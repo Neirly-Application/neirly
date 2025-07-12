@@ -1,3 +1,4 @@
+const { StringSelectMenuBuilder } = require('@discordjs/builders');
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -13,6 +14,28 @@ const userSchema = new mongoose.Schema({
   friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   profilePictureUrl: { type: String, default: '/media/user.png' },
   discordId: String,
+  passwordHash: {
+    type: String,
+  },
+  provider: { 
+  type: String, 
+  enum: ['local', 'google', 'discord'], 
+  default: 'local' 
+  },
+  profileCompleted: {
+    type: Boolean,
+    default: false
+  },
+  roles: {    
+    type: [String],
+    enum: ['user', 'supporter','moderator', 'ceo' ],
+    default: ['user']
+  },
+  devices: [{
+    name: String,
+    location: String,
+    lastActive: Date
+  }],
   passwordHash: { type: String },
   provider: { type: String, enum: ['local', 'google', 'discord'], default: 'local' },
   profileCompleted: { type: Boolean, default: false },

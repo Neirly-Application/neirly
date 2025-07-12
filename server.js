@@ -32,6 +32,7 @@ app.use('/api/auth', require('./src/routes/banUser'));
 app.use('/api/notifications', notificationsRouter);
 app.use('/api/friends', friendsRouter);
 app.use('/user_pfps', express.static(path.join(__dirname, 'user_pfps')));
+app.use('/api/devices', require('./src/routes/devices'));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));

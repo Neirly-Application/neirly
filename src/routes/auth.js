@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const getLocationFromIP = require('../utils/getLocationFromIP');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
 const { authMiddleware, requireRole } = require('../authMiddleware/authMiddleware');
@@ -37,6 +38,33 @@ router.post('/login', (req, res, next) => {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'Strict'
     });
+    
+    (async function handleDeviceSave() {
+      try {
+        const userAgent = req.headers['user-agent'] || 'Unknown';
+        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
+        const location = await getLocationFromIP(ip);
+      
+        const existingDevice = user.devices.find(dev =>
+          dev.name === userAgent && dev.location === location
+        );
+      
+        if (existingDevice) {
+          existingDevice.lastActive = new Date();
+        } else {
+          user.devices.push({
+            name: userAgent,
+            location,
+            lastActive: new Date()
+          });
+        }
+      
+        await user.save();
+        console.log('✅ Device saved');
+      } catch (err) {
+        console.error('Error saving login device:', err.message);
+      }
+    })();
 
     res.json({
       message: 'Login successfully completed!',
@@ -101,17 +129,37 @@ router.get('/google', passport.authenticate('google', {
 
 router.get('/google/callback',
   passport.authenticate('google', { session: false, failureRedirect: '/register.html' }),
-  (req, res) => {
+  async (req, res) => {
     try {
       console.log('User from Google:', req.user);
       const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-      console.log('Generated token:', token);
 
       res.cookie('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'Lax'
       });
+      try {
+        const userAgent = req.headers['user-agent'] || 'Unknown';
+        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
+        const location = await getLocationFromIP(ip);
+        const existingDevice = req.user.devices.find(dev =>
+          dev.name === userAgent && dev.location === location
+        );
+        if (existingDevice) {
+          existingDevice.lastActive = new Date();
+        } else {
+          req.user.devices.push({
+            name: userAgent,
+            location,
+            lastActive: new Date()
+          });
+        }
+        await req.user.save();
+        console.log('✅ Device saved (Google)');
+      } catch (err) {
+        console.error('Device tracking error (Google):', err.message);
+      }
 
       if (!req.user.profileCompleted) {
         return res.redirect(`/main/complete-profile.html?userId=${req.user._id}`);
@@ -125,6 +173,7 @@ router.get('/google/callback',
   }
 );
 
+
 router.get('/discord', passport.authenticate('discord', {
   scope: ['identify', 'email']
 }));
@@ -136,6 +185,33 @@ router.get('/discord/callback',
       const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
         expiresIn: '7d'
       });
+
+      (async function saveDiscordDevice() {
+        try {
+          const userAgent = req.headers['user-agent'] || 'Unknown';
+          const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
+          const location = await getLocationFromIP(ip);
+        
+          const existingDevice = req.user.devices.find(dev =>
+            dev.name === userAgent && dev.location === location
+          );
+        
+          if (existingDevice) {
+            existingDevice.lastActive = new Date();
+          } else {
+            req.user.devices.push({
+              name: userAgent,
+              location,
+              lastActive: new Date()
+            });
+          }
+        
+          await req.user.save();
+          console.log('✅ Discord device saved');
+        } catch (err) {
+          console.error('Error saving Discord login device:', err.message);
+        }
+      })();
 
       res.cookie('token', token, {
         httpOnly: true,
