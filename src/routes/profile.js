@@ -7,7 +7,7 @@ const { authMiddleware } = require('../authMiddleware/authMiddleware');
 
 const upload = multer({
   dest: path.join(__dirname, '../../user_pfps/'),
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (!file.mimetype.startsWith('image/')) {
       return cb(new Error('The file must be an image.'));
@@ -29,6 +29,7 @@ router.get('/', async (req, res) => {
       nickname: user.nickname,
       roles: user.roles,
       profilePictureUrl: user.profilePictureUrl || null,
+      about_me: user.about_me || '',
     });
   } catch (error) {
     console.error(error);
@@ -46,13 +47,18 @@ router.put('/', upload.single('profilePicture'), async (req, res) => {
       updates.nickname = req.body.nickname.trim();
       updatedFields.push('nickname');
     }
+    
+    if (typeof req.body.about_me === 'string' && req.body.about_me.trim() !== '' && req.body.about_me !== user.about_me) {
+      updates.about_me = req.body.about_me.trim().slice(0, 190);
+      updatedFields.push('about_me');
+    }
 
     if (req.file) {
       if (user.profilePictureUrl) {
         const oldPath = path.join(__dirname, '../../', user.profilePictureUrl);
         if (fs.existsSync(oldPath)) {
           fs.unlink(oldPath, err => {
-            if (err) console.warn('Errore nel rimuovere la vecchia immagine:', err.message);
+            if (err) console.warn('Error while removing the old profile picture:', err.message);
           });
         }
       }
@@ -73,6 +79,7 @@ router.put('/', upload.single('profilePicture'), async (req, res) => {
       updatedFields,
       profilePictureUrl: user.profilePictureUrl,
       nickname: user.nickname,
+      about_me: user.about_me,
     });
 
   } catch (error) {
