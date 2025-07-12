@@ -1,0 +1,113 @@
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const DiscordStrategy = require('passport-discord').Strategy;
+const bcrypt = require('bcrypt');
+const User = require('../models/User');
+const Notification = require('../models/Notification');
+
+passport.use(new LocalStrategy({ usernameField: 'email' },
+  async (email, password, done) => {
+    try {
+      const user = await User.findOne({ email });
+      if (!user) return done(null, false);
+      const ok = await bcrypt.compare(password, user.passwordHash);
+      return done(null, ok ? user : false);
+    } catch (err) {
+      done(err);
+    }
+  }
+));
+
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: '/api/auth/google/callback',
+}, async (accessToken, refreshToken, profile, done) => {
+  try {
+    const email = profile.emails && profile.emails[0] && profile.emails[0].value;
+    let user = await User.findOne({ email });
+
+    if (user) {
+      if (!user.name || user.name.trim() === '') {
+        user.name = profile.displayName || 'User';
+        await user.save();
+      }
+      return done(null, user);
+    }
+
+    const newUser = await User.create({
+      email,
+      name: profile.displayName || 'User',
+      discordId: null,
+      passwordHash: '',
+      provider: 'google',
+      profileCompleted: false,
+      join_date: new Date(),
+      roles: ['user'],
+      banned: false,
+      forceLogout: false,
+    });
+
+    await Notification.create({
+      userId: newUser._id,
+      message: `Welcome ${newUser.name || newUser.email}! This is just a simple welcome notification. Don't take care of what there's in here thanks :3`,
+      imageUrl: '../media/notification.png'
+    });
+
+    done(null, newUser);
+  } catch (err) {
+    done(err, null);
+  }
+}));
+
+passport.use(new DiscordStrategy({
+  clientID: process.env.DISCORD_CLIENT_ID,
+  clientSecret: process.env.DISCORD_CLIENT_SECRET,
+  callbackURL: '/api/auth/discord/callback',
+  scope: ['identify', 'email'],
+}, async (accessToken, refreshToken, profile, done) => {
+  try {
+    const email = profile.email;
+
+    if (!email) {
+      return done(null, false, { message: 'Email non disponibile da Discord.' });
+    }
+
+    let user = await User.findOne({ email });
+
+    if (user) {
+      if (!user.discordId) {
+        user.discordId = profile.id;
+        if (!user.provider) user.provider = 'discord'; 
+        await user.save();
+      } else if (user.discordId !== profile.id) {
+        return done(null, false, { message: 'Discord ID mismatch con account esistente.' });
+      }
+      return done(null, user);
+    }
+
+    const newUser = await User.create({
+      email,
+      name: profile.username,
+      discordId: profile.id,
+      passwordHash: '',
+      provider: 'discord',
+      profileCompleted: false,
+      join_date: new Date(),
+      roles: ['user'],
+      banned: false,
+      forceLogout: false,
+    });
+
+    await Notification.create({
+      userId: newUser._id,
+      message: `Welcome ${newUser.name || newUser.email}! This is just a simple welcome notification. Don't take care of what there's in here thanks :3`,
+      imageUrl: '../media/notification.png'
+    });
+
+    return done(null, newUser);
+  } catch (err) {
+    return done(err);
+  }
+}));

@@ -1,0 +1,22 @@
+:root {
+    --primary: #1A2A6C;
+    --secondary: #66D9EF;
+    --accent: #ffffff;
+    --light-bg: #F9F9F9;
+    --dark-text: #2E2E2E;
+    --soft-dark-text: #333;
+    --neutral-grey: #D3D3D3;
+
+    --main-bg: #2c4296;
+
+    --error: #e74c3c;
+    --success: #27ae60;
+
+    
+    --first-bg-button: #3498db;
+    --button-box-shadow: rgba(52, 152, 219, 0.4);
+    --hover-bg-button: #2c4296;
+    --button-outline: #1A2A6C;
+
+    --inputs-border-color: #ccc;
+}

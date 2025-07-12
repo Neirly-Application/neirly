@@ -1,0 +1,95 @@
+@import url(./variables.css);
+@import url(./navbar.css);
+@import url(./section.css);
+@import url(./button.css);
+@import url(./cards.css);
+@import url(./notifications.css);
+@import url(./footer.css);
+@import url(./setup.css);
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--secondary-bg) var(--main-bg);
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--light-bg);
+  color: var(--dark-text);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+i {
+  padding-right: 5px;
+}
+
+img {
+  --webkit-user-drag: none;
+  pointer-events: none;   
+}
+
+.fancy-line {
+  height: 2px;
+  background: linear-gradient(to right, var(--secondary), var(--primary), var(--secondary));
+  border: none;
+  margin: 20px 0;
+  opacity: 0.5;
+}
+
+.fancy-line-2 {
+  height: 2px;
+  background: linear-gradient(to right, var(--primary), var(--secondary), var(--primary));
+  border: none;
+  margin: 5px 0;
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .fancy-line {
+    margin: 20px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .fancy-line {
+    margin: 10px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .fancy-line-2 {
+    margin: 4px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .fancy-line-2 {
+    margin: 3px 0;
+  }
+}
+
+::-webkit-scrollbar {
+  width: thin;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dark-text);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+  border: 1px solid var(--accent);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--main-bg);
+}
+
+::selection {
+  background: var(--main-bg);
+  color: var(--accent);
+}

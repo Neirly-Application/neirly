@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neirly - Login</title>
+    <link rel="stylesheet" type="text/css" href="./styles/main.css" />
+    <link rel="stylesheet" type="text/css" href="./styles/register_login.css" />
+    <link rel="stylesheet" type="text/css" href="./styles/notifications.css" />
+    <link rel="stylesheet" href="./styles/offline.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="icon" type="image/png" sizes="16x16" href="/media/neirly.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/media/neirly.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/media/neirly.png">
+    <link rel="icon" type="image/x-icon" href="/media/neirly.png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-logo"><a href="/">
+            <img src="./media/neirly.png">Neirly</a></div>
+        <button class="nav-toggle" aria-label="Open Menu" aria-expanded="false">
+        ☰
+        </button>
+        <ul class="nav-links">
+            <li>
+                <a href="#"><i class="fas fa-file-alt"></i> Policies</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="overlay"></div>
+
+    <section class="main-section">
+        <div class="main-card">
+            <h2><i class="fas fa-sign-in-alt"></i> Login</h2>
+                <form id="login-form">
+                    <div class="social-login">
+                        <p>Login with</p>
+                        <div class="social-icons">
+                        <a href="/api/auth/google" class="social google" title="Login with Google">
+                            <i class="fab fa-google"></i>
+                        </a>
+                        <a href="/api/auth/discord" class="social discord" title="Login with Discord">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                        <a href="#" class="social email" title="Login with Email" id="email-toggle">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+
+                    <div class="fancy-line"></div>
+
+                    <div id="email-login-form" class="email-form hidden">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="Enter your email adress" required />
+
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Enter your password" required />
+
+                        <button type="submit" class="cta-button"><i class="fas fa-sign-in-alt"></i> Login</button>
+                    </div>
+                    
+                    <p class="swap-link">Don't have an account? <a href="./register.html">Register</a></p>
+                </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+            <img src="/media/neirly.png"><br>Neirly</div>
+
+            <div class="footer-links">
+            <a href="#"><i class="fas fa-users"></i> Who we are</a>
+            <a href="#"><i class="fas fa-envelope"></i> Contacts</a>
+            <a href="#"><i class="fas fa-file-alt"></i> Policies</a>
+            </div>
+
+            <div class="footer-social">
+            <a href="#"><i class="fab fa-discord"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            © 2025 Neirly. All rights reserved.
+        </div>
+    </footer>
+
+    <div id="offlineOverlay" style="display:none;">
+        <div class="offline-content">
+        <img src="./media/offline.png" alt="Offline" />
+        <h1>No internet connection.</h1>
+        <p>Check your connection and try again.</p>
+        </div>
+    </div>
+
+    <script src="./scripts/script.js"></script>
+    <script src="./scripts/offline.js"></script>
+    <script type="module" src="./scripts/login.js"></script>
+
+    <script>
+        const emailToggle = document.getElementById('email-toggle');
+        const emailForm = document.getElementById('email-login-form');
+
+        emailToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        emailForm.classList.toggle('hidden');
+        });
+    </script>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('error') === 'discord-email-in-use') {
+            alert("Questa email è già stata registrata tramite un altro provider. Accedi con Google o Email.");
+        }
+    </script>
+</body>
+</html>

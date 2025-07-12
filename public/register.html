@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neirly - Register</title>
+    <link rel="stylesheet" type="text/css" href="./styles/main.css" />
+    <link rel="stylesheet" type="text/css" href="./styles/register_login.css" />
+    <link rel="stylesheet" type="text/css" href="./styles/notifications.css" />
+    <link rel="stylesheet" href="./styles/offline.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="icon" type="image/png" sizes="16x16" href="/media/neirly.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/media/neirly.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/media/neirly.png">
+    <link rel="icon" type="image/x-icon" href="/media/neirly.png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-logo"><a href="/">
+            <img src="./media/neirly.png">Neirly</a></div>
+        <button class="nav-toggle" aria-label="Open Menu" aria-expanded="false">
+        ☰
+        </button>
+        <ul class="nav-links">
+            <li>
+                <a href="#"><i class="fas fa-file-alt"></i> Policies</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="overlay"></div>
+
+    <section class="main-section" id="register-section">
+        <div class="main-card">
+            <h2><i class="fas fa-user-plus"></i> Register</h2>
+                <form>
+                    <div class="social-login">
+                        <p>Register with</p>
+                        <div class="social-icons">
+                            <a href="/api/auth/google" class="social google" title="Register with Google">
+                                <i class="fab fa-google"></i>
+                            </a>
+                            <a href="/api/auth/discord" class="social discord" title="Login with Discord">
+                                <i class="fab fa-discord"></i>
+                            </a>
+                            <a href="#" class="social email" title="Register with Email" id="email-toggle">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                        <div class="fancy-line"></div>
+
+                    <div id="email-register-form" class="email-form hidden">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="Enter your email address" required />
+
+                        <label for="password-register">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password-register" placeholder="Create a password" required />
+                            <button type="button" class="toggle-password" aria-label="Show/Hide password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+
+                        <label for="password-repeat">Confirm Password</label>
+                        <input type="password" id="password-repeat" placeholder="Confirm your password" required />
+
+                        <button type="submit" id="register-button" class="cta-button">
+                            <i class="fas fa-user-plus"></i> Register
+                        </button>
+                    </div>
+                
+                    <p class="swap-link">Already have an account? <a href="./login.html">Login</a></p>
+                </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+            <img src="/media/neirly.png"><br>Neirly</div>
+
+            <div class="footer-links">
+            <a href="#"><i class="fas fa-users"></i> Who we are</a>
+            <a href="#"><i class="fas fa-envelope"></i> Contacts</a>
+            <a href="#"><i class="fas fa-file-alt"></i> Policies</a>
+            </div>
+
+            <div class="footer-social">
+            <a href="#"><i class="fab fa-discord"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            © 2025 Neirly. All rights reserved.
+        </div>
+    </footer>
+
+    <div id="offlineOverlay" style="display:none;">
+        <div class="offline-content">
+        <img src="./media/offline.png" alt="Offline" />
+        <h1>No internet connection.</h1>
+        <p>Check your connection and try again.</p>
+        </div>
+    </div>
+
+    <script src="./scripts/register.js" defer></script>
+    <script src="./scripts/offline.js"></script>
+
+    <script>
+        document.getElementById('email-toggle').addEventListener('click', (e) => {
+            e.preventDefault();
+            const form = document.getElementById('email-register-form');
+            form.classList.toggle('hidden');
+        });
+    </script>
+    <script language="javascript">
+        if (!passwordRegex.test(password)) {
+        return res.status(400).json({
+            message: 'Password must be at least 8 characters long, contain one uppercase letter and one number.'
+        });
+        }
+    </script>
+
+</body>
+</html>

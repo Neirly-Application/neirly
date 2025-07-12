@@ -1,0 +1,220 @@
+@import url(./variables.css);
+
+.main-section {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--light-bg);
+  padding: 4rem 2rem;
+  min-height: 100vh;
+}
+
+.main-card {
+  background-color: var(--accent);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem 2rem;
+  max-width: 400px;
+  width: 100%;
+}
+
+.main-card h2 {
+  margin-bottom: 1.5rem;
+  color: var(--primary);
+  font-size: 1.75rem;
+  text-align: center;
+}
+
+input,
+button {
+  box-sizing: border-box;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.btn {
+  background-color: var(--primary);
+  color: var(--accent);
+  padding: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: var(--secondary);
+  color: var(--dark-text);
+}
+
+.swap-link {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+  color: var(--dark-text);
+}
+
+.swap-link a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.swap-link a:hover {
+  text-decoration: underline;
+}
+
+.social-login {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.social-login p {
+  margin-bottom: 0.5rem;
+  color: var(--dark-text);
+  font-size: 0.95rem;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.social-icons .social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  background-color: transparent;
+  color: var(--primary);
+  transition: color 0.3s ease, transform 0.2s ease;
+  text-decoration: none;
+  border: 2px solid transparent;
+}
+
+.social-icons .social:hover {
+  transform: translateY(-3px);
+  color: var(--secondary);
+}
+
+.social.google { color: #DB4437; }
+.social.discord { color: #5865F2; }
+.social.github { color: #333; }
+
+.social.google:hover,
+.social.discord:hover,
+.social.github:hover {
+  color: var(--secondary);
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  flex: 1;
+  padding-right: 2.5rem;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--neutral-grey);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  width: 1.8rem;
+  height: 1.8rem;
+  line-height: 1;
+}
+
+.toggle-password:hover {
+  color: var(--primary);
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: none;
+  }
+
+  .nav-links {
+    position: static;
+    transform: none;
+    height: auto;
+    width: 100%;
+    background-color: transparent;
+    padding: 0;
+    gap: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .nav-links a {
+    color: var(--accent);
+    font-size: 1rem;
+    text-align: right;
+  }
+
+  .nav-links.show {
+    transform: none;
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+.email-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 20px;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.email-form label {
+  text-align: left;
+  color: var(--dark-text);
+  font-weight: 500;
+}
+
+.email-form input {
+  margin-bottom: 20px;
+  padding: 0.75rem;
+  border: 1px solid var(--neutral-grey);
+  border-radius: 6px;
+  font-size: 1rem;
+  color: var(--dark-text);
+}
+
+.email-form input:focus {
+  border-color: var(--secondary);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(102, 217, 239, 0.3);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

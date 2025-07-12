@@ -1,0 +1,33 @@
+@import url(./variables.css);
+
+.cta-button {
+  text-decoration: none;
+  margin-top: 1.5rem;
+  padding: 0.75rem;
+  background-color: var(--first-bg-button);
+  border: none;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border-radius: 6px;
+  width: 100%;
+  transition: background-color 0.3s ease, transform 0.15s ease;
+  box-shadow: 0 2px 6px var(--button-box-shadow);
+  user-select: none;
+}
+
+.cta-button:hover,
+.cta-button:focus-visible {
+  background-color: var(--hover-bg-button);
+  transform: scale(1.03);
+  outline-offset: 3px;
+  outline: 2px solid var(--button-outline);
+}
+
+@media (max-width: 480px) {
+  .cta-button {
+    padding: 0.65rem;
+    font-size: 1rem;
+  }
+}

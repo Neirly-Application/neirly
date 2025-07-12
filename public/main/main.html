@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Neirly - Home</title>
+  
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    integrity="sha512-..."
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+  <link rel="stylesheet" href="./main.css" />
+  <link rel="stylesheet" href="../styles/offline.css" />
+  <link rel="stylesheet" href="../styles/manageMain.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/media/neirly.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/media/neirly.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/media/neirly.png">
+  <link rel="icon" type="image/x-icon" href="/media/neirly.png">
+</head>
+
+<body>
+  <button class="mobile-toggle" aria-label="Toggle Menu">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <div class="mobile-topbar">
+    <div class="topbar-left">
+      <img src="../media/neirly.png" alt="Neirly Logo" class="topbar-logo" />
+      <span class="topbar-title">Neirly</span>
+    </div>
+    <div class="topbar-menu">
+      <a href="#notifications" class="nav-item" title="Notifications" data-section="notifications">
+        <i class="fas fa-bell">
+          <span class="notification-badge"></span>
+        </i>
+      </a>
+      <button class="menu-button" title="Options">
+        <i class="fas fa-ellipsis-v"></i>
+      </button>
+      <div class="menu-dropdown">        
+        <a href="#ceo" class="nav-item" data-section="ceo" id="admin-section" style="display:none;">
+          <i class="fas fa-user-shield"></i> Actions
+        </a>
+        <a href="#friend-list" data-section="friend-list" class="nav-item">
+          <i class="fas fa-user-friends"></i> Friends
+        </a>
+        <a href="#profile" data-section="profile" class="nav-item">
+          <i class="fas fa-user"></i> Profile
+        </a>
+        <a href="#settings" data-section="settings" class="nav-item">
+          <i class="fas fa-cog"></i> Settings 
+        </a>
+        <a href="/privacy-policy" class="nav-item">
+          <i class="fas fa-file-alt"></i> Policies
+        </a>
+        <a href="#logout" class="nav-item logout-btn" id="logout-btn">
+          <i class="fas fa-sign-out-alt"></i>  Logout
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <nav class="sidebar">
+    <div class="nav-header">
+      <img src="../media/neirly.png" alt="Neirly Logo" class="nav-logo" />
+          <div id="welcomeMessage"></div>
+    </div>
+    
+    <div class="nav-links">
+      <a href="#map" class="nav-item active" data-section="map">
+        <i class="fas fa-map"></i> 
+        <span>Map</span>
+      </a>
+      <a href="#friend-list" class="nav-item" data-section="friend-list">
+        <i class="fas fa-user-friends"></i>
+        <span>Friends</span>
+      </a>
+      <a href="#notifications" class="nav-item" data-section="notifications">
+        <i class="fas fa-bell"></i>
+        <span>Notifications</span>
+        <span class="notification-badge"></span>
+      </a>
+      <a href="#messages" class="nav-item" data-section="messages">
+        <i class="fas fa-comment-alt"></i> 
+        <span>Messagges</span>
+      </a>
+      <a href="#profile" class="nav-item" data-section="profile">
+        <i class="fas fa-user"></i> 
+        <span>Profile</span>
+      </a>
+      <a href="#ceo" class="nav-item" data-section="ceo" id="admin-section" style="display:none;">
+        <i class="fas fa-user-shield"></i> 
+        <span>Actions</span>
+      </a>
+    </div>
+
+    <div class="nav-footer">
+      <a href="/privacy-policy" class="nav-item">
+        <i class="fas fa-file-alt"></i>
+        <span>Policies</span>
+      </a>
+      <a href="#settings" class="nav-item settings" data-section="settings">
+        <i class="fas fa-cog"></i> 
+        <span>Settings</span>
+      </a>
+      <a href="#logout" class="nav-item logout-btn" id="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> 
+        <span>Logout</span>
+      </a>
+    </div>
+  </nav>
+
+  <nav class="bottom-navbar">
+    <a href="#map" class="nav-item" data-section="map">
+      <i class="fas fa-map"></i>
+    </a>
+    <a href="#messages" class="nav-item" data-section="messages">
+      <i class="fas fa-comment-alt"></i>
+    </a>
+    <a href="#friend-list" class="nav-item" data-section="friend-list">
+      <i class="fas fa-user-friends"></i>
+    </a>
+  </nav>
+
+  <main class="content"></main>
+
+  <div id="offlineOverlay" style="display:none;">
+    <div class="offline-content">
+      <img src="../media/offline.png" alt="Offline" />
+      <h1>No internet connection.</h1>
+      <p>Check your connection and try again.</p>
+    </div>
+  </div>
+
+  <div id="custom-confirm-overlay" class="confirm-overlay" style="display:none;">
+    <div class="confirm-box">
+      <div class="confirm-header">
+        <img src="../media/handstop.png" alt="Alert Icon" class="confirm-icon" aria-hidden="true">
+        <h2 id="confirm-title">Oop... wait a second...</h2>
+      </div>
+      <p id="confirm-message">Are you sure?</p>
+      <div class="confirm-buttons">
+        <button id="confirm-yes" class="btn-confirm yes">Confirm</button>
+        <button id="confirm-no" class="btn-confirm no">Dismiss</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="custom-toast-container" class="toast-container"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="../scripts/manageMain.js"></script>
+  <script src="../scripts/offline.js"></script>
+  <script src="../scripts/notification.js"></script>
+
+  <script>
+    function updateActiveNavItem(section) {
+      document.querySelectorAll('.nav-item').forEach(el => {
+        el.classList.remove('active');
+      });
+      document.querySelectorAll(`.nav-item[data-section="${section}"]`).forEach(el => {
+        el.classList.add('active');
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!location.hash) {
+        location.hash = 'map';  
+      }
+      const currentSection = location.hash.replace('#', '');
+      updateActiveNavItem(currentSection);
+    });
+
+    window.addEventListener('hashchange', () => {
+      const section = location.hash.replace('#', '') || 'map';
+      updateActiveNavItem(section);
+    });
+
+    document.addEventListener('click', function (e) {
+      const btn = document.querySelector('.menu-button');
+      const dropdown = document.querySelector('.menu-dropdown');
+
+      if (!btn || !dropdown) return;
+
+      const isClickOnButton = btn.contains(e.target);
+      const isClickInsideDropdown = dropdown.contains(e.target);
+
+      if (isClickOnButton) {
+        if (dropdown.classList.contains('show')) {
+          dropdown.classList.remove('show');
+          dropdown.classList.add('hide');
+
+          setTimeout(() => dropdown.style.display = 'none', 250);
+        } else {
+          dropdown.style.display = 'flex';
+          requestAnimationFrame(() => {
+            dropdown.classList.remove('hide');
+            dropdown.classList.add('show');
+          });
+        }
+      } else if (!isClickInsideDropdown) {
+        if (dropdown.classList.contains('show')) {
+          dropdown.classList.remove('show');
+          dropdown.classList.add('hide');
+          setTimeout(() => dropdown.style.display = 'none', 250);
+        }
+      }
+    });
+
+    document.querySelectorAll('.menu-dropdown .nav-item').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const section = link.getAttribute('data-section');
+        if (section) {
+          // Usa l'href per la navigazione per coerenza, data-section solo per l'highlight
+          const targetHash = link.getAttribute('href');
+          if (targetHash) {
+            location.hash = targetHash;
+          }
+        }
+
+        const dropdown = document.querySelector('.menu-dropdown');
+        if (dropdown.classList.contains('show')) {
+          dropdown.classList.remove('show');
+          dropdown.classList.add('hide');
+          setTimeout(() => dropdown.style.display = 'none', 250);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

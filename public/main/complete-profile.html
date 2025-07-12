@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Complete Profile</title>
+
+    <link rel="icon" type="image/png" sizes="16x16" href="/media/neirly.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/media/neirly.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/media/neirly.png">
+    <link rel="icon" type="image/x-icon" href="/media/neirly.png">
+
+    <link rel="stylesheet" href="../styles/completeProfile.css" />
+    <link rel="stylesheet" href="../styles/offline.css" />
+</head>
+<body>
+<h1>Complete profile</h1>
+<form id="complete-profile-form" novalidate>
+  <label for="username">Username:</label>
+  <input type="text" id="username" name="username" required value="" />
+
+  <label for="birthdate">Date of birth:</label>
+  <input type="date" id="birthdate" name="birthdate" required />
+
+  <label for="password">Password:</label>
+  <input type="password" id="password" name="password" minlength="6" required />
+
+
+  <label class="custom-checkbox">
+    <input type="checkbox" id="wantsUpdates" />
+    <span class="checkmark"></span>
+    I want to receive email updates
+  </label>
+  <br />
+
+  <label class="custom-checkbox">
+    <input type="checkbox" id="acceptedTerms" required />
+    <span class="checkmark"></span>
+    I've read and I accept Neirly's <a href="/terms.html" target="_blank">terms and conditions</a> and <a href="/privacy.html" target="_blank">privacy policy</a>.
+  </label>
+  <br />
+  
+  <div id="error-msg" class="error"></div>
+
+  <button class="cta-button" type="submit">Complete</button>
+</form>
+
+  <div id="offlineOverlay" style="display:none;">
+    <div class="offline-content">
+      <img src="../media/offline.png" alt="Offline" />
+      <h1>No internet connection.</h1>
+      <p>Check your connection and try again.</p>
+    </div>
+  </div>
+
+  <script language="javascript" src="../scripts/completeProfile.js"></script>
+  <script src="../scripts/offline.js"></script>
+  <script language="javascript">
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+          message: 'Password must be at least 8 characters long, contain one uppercase letter and one number.'
+      });
+    }
+  </script>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const nickname = urlParams.get('nickname');
+    if (nickname) {
+      document.getElementById('nickname').value = nickname;
+    }
+  </script>
+</body>
+</html>

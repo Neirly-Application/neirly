@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neirly - 404</title>
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/media/neirly.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/media/neirly.png" />
+  <link rel="icon" type="image/png" sizes="48x48" href="/media/neirly.png" />
+  <link rel="icon" type="image/x-icon" href="/media/neirly.png" />
+
+  <link rel="stylesheet" type="text/css" href="/styles/button.css" />
+  <link rel="stylesheet" type="text/css" href="/styles/404.css" />
+  <link rel="stylesheet" href="/styles/offline.css" />
+
+</head>
+<body>
+  <div class="container">
+    <img src="/media/error404.png" alt="404 Error" class="animated-img"/>
+    <h1>404 - Page not found!</h1>
+    <a class="cta-button" href="#" onclick="window.history.length > 1 ? history.back() : window.location.href = '/'">Go back</a>
+  </div>
+
+  <div id="offlineOverlay" style="display:none;">
+    <div class="offline-content">
+      <img src="/media/offline.png" alt="Offline" />
+      <h1>No internet connection.</h1>
+      <p>Check your connection and try again.</p>
+    </div>
+  </div>
+
+  
+  <script src="/scripts/offline.js"></script>
+</body>
+</html>
