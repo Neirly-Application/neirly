@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       try {
         const res = await fetch('/api/profile', { credentials: 'include' });
         if (!res.ok) {
-          // Se il profilo non è accessibile, probabile sessione scaduta
           window.location.href = '/login.html';
           return;
         }
@@ -23,7 +22,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           welcomeMessage.textContent = `Welcome, ${user.name}!`;
         }
 
-        // Mostra la sezione admin se l'utente è CEO
         if (user && user.roles && user.roles.includes('ceo')) {
           document.querySelectorAll('#admin-section').forEach(el => {
             el.style.display = 'flex';
@@ -212,9 +210,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             content.innerHTML = `<p>User data not loaded. Please refresh.</p>`;
             return;
           }
+          
+          console.log("ABOUT ME:", user.about_me);
           const maskedEmail = maskEmail(user.email || '');
           content.innerHTML = `
-                <h2><i class="fas fa-user"></i> Account & Profile</h2>
+              <h2><i class="fas fa-user"></i> Account & Profile</h2>
                 <form id="profile-form" class="profile-form" enctype="multipart/form-data">
                   <div class="form-group">
                     <div class="profile-pic-wrapper" style="position: relative; display: inline-block;">
@@ -228,7 +228,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                   <div class="form-group">
                     <label>Nickname:</label>
-                    <input type="text" id="nickname-input" value="${user.nickname || user.name || ''}" />
+                    <input type="text" id="nickname-input" value="${user.nickname || user.name || "👋 Hello there! I'm a Neirly user!"}" />
+                  </div>
+
+                  <div class="form-group">
+                    <label>About me:</label>
+                    <textarea maxlength="190" id="aboutme-input" placeholder="What's on your mind?...">${user.about_me || ''}</textarea>
                   </div>
 
                   <div class="form-group">
@@ -285,13 +290,23 @@ document.addEventListener('DOMContentLoaded', async () => {
               unsavedNotification.style.display = show ? 'flex' : 'none';
             }
 
+            function normalizeText(text) {
+              return text.replace(/\s+/g, ' ').trim();
+            }
+
             function checkFormChanges() {
               const currentNickname = document.getElementById('nickname-input').value.trim();
-              const nicknameChanged = currentNickname !== (user.nickname || user.name || '');
+              const currentAboutMe = normalizeText(document.getElementById('aboutme-input').value);
+
+              const originalNickname = (user.nickname || user.name || '').trim();
+              const originalAboutMe = normalizeText(user.about_me || '');
+
+              const nicknameChanged = currentNickname !== originalNickname;
+              const aboutMeChanged = currentAboutMe !== originalAboutMe;
 
               const imageChanged = !!croppedBlob;
 
-              const hasChanges = nicknameChanged || imageChanged;
+              const hasChanges = nicknameChanged || aboutMeChanged || imageChanged;
               formChanged = hasChanges;
               toggleUnsavedNotification(hasChanges);
             }
@@ -356,6 +371,10 @@ document.addEventListener('DOMContentLoaded', async () => {
               });
             });
 
+            document.getElementById('aboutme-input').addEventListener('input', () => {
+              checkFormChanges();
+            });
+
             saveChangesBtn.addEventListener('click', () => {
               form.requestSubmit();
             });
@@ -364,17 +383,22 @@ document.addEventListener('DOMContentLoaded', async () => {
               e.preventDefault();
 
               let newNickname = document.getElementById('nickname-input').value.trim();
+              let newAboutMe = document.getElementById('aboutme-input').value.trim();
+
               if (!newNickname) newNickname = user.nickname || user.name || '';
 
               const formData = new FormData();
               if (newNickname !== (user.nickname || user.name || '')) {
                 formData.append('nickname', newNickname);
               }
+              if (newAboutMe !== (user.about_me || '')) {
+                formData.append('about_me', newAboutMe);
+              }
               if (croppedBlob) {
                 formData.append('profilePicture', croppedBlob, 'profile.jpg');
               }
 
-              if (!formData.has('nickname') && !formData.has('profilePicture')) {
+              if (!formData.has('nickname') && !formData.has('about_me') && !formData.has('profilePicture')) {
                 return;
               }
 
@@ -394,6 +418,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                   croppedBlob = null;
 
                   user.nickname = newNickname;
+                  user.about_me = newAboutMe;
 
                 } else {
                   showToast('Error: ' + (updateData.message || "Can't update profile."), 'error');
