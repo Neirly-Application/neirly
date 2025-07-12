@@ -47,6 +47,7 @@ passport.use(new GoogleStrategy({
       roles: ['user'],
       banned: false,
       forceLogout: false,
+      about_me: "👋 Hello there! I'm a Neirly user!",
     });
 
     await Notification.create({
@@ -98,6 +99,7 @@ passport.use(new DiscordStrategy({
       roles: ['user'],
       banned: false,
       forceLogout: false,
+      about_me: "👋 Hello there! I'm a Neirly user!",
     });
 
     await Notification.create({
