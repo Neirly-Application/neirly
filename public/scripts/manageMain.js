@@ -64,12 +64,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         case 'notifications':
           content.innerHTML = `
               <h2><i class="fas fa-bell"></i> Notifications</h2>
-              <div id="notificationList">Loading notifications...</div>
-              <div id="notificationDetail" class="notification-detail hidden"></div>
+              <div id="notificationList">Loading notifications...
+              </div>
             `;
 
           const notificationList = document.getElementById('notificationList');
-          const notificationDetail = document.getElementById('notificationDetail');
           let allNotifications = [];
           let openNotificationId = null;
 
@@ -132,29 +131,35 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const notification = allNotifications.find(n => n._id === id);
                 if (!notification) return;
 
-                if (openNotificationId === id) {
-                  notificationDetail.style.display = 'none';
-                  notificationDetail.classList.add('hidden');
-                  notificationDetail.innerHTML = '';
-                  openNotificationId = null;
+                const existingDetail = document.querySelector('.notification-detail-view');
+                let wasOpen = false;
+                if (existingDetail) {
+                  if (existingDetail.dataset.notificationId === id) {
+                    wasOpen = true;
+                  }
+                  existingDetail.remove();
+                }
+
+                if (wasOpen) {
                   return;
                 }
 
                 if (!notification.read) {
                   await markNotificationAsRead(id);
                   notification.read = true;
+                  item.classList.remove('unread');
                 }
 
-                openNotificationId = id;
-                notificationDetail.classList.remove('hidden');
-                notificationDetail.style.display = 'block';
-                notificationDetail.innerHTML = `
+                const detailView = document.createElement('div');
+                detailView.className = 'notification-detail-view';
+                detailView.dataset.notificationId = id;
+                detailView.innerHTML = `
                     <h3>${notification.title}</h3>
                     <p>${notification.message}</p>
                     <small><em>${new Date(notification.date).toLocaleString()}</em></small>
                   `;
+                item.insertAdjacentElement('afterend', detailView);
 
-                renderNotifications();
                 fetchUnreadCount();
               });
             });
