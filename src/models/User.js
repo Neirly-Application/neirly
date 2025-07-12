@@ -1,3 +1,4 @@
+const { StringSelectMenuBuilder } = require('@discordjs/builders');
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -34,7 +35,12 @@ const userSchema = new mongoose.Schema({
     type: [String],
     enum: ['user', 'supporter','moderator', 'ceo' ],
     default: ['user']
-  }
+  },
+  devices: [{
+    name: String,
+    location: String,
+    lastActive: Date
+  }],
 });
 
 const User = mongoose.model('User', userSchema);
