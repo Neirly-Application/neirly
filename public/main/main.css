@@ -146,11 +146,12 @@ body {
 }
 
 .content {
+  position: relative;
   flex-grow: 1;
   padding: 35px 50px;
   background: var(--light-bg);
   transition: padding 0.3s ease, background-color 0.3s ease;
-  min-height: 100vh;
+  min-height: auto;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -789,8 +790,6 @@ body.subsection-active {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
 }
-
-@import url(./variables.css);
 
 .card {
     background: white;
