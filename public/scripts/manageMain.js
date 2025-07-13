@@ -209,13 +209,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         case 'map-screen':
           content.innerHTML = `
-            <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link">
-              <i class="fas fa-arrow-left"></i>
-            </a>
-            <h2><i class="fas fa-map-marker-alt"></i> Map</h2>
+            <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link">
+                <i class="fas fa-arrow-left"></i>
+              </a>
+              <h2><i class="fas fa-map-marker-alt"></i> Map</h2>
+            </div>
 
-            <div id="map-loader" class="map-loader">Loading map...</div>
-            <div id="map" class="map-container"></div>
+            <div id="map" class="map-container">
+              <div id="map-loader" class="map-loader">Loading map...</div>
+            </div>
             
             <button id="btn-center-map"><i class="fas fa-crosshairs"></i> Center Map</button>
           `;
@@ -223,7 +226,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           const loader = document.getElementById('map-loader');
           const mapContainer = document.getElementById('map');
           loader.style.display = 'flex';
-          mapContainer.style.display = 'none';
+          mapContainer.style.display = 'block';
 
           let map, userMarker, userCoords;
 
@@ -253,7 +256,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
           function initializeMap(latitude, longitude, profileImgUrl, nickname) {
             loader.style.display = 'none';
-            mapContainer.style.display = 'block';
 
             map = L.map('map', {
               center: [latitude, longitude],
@@ -667,8 +669,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         case 'settings-account':
           content.innerHTML = `
+            <div class="case-header">
               <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
               <h2><i class="fas fa-user-shield"></i> Account & Security</h2>
+            </div>
               <button class="btn">Change Password</button>
               <button class="btn">Enable 2FA</button>
             `;
@@ -676,12 +680,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       case 'settings-devices':
         content.innerHTML = `
-          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-          <h2><i class="fas fa-laptop"></i> Connected Devices</h2>
-          <p>Here are the devices currently connected to your account.</p>
-          <div class="device-list" id="device-list">
-            <p>Loading devices...</p>
-          </div>
+            <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <h2><i class="fas fa-laptop"></i> Connected Devices</h2>
+            </div>
+              <p>Here are the devices currently connected to your account.</p>
+              <div class="device-list" id="device-list">
+                <p>Loading devices...</p>
+              </div>
         `;
 
         const normalize = str => (str || '').replace(/\s+/g, '').toLowerCase();
@@ -753,8 +759,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                   <div class="device-info">
                   <strong>${device.name} ${tag1}</strong>
                   <div class="fancy-line"></div>
-                  <p>Location: ${device.location}</p>
-                  <p>Last Active: ${formatLastActive(device.lastActive)} ${tag2}</p>
+                    <div class="device-info-text">
+                      <p>Location: ${device.location}</p>
+                      <p>Last Active: ${formatLastActive(device.lastActive)} ${tag2}</p>
+                    </div>
                   </div>
                   <div class="device-actions">
                     <button class="btn-disconnect">Disconnect</button>
@@ -828,34 +836,47 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         case 'settings-activity':
           content.innerHTML = `
+            <div class="case-header">
               <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
               <h2><i class="fas fa-chart-line"></i> Activity</h2>
+            </div>
               <p>Your account activity.</p>
             `;
           break;
 
         case 'settings-notifications':
           content.innerHTML = `
-          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-          <h2><i class="fas fa-bell"></i> Notifications</h2><p>Gestisci le tue preferenze di notifica.</p>`;
+            <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <h2><i class="fas fa-bell"></i> Notifications</h2>
+            </div>
+              <p>Gestisci le tue preferenze di notifica.</p>`;
           break;
 
         case 'settings-theme':
           content.innerHTML = `
-          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-          <h2><i class="fas fa-palette"></i> App Theme</h2><p>Scegli il tema della tua app.</p>`;
+            <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <h2><i class="fas fa-palette"></i> App Theme</h2>
+            </div>
+              <p>Scegli il tema della tua app.</p>`;
           break;
 
         case 'settings-region':
           content.innerHTML = `
-          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-          <h2><i class="fas fa-globe"></i> Language</h2><p>Imposta la lingua e la regione.</p>`;
+            <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <h2><i class="fas fa-globe"></i> Language</h2>
+            </div>
+              <p>Imposta la lingua e la regione.</p>`;
           break;
 
          case 'settings-privacy':
             content.innerHTML = `
+            <div class="case-header">
               <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
               <h2><i class="fas fa-lock"></i> Privacy</h2>
+            </div>
               <form id="privacy-form" class="privacy-form">
                 <div class="form-group">
                   <label for="profile-visibility">Who can view your profile?</label>
@@ -916,15 +937,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         case 'settings-info':
           content.innerHTML = `
-          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-          <h2><i class="fas fa-info-circle"></i> App Informations</h2><p>Informazioni sulla versione dell'app.</p>`;
+            <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <h2><i class="fas fa-info-circle"></i> App Informations</h2>
+            </div>
+              <p>Informazioni sulla versione dell'app.</p>`;
           break;
 
         case 'settings-danger':
           content.innerHTML = `
-          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-            <h2><i class="fas fa-exclamation-triangle"></i> Dangerous Actions</h2>
-            <button id="delete-account-btn" class="btn-delete-account"><i class="fas fa-trash"></i> Delete Account</button>
+            <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <h2><i class="fas fa-exclamation-triangle"></i> Dangerous Actions</h2>
+            </div>
+              <button id="delete-account-btn" class="btn-delete-account"><i class="fas fa-trash"></i> Delete Account</button>
           `;
 
           const deleteBtn = document.getElementById('delete-account-btn');
