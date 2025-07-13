@@ -188,6 +188,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="card map-card">
               <button class="map-button">Go to Map</button>
             </div>
+            
+            <div class="fancy-line"></div>
 
             <div class="card profile-card">
               <img src="../media/user.png" alt="User Profile">
@@ -198,8 +200,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <span class="status">Online</span>
               </div>
               <div class="profile-actions">
-                <button class="view-btn">View Profile</button>
-                <button class="request-btn">Add as Friend</button>
+                <button class="view-btn"><i class="fas fa-user"></i> <span>View Profile</span></button>
+                <button class="request-btn"><i class="fas fa-user-plus"></i> <span>Add as Friend</span></button>
               </div>
             </div>
           `;

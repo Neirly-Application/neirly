@@ -797,6 +797,7 @@ body.subsection-active {
     display: flex;
     align-items: center;
     gap: 15px;
+    flex-wrap: wrap; /* utile per il responsive */
 }
 
 .profile-card img {
@@ -851,6 +852,10 @@ body.subsection-active {
     border-radius: 6px;
     cursor: pointer;
     transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 }
 
 .profile-actions .view-btn {
@@ -869,4 +874,47 @@ body.subsection-active {
 
 .profile-actions .request-btn:hover {
     background-color: #218838;
+}
+
+@media (max-width: 480px) {
+  .profile-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-actions {
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .profile-actions button span {
+    display: none;
+  }
+
+  .profile-actions button {
+    flex: 1;
+  }
+}
+
+.fancy-line {
+  height: 2px;
+  background: linear-gradient(to right, var(--secondary), var(--primary), var(--secondary));
+  border: none;
+  margin: 30px 0;
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .fancy-line {
+    margin: 25px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .fancy-line {
+    margin: 20px 0;
+  }
 }
