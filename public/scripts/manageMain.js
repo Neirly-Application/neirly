@@ -300,173 +300,216 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
               `;
 
-            const profilePicInput = document.getElementById('profilePicInput');
-            const profilePicImg = document.getElementById('profile-pic');
-            const cropperModal = document.getElementById('cropper-modal');
-            const cropperImage = document.getElementById('cropper-image');
-            const zoomSlider = document.getElementById('zoom-slider');
-            const form = document.getElementById('profile-form');
-
-            const unsavedNotification = document.getElementById('unsaved-notification');
-            const saveChangesBtn = document.getElementById('save-changes-btn');
-
-            let cropper = null;
-            let croppedBlob = null;
-            let formChanged = false;
-
-            const saveChangesBtnOriginal = form.querySelector('.btn-submit');
-            if (saveChangesBtnOriginal) saveChangesBtnOriginal.style.display = 'none';
-
-            function toggleUnsavedNotification(show) {
-              unsavedNotification.style.display = show ? 'flex' : 'none';
-            }
-
-            function normalizeText(text) {
-              return text.replace(/\s+/g, ' ').trim();
-            }
-
-            function checkFormChanges() {
-              const currentNickname = document.getElementById('nickname-input').value.trim();
-              const currentUniquenick = document.getElementById('uniquenick-input').value.trim();
-              const currentAboutMe = normalizeText(document.getElementById('aboutme-input').value);
-
-              const originalNickname = (user.nickname || user.name || '').trim();
-              const originalUniquenick = (user.uniquenick || '').trim();
-              const originalAboutMe = normalizeText(user.about_me || '');
-
-              const nicknameChanged = currentNickname !== originalNickname;
-              const uniquenickChanged = currentUniquenick !== originalUniquenick;
-              const aboutMeChanged = currentAboutMe !== originalAboutMe;
-
-              const imageChanged = !!croppedBlob;
-
-              const hasChanges = nicknameChanged || aboutMeChanged || uniquenickChanged ||imageChanged;
-              formChanged = hasChanges;
-              toggleUnsavedNotification(hasChanges);
-            }
-
-            document.querySelector('.profile-pic-wrapper').addEventListener('click', () => {
-              profilePicInput.click();
-            });
-
-            profilePicInput.addEventListener('change', () => {
-              const file = profilePicInput.files[0];
-              if (!file) return;
-
-              const url = URL.createObjectURL(file);
-              cropperImage.src = url;
-              cropperModal.style.display = 'flex';
-
-              if (cropper) cropper.destroy();
-              cropper = new Cropper(cropperImage, {
-                aspectRatio: 1,
-                viewMode: 1,
-                background: false,
-                guides: false,
-                dragMode: 'move',
-                cropBoxMovable: false,
-                cropBoxResizable: false,
-                ready() {
-                  zoomSlider.value = 1;
-                  cropper.zoomTo(1);
+                const profilePicInput = document.getElementById('profilePicInput');
+                const profilePicImg = document.getElementById('profile-pic');
+                const cropperModal = document.getElementById('cropper-modal');
+                const cropperImage = document.getElementById('cropper-image');
+                const zoomSlider = document.getElementById('zoom-slider');
+                const form = document.getElementById('profile-form');
+                        
+                const unsavedNotification = document.getElementById('unsaved-notification');
+                const saveChangesBtn = document.getElementById('save-changes-btn');
+                        
+                let cropper = null;
+                let croppedBlob = null;
+                let formChanged = false;
+                        
+                const saveChangesBtnOriginal = form.querySelector('.btn-submit');
+                if (saveChangesBtnOriginal) saveChangesBtnOriginal.style.display = 'none';
+                        
+                function toggleUnsavedNotification(show) {
+                  unsavedNotification.style.display = show ? 'flex' : 'none';
                 }
-              });
-
-              zoomSlider.addEventListener('input', () => {
-                const zoom = parseFloat(zoomSlider.value);
-                cropper.zoomTo(zoom);
-              });
-            });
-
-            profilePicInput.addEventListener('input', () => {
-              checkFormChanges();
-            });
-
-            document.getElementById('crop-cancel').addEventListener('click', () => {
-              if (cropper) cropper.destroy();
-              cropperModal.style.display = 'none';
-            });
-
-            document.getElementById('crop-confirm').addEventListener('click', () => {
-              if (!cropper) return;
-              cropper.getCroppedCanvas({ width: 300, height: 300 }).toBlob(blob => {
-                croppedBlob = blob;
-                profilePicImg.src = URL.createObjectURL(blob);
-                cropperModal.style.display = 'none';
-                cropper.destroy();
-
-                checkFormChanges();
-              }, 'image/jpeg');
-            });
-
-            form.querySelectorAll('input[type="text"]').forEach(input => {
-              input.addEventListener('input', () => {
-                checkFormChanges();
-              });
-            });
-
-            document.getElementById('aboutme-input').addEventListener('input', () => {
-              checkFormChanges();
-            });
-
-            saveChangesBtn.addEventListener('click', () => {
-              form.requestSubmit();
-            });
-
-            form.addEventListener('submit', async (e) => {
-              e.preventDefault();
-
-              let newNickname = document.getElementById('nickname-input').value.trim();
-              let newUniquenick = document.getElementById('uniquenick-input').value.trim();
-              let newAboutMe = document.getElementById('aboutme-input').value.trim();
-
-              if (!newNickname) newNickname = user.nickname || user.name || '';
-
-              const formData = new FormData();
-              if (newNickname !== (user.nickname || user.name || '')) {
-                formData.append('nickname', newNickname);
-              }
-              if (newUniquenick !== (user.uniquenick || '')) {
-                formData.append('uniquenick', newUniquenick);
-              }
-              if (newAboutMe !== (user.about_me || '')) {
-                formData.append('about_me', newAboutMe);
-              }
-              if (croppedBlob) {
-                formData.append('profilePicture', croppedBlob, 'profile.jpg');
-              }
-
-              if (!formData.has('nickname') && !formData.has('about_me') && !formData.has('uniquenick') && !formData.has('profilePicture')) {
-                return;
-              }
-
-              try {
-                const updateRes = await fetch('/api/profile', {
-                  method: 'PUT',
-                  credentials: 'include',
-                  body: formData
+                
+                function normalizeText(text) {
+                  return text.replace(/\s+/g, ' ').trim();
+                }
+                
+                function checkFormChanges() {
+                  const currentNickname = document.getElementById('nickname-input').value.trim();
+                  const currentUniquenick = document.getElementById('uniquenick-input').value.trim();
+                  const currentAboutMe = normalizeText(document.getElementById('aboutme-input').value);
+                  const currentVisibility = document.getElementById('profile-visibility')?.value;
+                  const currentShowBirthdate = document.getElementById('show-birthdate-checkbox')?.checked;
+                
+                  const originalNickname = (user.nickname || user.name || '').trim();
+                  const originalUniquenick = (user.uniquenick || '').trim();
+                  const originalAboutMe = normalizeText(user.about_me || '');
+                  const originalVisibility = user.privacy?.visibility || 'friends';
+                  const originalShowBirthdate = !!user.privacy?.show_birthdate;
+                
+                  const nicknameChanged = currentNickname !== originalNickname;
+                  const uniquenickChanged = currentUniquenick !== originalUniquenick;
+                  const aboutMeChanged = currentAboutMe !== originalAboutMe;
+                  const privacyChanged = currentVisibility !== originalVisibility;
+                  const birthdateVisibilityChanged = currentShowBirthdate !== originalShowBirthdate;
+                  const imageChanged = !!croppedBlob;
+                
+                  const hasChanges =
+                    nicknameChanged ||
+                    uniquenickChanged ||
+                    aboutMeChanged ||
+                    imageChanged ||
+                    privacyChanged ||
+                    birthdateVisibilityChanged;
+                
+                  formChanged = hasChanges;
+                  toggleUnsavedNotification(hasChanges);
+                }
+                
+                document.querySelector('.profile-pic-wrapper').addEventListener('click', () => {
+                  profilePicInput.click();
                 });
-
-                const updateData = await updateRes.json();
-                if (updateRes.ok) {
-                  showToast('Profile successfully updated.', 'success');
-
-                  formChanged = false;
-                  toggleUnsavedNotification(false);
-                  croppedBlob = null;
-
-                  user.nickname = newNickname;
-                  user.uniquenick = newUniquenick;
-                  user.about_me = newAboutMe;
-
-                } else {
-                  showToast('Error: ' + (updateData.message || "Can't update profile."), 'error');
+                
+                profilePicInput.addEventListener('change', () => {
+                  const file = profilePicInput.files[0];
+                  if (!file) return;
+                
+                  const url = URL.createObjectURL(file);
+                  cropperImage.src = url;
+                  cropperModal.style.display = 'flex';
+                
+                  if (cropper) cropper.destroy();
+                  cropper = new Cropper(cropperImage, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    background: false,
+                    guides: false,
+                    dragMode: 'move',
+                    cropBoxMovable: false,
+                    cropBoxResizable: false,
+                    ready() {
+                      zoomSlider.value = 1;
+                      cropper.zoomTo(1);
+                    }
+                  });
+                
+                  zoomSlider.addEventListener('input', () => {
+                    const zoom = parseFloat(zoomSlider.value);
+                    cropper.zoomTo(zoom);
+                  });
+                });
+                
+                profilePicInput.addEventListener('input', () => {
+                  checkFormChanges();
+                });
+                
+                document.getElementById('crop-cancel').addEventListener('click', () => {
+                  if (cropper) cropper.destroy();
+                  cropperModal.style.display = 'none';
+                });
+                
+                document.getElementById('crop-confirm').addEventListener('click', () => {
+                  if (!cropper) return;
+                  cropper.getCroppedCanvas({ width: 300, height: 300 }).toBlob(blob => {
+                    croppedBlob = blob;
+                    profilePicImg.src = URL.createObjectURL(blob);
+                    cropperModal.style.display = 'none';
+                    cropper.destroy();
+                    checkFormChanges();
+                  }, 'image/jpeg');
+                });
+                
+                form.querySelectorAll('input[type="text"]').forEach(input => {
+                  input.addEventListener('input', () => {
+                    checkFormChanges();
+                  });
+                });
+                
+                document.getElementById('aboutme-input').addEventListener('input', () => {
+                  checkFormChanges();
+                });
+                
+                if (document.getElementById('profile-visibility')) {
+                  document.getElementById('profile-visibility').addEventListener('change', () => {
+                    checkFormChanges();
+                  });
                 }
-              } catch (err) {
-                showToast('Network error while saving changes.', 'error');
-              }
-            });
-          break;
+                if (document.getElementById('show-birthdate-checkbox')) {
+                  document.getElementById('show-birthdate-checkbox').addEventListener('change', () => {
+                    checkFormChanges();
+                  });
+                }
+                
+                saveChangesBtn.addEventListener('click', () => {
+                  form.requestSubmit();
+                });
+                
+                form.addEventListener('submit', async (e) => {
+                  e.preventDefault();
+                
+                  let newNickname = document.getElementById('nickname-input').value.trim();
+                  let newUniquenick = document.getElementById('uniquenick-input').value.trim();
+                  let newAboutMe = document.getElementById('aboutme-input').value.trim();
+                  const newVisibility = document.getElementById('profile-visibility')?.value;
+                  const newShowBirthdate = document.getElementById('show-birthdate-checkbox')?.checked;
+                
+                  if (!newNickname) newNickname = user.nickname || user.name || '';
+                
+                  const formData = new FormData();
+                  if (newNickname !== (user.nickname || user.name || '')) {
+                    formData.append('nickname', newNickname);
+                  }
+                  if (newUniquenick !== (user.uniquenick || '')) {
+                    formData.append('uniquenick', newUniquenick);
+                  }
+                  if (newAboutMe !== (user.about_me || '')) {
+                    formData.append('about_me', newAboutMe);
+                  }
+                  if (croppedBlob) {
+                    formData.append('profilePicture', croppedBlob, 'profile.jpg');
+                  }
+                
+                  if (newVisibility && newVisibility !== (user.privacy?.visibility || 'friends')) {
+                    formData.append('privacy_visibility', newVisibility);
+                  }
+                  if (typeof newShowBirthdate === 'boolean' && newShowBirthdate !== !!user.privacy?.show_birthdate) {
+                    formData.append('privacy_show_birthdate', newShowBirthdate.toString());
+                  }
+                
+                  if (
+                    !formData.has('nickname') &&
+                    !formData.has('about_me') &&
+                    !formData.has('uniquenick') &&
+                    !formData.has('profilePicture') &&
+                    !formData.has('privacy_visibility') &&
+                    !formData.has('privacy_show_birthdate')
+                  ) {
+                    return;
+                  }
+                
+                  try {
+                    const updateRes = await fetch('/api/profile', {
+                      method: 'PUT',
+                      credentials: 'include',
+                      body: formData
+                    });
+                  
+                    const updateData = await updateRes.json();
+                    if (updateRes.ok) {
+                      showToast('Profile successfully updated.', 'success');
+                    
+                      formChanged = false;
+                      toggleUnsavedNotification(false);
+                      croppedBlob = null;
+                    
+                      user.nickname = newNickname;
+                      user.uniquenick = newUniquenick;
+                      user.about_me = newAboutMe;
+                      user.privacy = {
+                        ...user.privacy,
+                        visibility: newVisibility,
+                        show_birthdate: newShowBirthdate
+                      };
+                    
+                    } else {
+                      showToast('Error: ' + (updateData.message || "Can't update profile."), 'error');
+                    }
+                  } catch (err) {
+                    showToast('Network error while saving changes.', 'error');
+                  }
+                });
+                break;
 
         case 'settings':
           content.innerHTML = `
@@ -674,11 +717,67 @@ document.addEventListener('DOMContentLoaded', async () => {
           <h2><i class="fas fa-globe"></i> Language</h2><p>Imposta la lingua e la regione.</p>`;
           break;
 
-        case 'settings-privacy':
-          content.innerHTML = `
-          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-          <h2><i class="fas fa-lock"></i> Privacy</h2><p>Controlla le tue impostazioni sulla privacy.</p>`;
-          break;
+         case 'settings-privacy':
+            content.innerHTML = `
+              <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <h2><i class="fas fa-lock"></i> Privacy</h2>
+              <form id="privacy-form" class="privacy-form">
+                <div class="form-group">
+                  <label for="profile-visibility">Who can view your profile?</label>
+                  <select id="profile-visibility">
+                    <option value="friends">Only Friends</option>
+                    <option value="everyone">Everyone</option>
+                    <option value="private">No one (private)</option>
+                  </select>
+                </div>
+              </form>
+
+              <div id="privacy-unsaved-notification" class="unsaved-notification" style="display:none;">
+                <span>You have unsaved changes.</span>
+                <button id="privacy-save-changes-btn" class="btn-submit">Save</button>
+              </div>
+            `;
+
+            const privacySelect = document.getElementById('profile-visibility');
+            const privacyUnsavedNotification = document.getElementById('privacy-unsaved-notification');
+            const privacySaveBtn = document.getElementById('privacy-save-changes-btn');
+
+            let originalPrivacy = user?.privacy || 'friends'; // default fallback
+            privacySelect.value = originalPrivacy;
+
+            function togglePrivacyUnsaved(show) {
+              privacyUnsavedNotification.style.display = show ? 'flex' : 'none';
+            }
+          
+            privacySelect.addEventListener('change', () => {
+              togglePrivacyUnsaved(privacySelect.value !== originalPrivacy);
+            });
+          
+            privacySaveBtn.addEventListener('click', async () => {
+              const selected = privacySelect.value;
+              try {
+                const res = await fetch('/api/privacy', {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  credentials: 'include',
+                  body: JSON.stringify({ visibility: selected })
+                });
+              
+                const data = await res.json();
+                if (res.ok) {
+                  showToast('Privacy settings updated.', 'success');
+                  originalPrivacy = selected;
+                  togglePrivacyUnsaved(false);
+                  user.privacy = selected;
+                } else {
+                  showToast(data.message || 'Error saving privacy settings.', 'error');
+                }
+              } catch (err) {
+                console.error('Error saving privacy settings:', err);
+                showToast('Network error while saving settings.', 'error');
+              }
+            });
+            break;
 
         case 'settings-info':
           content.innerHTML = `
