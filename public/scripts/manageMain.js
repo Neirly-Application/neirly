@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               const user = await fetchUserProfile();
               const profileImgUrl = user?.profilePictureUrl?.trim()
                 ? user.profilePictureUrl
-                : '/media/user.png';
+                : '../media/user.png';
               const nickname = user?.nickname || "You're here!";
 
               setTimeout(() => {
@@ -389,14 +389,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             <form id="profile-form" class="profile-form" enctype="multipart/form-data" autocomplete="off">
               <div class="form-group">
                 <div class="profile-pic-wrapper" style="position: relative; display: inline-block;">
-                  <img id="profile-pic" src="${user.profilePictureUrl || '/media/user.png'}" alt="Profile Picture" class="profile-img" />
+                  <img id="profile-pic" src="${user.profilePictureUrl || '../media/user.png'}" alt="Profile Picture" class="profile-img" />
                   <div class="edit-icon" style="position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.6); border-radius: 50%; padding: 5px;">
                     <i class="fas fa-pen" style="color: white;"></i>
               <h2><i class="fas fa-user"></i> Profile</h2>
                 <form id="profile-form" class="profile-form" enctype="multipart/form-data" autocomplete="off">
                   <div class="form-group">
                     <div class="profile-pic-wrapper" style="position: relative; display: inline-block;">
-                      <img id="profile-pic" src="${user.profilePictureUrl || '/media/user.png'}" alt="Profile Picture" class="profile-img" />
+                      <img id="profile-pic" src="${user.profilePictureUrl || '../media/user.png'}" alt="Profile Picture" class="profile-img" />
                       <div class="edit-icon" style="position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.6); border-radius: 50%; padding: 5px;">
                         <i class="fas fa-pen" style="color: white;"></i>
                       </div>
