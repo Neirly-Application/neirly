@@ -10,7 +10,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--dark-text, #151515);
+    background-color: var(--dark-text, var(--color-151515));
     color: var(--accent);
     display: flex;
     justify-content: center;

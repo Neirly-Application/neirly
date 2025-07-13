@@ -29,8 +29,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  color: white;
+  background-color: var(--color-rgba-000-04);
+  color: var(--color-fff);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,8 +54,8 @@ input[type="file"] {
 }
 
 .btn-submit {
-  background-color: #007bff;
-  color: white;
+  background-color: var(--color-007bff);
+  color: var(--color-fff);
   border: none;
   padding: 10px 16px;
   border-radius: 6px;
@@ -63,12 +63,12 @@ input[type="file"] {
 }
 
 .btn-submit:hover {
-  background-color: #0056b3;
+  background-color: var(--color-0056b3);
 }
 
 .btn-delete-account {
-  background-color: #e74c3c;
-  color: white;
+  background-color: var(--color-e74c3c);
+  color: var(--color-fff);
   border: none;
   padding: 10px 20px;
   border-radius: 6px;
@@ -76,7 +76,7 @@ input[type="file"] {
 }
 
 .btn-delete-account:hover {
-  background-color: #c0392b;
+  background-color: var(--color-c0392b);
 }
 
 .input-search-email {
@@ -87,7 +87,7 @@ input[type="file"] {
 }
 
 .user-card {
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--inputs-border-color);
   padding: 10px;
   margin-bottom: 10px;
 }
@@ -106,28 +106,28 @@ input[type="file"] {
 }
 
 .add-role {
-  background-color: #2ecc71;
-  color: white;
+  background-color: var(--color-2ecc71);
+  color: var(--color-fff);
 }
 
 .remove-role {
   background-color: #3498db;
-  color: white;
+  color: var(--color-fff);
 }
 
 .force-logout {
   background-color: #95a5a6;
-  color: white;
+  color: var(--color-fff);
 }
 
 .ban-user {
-  background-color: #e67e22;
-  color: white;
+  background-color: var(--color-e67e22);
+  color: var(--color-fff);
 }
 
 .delete-user {
-  background-color: #e74c3c;
-  color: white;
+  background-color: var(--color-e74c3c);
+  color: var(--color-fff);
 }
 
 .friend-form {
@@ -150,16 +150,16 @@ input[type="file"] {
   background-color: #3498db;
   border: none;
   border-radius: 4px;
-  color: white;
+  color: var(--color-fff);
   transition: background-color 0.3s ease;
 }
 
 .friend-btn:hover {
-  background-color: #2980b9;
+  background-color: var(--color-2980b9);
 }
 
 .friend-request-card {
-  border: 1px solid #eee;
+  border: 1px solid var(--color-eee);
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 6px;
@@ -175,8 +175,8 @@ input[type="file"] {
 }
 
 .friend-request-card .accept-btn {
-  background-color: #2ecc71;
-  color: white;
+  background-color: var(--color-2ecc71);
+  color: var(--color-fff);
 }
 
 .friend-request-card .accept-btn:hover {
@@ -184,8 +184,8 @@ input[type="file"] {
 }
 
 .friend-request-card .reject-btn {
-  background-color: #e74c3c;
-  color: white;
+  background-color: var(--color-e74c3c);
+  color: var(--color-fff);
   margin-right: 0;
 }
 
@@ -194,7 +194,7 @@ input[type="file"] {
 }
 
 .friend-item {
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--inputs-border-color);
   padding: 10px;
 }
 

@@ -20,4 +20,34 @@
     --button-outline: #1A2A6C;
 
     --inputs-border-color: #ccc;
+
+    --color-151515: #151515;
+    --color-rgba-000-012: rgba(0, 0, 0, 0.12);
+    --color-rgba-000-01: rgba(0, 0, 0, 0.1);
+    --color-db4437: #DB4437;
+    --color-5865f2: #5865F2;
+    --color-333: #333;
+    --color-rgba-102-217-239-03: rgba(102, 217, 239, 0.3);
+    --color-rgba-000-06: rgba(0, 0, 0, 0.6);
+    --color-fff: #fff;
+    --color-rgba-000-03: rgba(0, 0, 0, 0.3);
+    --color-28a745: #28a745;
+    --color-dc3545: #dc3545;
+    --color-007bff: #007bff;
+    --color-e0e0e0: #e0e0e0;
+    --color-bdeaff: #bdeaff;
+    --color-666: #666;
+    --color-444: #444;
+    --color-rgba-000-02: rgba(0, 0, 0, 0.2);
+    --color-0056b3: #0056b3;
+    --color-c0392b: #c0392b;
+    --color-2ecc71: #2ecc71;
+    --color-95a5a6: #95a5a6;
+    --color-e67e22: #e67e22;
+    --color-3498db: #3498db;
+    --color-2980b9: #2980b9;
+    --color-eee: #eee;
+    --color-27ae60: #27ae60;
+    --color-rgba-26-42-108-02: rgba(26, 42, 108, 0.2);
+    --color-rgba-000-025: rgba(0, 0, 0, 0.25);
 }
