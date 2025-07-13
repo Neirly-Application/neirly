@@ -63,7 +63,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       switch (section) {
         case 'notifications':
           content.innerHTML = `
+            <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
               <h2><i class="fas fa-bell"></i> Notifications</h2>
+            </div>
               <div id="notificationList">Loading notifications...
               </div>
             `;
@@ -184,11 +187,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         case 'map':
           content.innerHTML = `
-          <h2><i class="fas fa-map"></i> Map</h2>
+            <h2><i class="fas fa-map"></i> Map</h2>
             <div class="card map-card">
-              <button class="map-button">Go to Map</button>
+              <a href="#map-screen" class="btn map-button"><i class="fas fa-location-arrow"></i> Go to Map</a>
             </div>
-            
+
             <div class="fancy-line"></div>
 
             <div class="card profile-card">
@@ -207,6 +210,143 @@ document.addEventListener('DOMContentLoaded', async () => {
           `;
           break;
 
+        case 'map-screen':
+          content.innerHTML = `
+            <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link">
+                <i class="fas fa-arrow-left"></i>
+              </a>
+              <h2><i class="fas fa-map-marker-alt"></i> Map</h2>
+            </div>
+
+            <div id="map" class="map-container">
+              <div id="map-loader" class="map-loader">Loading map...</div>
+            </div>
+            
+            <button id="btn-center-map"><i class="fas fa-crosshairs"></i> Center Map</button>
+          `;
+
+          const loader = document.getElementById('map-loader');
+          const mapContainer = document.getElementById('map');
+          loader.style.display = 'flex';
+          mapContainer.style.display = 'block';
+
+          let map, userMarker, userCoords;
+
+          async function fetchUserProfile() {
+            try {
+              const res = await fetch('/api/profile', { credentials: 'include' });
+              if (!res.ok) throw new Error('Failed to fetch user profile');
+              return await res.json();
+            } catch (err) {
+              console.error('[User Profile Fetch Error]', err);
+              return null;
+            }
+          }
+
+          function createProfileIcon(url) {
+            return L.icon({
+              iconUrl: url,
+              iconSize: [40, 40],
+              iconAnchor: [20, 40],
+              popupAnchor: [0, -50],
+              className: 'user-map-icon',
+              shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+              shadowSize: [41, 41],
+              shadowAnchor: [12, 41],
+            });
+          }
+
+          function initializeMap(latitude, longitude, profileImgUrl, nickname) {
+            loader.style.display = 'none';
+
+            map = L.map('map', {
+              center: [latitude, longitude],
+              zoom: 14,
+              minZoom: 5,
+              maxZoom: 18,
+              zoomControl: false
+            });
+
+            const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            const esriLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/' +
+              'World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+              attribution: 'Tiles &copy; Esri'
+            });
+
+            const baseLayers = {
+              "Street Map": osmLayer,
+              "Satellite": esriLayer
+            };
+            L.control.layers(baseLayers).addTo(map);
+            L.control.scale({ imperial: false }).addTo(map);
+            L.control.zoom({ position: 'topright' }).addTo(map);
+
+            const profileIcon = createProfileIcon(profileImgUrl);
+
+            userMarker = L.marker([latitude, longitude], { icon: profileIcon })
+              .addTo(map)
+              .bindPopup(`
+                <div style="text-align:center;">
+                  <img src="${profileImgUrl}" alt="Profile" style="width: 40px; height:40px; border-radius:50%; border:2px solid #333; box-shadow: 0 0 5px rgba(0,0,0,0.3); margin-bottom:5px;">
+                  <h4>${nickname}</h4>
+                  <a href="#wrong-pos">Wrong Position?</a>
+                </div>
+              `, {className: 'pos-popup'})
+              .openPopup();
+
+            userCoords = [latitude, longitude];
+          }
+
+          function updateUserLocation(position, profileImgUrl, nickname) {
+            const { latitude, longitude } = position.coords;
+            userCoords = [latitude, longitude];
+            if (userMarker) {
+              userMarker.setLatLng(userCoords);
+              userMarker.setPopupContent(`
+                <div style="text-align:center;">
+                  <img src="${profileImgUrl}" alt="Profile" style="width: 40px; height: 40px; border-radius:50%; border:2px solid #333; box-shadow: 0 0 5px rgba(0,0,0,0.3); margin-bottom:5px;">
+                  <h4>${nickname}</h4>
+                  <a href="#wrong-pos">Wrong Position?</a>
+                </div>
+              `);
+              userMarker.openPopup();
+            } else {
+              userMarker = L.marker(userCoords, { icon: createProfileIcon(profileImgUrl) }).addTo(map);
+            }
+            map.setView(userCoords, 14);
+          }
+
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(async position => {
+              const user = await fetchUserProfile();
+              const profileImgUrl = user?.profilePictureUrl?.trim()
+                ? user.profilePictureUrl
+                : '/media/user.png';
+              const nickname = user?.nickname || "You're here!";
+
+              setTimeout(() => {
+                initializeMap(position.coords.latitude, position.coords.longitude, profileImgUrl, nickname);
+              }, 1000);
+            }, () => {
+              loader.innerHTML = "Permission denied or location unavailable.";
+            });
+          } else {
+            loader.innerHTML = "Geolocation not supported.";
+          }
+
+          document.addEventListener('click', e => {
+            if (e.target.id === 'btn-center-map') {
+              if (map && userCoords) {
+                map.setView(userCoords, 14);
+              }
+            }
+          });
+          break;
+
         case 'messages':
           content.innerHTML = '<h2><i class="fas fa-comment-alt"></i> Messages</h2><p>Qui puoi vedere i messaggi.</p>';
           break;
@@ -216,7 +356,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           break;
 
         case 'profile':
-          content.innerHTML = '<h2><i class="fas fa-user"></i> Account & Profile</h2><p>Loading datas...</p>';
+          content.innerHTML = '<h2><i class="fas fa-user"></i> Profile</h2><p>Loading datas...</p>';
 
           function maskEmail(email) {
             if (!email) return '';
@@ -244,6 +384,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           const maskedEmail = maskEmail(user.email || '');
 
           content.innerHTML = `
+
             <h2><i class="fas fa-user"></i> Account & Profile</h2>
             <form id="profile-form" class="profile-form" enctype="multipart/form-data" autocomplete="off">
               <div class="form-group">
@@ -251,9 +392,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                   <img id="profile-pic" src="${user.profilePictureUrl || '/media/user.png'}" alt="Profile Picture" class="profile-img" />
                   <div class="edit-icon" style="position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.6); border-radius: 50%; padding: 5px;">
                     <i class="fas fa-pen" style="color: white;"></i>
-                  </div>
-                </div>
-                <input type="file" id="profilePicInput" accept="image/*" style="display:none;" />
+              <h2><i class="fas fa-user"></i> Profile</h2>
+                <form id="profile-form" class="profile-form" enctype="multipart/form-data" autocomplete="off">
+                  <div class="form-group">
+                    <div class="profile-pic-wrapper" style="position: relative; display: inline-block;">
+                      <img id="profile-pic" src="${user.profilePictureUrl || '/media/user.png'}" alt="Profile Picture" class="profile-img" />
+                      <div class="edit-icon" style="position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.6); border-radius: 50%; padding: 5px;">
+                        <i class="fas fa-pen" style="color: white;"></i>
+                      </div>
+                    </div>
+                    <input type="file" id="profilePicInput" accept="image/*" style="display:none;" />
               </div>
 
               <div class="form-group">
@@ -489,7 +637,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         case 'settings':
           content.innerHTML = `
+          <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
               <h2><i class="fas fa-cog"></i> Settings</h2>
+            </div>
               <div class="settings-container">
                 <ul class="settings-menu">
                   <li><a href="#settings-account"><i class="fas fa-user-shield"></i> Account & Security</a></li>
@@ -508,8 +659,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         case 'settings-account':
           content.innerHTML = `
+            <div class="case-header">
               <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
               <h2><i class="fas fa-user-shield"></i> Account & Security</h2>
+            </div>
               <button class="btn">Change Password</button>
               <button class="btn">Enable 2FA</button>
             `;
@@ -517,12 +670,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       case 'settings-devices':
         content.innerHTML = `
-          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-          <h2><i class="fas fa-laptop"></i> Connected Devices</h2>
-          <p>Here are the devices currently connected to your account.</p>
-          <div class="device-list" id="device-list">
-            <p>Loading devices...</p>
-          </div>
+            <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <h2><i class="fas fa-laptop"></i> Connected Devices</h2>
+            </div>
+              <p>Here are the devices currently connected to your account.</p>
+              <div class="device-list" id="device-list">
+                <p>Loading devices...</p>
+              </div>
         `;
 
         const normalize = str => (str || '').replace(/\s+/g, '').toLowerCase();
@@ -594,8 +749,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                   <div class="device-info">
                   <strong>${device.name} ${tag1}</strong>
                   <div class="fancy-line"></div>
-                  <p>Location: ${device.location}</p>
-                  <p>Last Active: ${formatLastActive(device.lastActive)} ${tag2}</p>
+                    <div class="device-info-text">
+                      <p>Location: ${device.location}</p>
+                      <p>Last Active: ${formatLastActive(device.lastActive)} ${tag2}</p>
+                    </div>
                   </div>
                   <div class="device-actions">
                     <button class="btn-disconnect">Disconnect</button>
@@ -669,34 +826,47 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         case 'settings-activity':
           content.innerHTML = `
+            <div class="case-header">
               <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
               <h2><i class="fas fa-chart-line"></i> Activity</h2>
+            </div>
               <p>Your account activity.</p>
             `;
           break;
 
         case 'settings-notifications':
           content.innerHTML = `
-          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-          <h2><i class="fas fa-bell"></i> Notifications</h2><p>Gestisci le tue preferenze di notifica.</p>`;
+            <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <h2><i class="fas fa-bell"></i> Notifications</h2>
+            </div>
+              <p>Gestisci le tue preferenze di notifica.</p>`;
           break;
 
         case 'settings-theme':
           content.innerHTML = `
-          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-          <h2><i class="fas fa-palette"></i> App Theme</h2><p>Scegli il tema della tua app.</p>`;
+            <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <h2><i class="fas fa-palette"></i> App Theme</h2>
+            </div>
+              <p>Scegli il tema della tua app.</p>`;
           break;
 
         case 'settings-region':
           content.innerHTML = `
-          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-          <h2><i class="fas fa-globe"></i> Language</h2><p>Imposta la lingua e la regione.</p>`;
+            <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <h2><i class="fas fa-globe"></i> Language</h2>
+            </div>
+              <p>Imposta la lingua e la regione.</p>`;
           break;
 
          case 'settings-privacy':
             content.innerHTML = `
+            <div class="case-header">
               <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
               <h2><i class="fas fa-lock"></i> Privacy</h2>
+            </div>
               <form id="privacy-form" class="privacy-form">
                 <div class="form-group">
                   <label for="profile-visibility">Who can view your profile?</label>
@@ -757,15 +927,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         case 'settings-info':
           content.innerHTML = `
-          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-          <h2><i class="fas fa-info-circle"></i> App Informations</h2><p>Informazioni sulla versione dell'app.</p>`;
+            <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <h2><i class="fas fa-info-circle"></i> App Informations</h2>
+            </div>
+              <p>Informazioni sulla versione dell'app.</p>`;
           break;
 
         case 'settings-danger':
           content.innerHTML = `
-          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-            <h2><i class="fas fa-exclamation-triangle"></i> Dangerous Actions</h2>
-            <button id="delete-account-btn" class="btn-delete-account"><i class="fas fa-trash"></i> Delete Account</button>
+            <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <h2><i class="fas fa-exclamation-triangle"></i> Dangerous Actions</h2>
+            </div>
+              <button id="delete-account-btn" class="btn-delete-account"><i class="fas fa-trash"></i> Delete Account</button>
           `;
 
           const deleteBtn = document.getElementById('delete-account-btn');

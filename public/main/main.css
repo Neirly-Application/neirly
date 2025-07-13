@@ -146,11 +146,12 @@ body {
 }
 
 .content {
+  position: relative;
   flex-grow: 1;
   padding: 35px 50px;
   background: var(--light-bg);
   transition: padding 0.3s ease, background-color 0.3s ease;
-  min-height: 100vh;
+  min-height: auto;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -621,6 +622,26 @@ form button:focus-visible {
   cursor: pointer;
 }
 
+.fancy-line {
+  display: block;
+  height: 2px;
+  background: linear-gradient(to right, var(--secondary), var(--primary), var(--secondary));
+  border: none;
+  margin: 30px 0;
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .fancy-line {
+    margin: 25px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .fancy-line {
+    margin: 20px 0;
+  }
+}
 
 /** DEVICES SETTING **/
 .device-card {
@@ -646,6 +667,10 @@ form button:focus-visible {
 
 .device-info strong {
   margin-bottom: 10px;
+}
+
+.device-info-text {
+  margin-top: 10px;
 }
 
 .device-actions {
@@ -679,6 +704,12 @@ form button:focus-visible {
 
   .btn-disconnect {
     width: 100%;
+  }
+}
+
+@media (min-width: 480px) {
+  .device-info .fancy-line {
+    display: none;
   }
 }
 
@@ -786,24 +817,6 @@ form button:focus-visible {
   margin-bottom: 0;
 }
 
-.back-arrow-link {
-  font-size: 1.5rem;
-  color: var(--dark-text);
-  text-decoration: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  transition: background-color 0.2s ease;
-}
-
-.back-arrow-link:hover {
-  background-color: #e0e0e0;
-}
-
 body.subsection-active .mobile-topbar,
 body.subsection-active .bottom-navbar,
 body.subsection-active .sidebar {
@@ -814,8 +827,6 @@ body.subsection-active {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
 }
-
-@import url(./variables.css);
 
 .card {
     background: white;
@@ -954,22 +965,30 @@ body.subsection-active {
   }
 }
 
-.fancy-line {
-  height: 2px;
-  background: linear-gradient(to right, var(--secondary), var(--primary), var(--secondary));
-  border: none;
-  margin: 30px 0;
-  opacity: 0.5;
+.case-header {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
 }
 
-@media (max-width: 768px) {
-  .fancy-line {
-    margin: 25px 0;
-  }
+.case-header h2 {
+  margin: 0;
 }
 
-@media (max-width: 480px) {
-  .fancy-line {
-    margin: 20px 0;
-  }
+.back-arrow-link {
+  font-size: 1.5rem;
+  color: var(--dark-text);
+  text-decoration: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.back-arrow-link:hover {
+  background-color: #e0e0e0;
 }

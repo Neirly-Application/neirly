@@ -14,7 +14,7 @@
   background: var(--accent);
   height: 320px;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px var(--color-rgba-000-01);
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
@@ -26,7 +26,7 @@
 .card:hover,
 .card:focus-within {
   transform: translateY(-10px);
-  box-shadow: 0 10px 25px rgba(26, 42, 108, 0.2);
+  box-shadow: 0 10px 25px var(--color-rgba-26-42-108-02);
   outline: none;
 }
 
@@ -66,7 +66,7 @@
   align-self: center;
   margin: 20px 0;
   display: block;
-  filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(5px 5px 5px var(--color-rgba-000-03));
   transition: width 0.2s ease, filter 0.2s ease;
   will-change: width, filter;
 }
@@ -74,7 +74,7 @@
 .card:hover img,
 .card:focus-within img {
   width: 60px;
-  filter: drop-shadow(3px 3px 4px rgba(0, 0, 0, 0.25));
+  filter: drop-shadow(3px 3px 4px var(--color-rgba-000-025));
 }
 
 .card-details {
