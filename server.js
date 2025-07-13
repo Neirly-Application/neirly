@@ -10,6 +10,7 @@ const profileRouter = require('./src/routes/profile');
 const { authMiddleware } = require('./src/authMiddleware/authMiddleware');
 const notificationsRouter = require('./src/routes/notifications');
 const friendsRouter = require('./src/routes/friends');
+const privacyRoutes = require('./src/routes/privacy');
 
 require('./src/config/passport');
 require('./src/discordBot');
@@ -31,6 +32,7 @@ app.use('/api/auth', require('./src/routes/forceLogout'));
 app.use('/api/auth', require('./src/routes/banUser'));
 app.use('/api/notifications', notificationsRouter);
 app.use('/api/friends', friendsRouter);
+app.use('/api/privacy', privacyRoutes);
 app.use('/user_pfps', express.static(path.join(__dirname, 'user_pfps')));
 app.use('/api/devices', require('./src/routes/devices'));
 

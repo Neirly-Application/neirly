@@ -709,6 +709,32 @@ form button:focus-visible {
 }
 /** DEVICES SETTING **/
 
+/** PRIVACY SETTING **/
+.privacy-form select {
+  padding: 8px 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: border 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+}
+
+.privacy-form select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.privacy-form label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/** PRIVACY SETTING **/
+
 .btn-delete-account {
   background: #d9534f;
 }
