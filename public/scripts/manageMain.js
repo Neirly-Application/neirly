@@ -63,7 +63,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       switch (section) {
         case 'notifications':
           content.innerHTML = `
+            <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
               <h2><i class="fas fa-bell"></i> Notifications</h2>
+            </div>
               <div id="notificationList">Loading notifications...
               </div>
             `;
@@ -353,7 +356,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           break;
 
         case 'profile':
-          content.innerHTML = '<h2><i class="fas fa-user"></i> Account & Profile</h2><p>Loading datas...</p>';
+          content.innerHTML = '<h2><i class="fas fa-user"></i> Profile</h2><p>Loading datas...</p>';
 
           function maskEmail(email) {
             if (!email) return '';
@@ -377,7 +380,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           console.log("ABOUT ME:", user.about_me);
           const maskedEmail = maskEmail(user.email || '');
           content.innerHTML = `
-              <h2><i class="fas fa-user"></i> Account & Profile</h2>
+              <h2><i class="fas fa-user"></i> Profile</h2>
                 <form id="profile-form" class="profile-form" enctype="multipart/form-data" autocomplete="off">
                   <div class="form-group">
                     <div class="profile-pic-wrapper" style="position: relative; display: inline-block;">
@@ -650,7 +653,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         case 'settings':
           content.innerHTML = `
+          <div class="case-header">
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
               <h2><i class="fas fa-cog"></i> Settings</h2>
+            </div>
               <div class="settings-container">
                 <ul class="settings-menu">
                   <li><a href="#settings-account"><i class="fas fa-user-shield"></i> Account & Security</a></li>
