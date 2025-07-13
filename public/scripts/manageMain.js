@@ -262,10 +262,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             map = L.map('map', {
               center: [latitude, longitude],
-              zoom: 14,
-              minZoom: 5,
+              zoom: 18,
+              minZoom: 9,
               maxZoom: 18,
-              zoomControl: false
+              zoomControl: false,
             });
 
             const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           document.addEventListener('click', e => {
             if (e.target.id === 'btn-center-map') {
               if (map && userCoords) {
-                map.setView(userCoords, 14);
+                map.setView(userCoords, 18);
               }
             }
           });
