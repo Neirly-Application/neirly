@@ -183,7 +183,26 @@ document.addEventListener('DOMContentLoaded', async () => {
           break;
 
         case 'map':
-          content.innerHTML = '<h2><i class="fas fa-map"></i> Map</h2><p>Contenuto della mappa...</p>';
+          content.innerHTML = `
+          <h2><i class="fas fa-map"></i> Map</h2>
+            <div class="card map-card">
+              <button class="map-button">Go to Map</button>
+            </div>
+
+            <div class="card profile-card">
+              <img src="../media/user.png" alt="User Profile">
+              <div class="profile-info">
+                <h3>Username</h3>
+                <p>@uniquenick</p>
+                <p>"About me"</p>
+                <span class="status">Online</span>
+              </div>
+              <div class="profile-actions">
+                <button class="view-btn">View Profile</button>
+                <button class="request-btn">Add as Friend</button>
+              </div>
+            </div>
+          `;
           break;
 
         case 'messages':
