@@ -464,6 +464,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                   <li><a href="#settings-account"><i class="fas fa-user-shield"></i> Account & Security</a></li>
                   <li><a href="#settings-devices"><i class="fas fa-laptop"></i> Devices</a></li>
                   <li><a href="#settings-privacy"><i class="fas fa-lock"></i> Privacy</a></li>
+                  <li><a href="#settings-activity"><i class="fas fa-chart-line"></i> Activity</a></li>
                   <li><a href="#settings-notifications"><i class="fas fa-bell"></i> Notifications</a></li>
                   <li><a href="#settings-theme"><i class="fas fa-palette"></i> App Theme</a></li>
                   <li><a href="#settings-region"><i class="fas fa-globe"></i> Language</a></li>
@@ -477,7 +478,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         case 'settings-account':
           content.innerHTML = `
               <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-              <h2>👤 Security & Account</h2>
+              <h2><i class="fas fa-user-shield"></i> Account & Security</h2>
               <button class="btn">Change Password</button>
               <button class="btn">Enable 2FA</button>
             `;
@@ -627,8 +628,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
           }
         });
-      
         break;
+
+        case 'settings-activity':
+          content.innerHTML = `
+              <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <h2><i class="fas fa-chart-line"></i> Activity</h2>
+              <p>Your account activity.</p>
+            `;
+          break;
 
         case 'settings-notifications':
           content.innerHTML = `
