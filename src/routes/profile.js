@@ -32,6 +32,7 @@ router.get('/', async (req, res) => {
       roles: user.roles,
       profilePictureUrl: user.profilePictureUrl || null,
       about_me: user.about_me || '',
+      uniquenickChangedAt: user.uniquenickChangedAt || null,
     });
   } catch (error) {
     console.error(error);
@@ -59,13 +60,20 @@ router.put('/', upload.single('profilePicture'), async (req, res) => {
       req.body.uniquenick.trim() !== '' &&
       req.body.uniquenick !== user.uniquenick
     ) {
-      const newUniquenick = req.body.uniquenick.trim().toLowerCase();
+      const now = new Date();
+      const lastChanged = user.uniquenickChangedAt || new Date(0);
+      const sevenDays = 7 * 24 * 60 * 60 * 1000;
 
+      if (now - lastChanged < sevenDays) {
+        return res.status(403).json({ message: 'Uniquenick can only be changed every 7 days.' });
+      }
+
+      const newUniquenick = req.body.uniquenick.trim().toLowerCase();
       const isValidUniquenick = /^[a-z0-9._]+$/.test(newUniquenick);
+
       if (!isValidUniquenick) {
         return res.status(400).json({
-          message:
-            'Uniquenick can only contain lowercase letters, numbers, underscores, and dots.',
+          message: 'Uniquenick can only contain lowercase letters, numbers, underscores, and dots.',
         });
       }
 
@@ -79,6 +87,7 @@ router.put('/', upload.single('profilePicture'), async (req, res) => {
       }
 
       updates.uniquenick = newUniquenick;
+      updates.uniquenickChangedAt = now;
       updatedFields.push('uniquenick');
     }
 
@@ -119,6 +128,7 @@ router.put('/', upload.single('profilePicture'), async (req, res) => {
       nickname: user.nickname,
       uniquenick: user.uniquenick,
       about_me: user.about_me,
+      uniquenickChangedAt: user.uniquenickChangedAt,
     });
   } catch (error) {
     console.error('Update error:', error);

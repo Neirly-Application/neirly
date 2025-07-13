@@ -33,6 +33,9 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  uniquenickChangedAt: { 
+    type: Date 
+  },
   roles: {    
     type: [String],
     enum: ['user', 'supporter','moderator', 'ceo' ],
