@@ -6,6 +6,26 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
 
+// Funzione per creare un uniquenick valido e univoco
+async function generateUniqueNick(base) {
+  let clean = base
+    .toLowerCase()
+    .replace(/\s+/g, '_')
+    .replace(/[^a-z0-9._]/g, '')
+    .substring(0, 20);
+
+  let uniquenick = clean;
+  let counter = 1;
+
+  while (await User.findOne({ uniquenick })) {
+    uniquenick = `${clean}_${Math.floor(Math.random() * 10000)}`;
+    counter++;
+    if (counter > 10) break;
+  }
+
+  return uniquenick;
+}
+
 passport.use(new LocalStrategy({ usernameField: 'email' },
   async (email, password, done) => {
     try {
@@ -36,9 +56,13 @@ passport.use(new GoogleStrategy({
       return done(null, user);
     }
 
+    const baseNick = profile.displayName || 'user';
+    const uniquenick = await generateUniqueNick(baseNick);
+
     const newUser = await User.create({
       email,
       name: profile.displayName || 'User',
+      uniquenick,
       discordId: null,
       passwordHash: '',
       provider: 'google',
@@ -70,7 +94,6 @@ passport.use(new DiscordStrategy({
 }, async (accessToken, refreshToken, profile, done) => {
   try {
     const email = profile.email;
-
     if (!email) {
       return done(null, false, { message: 'Email non disponibile da Discord.' });
     }
@@ -80,7 +103,7 @@ passport.use(new DiscordStrategy({
     if (user) {
       if (!user.discordId) {
         user.discordId = profile.id;
-        if (!user.provider) user.provider = 'discord'; 
+        if (!user.provider) user.provider = 'discord';
         await user.save();
       } else if (user.discordId !== profile.id) {
         return done(null, false, { message: 'Discord ID mismatch con account esistente.' });
@@ -88,9 +111,13 @@ passport.use(new DiscordStrategy({
       return done(null, user);
     }
 
+    const baseNick = profile.username || 'user';
+    const uniquenick = await generateUniqueNick(baseNick);
+
     const newUser = await User.create({
       email,
       name: profile.username,
+      uniquenick,
       discordId: profile.id,
       passwordHash: '',
       provider: 'discord',
@@ -113,3 +140,5 @@ passport.use(new DiscordStrategy({
     return done(err);
   }
 }));
+
+module.exports = passport;

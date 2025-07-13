@@ -132,8 +132,8 @@
     <a href="#messages" class="nav-item" data-section="messages">
       <i class="fas fa-comment-alt"></i>
     </a>
-    <a href="#friend-list" class="nav-item" data-section="friend-list">
-      <i class="fas fa-user-friends"></i>
+    <a href="#profile" class="nav-item" data-section="profile">
+      <i class="fas fa-user"></i>
     </a>
   </nav>
 
@@ -168,80 +168,153 @@
   <script src="../scripts/offline.js"></script>
   <script src="../scripts/notification.js"></script>
 
-  <script>
-    function updateActiveNavItem(section) {
-      document.querySelectorAll('.nav-item').forEach(el => {
-        el.classList.remove('active');
-      });
-      document.querySelectorAll(`.nav-item[data-section="${section}"]`).forEach(el => {
-        el.classList.add('active');
-      });
+<script>
+  function updateActiveNavItem(section) {
+    document.querySelectorAll('.nav-item').forEach(el => {
+      el.classList.remove('active');
+    });
+    document.querySelectorAll(`.nav-item[data-section="${section}"]`).forEach(el => {
+      el.classList.add('active');
+    });
+  }
+
+  const sections = ['map', 'messages', 'profile','friend-list'];
+
+  function isMobile() {
+    return window.innerWidth <= 768;
+  }
+
+  function getCurrentSectionIndex() {
+    const hash = window.location.hash.replace('#', '');
+    return sections.indexOf(hash) !== -1 ? sections.indexOf(hash) : -1;
+  }
+
+  let touchStartX = 0;
+  let touchEndX = 0;
+  let swipeActive = false;
+
+  function handleSwipeNavigation() {
+    const currentIndex = getCurrentSectionIndex();
+    if (currentIndex === -1) return;
+
+    const direction = touchEndX < touchStartX ? 1 : -1;
+    const nextIndex = currentIndex + direction;
+
+    if (nextIndex >= 0 && nextIndex < sections.length) {
+      window.location.hash = `#${sections[nextIndex]}`;
     }
+  }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      if (!location.hash) {
-        location.hash = 'map';  
+  function onTouchStart(e) {
+    touchStartX = e.changedTouches[0].screenX;
+  }
+
+  function onTouchEnd(e) {
+    touchEndX = e.changedTouches[0].screenX;
+    if (Math.abs(touchEndX - touchStartX) > 50) {
+      handleSwipeNavigation();
+    }
+  }
+
+  function enableSwipe() {
+    if (!swipeActive) {
+      document.addEventListener('touchstart', onTouchStart);
+      document.addEventListener('touchend', onTouchEnd);
+      swipeActive = true;
+    }
+  }
+
+  function disableSwipe() {
+    if (swipeActive) {
+      document.removeEventListener('touchstart', onTouchStart);
+      document.removeEventListener('touchend', onTouchEnd);
+      swipeActive = false;
+    }
+  }
+
+  function checkScreenSize() {
+    if (isMobile()) {
+      enableSwipe();
+    } else {
+      disableSwipe();
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!location.hash) {
+      location.hash = 'map';
+    }
+    const currentSection = location.hash.replace('#', '');
+    updateActiveNavItem(currentSection);
+    checkScreenSize();
+  });
+
+  window.addEventListener('resize', checkScreenSize);
+
+  window.addEventListener('hashchange', () => {
+    const section = location.hash.replace('#', '') || 'map';
+    updateActiveNavItem(section);
+  });
+
+  document.querySelectorAll('.bottom-navbar .nav-item').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const section = link.getAttribute('data-section');
+      if (section) {
+        updateActiveNavItem(section);
       }
-      const currentSection = location.hash.replace('#', '');
-      updateActiveNavItem(currentSection);
     });
+  });
 
-    window.addEventListener('hashchange', () => {
-      const section = location.hash.replace('#', '') || 'map';
-      updateActiveNavItem(section);
-    });
+  document.addEventListener('click', function (e) {
+    const btn = document.querySelector('.menu-button');
+    const dropdown = document.querySelector('.menu-dropdown');
 
-    document.addEventListener('click', function (e) {
-      const btn = document.querySelector('.menu-button');
+    if (!btn || !dropdown) return;
+
+    const isClickOnButton = btn.contains(e.target);
+    const isClickInsideDropdown = dropdown.contains(e.target);
+
+    if (isClickOnButton) {
+      if (dropdown.classList.contains('show')) {
+        dropdown.classList.remove('show');
+        dropdown.classList.add('hide');
+        setTimeout(() => dropdown.style.display = 'none', 250);
+      } else {
+        dropdown.style.display = 'flex';
+        requestAnimationFrame(() => {
+          dropdown.classList.remove('hide');
+          dropdown.classList.add('show');
+        });
+      }
+    } else if (!isClickInsideDropdown) {
+      if (dropdown.classList.contains('show')) {
+        dropdown.classList.remove('show');
+        dropdown.classList.add('hide');
+        setTimeout(() => dropdown.style.display = 'none', 250);
+      }
+    }
+  });
+
+  document.querySelectorAll('.menu-dropdown .nav-item').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const section = link.getAttribute('data-section');
+      if (section) {
+        const targetHash = link.getAttribute('href');
+        if (targetHash) {
+          location.hash = targetHash;
+        }
+      }
+
       const dropdown = document.querySelector('.menu-dropdown');
-
-      if (!btn || !dropdown) return;
-
-      const isClickOnButton = btn.contains(e.target);
-      const isClickInsideDropdown = dropdown.contains(e.target);
-
-      if (isClickOnButton) {
-        if (dropdown.classList.contains('show')) {
-          dropdown.classList.remove('show');
-          dropdown.classList.add('hide');
-
-          setTimeout(() => dropdown.style.display = 'none', 250);
-        } else {
-          dropdown.style.display = 'flex';
-          requestAnimationFrame(() => {
-            dropdown.classList.remove('hide');
-            dropdown.classList.add('show');
-          });
-        }
-      } else if (!isClickInsideDropdown) {
-        if (dropdown.classList.contains('show')) {
-          dropdown.classList.remove('show');
-          dropdown.classList.add('hide');
-          setTimeout(() => dropdown.style.display = 'none', 250);
-        }
+      if (dropdown.classList.contains('show')) {
+        dropdown.classList.remove('show');
+        dropdown.classList.add('hide');
+        setTimeout(() => dropdown.style.display = 'none', 250);
       }
     });
+  });
+</script>
 
-    document.querySelectorAll('.menu-dropdown .nav-item').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const section = link.getAttribute('data-section');
-        if (section) {
-          // Usa l'href per la navigazione per coerenza, data-section solo per l'highlight
-          const targetHash = link.getAttribute('href');
-          if (targetHash) {
-            location.hash = targetHash;
-          }
-        }
-
-        const dropdown = document.querySelector('.menu-dropdown');
-        if (dropdown.classList.contains('show')) {
-          dropdown.classList.remove('show');
-          dropdown.classList.add('hide');
-          setTimeout(() => dropdown.style.display = 'none', 250);
-        }
-      });
-    });
-  </script>
 </body>
 </html>

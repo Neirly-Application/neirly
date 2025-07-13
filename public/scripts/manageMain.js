@@ -183,7 +183,28 @@ document.addEventListener('DOMContentLoaded', async () => {
           break;
 
         case 'map':
-          content.innerHTML = '<h2><i class="fas fa-map"></i> Map</h2><p>Contenuto della mappa...</p>';
+          content.innerHTML = `
+          <h2><i class="fas fa-map"></i> Map</h2>
+            <div class="card map-card">
+              <button class="map-button">Go to Map</button>
+            </div>
+            
+            <div class="fancy-line"></div>
+
+            <div class="card profile-card">
+              <img src="../media/user.png" alt="User Profile">
+              <div class="profile-info">
+                <h3>Username</h3>
+                <p>@uniquenick</p>
+                <p>"About me"</p>
+                <span class="status">Online</span>
+              </div>
+              <div class="profile-actions">
+                <button class="view-btn"><i class="fas fa-user"></i> <span>View Profile</span></button>
+                <button class="request-btn"><i class="fas fa-user-plus"></i> <span>Add as Friend</span></button>
+              </div>
+            </div>
+          `;
           break;
 
         case 'messages':
@@ -216,11 +237,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
           }
           
-          // console.log("ABOUT ME:", user.about_me);
+          console.log("ABOUT ME:", user.about_me);
           const maskedEmail = maskEmail(user.email || '');
           content.innerHTML = `
               <h2><i class="fas fa-user"></i> Account & Profile</h2>
-                <form id="profile-form" class="profile-form" enctype="multipart/form-data">
+                <form id="profile-form" class="profile-form" enctype="multipart/form-data" autocomplete="off">
                   <div class="form-group">
                     <div class="profile-pic-wrapper" style="position: relative; display: inline-block;">
                       <img id="profile-pic" src="${user.profilePictureUrl || '/media/user.png'}" alt="Profile Picture" class="profile-img" />
@@ -232,8 +253,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                   </div>
 
                   <div class="form-group">
+                    <label>Display name:</label>
+                    <input type="text" id="nickname-input" value="${user.nickname || user.name || "User"}" />
+                  </div>
+
+                  <div class="form-group">
                     <label>Nickname:</label>
-                    <input type="text" id="nickname-input" value="${user.nickname || user.name || "👋 Hello there! I'm a Neirly user!"}" />
+                    <input type="text" id="uniquenick-input" value="${user.uniquenick || ''}" maxlength="24" />
                   </div>
 
                   <div class="form-group">
@@ -254,7 +280,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 <div id="unsaved-notification" class="unsaved-notification" style="display:none;">
                   <span id="unsaved-text">You have unsaved changes.</span>
-                  <button id="cancel-changes-btn" class"btn-cancel">Cancel</button>
                   <button id="save-changes-btn" class="btn-submit">Save</button>
                 </div>
 
@@ -274,186 +299,174 @@ document.addEventListener('DOMContentLoaded', async () => {
                   </div>
                 </div>
               `;
-                const profilePicInput = document.getElementById('profilePicInput');
-                const profilePicImg = document.getElementById('profile-pic');
-                const cropperModal = document.getElementById('cropper-modal');
-                const cropperImage = document.getElementById('cropper-image');
-                const zoomSlider = document.getElementById('zoom-slider');
-                const form = document.getElementById('profile-form');
-                        
-                const unsavedNotification = document.getElementById('unsaved-notification');
-                const saveChangesBtn = document.getElementById('save-changes-btn');
-                const cancelChangesBtn = document.getElementById('cancel-changes-btn');
-                        
-                let cropper = null;
-                let croppedBlob = null;
-                let formChanged = false;
-                        
-                const saveChangesBtnOriginal = form.querySelector('.btn-submit');
-                if (saveChangesBtnOriginal) saveChangesBtnOriginal.style.display = 'none';
-                        
-                function toggleUnsavedNotification(show) {
-                  unsavedNotification.style.display = show ? 'flex' : 'none';
+
+            const profilePicInput = document.getElementById('profilePicInput');
+            const profilePicImg = document.getElementById('profile-pic');
+            const cropperModal = document.getElementById('cropper-modal');
+            const cropperImage = document.getElementById('cropper-image');
+            const zoomSlider = document.getElementById('zoom-slider');
+            const form = document.getElementById('profile-form');
+
+            const unsavedNotification = document.getElementById('unsaved-notification');
+            const saveChangesBtn = document.getElementById('save-changes-btn');
+
+            let cropper = null;
+            let croppedBlob = null;
+            let formChanged = false;
+
+            const saveChangesBtnOriginal = form.querySelector('.btn-submit');
+            if (saveChangesBtnOriginal) saveChangesBtnOriginal.style.display = 'none';
+
+            function toggleUnsavedNotification(show) {
+              unsavedNotification.style.display = show ? 'flex' : 'none';
+            }
+
+            function normalizeText(text) {
+              return text.replace(/\s+/g, ' ').trim();
+            }
+
+            function checkFormChanges() {
+              const currentNickname = document.getElementById('nickname-input').value.trim();
+              const currentUniquenick = document.getElementById('uniquenick-input').value.trim();
+              const currentAboutMe = normalizeText(document.getElementById('aboutme-input').value);
+
+              const originalNickname = (user.nickname || user.name || '').trim();
+              const originalUniquenick = (user.uniquenick || '').trim();
+              const originalAboutMe = normalizeText(user.about_me || '');
+
+              const nicknameChanged = currentNickname !== originalNickname;
+              const uniquenickChanged = currentUniquenick !== originalUniquenick;
+              const aboutMeChanged = currentAboutMe !== originalAboutMe;
+
+              const imageChanged = !!croppedBlob;
+
+              const hasChanges = nicknameChanged || aboutMeChanged || uniquenickChanged ||imageChanged;
+              formChanged = hasChanges;
+              toggleUnsavedNotification(hasChanges);
+            }
+
+            document.querySelector('.profile-pic-wrapper').addEventListener('click', () => {
+              profilePicInput.click();
+            });
+
+            profilePicInput.addEventListener('change', () => {
+              const file = profilePicInput.files[0];
+              if (!file) return;
+
+              const url = URL.createObjectURL(file);
+              cropperImage.src = url;
+              cropperModal.style.display = 'flex';
+
+              if (cropper) cropper.destroy();
+              cropper = new Cropper(cropperImage, {
+                aspectRatio: 1,
+                viewMode: 1,
+                background: false,
+                guides: false,
+                dragMode: 'move',
+                cropBoxMovable: false,
+                cropBoxResizable: false,
+                ready() {
+                  zoomSlider.value = 1;
+                  cropper.zoomTo(1);
                 }
-                
-                function normalizeText(text) {
-                  return text.replace(/\s+/g, ' ').trim();
-                }
-                
-                function checkFormChanges() {
-                  const currentNickname = document.getElementById('nickname-input').value.trim();
-                  const currentAboutMe = normalizeText(document.getElementById('aboutme-input').value);
-                  const currentVisibility = document.getElementById('profile-visibility')?.value;
-                
-                  const originalNickname = (user.nickname || user.name || '').trim();
-                  const originalAboutMe = normalizeText(user.about_me || '');
-                  const originalVisibility = user.privacy?.visibility || 'friends';
-                
-                  const nicknameChanged = currentNickname !== originalNickname;
-                  const aboutMeChanged = currentAboutMe !== originalAboutMe;
-                  const imageChanged = !!croppedBlob;
-                  const privacyChanged = currentVisibility && currentVisibility !== originalVisibility;
-                
-                  const hasChanges = nicknameChanged || aboutMeChanged || imageChanged || privacyChanged;
-                  formChanged = hasChanges;
-                  toggleUnsavedNotification(hasChanges);
-                }
-                
-                document.querySelector('.profile-pic-wrapper').addEventListener('click', () => {
-                  profilePicInput.click();
+              });
+
+              zoomSlider.addEventListener('input', () => {
+                const zoom = parseFloat(zoomSlider.value);
+                cropper.zoomTo(zoom);
+              });
+            });
+
+            profilePicInput.addEventListener('input', () => {
+              checkFormChanges();
+            });
+
+            document.getElementById('crop-cancel').addEventListener('click', () => {
+              if (cropper) cropper.destroy();
+              cropperModal.style.display = 'none';
+            });
+
+            document.getElementById('crop-confirm').addEventListener('click', () => {
+              if (!cropper) return;
+              cropper.getCroppedCanvas({ width: 300, height: 300 }).toBlob(blob => {
+                croppedBlob = blob;
+                profilePicImg.src = URL.createObjectURL(blob);
+                cropperModal.style.display = 'none';
+                cropper.destroy();
+
+                checkFormChanges();
+              }, 'image/jpeg');
+            });
+
+            form.querySelectorAll('input[type="text"]').forEach(input => {
+              input.addEventListener('input', () => {
+                checkFormChanges();
+              });
+            });
+
+            document.getElementById('aboutme-input').addEventListener('input', () => {
+              checkFormChanges();
+            });
+
+            saveChangesBtn.addEventListener('click', () => {
+              form.requestSubmit();
+            });
+
+            form.addEventListener('submit', async (e) => {
+              e.preventDefault();
+
+              let newNickname = document.getElementById('nickname-input').value.trim();
+              let newUniquenick = document.getElementById('uniquenick-input').value.trim();
+              let newAboutMe = document.getElementById('aboutme-input').value.trim();
+
+              if (!newNickname) newNickname = user.nickname || user.name || '';
+
+              const formData = new FormData();
+              if (newNickname !== (user.nickname || user.name || '')) {
+                formData.append('nickname', newNickname);
+              }
+              if (newUniquenick !== (user.uniquenick || '')) {
+                formData.append('uniquenick', newUniquenick);
+              }
+              if (newAboutMe !== (user.about_me || '')) {
+                formData.append('about_me', newAboutMe);
+              }
+              if (croppedBlob) {
+                formData.append('profilePicture', croppedBlob, 'profile.jpg');
+              }
+
+              if (!formData.has('nickname') && !formData.has('about_me') && !formData.has('uniquenick') && !formData.has('profilePicture')) {
+                return;
+              }
+
+              try {
+                const updateRes = await fetch('/api/profile', {
+                  method: 'PUT',
+                  credentials: 'include',
+                  body: formData
                 });
-                
-                profilePicInput.addEventListener('change', () => {
-                  const file = profilePicInput.files[0];
-                  if (!file) return;
-                
-                  const url = URL.createObjectURL(file);
-                  cropperImage.src = url;
-                  cropperModal.style.display = 'flex';
-                
-                  if (cropper) cropper.destroy();
-                  cropper = new Cropper(cropperImage, {
-                    aspectRatio: 1,
-                    viewMode: 1,
-                    background: false,
-                    guides: false,
-                    dragMode: 'move',
-                    cropBoxMovable: false,
-                    cropBoxResizable: false,
-                    ready() {
-                      zoomSlider.value = 1;
-                      cropper.zoomTo(1);
-                    }
-                  });
-                
-                  zoomSlider.addEventListener('input', () => {
-                    const zoom = parseFloat(zoomSlider.value);
-                    cropper.zoomTo(zoom);
-                  });
-                });
-                
-                profilePicInput.addEventListener('input', () => {
-                  checkFormChanges();
-                });
-                
-                document.getElementById('crop-cancel').addEventListener('click', () => {
-                  if (cropper) cropper.destroy();
-                  cropperModal.style.display = 'none';
-                });
-                
-                document.getElementById('crop-confirm').addEventListener('click', () => {
-                  if (!cropper) return;
-                  cropper.getCroppedCanvas({ width: 300, height: 300 }).toBlob(blob => {
-                    croppedBlob = blob;
-                    profilePicImg.src = URL.createObjectURL(blob);
-                    cropperModal.style.display = 'none';
-                    cropper.destroy();
-                    checkFormChanges();
-                  }, 'image/jpeg');
-                });
-                
-                form.querySelectorAll('input[type="text"]').forEach(input => {
-                  input.addEventListener('input', () => {
-                    checkFormChanges();
-                  });
-                });
-                
-                document.getElementById('aboutme-input').addEventListener('input', () => {
-                  checkFormChanges();
-                });
-                
-                saveChangesBtn.addEventListener('click', () => {
-                  form.requestSubmit();
-                });
-                
-                cancelChangesBtn.addEventListener('click', () => {
-                  document.getElementById('nickname-input').value = user.nickname || user.name || '';
-                  document.getElementById('aboutme-input').value = user.about_me || '';
-                
-                  const visibilitySelect = document.getElementById('profile-visibility');
-                  if (visibilitySelect) {
-                    visibilitySelect.value = user.privacy?.visibility || 'friends';
-                  }
-                
-                  if (croppedBlob) {
-                    profilePicImg.src = user.profilePictureUrl || '/media/user.png';
-                    croppedBlob = null;
-                  }
-                
+
+                const updateData = await updateRes.json();
+                if (updateRes.ok) {
+                  showToast('Profile successfully updated.', 'success');
+
                   formChanged = false;
-                  toggleUnsavedNotification(false); // Nasconde la notifica senza animazione
-                });
-                
-                form.addEventListener('submit', async (e) => {
-                  e.preventDefault();
-                
-                  let newNickname = document.getElementById('nickname-input').value.trim();
-                  let newAboutMe = document.getElementById('aboutme-input').value.trim();
-                
-                  if (!newNickname) newNickname = user.nickname || user.name || '';
-                
-                  const formData = new FormData();
-                  if (newNickname !== (user.nickname || user.name || '')) {
-                    formData.append('nickname', newNickname);
-                  }
-                  if (newAboutMe !== (user.about_me || '')) {
-                    formData.append('about_me', newAboutMe);
-                  }
-                  if (croppedBlob) {
-                    formData.append('profilePicture', croppedBlob, 'profile.jpg');
-                  }
-                
-                  if (!formData.has('nickname') && !formData.has('about_me') && !formData.has('profilePicture')) {
-                    return;
-                  }
-                
-                  try {
-                    const updateRes = await fetch('/api/profile', {
-                      method: 'PUT',
-                      credentials: 'include',
-                      body: formData
-                    });
-                  
-                    const updateData = await updateRes.json();
-                    if (updateRes.ok) {
-                      showToast('Profile successfully updated.', 'success');
-                    
-                      formChanged = false;
-                      toggleUnsavedNotification(false);
-                      croppedBlob = null;
-                    
-                      user.nickname = newNickname;
-                      user.about_me = newAboutMe;
-                    
-                    } else {
-                      showToast('Error: ' + (updateData.message || "Can't update profile."), 'error');
-                    }
-                  } catch (err) {
-                    showToast('Network error while saving changes.', 'error');
-                  }
-                });
-                
-                break;
+                  toggleUnsavedNotification(false);
+                  croppedBlob = null;
+
+                  user.nickname = newNickname;
+                  user.uniquenick = newUniquenick;
+                  user.about_me = newAboutMe;
+
+                } else {
+                  showToast('Error: ' + (updateData.message || "Can't update profile."), 'error');
+                }
+              } catch (err) {
+                showToast('Network error while saving changes.', 'error');
+              }
+            });
+          break;
 
         case 'settings':
           content.innerHTML = `
@@ -463,6 +476,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                   <li><a href="#settings-account"><i class="fas fa-user-shield"></i> Account & Security</a></li>
                   <li><a href="#settings-devices"><i class="fas fa-laptop"></i> Devices</a></li>
                   <li><a href="#settings-privacy"><i class="fas fa-lock"></i> Privacy</a></li>
+                  <li><a href="#settings-activity"><i class="fas fa-chart-line"></i> Activity</a></li>
                   <li><a href="#settings-notifications"><i class="fas fa-bell"></i> Notifications</a></li>
                   <li><a href="#settings-theme"><i class="fas fa-palette"></i> App Theme</a></li>
                   <li><a href="#settings-region"><i class="fas fa-globe"></i> Language</a></li>
@@ -475,8 +489,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         case 'settings-account':
           content.innerHTML = `
-              <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-              <h2>👤 Security & Account</h2>
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <h2><i class="fas fa-user-shield"></i> Account & Security</h2>
               <button class="btn">Change Password</button>
               <button class="btn">Enable 2FA</button>
             `;
@@ -484,8 +498,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       case 'settings-devices':
         content.innerHTML = `
-          <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-          <h2>💻 Connected Devices</h2>
+          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+          <h2><i class="fas fa-laptop"></i> Connected Devices</h2>
           <p>Here are the devices currently connected to your account.</p>
           <div class="device-list" id="device-list">
             <p>Loading devices...</p>
@@ -545,8 +559,11 @@ document.addEventListener('DOMContentLoaded', async () => {
               const minutesAgo = (now - lastSeen) / 60000;
               const isOnline = minutesAgo <= 5;
             
-              const tags = [
+              const tag1 = [
                 isCurrent ? '<span class="status-tag current">Current Device</span>' : '',
+              ].join(' ');
+
+              const tag2 = [
                 isOnline
                   ? '<span class="status-tag online">🟢 Online</span>'
                   : '<span class="status-tag offline">🔴 Offline</span>'
@@ -556,11 +573,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="device-card" data-index="${index}" data-name="${device.name}">
                   ${icon}
                   <div class="device-info">
-                    <strong>${device.name} ${tags}</strong><br>
-                    Location: ${device.location}<br>
-                    Last Active: ${formatLastActive(device.lastActive)}
+                  <strong>${device.name} ${tag1}</strong>
+                  <div class="fancy-line"></div>
+                  <p>Location: ${device.location}</p>
+                  <p>Last Active: ${formatLastActive(device.lastActive)} ${tag2}</p>
                   </div>
-                  <button class="btn-disconnect">Disconnect</button>
+                  <div class="device-actions">
+                    <button class="btn-disconnect">Disconnect</button>
+                  </div>
                 </div>
               `;
             }).join('');
@@ -626,99 +646,49 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
           }
         });
-      
         break;
+
+        case 'settings-activity':
+          content.innerHTML = `
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <h2><i class="fas fa-chart-line"></i> Activity</h2>
+              <p>Your account activity.</p>
+            `;
+          break;
 
         case 'settings-notifications':
           content.innerHTML = `
-          <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
           <h2><i class="fas fa-bell"></i> Notifications</h2><p>Gestisci le tue preferenze di notifica.</p>`;
           break;
 
         case 'settings-theme':
           content.innerHTML = `
-          <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
           <h2><i class="fas fa-palette"></i> App Theme</h2><p>Scegli il tema della tua app.</p>`;
           break;
 
         case 'settings-region':
           content.innerHTML = `
-          <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
           <h2><i class="fas fa-globe"></i> Language</h2><p>Imposta la lingua e la regione.</p>`;
           break;
 
-          case 'settings-privacy':
-            content.innerHTML = `
-              <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-              <h2><i class="fas fa-lock"></i> Privacy</h2>
-              <form id="privacy-form" class="privacy-form">
-                <div class="form-group">
-                  <label for="profile-visibility">Who can view your profile?</label>
-                  <select id="profile-visibility">
-                    <option value="friends">Only Friends</option>
-                    <option value="everyone">Everyone</option>
-                    <option value="private">No one (private)</option>
-                  </select>
-                </div>
-              </form>
-
-              <div id="privacy-unsaved-notification" class="unsaved-notification" style="display:none;">
-                <span>You have unsaved changes.</span>
-                <button id="privacy-save-changes-btn" class="btn-submit">Save</button>
-              </div>
-            `;
-
-            const privacySelect = document.getElementById('profile-visibility');
-            const privacyUnsavedNotification = document.getElementById('privacy-unsaved-notification');
-            const privacySaveBtn = document.getElementById('privacy-save-changes-btn');
-
-            let originalPrivacy = user?.privacy || 'friends'; // default fallback
-            privacySelect.value = originalPrivacy;
-
-            function togglePrivacyUnsaved(show) {
-              privacyUnsavedNotification.style.display = show ? 'flex' : 'none';
-            }
-          
-            privacySelect.addEventListener('change', () => {
-              togglePrivacyUnsaved(privacySelect.value !== originalPrivacy);
-            });
-          
-            privacySaveBtn.addEventListener('click', async () => {
-              const selected = privacySelect.value;
-              try {
-                const res = await fetch('/api/privacy', {
-                  method: 'PUT',
-                  headers: { 'Content-Type': 'application/json' },
-                  credentials: 'include',
-                  body: JSON.stringify({ visibility: selected })
-                });
-              
-                const data = await res.json();
-                if (res.ok) {
-                  showToast('Privacy settings updated.', 'success');
-                  originalPrivacy = selected;
-                  togglePrivacyUnsaved(false);
-                  user.privacy = selected;
-                } else {
-                  showToast(data.message || 'Error saving privacy settings.', 'error');
-                }
-              } catch (err) {
-                console.error('Error saving privacy settings:', err);
-                showToast('Network error while saving settings.', 'error');
-              }
-            });
-            break;
-
+        case 'settings-privacy':
+          content.innerHTML = `
+          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+          <h2><i class="fas fa-lock"></i> Privacy</h2><p>Controlla le tue impostazioni sulla privacy.</p>`;
+          break;
 
         case 'settings-info':
           content.innerHTML = `
-          <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
           <h2><i class="fas fa-info-circle"></i> App Informations</h2><p>Informazioni sulla versione dell'app.</p>`;
           break;
 
         case 'settings-danger':
           content.innerHTML = `
-          <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
             <h2><i class="fas fa-exclamation-triangle"></i> Dangerous Actions</h2>
             <button id="delete-account-btn" class="btn-delete-account"><i class="fas fa-trash"></i> Delete Account</button>
           `;
