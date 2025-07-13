@@ -31,6 +31,11 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'supporter','moderator', 'ceo' ],
     default: ['user']
   },
+  profileVisibility: {
+    type: String,
+    enum: ['friends', 'everyone', 'private'],
+    default: 'friends'
+  },
   devices: [{
     name: String,
     location: String,
