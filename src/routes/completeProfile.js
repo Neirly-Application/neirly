@@ -4,9 +4,9 @@ const User = require('../models/User');
 const router = express.Router();
 
 router.post('/complete-profile', async (req, res) => {
-  const { userId, username, birthdate, password, wantsUpdates, acceptedTerms, profilePictureUrl } = req.body;
+  const { userId, username, uniquenick, birthdate, password, wantsUpdates, acceptedTerms, profilePictureUrl } = req.body;
 
-  if (!userId || !username || !birthdate || !password || acceptedTerms !== true) {
+  if (!userId || !username || !uniquenick || !birthdate || !password || acceptedTerms !== true) {
     return res.status(400).json({ message: 'All required fields must be filled and terms must be accepted.' });
   }
 
@@ -17,6 +17,7 @@ router.post('/complete-profile', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     user.name = username;
+    user.uniquenick = uniquenick;
     user.birthdate = new Date(birthdate);
     user.passwordHash = hashedPassword;
     user.wantsUpdates = wantsUpdates === true;

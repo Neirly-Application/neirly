@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           const maskedEmail = maskEmail(user.email || '');
           content.innerHTML = `
               <h2><i class="fas fa-user"></i> Account & Profile</h2>
-                <form id="profile-form" class="profile-form" enctype="multipart/form-data">
+                <form id="profile-form" class="profile-form" enctype="multipart/form-data" autocomplete="off">
                   <div class="form-group">
                     <div class="profile-pic-wrapper" style="position: relative; display: inline-block;">
                       <img id="profile-pic" src="${user.profilePictureUrl || '/media/user.png'}" alt="Profile Picture" class="profile-img" />
@@ -253,8 +253,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                   </div>
 
                   <div class="form-group">
+                    <label>Display name:</label>
+                    <input type="text" id="nickname-input" value="${user.nickname || user.name || "User"}" />
+                  </div>
+
+                  <div class="form-group">
                     <label>Nickname:</label>
-                    <input type="text" id="nickname-input" value="${user.nickname || user.name || "👋 Hello there! I'm a Neirly user!"}" />
+                    <input type="text" id="uniquenick-input" value="${user.uniquenick || ''}" maxlength="24" />
                   </div>
 
                   <div class="form-group">
@@ -322,17 +327,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             function checkFormChanges() {
               const currentNickname = document.getElementById('nickname-input').value.trim();
+              const currentUniquenick = document.getElementById('uniquenick-input').value.trim();
               const currentAboutMe = normalizeText(document.getElementById('aboutme-input').value);
 
               const originalNickname = (user.nickname || user.name || '').trim();
+              const originalUniquenick = (user.uniquenick || '').trim();
               const originalAboutMe = normalizeText(user.about_me || '');
 
               const nicknameChanged = currentNickname !== originalNickname;
+              const uniquenickChanged = currentUniquenick !== originalUniquenick;
               const aboutMeChanged = currentAboutMe !== originalAboutMe;
 
               const imageChanged = !!croppedBlob;
 
-              const hasChanges = nicknameChanged || aboutMeChanged || imageChanged;
+              const hasChanges = nicknameChanged || aboutMeChanged || uniquenickChanged ||imageChanged;
               formChanged = hasChanges;
               toggleUnsavedNotification(hasChanges);
             }
@@ -409,6 +417,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               e.preventDefault();
 
               let newNickname = document.getElementById('nickname-input').value.trim();
+              let newUniquenick = document.getElementById('uniquenick-input').value.trim();
               let newAboutMe = document.getElementById('aboutme-input').value.trim();
 
               if (!newNickname) newNickname = user.nickname || user.name || '';
@@ -417,6 +426,9 @@ document.addEventListener('DOMContentLoaded', async () => {
               if (newNickname !== (user.nickname || user.name || '')) {
                 formData.append('nickname', newNickname);
               }
+              if (newUniquenick !== (user.uniquenick || '')) {
+                formData.append('uniquenick', newUniquenick);
+              }
               if (newAboutMe !== (user.about_me || '')) {
                 formData.append('about_me', newAboutMe);
               }
@@ -424,7 +436,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 formData.append('profilePicture', croppedBlob, 'profile.jpg');
               }
 
-              if (!formData.has('nickname') && !formData.has('about_me') && !formData.has('profilePicture')) {
+              if (!formData.has('nickname') && !formData.has('about_me') && !formData.has('uniquenick') && !formData.has('profilePicture')) {
                 return;
               }
 
@@ -444,6 +456,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                   croppedBlob = null;
 
                   user.nickname = newNickname;
+                  user.uniquenick = newUniquenick;
                   user.about_me = newAboutMe;
 
                 } else {
@@ -453,7 +466,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showToast('Network error while saving changes.', 'error');
               }
             });
-
           break;
 
         case 'settings':
