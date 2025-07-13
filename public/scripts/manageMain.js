@@ -489,7 +489,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         case 'settings-account':
           content.innerHTML = `
-              <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
               <h2><i class="fas fa-user-shield"></i> Account & Security</h2>
               <button class="btn">Change Password</button>
               <button class="btn">Enable 2FA</button>
@@ -498,7 +498,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       case 'settings-devices':
         content.innerHTML = `
-          <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
           <h2><i class="fas fa-laptop"></i> Connected Devices</h2>
           <p>Here are the devices currently connected to your account.</p>
           <div class="device-list" id="device-list">
@@ -650,7 +650,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         case 'settings-activity':
           content.innerHTML = `
-              <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
               <h2><i class="fas fa-chart-line"></i> Activity</h2>
               <p>Your account activity.</p>
             `;
@@ -658,37 +658,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         case 'settings-notifications':
           content.innerHTML = `
-          <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
           <h2><i class="fas fa-bell"></i> Notifications</h2><p>Gestisci le tue preferenze di notifica.</p>`;
           break;
 
         case 'settings-theme':
           content.innerHTML = `
-          <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
           <h2><i class="fas fa-palette"></i> App Theme</h2><p>Scegli il tema della tua app.</p>`;
           break;
 
         case 'settings-region':
           content.innerHTML = `
-          <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
           <h2><i class="fas fa-globe"></i> Language</h2><p>Imposta la lingua e la regione.</p>`;
           break;
 
         case 'settings-privacy':
           content.innerHTML = `
-          <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
           <h2><i class="fas fa-lock"></i> Privacy</h2><p>Controlla le tue impostazioni sulla privacy.</p>`;
           break;
 
         case 'settings-info':
           content.innerHTML = `
-          <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
           <h2><i class="fas fa-info-circle"></i> App Informations</h2><p>Informazioni sulla versione dell'app.</p>`;
           break;
 
         case 'settings-danger':
           content.innerHTML = `
-          <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
             <h2><i class="fas fa-exclamation-triangle"></i> Dangerous Actions</h2>
             <button id="delete-account-btn" class="btn-delete-account"><i class="fas fa-trash"></i> Delete Account</button>
           `;
