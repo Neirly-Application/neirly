@@ -227,7 +227,6 @@
         e.preventDefault();
         const section = link.getAttribute('data-section');
         if (section) {
-          // Usa l'href per la navigazione per coerenza, data-section solo per l'highlight
           const targetHash = link.getAttribute('href');
           if (targetHash) {
             location.hash = targetHash;
