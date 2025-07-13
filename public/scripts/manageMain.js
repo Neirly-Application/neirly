@@ -487,7 +487,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       case 'settings-devices':
         content.innerHTML = `
           <a href="#settings" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-          <h2>💻 Connected Devices</h2>
+          <h2><i class="fas fa-laptop"></i> Connected Devices</h2>
           <p>Here are the devices currently connected to your account.</p>
           <div class="device-list" id="device-list">
             <p>Loading devices...</p>
@@ -547,8 +547,11 @@ document.addEventListener('DOMContentLoaded', async () => {
               const minutesAgo = (now - lastSeen) / 60000;
               const isOnline = minutesAgo <= 5;
             
-              const tags = [
+              const tag1 = [
                 isCurrent ? '<span class="status-tag current">Current Device</span>' : '',
+              ].join(' ');
+
+              const tag2 = [
                 isOnline
                   ? '<span class="status-tag online">🟢 Online</span>'
                   : '<span class="status-tag offline">🔴 Offline</span>'
@@ -558,11 +561,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="device-card" data-index="${index}" data-name="${device.name}">
                   ${icon}
                   <div class="device-info">
-                    <strong>${device.name} ${tags}</strong><br>
-                    Location: ${device.location}<br>
-                    Last Active: ${formatLastActive(device.lastActive)}
+                  <strong>${device.name} ${tag1}</strong>
+                  <div class="fancy-line"></div>
+                  <p>Location: ${device.location}</p>
+                  <p>Last Active: ${formatLastActive(device.lastActive)} ${tag2}</p>
                   </div>
-                  <button class="btn-disconnect">Disconnect</button>
+                  <div class="device-actions">
+                    <button class="btn-disconnect">Disconnect</button>
+                  </div>
                 </div>
               `;
             }).join('');
