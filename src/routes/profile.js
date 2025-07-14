@@ -52,6 +52,7 @@ router.get('/profile', async (req, res) => {
       roles: user.roles,
       profilePictureUrl: user.profilePictureUrl || null,
       about_me: user.about_me || '',
+      bioLimit: user.bioLimit,
       uniquenickChangedAt: user.uniquenickChangedAt || null,
     });
   } catch (error) {

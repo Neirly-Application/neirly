@@ -35,6 +35,11 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  bioLimit: { 
+    type: Number, 
+    default: 250 
+
+  },
   roles: {    
     type: [String],
     enum: ['user', 'supporter','moderator', 'ceo' ],

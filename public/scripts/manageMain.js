@@ -380,261 +380,278 @@ document.addEventListener('DOMContentLoaded', async () => {
           break;
 
         case 'profile': {
-          // console.log('DEBUG: entered case "profile"');
+                  content.innerHTML = '<h2><i class="fas fa-user"></i> Profile</h2><p>Loading data…</p>';
+                  if (!user) {
+                    console.warn('DEBUG: user object missing – redirecting');
+                    content.innerHTML = '<p>User data not loaded. Please refresh.</p>';
+                    return;
+                  }
 
-          content.innerHTML = '<h2><i class="fas fa-user"></i> Profile</h2><p>Loading data…</p>';
-          if (!user) {
-            console.warn('DEBUG: user object missing – redirecting');
-            content.innerHTML = '<p>User data not loaded. Please refresh.</p>';
-            return;
-          }
+                  const maskEmail = (email = '') => {
+                    const [u, d] = email.split('@');
+                    if (!d) return email;
+                    if (u.length <= 2) return u[0] + '*'.repeat(u.length - 1) + '@' + d;
+                    return `${u[0]}${'*'.repeat(u.length - 2)}${u.slice(-1)}@${d}`;
+                  };
 
-          const maskEmail = (email = '') => {
-            const [u, d] = email.split('@');
-            if (!d) return email;
-            if (u.length <= 2) return u[0] + '*'.repeat(u.length - 1) + '@' + d;
-            return `${u[0]}${'*'.repeat(u.length - 2)}${u.slice(-1)}@${d}`;
-          };
+                  const lastUniquenickChange   = new Date(user.uniquenickChangedAt || 0);
+                  const sevenDaysInMs          = 7 * 24 * 60 * 60 * 1000;
+                  const canEditUniquenick      = Date.now() - lastUniquenickChange.getTime() >= sevenDaysInMs;
+                  const nextChangeDateReadable = new Date(lastUniquenickChange.getTime() + sevenDaysInMs).toLocaleDateString();
 
-          const lastUniquenickChange   = new Date(user.uniquenickChangedAt || 0);
-          const sevenDaysInMs          = 7 * 24 * 60 * 60 * 1000;
-          const canEditUniquenick      = Date.now() - lastUniquenickChange.getTime() >= sevenDaysInMs;
-          const nextChangeDateReadable = new Date(lastUniquenickChange.getTime() + sevenDaysInMs)
-                                            .toLocaleDateString();
+                  content.innerHTML = `
+                    <h2><i class="fas fa-user"></i> Profile</h2>
 
-          // console.log('DEBUG:', {
-          //   lastUniquenickChange,
-          //   canEditUniquenick,
-          //   nextChangeDateReadable
-          // });
+                    <form id="profile-form" class="profile-form" enctype="multipart/form-data" autocomplete="off">
+                      <div class="form-group">
+                        <div class="profile-pic-wrapper" style="position:relative;display:inline-block;">
+                          <img id="profile-pic"
+                              src="${user.profilePictureUrl || '../media/user.png'}"
+                              alt="Profile Picture"
+                              class="profile-img" />
+                          <div class="edit-icon"
+                              style="position:absolute;bottom:5px;right:5px;background:rgba(0,0,0,0.6);border-radius:50%;padding:5px;">
+                            <i class="fas fa-pen" style="color:white;"></i>
+                          </div>
+                        </div>
+                        <input type="file" id="profilePicInput" accept="image/*" style="display:none;">
+                      </div>
 
-          content.innerHTML = `
-            <h2><i class="fas fa-user"></i> Profile</h2>
+                      <div class="form-group">
+                        <label>Display name:</label>
+                        <input type="text" id="nickname-input" value="${user.nickname || user.name || 'User'}">
+                      </div>
 
-            <form id="profile-form" class="profile-form" enctype="multipart/form-data" autocomplete="off">
-              <div class="form-group">
-                <div class="profile-pic-wrapper" style="position:relative;display:inline-block;">
-                  <img id="profile-pic"
-                      src="${user.profilePictureUrl || '../media/user.png'}"
-                      alt="Profile Picture"
-                      class="profile-img" />
-                  <div class="edit-icon"
-                      style="position:absolute;bottom:5px;right:5px;background:rgba(0,0,0,0.6);border-radius:50%;padding:5px;">
-                    <i class="fas fa-pen" style="color:white;"></i>
-                  </div>
-                </div>
-                <input type="file" id="profilePicInput" accept="image/*" style="display:none;">
-              </div>
+                      <div class="form-group">
+                        <label>Nickname:</label>
+                        <input type="text" id="uniquenick-input"
+                              value="${user.uniquenick || ''}"
+                              maxlength="24"
+                              ${canEditUniquenick ? '' : 'disabled'}
+                              title="${canEditUniquenick ? '' : 'You can change your nickname every 7 days.'}">
+                        ${canEditUniquenick ? '' : `<small style="color:#888;">Next change: ${nextChangeDateReadable}</small>`}
+                      </div>
+                      <div class="form-group about-group" style="position:relative;">
+                        <label>About me:</label>
+                        <div style="position:relative;">
+                          <textarea id="aboutme-input" placeholder="What's on your mind?..." style="padding: 10px 75px 50px 10px; resize: vertical; min-height: 100px;"></textarea>
+                          <span id="about-counter"
+                                style="position:absolute;bottom:6px;right:12px;font-size:0.75em;color:#888;pointer-events:none;">
+                            250
+                          </span>
+                        </div>
+                      </div>
 
-              <div class="form-group">
-                <label>Display name:</label>
-                <input type="text" id="nickname-input" value="${user.nickname || user.name || 'User'}">
-              </div>
+                      <div class="form-group"><label>Email:</label>
+                        <input type="email" value="${maskEmail(user.email)}" readonly>
+                      </div>
+                      <div class="form-group"><label>Date of birth:</label>
+                        <input type="date" value="${user.birthdate ? user.birthdate.split('T')[0] : ''}" readonly>
+                      </div>
+                    </form>
 
-              <div class="form-group">
-                <label>Nickname:</label>
-                <input type="text" id="uniquenick-input"
-                      value="${user.uniquenick || ''}"
-                      maxlength="24"
-                      ${canEditUniquenick ? '' : 'disabled'}
-                      title="${canEditUniquenick ? '' : 'You can change your nickname every 7 days.'}">
-                ${canEditUniquenick ? '' :
-                  `<small style="color:#888;">Next change: ${nextChangeDateReadable}</small>`}
-              </div>
+                    <div id="unsaved-notification" class="unsaved-notification" style="display:none;align-items:center;gap:10px;">
+                      <span>You have unsaved changes.</span>
+                      <button id="cancel-changes-btn" class="btn-cancel">Cancel</button>
+                      <button id="save-changes-btn" class="btn-submit">Save</button>
+                    </div>
 
-              <div class="form-group">
-                <label>About me:</label>
-                <textarea maxlength="190" id="aboutme-input"
-                          placeholder="What's on your mind?...">${user.about_me || ''}</textarea>
-              </div>
+                    <div id="cropper-modal" class="profile-img-editor" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:1000;">
+                      <div class="profile-img-editor-content" style="background:white;padding:20px;border-radius:10px;text-align:center;">
+                        <h3>Edit Image</h3>
+                        <div style="width:300px;height:300px;margin:auto;">
+                          <img id="cropper-image" style="width:300px;height:300px;object-fit:cover;">
+                        </div>
+                        <div style="margin-top:15px;">
+                          <button id="crop-confirm" class="btn-submit">Upload</button>
+                          <button id="crop-cancel" class="btn-cancel">Cancel</button>
+                        </div>
+                      </div>
+                    </div>
+                  `;
 
-              <div class="form-group"><label>Email:</label>
-                <input type="email" value="${maskEmail(user.email)}" readonly>
-              </div>
-              <div class="form-group"><label>Date of birth:</label>
-                <input type="date" value="${user.birthdate ? user.birthdate.split('T')[0] : ''}" readonly>
-              </div>
-            </form>
+                  const profilePicInput = document.getElementById('profilePicInput');
+                  const profilePicImg = document.getElementById('profile-pic');
+                  const cropperModal = document.getElementById('cropper-modal');
+                  const cropperImage = document.getElementById('cropper-image');
+                  const form = document.getElementById('profile-form');
+                  const saveBtn = document.getElementById('save-changes-btn');
+                  const cancelBtn = document.getElementById('cancel-changes-btn');
+                  const banner = document.getElementById('unsaved-notification');
 
-            <div id="unsaved-notification"
-                class="unsaved-notification"
-                style="display:none;align-items:center;gap:10px;">
-              <span>You have unsaved changes.</span>
-              <button id="cancel-changes-btn" class="btn-cancel">Cancel</button>
-              <button id="save-changes-btn"   class="btn-submit">Save</button>
-            </div>
+                  const aboutInput = document.getElementById('aboutme-input');
+                  const counter = document.getElementById('about-counter');
+                  const maxLen = user.bioLimit || 250;
 
-            <div id="cropper-modal"
-                class="profile-img-editor"
-                style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);
-                        justify-content:center;align-items:center;z-index:1000;">
-              <div class="profile-img-editor-content"
-                  style="background:white;padding:20px;border-radius:10px;text-align:center;">
-                <h3>Edit Image</h3>
-                <div style="width:300px;height:300px;margin:auto;">
-                  <img id="cropper-image" style="width:300px;height:300px;object-fit:cover;">
-                </div>
-                <div style="margin-top:15px;">
-                  <button id="crop-confirm" class="btn-submit">Upload</button>
-                  <button id="crop-cancel"  class="btn-cancel">Cancel</button>
-                </div>
-              </div>
-            </div>
-          `;
 
-          const profilePicInput   = document.getElementById('profilePicInput');
-          const profilePicImg     = document.getElementById('profile-pic');
-          const cropperModal      = document.getElementById('cropper-modal');
-          const cropperImage      = document.getElementById('cropper-image');
-          const form              = document.getElementById('profile-form');
-          const saveBtn           = document.getElementById('save-changes-btn');
-          const cancelBtn         = document.getElementById('cancel-changes-btn');
-          const banner            = document.getElementById('unsaved-notification');
+                  const updateAboutCounter = () => {
+                    const current = aboutInput.value.length;
+                    const remaining = maxLen - current;
 
-          let cropper     = null;
-          let croppedBlob = null;
+                    if (remaining <= 150) {
+                      counter.style.visibility = 'visible';
+                      counter.textContent = remaining >= 0 ? `${remaining}` : `${remaining}`;
+                      counter.style.color = remaining >= 0 ? '#888' : 'red';
+                    } else {
+                      counter.style.visibility = 'hidden';
+                    }
+                  };
 
-          const toggleBanner = show => banner.style.display = show ? 'flex' : 'none';
-          const norm         = str => str.replace(/\s+/g,' ').trim();
+                  aboutInput.addEventListener('input', () => {
+                    updateAboutCounter();
+                    detectChanges();
+                  });
 
-          const fieldState = () => ({
-            nickname   : norm(document.getElementById('nickname-input').value),
-            uniquenick : norm(document.getElementById('uniquenick-input').value),
-            about      : norm(document.getElementById('aboutme-input').value)
-          });
+                  updateAboutCounter();
 
-          const originalState = {
-            nickname   : norm(user.nickname || user.name || ''),
-            uniquenick : norm(user.uniquenick || ''),
-            about      : norm(user.about_me || '')
-          };
+                  let cropper = null;
+                  let croppedBlob = null;
 
-          const detectChanges = () => {
-            const s   = fieldState();
-            const diff = (
-              s.nickname   !== originalState.nickname   ||
-              s.uniquenick !== originalState.uniquenick ||
-              s.about      !== originalState.about      ||
-              !!croppedBlob
-            );
-            toggleBanner(diff);
-            return diff;
-          };
+                  const toggleBanner = show => banner.style.display = show ? 'flex' : 'none';
+                  const norm = str => str.replace(/\s+/g, ' ').trim();
 
-          form.addEventListener('input', detectChanges);
+                  const fieldState = () => ({
+                    nickname: norm(document.getElementById('nickname-input').value),
+                    uniquenick: norm(document.getElementById('uniquenick-input').value),
+                    about: norm(document.getElementById('aboutme-input').value)
+                  });
 
-          document.querySelector('.profile-pic-wrapper').onclick = () => profilePicInput.click();
+                  const originalState = {
+                    nickname: norm(user.nickname || user.name || ''),
+                    uniquenick: norm(user.uniquenick || ''),
+                    about: norm(user.about_me || '')
+                  };
 
-          profilePicInput.onchange = () => {
-            const file = profilePicInput.files[0];
-            if (!file) return;
-            console.log('DEBUG: selected file', file);
+                  const detectChanges = () => {
+                    const s = fieldState();
+                    const diff = (
+                      s.nickname !== originalState.nickname ||
+                      s.uniquenick !== originalState.uniquenick ||
+                      s.about !== originalState.about ||
+                      !!croppedBlob
+                    );
+                    toggleBanner(diff);
+                    return diff;
+                  };
 
-            cropperImage.src           = URL.createObjectURL(file);
-            cropperModal.style.display = 'flex';
+                  form.addEventListener('input', detectChanges);
 
-            if (cropper) cropper.destroy();
-            cropper = new Cropper(cropperImage, {
-              aspectRatio: 1,
-              viewMode   : 1,
-              background : false,
-              guides     : false
-            });
-          };
+                  document.querySelector('.profile-pic-wrapper').onclick = () => profilePicInput.click();
 
-          document.getElementById('crop-cancel').onclick = () => {
-            if (cropper) cropper.destroy();
-            cropperModal.style.display = 'none';
-          };
+                  profilePicInput.onchange = () => {
+                    const file = profilePicInput.files[0];
+                    if (!file) return;
+                    console.log('DEBUG: selected file', file);
 
-          document.getElementById('crop-confirm').onclick = () => {
-            if (!cropper) return;
-            cropper.getCroppedCanvas({ width:300, height:300 })
-                  .toBlob(blob => {
-                      croppedBlob         = blob;
-                      profilePicImg.src   = URL.createObjectURL(blob);
-                      cropperModal.style.display = 'none';
-                      cropper.destroy();
+                    cropperImage.src = URL.createObjectURL(file);
+                    cropperModal.style.display = 'flex';
+
+                    if (cropper) cropper.destroy();
+                    cropper = new Cropper(cropperImage, {
+                      aspectRatio: 1,
+                      viewMode: 1,
+                      background: false,
+                      guides: false
+                    });
+                  };
+
+                  document.getElementById('crop-cancel').onclick = () => {
+                    if (cropper) cropper.destroy();
+                    cropperModal.style.display = 'none';
+                  };
+
+                  document.getElementById('crop-confirm').onclick = () => {
+                    if (!cropper) return;
+                    cropper.getCroppedCanvas({ width: 300, height: 300 })
+                      .toBlob(blob => {
+                        croppedBlob = blob;
+                        profilePicImg.src = URL.createObjectURL(blob);
+                        cropperModal.style.display = 'none';
+                        cropper.destroy();
+                        detectChanges();
+                      }, 'image/jpeg');
+                  };
+
+                  cancelBtn.onclick = () => {
+                    document.getElementById('nickname-input').value = originalState.nickname;
+                    document.getElementById('uniquenick-input').value = originalState.uniquenick;
+                    document.getElementById('aboutme-input').value = originalState.about;
+                    croppedBlob = null;
+                    profilePicImg.src = user.profilePictureUrl || '../media/user.png';
+                    detectChanges();
+                  };
+
+                  saveBtn.onclick = () => form.requestSubmit();
+
+                  form.onsubmit = async e => {
+                    e.preventDefault();
+
+                    const currentLength = document.getElementById('aboutme-input').value.length;
+                    if (currentLength > maxLen) {
+                      showToast('Too many characters in the About Me section.', 'error');
+                      return;
+                    }
+                  
+                    if (!detectChanges()) return;
+
+                    const { nickname, uniquenick, about } = fieldState();
+                    const data = new FormData();
+
+                    if (nickname !== originalState.nickname) data.append('nickname', nickname);
+                    if (about !== originalState.about) data.append('about_me', about);
+
+                    if (canEditUniquenick && uniquenick !== originalState.uniquenick) {
+                      data.append('uniquenick', uniquenick);
+                    }
+
+                    if (croppedBlob) data.append('profilePicture', croppedBlob, 'profile.jpg');
+
+                    console.log('DEBUG: submitting fields', Array.from(data.keys()));
+
+                    try {
+                      const res = await fetch('/api/profile', { method: 'PUT', credentials: 'include', body: data });
+                      const json = await res.json();
+
+                      if (!res.ok) {
+                        showToast(json.message || 'Update failed.', 'error');
+                        return;
+                      }
+
+                      showToast('Profile successfully updated.', 'success');
+
+                      Object.assign(user, {
+                        nickname: nickname,
+                        about_me: about,
+                        profilePictureUrl: json.profilePictureUrl || user.profilePictureUrl,
+                        ...(json.uniquenick && { uniquenick: json.uniquenick }),
+                        ...(json.uniquenickChangedAt && { uniquenickChangedAt: json.uniquenickChangedAt })
+                      });
+
+                      profilePicImg.src = user.profilePictureUrl || '../media/user.png';
+
+                      if (json.uniquenickChangedAt) {
+                        const input = document.getElementById('uniquenick-input');
+                        input.disabled = true;
+                        const next = new Date(new Date(json.uniquenickChangedAt).getTime() + sevenDaysInMs).toLocaleDateString();
+                        let small = input.parentElement.querySelector('small');
+                        if (!small) {
+                          small = document.createElement('small');
+                          small.style.color = '#888';
+                          input.parentElement.appendChild(small);
+                        }
+                        small.textContent = `Next change: ${next}`;
+                      }
+
+                      croppedBlob = null;
+                      Object.assign(originalState, { nickname, uniquenick: user.uniquenick, about });
                       detectChanges();
-                  }, 'image/jpeg');
-          };
 
-          cancelBtn.onclick = () => {
-            document.getElementById('nickname-input').value    = originalState.nickname;
-            document.getElementById('uniquenick-input').value  = originalState.uniquenick;
-            document.getElementById('aboutme-input').value     = originalState.about;
-            croppedBlob = null;
-            profilePicImg.src = user.profilePictureUrl || '../media/user.png';
-            detectChanges();
-          };
+                    } catch (err) {
+                      showToast('Network error.', 'error');
+                    }
+                  };
+                } break;
 
-          saveBtn.onclick = () => form.requestSubmit();
-
-          form.onsubmit = async e => {
-            e.preventDefault();
-            if (!detectChanges()) return;
-
-            const { nickname, uniquenick, about } = fieldState();
-            const data = new FormData();
-
-            if (nickname !== originalState.nickname)   data.append('nickname', nickname);
-            if (about    !== originalState.about)      data.append('about_me', about);
-
-            if (canEditUniquenick && uniquenick !== originalState.uniquenick) {
-              data.append('uniquenick', uniquenick);
-            }
-
-            if (croppedBlob) data.append('profilePicture', croppedBlob, 'profile.jpg');
-
-            console.log('DEBUG: submitting fields', Array.from(data.keys()));
-
-            try {
-              const res  = await fetch('/api/profile', { method:'PUT', credentials:'include', body:data });
-              const json = await res.json();
-
-              if (!res.ok) {
-                showToast(json.message || 'Update failed.', 'error');
-                // console.error('DEBUG: server error response', json);
-                return;
-              }
-
-              showToast('Profile successfully updated.', 'success');
-              // console.log('DEBUG: update response', json);
-
-              Object.assign(user, {
-                nickname    : nickname,
-                about_me    : about,
-                profilePictureUrl : json.profilePictureUrl || user.profilePictureUrl,
-                ...(json.uniquenick && { uniquenick: json.uniquenick }),
-                ...(json.uniquenickChangedAt && { uniquenickChangedAt: json.uniquenickChangedAt })
-              });
-
-              profilePicImg.src = user.profilePictureUrl || '../media/user.png';
-
-              if (json.uniquenickChangedAt) {
-                const input = document.getElementById('uniquenick-input');
-                input.disabled = true;
-                const next = new Date(new Date(json.uniquenickChangedAt).getTime() + sevenDaysInMs)
-                                .toLocaleDateString();
-                let small = input.parentElement.querySelector('small');
-                if (!small) {
-                  small = document.createElement('small');
-                  small.style.color = '#888';
-                  input.parentElement.appendChild(small);
-                }
-                small.textContent = `Next change: ${next}`;
-              }
-
-              croppedBlob = null;
-              Object.assign(originalState, { nickname, uniquenick: user.uniquenick, about });
-              detectChanges();
-
-            } catch (err) {
-              // console.error('DEBUG: network error', err);
-              showToast('Network error.', 'error');
-            }
-          };
-        } break;
 
         case 'settings':
           content.innerHTML = `
