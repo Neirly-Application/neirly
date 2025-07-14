@@ -40,7 +40,7 @@
   font-size: 24px;
 }
 
-.profile-pic-wrapper:active .edit-icon {
+.profile-pic-wrapper:hover .edit-icon {
   opacity: 1;
 }
 
