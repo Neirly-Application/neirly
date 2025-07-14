@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     trim: true
   },
+  uniquenickChangedAt: { type: Date, default: null },
   birthdate: { type: Date },
   about_me: { type: String, default: "👋 Hello there! I'm a Neirly user!"},
   join_date: { type: Date, default: Date.now },
