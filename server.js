@@ -1,6 +1,4 @@
 require('dotenv').config();
-require('./src/config/passport');
-require('./src/discordBot');
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -23,6 +21,15 @@ const devicesRouter = require('./src/routes/devices');
 const deleteUserRouter = require('./src/routes/deleteUser');
 const nearMeRouter = require('./src/routes/nearMe');
 
+require('./src/config/passport');
+require('./src/discordBot');
+
+app.use(cors({ origin: true, credentials: true }));
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
+
 app.use('/user_pfps', express.static(path.join(__dirname, 'user_pfps')));
 app.use('/api/auth', authenticateRouter);
 app.use('/api/auth', completeProfileRouter);
@@ -37,11 +44,6 @@ app.use('/api', friendsRouter);
 app.use('/api', privacyRouter);
 app.use('/api', devicesRouter);
 app.use('/api', activityRouter);
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors({ origin: true, credentials: true }));
-app.use(passport.initialize());
-app.use(express.json());
-app.use(cookieParser());
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
@@ -49,7 +51,7 @@ app.get('/', (req, res) => {
 console.log('JWT_SECRET:', process.env.JWT_SECRET);
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-    app.listen(process.env.PORT||3000, () => console.log('✅ Server starter on port ' + process.env.PORT));
+    app.listen(process.env.PORT||3000, () => console.log('✅ Server starter on port' + " " + process.env.PORT));
     process.stdin.resume();
     process.stdin.pause();
   })
