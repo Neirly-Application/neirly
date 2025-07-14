@@ -104,7 +104,6 @@ router.post('/logout', authMiddleware, async (req, res) => {
       }
     });
   }
-
   res.json({ message: 'Logged out successfully!' });
 });
 
