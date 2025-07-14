@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const getLocationFromIP = require('../utils/getLocationFromIP');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
+const Activity = require('../models/ActivityLogs');
 const { authMiddleware, requireRole } = require('../authMiddleware/authMiddleware');
 const ActivityLog = require('../models/ActivityLogs');
 const { sendLoginMessage } = require('../discordBot');
@@ -112,6 +113,7 @@ router.delete('/delete-account', authMiddleware, async (req, res) => {
     const userId = req.user._id;
 
     await Notification.deleteMany({ userId });
+    await Activity.deleteMany({ userId });
 
     await User.findByIdAndDelete(userId);
 
@@ -253,7 +255,7 @@ router.get('/discord/callback',
               ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip
             }
           });
-          console.log('✅ Discord device saved');
+          console.log('✅ Device saved (Discord)');
         } catch (err) {
           console.error('Error saving Discord login device:', err.message);
         }
@@ -281,26 +283,26 @@ router.get('/discord/callback',
 );
 
 router.get('/admin-only', authMiddleware, requireRole('ceo'), (req, res) => {
-  res.json({ message: `Benvenuto CEO ${req.user.name}` });
+  res.json({ message: `Welcome ${req.user.name}` });
 });
 
 router.put('/set-role', authMiddleware, requireRole('ceo'), async (req, res) => {
   const { userId, newRole } = req.body;
 
   if (!['user', 'supporter', 'moderator', 'ceo'].includes(newRole)) {
-    return res.status(400).json({ message: 'Ruolo non valido.' });
+    return res.status(400).json({ message: 'Invalid role.' });
   }
 
   try {
     const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: 'Utente non trovato.' });
+    if (!user) return res.status(404).json({ message: 'User not found.' });
 
     user.roles = newRole;
     await user.save();
 
     res.json({ message: `Ruolo aggiornato a ${newRole} per ${user.email}` });
   } catch (err) {
-    res.status(500).json({ message: 'Errore durante aggiornamento ruolo.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 });
 

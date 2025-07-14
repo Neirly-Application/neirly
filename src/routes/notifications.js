@@ -8,7 +8,7 @@ router.get('/notifications', authMiddleware, async (req, res) => {
     const notifications = await Notification.find({ userId: req.user._id }).sort({ date: -1 });
     res.json(notifications);
   } catch (err) {
-    res.status(500).json({ message: 'Errore server' });
+    res.status(500).json({ message: 'Server error.' });
   }
 });
 
@@ -19,10 +19,10 @@ router.put('/notifications/:id/read', authMiddleware, async (req, res) => {
       { read: true },
       { new: true }
     );
-    if (!notification) return res.status(404).json({ message: 'Notification not found' });
+    if (!notification) return res.status(404).json({ message: 'Notification not found.' });
     res.json(notification);
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error.' });
   }
 });
 
@@ -31,7 +31,7 @@ router.get('/notifications/unread-count', authMiddleware, async (req, res) => {
     const count = await Notification.countDocuments({ userId: req.user._id, read: false });
     res.json({ unread: count });
   } catch (err) {
-    res.status(500).json({ message: 'Error counting unread notifications.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 });
 

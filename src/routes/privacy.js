@@ -13,8 +13,8 @@ router.get('/privacy', async (req, res) => {
             visibility: user.privacy?.visibility || 'friends',
         });
     } catch (err) {
-        console.error('error get privacy:', err);
-        res.status(500).json({ message: 'Internal Error' });
+        console.error('Error getting privacy:', err);
+        res.status(500).json({ message: 'Server error.' });
     }
 });
 
@@ -25,7 +25,7 @@ router.put('/privacy', async (req, res) => {
         const allowedValues = ['friends', 'everyone', 'private'];
 
         if (!allowedValues.includes(visibility)) {
-            return res.status(400).json({ message: 'Values not valid' })
+            return res.status(400).json({ message: 'Invalid values.' })
         }
 
         const user = req.user;
@@ -35,10 +35,10 @@ router.put('/privacy', async (req, res) => {
         };
 
         await user.save();
-        res.json({ message: 'Privacy Updated', visibility });
+        res.json({ message: 'Privacy Updated.', visibility });
     } catch (err) {
         console.error('Privacy updating error:', err);
-        res.status(500).json({ message: 'Internal error' });
+        res.status(500).json({ message: 'Server error.' });
     }
 });
 
