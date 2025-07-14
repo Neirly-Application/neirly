@@ -356,13 +356,17 @@ document.addEventListener('DOMContentLoaded', async () => {
           break;
 
         case 'profile':
-          content.innerHTML = '<h2><i class="fas fa-user"></i> Profile</h2><p>Loading datas...</p>';
+          content.innerHTML = '<h2><i class="fas fa-user"></i> Profile</h2><p>Loading data...</p>';
+
+          if (!user) {
+            content.innerHTML = `<p>User data not loaded. Please refresh.</p>`;
+            return;
+          }
 
           function maskEmail(email) {
             if (!email) return '';
             const [userPart, domain] = email.split('@');
             if (!domain) return email;
-
             if (userPart.length <= 2) {
               return userPart[0] + '*'.repeat(userPart.length - 1) + '@' + domain;
             }
@@ -372,284 +376,254 @@ document.addEventListener('DOMContentLoaded', async () => {
             return `${firstChar}${maskedMiddle}${lastChar}@${domain}`;
           }
 
-          if (!user) {
-            content.innerHTML = `<p>User data not loaded. Please refresh.</p>`;
-            return;
-          }
-          
-          console.log("ABOUT ME:", user.about_me);
           const maskedEmail = maskEmail(user.email || '');
+
           content.innerHTML = `
-              <h2><i class="fas fa-user"></i> Profile</h2>
-                <form id="profile-form" class="profile-form" enctype="multipart/form-data" autocomplete="off">
-                  <div class="form-group">
-                    <div class="profile-pic-wrapper" style="position: relative; display: inline-block;">
-                      <img id="profile-pic" src="${user.profilePictureUrl || '../media/user.png'}" alt="Profile Picture" class="profile-img" />
-                      <div class="edit-icon" style="position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.6); border-radius: 50%; padding: 5px;">
-                        <i class="fas fa-pen" style="color: white;"></i>
-                      </div>
-                    </div>
-                    <input type="file" id="profilePicInput" accept="image/*" style="display:none;" />
-                  </div>
-
-                  <div class="form-group">
-                    <label>Display name:</label>
-                    <input type="text" id="nickname-input" value="${user.nickname || user.name || "User"}" />
-                  </div>
-
-                  <div class="form-group">
-                    <label>Nickname:</label>
-                    <input type="text" id="uniquenick-input" value="${user.uniquenick || ''}" maxlength="24" />
-                  </div>
-
-                  <div class="form-group">
-                    <label>About me:</label>
-                    <textarea maxlength="190" id="aboutme-input" placeholder="What's on your mind?...">${user.about_me || ''}</textarea>
-                  </div>
-
-                  <div class="form-group">
-                    <label>Email:</label>
-                    <input type="email" value="${maskedEmail}" readonly />
-                  </div>
-
-                  <div class="form-group">
-                    <label>Date of birth:</label>
-                    <input type="date" value="${user.birthdate ? user.birthdate.split('T')[0] : ''}" readonly />
-                  </div>
-                </form>
-
-                <div id="unsaved-notification" class="unsaved-notification" style="display:none;">
-                  <span id="unsaved-text">You have unsaved changes.</span>
-                  <button id="save-changes-btn" class="btn-submit">Save</button>
-                </div>
-
-                <div id="profile-msg"></div>
-
-                <div id="cropper-modal" class="profile-img-editor" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:1000;">
-                  <div class="profile-img-editor-content" style="background:white; padding:20px; border-radius:10px; text-align:center;">
-                    <h3>Edit Image</h3>
-                    <div style="width: 300px; height: 300px; margin: auto;">
-                      <img id="cropper-image" style="width:300px; height:300px; object-fit:cover;" />
-                    </div>
-                    <input type="range" id="zoom-slider" min="0.5" max="3" step="0.01" value="1" style="width: 300px; margin-top: 15px;" />
-                    <div style="margin-top:15px;">
-                      <button id="crop-confirm" class="btn-submit">Upload</button>
-                      <button id="crop-cancel" class="btn-cancel">Cancel</button>
-                    </div>
+            <h2><i class="fas fa-user"></i> Profile</h2>
+            <form id="profile-form" class="profile-form" enctype="multipart/form-data" autocomplete="off">
+              <div class="form-group">
+                <div class="profile-pic-wrapper" style="position: relative; display: inline-block;">
+                  <img id="profile-pic" src="${user.profilePictureUrl || '../media/user.png'}" alt="Profile Picture" class="profile-img" />
+                  <div class="edit-icon" style="position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.6); border-radius: 50%; padding: 5px;">
+                    <i class="fas fa-pen" style="color: white;"></i>
                   </div>
                 </div>
-              `;
+                <input type="file" id="profilePicInput" accept="image/*" style="display:none;" />
+              </div>
 
-                const profilePicInput = document.getElementById('profilePicInput');
-                const profilePicImg = document.getElementById('profile-pic');
-                const cropperModal = document.getElementById('cropper-modal');
-                const cropperImage = document.getElementById('cropper-image');
-                const zoomSlider = document.getElementById('zoom-slider');
-                const form = document.getElementById('profile-form');
-                        
-                const unsavedNotification = document.getElementById('unsaved-notification');
-                const saveChangesBtn = document.getElementById('save-changes-btn');
-                        
-                let cropper = null;
-                let croppedBlob = null;
-                let formChanged = false;
-                        
-                const saveChangesBtnOriginal = form.querySelector('.btn-submit');
-                if (saveChangesBtnOriginal) saveChangesBtnOriginal.style.display = 'none';
-                        
-                function toggleUnsavedNotification(show) {
-                  unsavedNotification.style.display = show ? 'flex' : 'none';
-                }
-                
-                function normalizeText(text) {
-                  return text.replace(/\s+/g, ' ').trim();
-                }
-                
-                function checkFormChanges() {
-                  const currentNickname = document.getElementById('nickname-input').value.trim();
-                  const currentUniquenick = document.getElementById('uniquenick-input').value.trim();
-                  const currentAboutMe = normalizeText(document.getElementById('aboutme-input').value);
-                  const currentVisibility = document.getElementById('profile-visibility')?.value;
-                  const currentShowBirthdate = document.getElementById('show-birthdate-checkbox')?.checked;
-                
-                  const originalNickname = (user.nickname || user.name || '').trim();
-                  const originalUniquenick = (user.uniquenick || '').trim();
-                  const originalAboutMe = normalizeText(user.about_me || '');
-                  const originalVisibility = user.privacy?.visibility || 'friends';
-                  const originalShowBirthdate = !!user.privacy?.show_birthdate;
-                
-                  const nicknameChanged = currentNickname !== originalNickname;
-                  const uniquenickChanged = currentUniquenick !== originalUniquenick;
-                  const aboutMeChanged = currentAboutMe !== originalAboutMe;
-                  const privacyChanged = currentVisibility !== originalVisibility;
-                  const birthdateVisibilityChanged = currentShowBirthdate !== originalShowBirthdate;
-                  const imageChanged = !!croppedBlob;
-                
-                  const hasChanges =
-                    nicknameChanged ||
-                    uniquenickChanged ||
-                    aboutMeChanged ||
-                    imageChanged ||
-                    privacyChanged ||
-                    birthdateVisibilityChanged;
-                
-                  formChanged = hasChanges;
-                  toggleUnsavedNotification(hasChanges);
-                }
-                
-                document.querySelector('.profile-pic-wrapper').addEventListener('click', () => {
-                  profilePicInput.click();
-                });
-                
-                profilePicInput.addEventListener('change', () => {
-                  const file = profilePicInput.files[0];
-                  if (!file) return;
-                
-                  const url = URL.createObjectURL(file);
-                  cropperImage.src = url;
-                  cropperModal.style.display = 'flex';
-                
-                  if (cropper) cropper.destroy();
-                  cropper = new Cropper(cropperImage, {
-                    aspectRatio: 1,
-                    viewMode: 1,
-                    background: false,
-                    guides: false,
-                    dragMode: 'move',
-                    cropBoxMovable: false,
-                    cropBoxResizable: false,
-                    ready() {
-                      zoomSlider.value = 1;
-                      cropper.zoomTo(1);
-                    }
-                  });
-                
-                  zoomSlider.addEventListener('input', () => {
-                    const zoom = parseFloat(zoomSlider.value);
-                    cropper.zoomTo(zoom);
-                  });
-                });
-                
-                profilePicInput.addEventListener('input', () => {
-                  checkFormChanges();
-                });
-                
-                document.getElementById('crop-cancel').addEventListener('click', () => {
-                  if (cropper) cropper.destroy();
-                  cropperModal.style.display = 'none';
-                });
-                
-                document.getElementById('crop-confirm').addEventListener('click', () => {
-                  if (!cropper) return;
-                  cropper.getCroppedCanvas({ width: 300, height: 300 }).toBlob(blob => {
-                    croppedBlob = blob;
-                    profilePicImg.src = URL.createObjectURL(blob);
-                    cropperModal.style.display = 'none';
-                    cropper.destroy();
-                    checkFormChanges();
-                  }, 'image/jpeg');
-                });
-                
-                form.querySelectorAll('input[type="text"]').forEach(input => {
-                  input.addEventListener('input', () => {
-                    checkFormChanges();
-                  });
-                });
-                
-                document.getElementById('aboutme-input').addEventListener('input', () => {
-                  checkFormChanges();
-                });
-                
-                if (document.getElementById('profile-visibility')) {
-                  document.getElementById('profile-visibility').addEventListener('change', () => {
-                    checkFormChanges();
-                  });
-                }
-                if (document.getElementById('show-birthdate-checkbox')) {
-                  document.getElementById('show-birthdate-checkbox').addEventListener('change', () => {
-                    checkFormChanges();
-                  });
-                }
-                
-                saveChangesBtn.addEventListener('click', () => {
-                  form.requestSubmit();
-                });
-                
-                form.addEventListener('submit', async (e) => {
-                  e.preventDefault();
-                
-                  let newNickname = document.getElementById('nickname-input').value.trim();
-                  let newUniquenick = document.getElementById('uniquenick-input').value.trim();
-                  let newAboutMe = document.getElementById('aboutme-input').value.trim();
-                  const newVisibility = document.getElementById('profile-visibility')?.value;
-                  const newShowBirthdate = document.getElementById('show-birthdate-checkbox')?.checked;
-                
-                  if (!newNickname) newNickname = user.nickname || user.name || '';
-                
-                  const formData = new FormData();
-                  if (newNickname !== (user.nickname || user.name || '')) {
-                    formData.append('nickname', newNickname);
-                  }
-                  if (newUniquenick !== (user.uniquenick || '')) {
-                    formData.append('uniquenick', newUniquenick);
-                  }
-                  if (newAboutMe !== (user.about_me || '')) {
-                    formData.append('about_me', newAboutMe);
-                  }
-                  if (croppedBlob) {
-                    formData.append('profilePicture', croppedBlob, 'profile.jpg');
-                  }
-                
-                  if (newVisibility && newVisibility !== (user.privacy?.visibility || 'friends')) {
-                    formData.append('privacy_visibility', newVisibility);
-                  }
-                  if (typeof newShowBirthdate === 'boolean' && newShowBirthdate !== !!user.privacy?.show_birthdate) {
-                    formData.append('privacy_show_birthdate', newShowBirthdate.toString());
-                  }
-                
-                  if (
-                    !formData.has('nickname') &&
-                    !formData.has('about_me') &&
-                    !formData.has('uniquenick') &&
-                    !formData.has('profilePicture') &&
-                    !formData.has('privacy_visibility') &&
-                    !formData.has('privacy_show_birthdate')
-                  ) {
-                    return;
-                  }
-                
-                  try {
-                    const updateRes = await fetch('/api/profile', {
-                      method: 'PUT',
-                      credentials: 'include',
-                      body: formData
-                    });
-                  
-                    const updateData = await updateRes.json();
-                    if (updateRes.ok) {
-                      showToast('Profile successfully updated.', 'success');
-                    
-                      formChanged = false;
-                      toggleUnsavedNotification(false);
-                      croppedBlob = null;
-                    
-                      user.nickname = newNickname;
-                      user.uniquenick = newUniquenick;
-                      user.about_me = newAboutMe;
-                      user.privacy = {
-                        ...user.privacy,
-                        visibility: newVisibility,
-                        show_birthdate: newShowBirthdate
-                      };
-                    
-                    } else {
-                      showToast('Error: ' + (updateData.message || "Can't update profile."), 'error');
-                    }
-                  } catch (err) {
-                    showToast('Network error while saving changes.', 'error');
-                  }
-                });
-                break;
+              <div class="form-group">
+                <label>Display name:</label>
+                <input type="text" id="nickname-input" value="${user.nickname || user.name || "User"}" />
+              </div>
+
+              <div class="form-group">
+                <label>Nickname:</label>
+                <input type="text" id="uniquenick-input" value="${user.uniquenick || ''}" maxlength="24" />
+              </div>
+
+              <div class="form-group">
+                <label>About me:</label>
+                <textarea maxlength="190" id="aboutme-input" placeholder="What's on your mind?...">${user.about_me || ''}</textarea>
+              </div>
+
+              <div class="form-group">
+                <label>Email:</label>
+                <input type="email" value="${maskedEmail}" readonly />
+              </div>
+
+              <div class="form-group">
+                <label>Date of birth:</label>
+                <input type="date" value="${user.birthdate ? user.birthdate.split('T')[0] : ''}" readonly />
+              </div>
+            </form>
+
+            <div id="unsaved-notification" class="unsaved-notification" style="display:none; align-items:center; gap:10px;">
+              <span id="unsaved-text">You have unsaved changes.</span>
+              <button id="cancel-changes-btn" class="btn-cancel">Cancel</button>
+              <button id="save-changes-btn" class="btn-submit">Save</button>
+            </div>
+
+            <div id="profile-msg"></div>
+
+            <div id="cropper-modal" class="profile-img-editor" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:1000;">
+              <div class="profile-img-editor-content" style="background:white; padding:20px; border-radius:10px; text-align:center;">
+                <h3>Edit Image</h3>
+                <div style="width: 300px; height: 300px; margin: auto;">
+                  <img id="cropper-image" style="width:300px; height:300px; object-fit:cover;" />
+                </div>
+                <div style="margin-top:15px;">
+                  <button id="crop-confirm" class="btn-submit">Upload</button>
+                  <button id="crop-cancel" class="btn-cancel">Cancel</button>
+                </div>
+              </div>
+            </div>
+          `;
+
+          const profilePicInput = document.getElementById('profilePicInput');
+          const profilePicImg = document.getElementById('profile-pic');
+          const cropperModal = document.getElementById('cropper-modal');
+          const cropperImage = document.getElementById('cropper-image');
+          const zoomSlider = document.getElementById('zoom-slider');
+          const form = document.getElementById('profile-form');
+          const unsavedNotification = document.getElementById('unsaved-notification');
+          const saveChangesBtn = document.getElementById('save-changes-btn');
+          const cancelChangesBtn = document.getElementById('cancel-changes-btn');
+
+          let cropper = null;
+          let croppedBlob = null;
+          let formChanged = false;
+
+          function toggleUnsavedNotification(show) {
+            unsavedNotification.style.display = show ? 'flex' : 'none';
+          }
+
+          function normalizeText(text) {
+            return text.replace(/\s+/g, ' ').trim();
+          }
+
+          function checkFormChanges() {
+            const currentNickname = document.getElementById('nickname-input').value.trim();
+            const currentUniquenick = document.getElementById('uniquenick-input').value.trim();
+            const currentAboutMe = normalizeText(document.getElementById('aboutme-input').value);
+
+            const originalNickname = user.nickname !== undefined ? user.nickname.trim() : '';
+            const originalUniquenick = (user.uniquenick || '').trim();
+            const originalAboutMe = normalizeText(user.about_me || '');
+
+            const nicknameChanged = currentNickname !== originalNickname;
+            const uniquenickChanged = currentUniquenick !== originalUniquenick;
+            const aboutMeChanged = currentAboutMe !== originalAboutMe;
+            const imageChanged = !!croppedBlob;
+
+            const hasChanges = nicknameChanged || uniquenickChanged || aboutMeChanged || imageChanged;
+
+            formChanged = hasChanges;
+            toggleUnsavedNotification(hasChanges);
+          }
+
+          document.querySelector('.profile-pic-wrapper').addEventListener('click', () => {
+            profilePicInput.click();
+          });
+
+          profilePicInput.addEventListener('change', () => {
+            const file = profilePicInput.files[0];
+            if (!file) return;
+
+            const url = URL.createObjectURL(file);
+            cropperImage.src = url;
+            cropperModal.style.display = 'flex';
+
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(cropperImage, {
+              aspectRatio: 1,
+              viewMode: 1,
+              background: false,
+              guides: false,
+              dragMode: 'move',
+              cropBoxMovable: false,
+              cropBoxResizable: false,
+              ready() {
+                zoomSlider.value = 1;
+                cropper.zoomTo(1);
+              }
+            });
+
+            zoomSlider.addEventListener('input', () => {
+              const zoom = parseFloat(zoomSlider.value);
+              cropper.zoomTo(zoom);
+            });
+          });
+
+          profilePicInput.addEventListener('input', () => {
+            checkFormChanges();
+          });
+
+          document.getElementById('crop-cancel').addEventListener('click', () => {
+            if (cropper) cropper.destroy();
+            cropperModal.style.display = 'none';
+          });
+
+          document.getElementById('crop-confirm').addEventListener('click', () => {
+            if (!cropper) return;
+            cropper.getCroppedCanvas({ width: 300, height: 300 }).toBlob(blob => {
+              croppedBlob = blob;
+              profilePicImg.src = URL.createObjectURL(blob);
+              cropperModal.style.display = 'none';
+              cropper.destroy();
+              checkFormChanges();
+            }, 'image/jpeg');
+          });
+
+          form.querySelectorAll('input[type="text"]').forEach(input => {
+            input.addEventListener('input', () => {
+              checkFormChanges();
+            });
+          });
+
+          document.getElementById('aboutme-input').addEventListener('input', () => {
+            checkFormChanges();
+          });
+
+          cancelChangesBtn.addEventListener('click', () => {
+            document.getElementById('nickname-input').value = user.nickname || user.name || '';
+            document.getElementById('uniquenick-input').value = user.uniquenick || '';
+            document.getElementById('aboutme-input').value = user.about_me || '';
+
+            if (croppedBlob) {
+              croppedBlob = null;
+              profilePicImg.src = user.profilePictureUrl || '../media/user.png';
+            }
+
+            checkFormChanges();
+          });
+
+          saveChangesBtn.addEventListener('click', () => {
+            form.requestSubmit();
+          });
+
+          form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            let newNickname = document.getElementById('nickname-input').value.trim();
+            let newUniquenick = document.getElementById('uniquenick-input').value.trim();
+            let newAboutMe = document.getElementById('aboutme-input').value.trim();
+
+            if (!newNickname) newNickname = user.nickname || user.name || '';
+
+            const originalNickname = user.nickname !== undefined ? user.nickname.trim() : '';
+            const originalUniquenick = (user.uniquenick || '').trim();
+            const originalAboutMe = normalizeText(user.about_me || '');
+
+            const formData = new FormData();
+            if (newNickname !== originalNickname) {
+              formData.append('nickname', newNickname);
+            }
+            if (newUniquenick !== originalUniquenick) {
+              formData.append('uniquenick', newUniquenick);
+            }
+            if (normalizeText(newAboutMe) !== originalAboutMe) {
+              formData.append('about_me', newAboutMe);
+            }
+            if (croppedBlob) {
+              formData.append('profilePicture', croppedBlob, 'profile.jpg');
+            }
+
+            if (
+              !formData.has('nickname') &&
+              !formData.has('about_me') &&
+              !formData.has('uniquenick') &&
+              !formData.has('profilePicture')
+            ) {
+              return;
+            }
+
+            try {
+              const updateRes = await fetch('/api/profile', {
+                method: 'PUT',
+                credentials: 'include',
+                body: formData
+              });
+
+              const updateData = await updateRes.json();
+              if (updateRes.ok) {
+                showToast('Profile successfully updated.', 'success');
+
+                formChanged = false;
+                toggleUnsavedNotification(false);
+                croppedBlob = null;
+
+                user.nickname = newNickname;
+                user.uniquenick = newUniquenick;
+                user.about_me = newAboutMe;
+
+              } else {
+                showToast('Error: ' + (updateData.message || "Can't update profile."), 'error');
+              }
+            } catch (err) {
+              showToast('Network error while saving changes.', 'error');
+            }
+          });
+        break;
 
         case 'settings':
           content.innerHTML = `
