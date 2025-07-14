@@ -10,31 +10,39 @@ document.getElementById('complete-profile-form').addEventListener('submit', asyn
   const userId = new URLSearchParams(window.location.search).get('userId');
   const errorMsg = document.getElementById('error-msg');
 
+  errorMsg.textContent = ''; 
+
   if (!acceptedTerms) {
     errorMsg.textContent = 'You must accept the policies.';
     return;
   }
 
-  try {
-    const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
-    if (!passwordRegex.test(password)) {
-      errorMsg.textContent = 'Password must be at least 8 characters long, contain one uppercase letter and one number.';
-      return;
-    }
+  // Password: almeno 8 caratteri, 1 maiuscola, 1 numero
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+  if (!passwordRegex.test(password)) {
+    errorMsg.textContent = 'Password must be at least 8 characters long, contain one uppercase letter and one number.';
+    return;
+  }
 
-    if (!/^[a-z0-9._]+$/.test(uniquenick)) {
-      errorMsg.textContent = 'Nickname can only contain lowercase letters, numbers, underscores, and dots.';
-      return;
-    }
+  // unicikenick solo lettere minuscole, numeri, punto e underscore
+  if (!/^[a-z0-9._]+$/.test(uniquenick)) {
+    errorMsg.textContent = 'Nickname can only contain lowercase letters, numbers, underscores, and dots.';
+    return;
+  }
 
-    const nickCheck = await fetch(`/api/profile/check-nick?nick=${encodeURIComponent(uniquenick)}`);
-    const nickData = await nickCheck.json();
+ console.log('Checking nickname:', uniquenick);
+try {
+  const nickCheck = await fetch(`/api/profile/check-nick?nick=${encodeURIComponent(uniquenick)}`);
+  console.log('Fetch returned', nickCheck);
+  const nickData = await nickCheck.json();
+  console.log('Response JSON:', nickData);
 
-    if (nickData.exists) {
+    if (!nickData.available) {
       errorMsg.textContent = 'This nickname is already in use. Choose another one.';
       return;
     }
 
+    // Chiamata POST per completare il profilo
     const res = await fetch('/api/auth/complete-profile', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -52,11 +60,13 @@ document.getElementById('complete-profile-form').addEventListener('submit', asyn
     const data = await res.json();
 
     if (res.ok) {
+      // redirect dopo successo
       window.location.href = `/main/main.html?name=${encodeURIComponent(username)}`;
     } else {
       errorMsg.textContent = data.message || 'Error while saving.';
     }
   } catch (err) {
+    console.error('Fetch error:', err);
     errorMsg.textContent = 'Network error.';
   }
 });

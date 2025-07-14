@@ -19,6 +19,26 @@ const upload = multer({
 
 router.use(authMiddleware);
 
+router.get('/profile/check-nick', async (req, res) => {
+  try {
+    const { nick } = req.query;
+    if (!nick || typeof nick !== 'string') {
+      return res.status(400).json({ message: 'Nickname is required.' });
+    }
+
+    const existingUser = await User.findOne({ uniquenick: nick.toLowerCase() });
+
+    if (existingUser) {
+      return res.json({ available: false, message: 'Nickname already in use.' });
+    } else {
+      return res.json({ available: true });
+    }
+  } catch (error) {
+    console.error('Error checking nickname:', error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+});
+
 router.get('/profile', async (req, res) => {
   try {
     const user = req.user;
@@ -65,7 +85,7 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
       if (!isValidUniquenick) {
         return res.status(400).json({
           message:
-            'Uniquenick can only contain lowercase letters, numbers, underscores, and dots.',
+            'Nickname can only contain lowercase letters, numbers, underscores, and dots.',
         });
       }
 

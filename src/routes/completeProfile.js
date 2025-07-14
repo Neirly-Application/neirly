@@ -1,9 +1,10 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const { authMiddleware } = require('../authMiddleware/authMiddleware');
 const router = express.Router();
 
-router.post('/complete-profile', async (req, res) => {
+router.post('/complete-profile', authMiddleware, async (req, res) => {
   const { userId, username, uniquenick, birthdate, password, wantsUpdates, acceptedTerms, profilePictureUrl } = req.body;
 
   if (!userId || !username || !uniquenick || !birthdate || !password || acceptedTerms !== true) {
@@ -14,10 +15,31 @@ router.post('/complete-profile', async (req, res) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: 'User not found.' });
 
+    const newUniquenick = typeof uniquenick === 'string' ? uniquenick.trim().toLowerCase() : String(uniquenick).trim().toLowerCase();
+
+    // Controllo validità formato uniquenick
+    const isValidUniquenick = /^[a-z0-9._]+$/.test(newUniquenick);
+    if (!isValidUniquenick) {
+      return res.status(400).json({
+        message: 'Nickname can only contain lowercase letters, numbers, underscores, and dots.',
+      });
+    }
+
+    // Controllo se uniquenick è già usato da un altro user (escludendo l’utente corrente)
+    const existingUser = await User.findOne({
+      uniquenick: newUniquenick,
+      _id: { $ne: user._id }
+    });
+
+    if (existingUser) {
+      return res.status(409).json({ message: 'This nickname is already in use.' });
+    }
+
+    // Tutto ok, assegna i campi
     const hashedPassword = await bcrypt.hash(password, 10);
 
     user.name = username;
-    user.uniquenick = typeof uniquenick === 'string' ? uniquenick.trim() : String(uniquenick).trim();
+    user.uniquenick = newUniquenick;
     user.birthdate = new Date(birthdate);
     user.passwordHash = hashedPassword;
     user.wantsUpdates = wantsUpdates === true;
@@ -33,6 +55,11 @@ router.post('/complete-profile', async (req, res) => {
     res.json({ message: 'Profile completed successfully!' });
   } catch (error) {
     console.error('Error completing profile:', error);
+
+    if (error.code === 11000 && error.keyPattern && error.keyPattern.uniquenick) {
+      return res.status(409).json({ message: 'This nickname is already in use.' });
+    }
+
     res.status(500).json({ message: 'Internal server error.' });
   }
 });

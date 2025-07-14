@@ -32,18 +32,18 @@ app.use(passport.initialize());
 
 app.use('/user_pfps', express.static(path.join(__dirname, 'user_pfps')));
 app.use('/api/auth', authenticateRouter);
-app.use('/api/auth', completeProfileRouter);
-app.use('/api/auth', adminRouter);
 app.use('/api/auth', forceLogoutRouter);
 app.use('/api/auth', banUserRouter);
-app.use('/api', profileRouter);
-app.use('/api', deleteUserRouter);
-app.use('/api', nearMeRouter);
+app.use('/api/auth', adminRouter);
+app.use('/api/auth', completeProfileRouter);
 app.use('/api', notificationsRouter);
+app.use('/api', deleteUserRouter);
+app.use('/api', activityRouter);
+app.use('/api', profileRouter);
 app.use('/api', friendsRouter);
 app.use('/api', privacyRouter);
 app.use('/api', devicesRouter);
-app.use('/api', activityRouter);
+app.use('/api', nearMeRouter);
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
