@@ -91,8 +91,20 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
-router.post('/logout', (req, res) => {
-  res.clearCookie('token');
+router.post('/logout', authMiddleware, async (req, res) => {
+  res.clearCookie('token'); 
+
+  if (req.user) {
+    await ActivityLog.create({
+      userId: req.user._id,
+      type: 'logout',
+      metadata: {
+        userAgent: req.headers['user-agent'],
+        ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip
+      }
+    });
+  }
+
   res.json({ message: 'Logged out successfully!' });
 });
 
@@ -107,7 +119,7 @@ router.delete('/delete-account', authMiddleware, async (req, res) => {
     res.clearCookie('token');
     await ActivityLog.create({
       userId: req.user._id,
-      type: 'logout',
+      type: 'logout & deleting account',
       metadata: {
         ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip
       }

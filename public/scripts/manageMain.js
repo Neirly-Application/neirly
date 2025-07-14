@@ -1250,25 +1250,25 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    document.querySelectorAll('.logout-btn').forEach(logoutBtn => {
-      logoutBtn.addEventListener('click', async e => {
-        e.preventDefault();
-        try {
-          const res = await fetch('/api/auth/logout', {
-            method: 'POST',
-            credentials: 'include',
-          });
-          if (res.ok) {
-            window.location.href = '/login.html';
-          } else {
-            showToast('Logout failed.', 'error');
-          }
-        } catch (err) {
-          showToast('Network error while logging out.', 'error');
-        }
-      });
-    });
+  document.querySelectorAll('.logout-btn').forEach(logoutBtn => {
+    logoutBtn.addEventListener('click', async e => {
+      e.preventDefault();
+      try {
+        const res = await fetch('/api/auth/logout', {
+          method: 'POST',
+          credentials: 'include',
+        });
 
+        if (res.ok) {
+          window.location.href = '/login.html';
+        } else {
+          showToast('Logout failed.', 'error');
+        }
+      } catch (err) {
+        showToast('Network error while logging out.', 'error');
+      }
+    });
+  });
     await fetchAndSetUser();
 
     const initialSection = window.location.hash.substring(1) || 'map';
@@ -1284,4 +1284,3 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.location.href = '/login.html';
   }
 });
-
