@@ -49,7 +49,7 @@
   });
 
   // PATCH /api/devices/ping
-  router.patch('/ping', authMiddleware, async (req, res) => {
+  router.patch('devices/ping', authMiddleware, async (req, res) => {
     try {
       const userAgent = req.headers['user-agent'] || 'Unknown';
       const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
