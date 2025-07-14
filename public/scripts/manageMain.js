@@ -23,9 +23,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (user && user.roles && user.roles.includes('ceo')) {
-          document.querySelectorAll('#admin-section').forEach(el => {
-            el.style.display = 'flex';
-          });
+          // Mostra la sezione admin
+          if (adminSection) adminSection.style.display = 'flex';
+        } else {
+          if (adminSection) adminSection.style.display = 'none';
         }
       } catch (err) {
         console.error('Failed to fetch user profile on load:', err);
@@ -53,11 +54,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         const res = await fetch('/api/notifications', { credentials: 'include' });
         if (res.ok) {
           allNotifications = await res.json();
+          // Puoi poi fare render o aggiornamenti se serve
+        } else {
+          console.error('Failed to preload notifications, status:', res.status);
         }
       } catch (err) {
         console.error('Error preloading notifications:', err);
       }
     }
+
+    async function fetchUnreadCount() {
+      try {
+        const res = await fetch('/api/notifications/unread-count', { credentials: 'include' });
+        if (!res.ok) throw new Error('Failed to fetch unread notifications count');
+        const data = await res.json();
+        checkUnreadNotifications(data.unread || 0);
+      } catch (err) {
+        console.error('Error fetching unread count:', err);
+      }
+    }
+
+    await fetchAndSetUser();
+    await preloadNotifications();
+    await fetchUnreadCount();
 
     async function caricaSezione(section) {
       switch (section) {
@@ -182,7 +201,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
           }
 
-          await loadNotifications();
+          async function loadAndRenderNotifications() {
+            await loadNotifications();
+          }
+
+          loadAndRenderNotifications(); // chiamata senza await, perché è top-level
+
           break;
 
         case 'map':

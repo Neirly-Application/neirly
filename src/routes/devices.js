@@ -5,7 +5,7 @@
   const getLocationFromIP = require('../utils/getLocationFromIP');
 
   // GET /api/devices
-  router.get('/', authMiddleware, (req, res) => {
+  router.get('/devices', authMiddleware, (req, res) => {
     return res.json(req.user.devices || []);
   });
 

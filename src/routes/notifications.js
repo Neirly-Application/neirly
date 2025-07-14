@@ -12,7 +12,7 @@ router.get('/notifications', authMiddleware, async (req, res) => {
   }
 });
 
-router.put('/:id/read', authMiddleware, async (req, res) => {
+router.put('/notifications/:id/read', authMiddleware, async (req, res) => {
   try {
     const notification = await Notification.findOneAndUpdate(
       { _id: req.params.id, userId: req.user._id },
@@ -26,7 +26,7 @@ router.put('/:id/read', authMiddleware, async (req, res) => {
   }
 });
 
-router.get('/unread-count', authMiddleware, async (req, res) => {
+router.get('/notifications/unread-count', authMiddleware, async (req, res) => {
   try {
     const count = await Notification.countDocuments({ userId: req.user._id, read: false });
     res.json({ unread: count });
