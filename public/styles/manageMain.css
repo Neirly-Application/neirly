@@ -202,15 +202,29 @@ input[type="file"] {
     border-radius: 50%;
 }
 
-.activity-log {
+.activity-log-container {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
   gap: 15px;
   padding: 10px;
   border-radius: 12px;
-  background: #f8f9fa;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  overflow: none;
+}
+
+.activity-log-container h4 {
+  align-self: center;
+}
+
+.activity-log-list {
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  overflow-y: auto;
 }
 
 .activity-entry {
@@ -244,7 +258,7 @@ input[type="file"] {
 }
 
 @media (max-width: 480px) {
-  .activity-log {
+  .activity-log-container {
     padding: 8px;
     gap: 10px;
   }
@@ -252,5 +266,57 @@ input[type="file"] {
   .activity-entry {
     font-size: 13px;
     padding: 8px 12px;
+  }
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+  align-items: center;
+}
+
+/* Label e input/select impilati verticalmente */
+.filters label {
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Input, select e button di base */
+.filters select,
+.filters input[type="date"],
+.filters input[type="time"] {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.filters button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  background-color: var(--main-bg);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+/* Media query per schermi piccoli */
+@media (max-width: 600px) {
+  .filters {
+    flex-direction: column;
+    align-items: stretch;  /* estendi in larghezza */
+  }
+  
+  .filters label,
+  .filters button {
+    width: 100%;      /* full width */
+    max-width: 100%;  /* evita limitazioni */
+  }
+  
+  .filters button {
+    margin-top: 10px;
   }
 }

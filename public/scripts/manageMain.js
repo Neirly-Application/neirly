@@ -664,7 +664,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                   <li><a href="#settings-account"><i class="fas fa-user-shield"></i> Account & Security</a></li>
                   <li><a href="#settings-devices"><i class="fas fa-laptop"></i> Devices</a></li>
                   <li><a href="#settings-privacy"><i class="fas fa-lock"></i> Privacy</a></li>
-                  <li><a href="#settings-activity"><i class="fas fa-chart-line"></i> Activity</a></li>
+                  <li><a href="#settings-activity"><i class="fas fa-chart-line"></i> Activit Logs</a></li>
                   <li><a href="#settings-notifications"><i class="fas fa-bell"></i> Notifications</a></li>
                   <li><a href="#settings-theme"><i class="fas fa-palette"></i> App Theme</a></li>
                   <li><a href="#settings-region"><i class="fas fa-globe"></i> Language</a></li>
@@ -848,42 +848,124 @@ document.addEventListener('DOMContentLoaded', async () => {
             <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link">
               <i class="fas fa-arrow-left"></i>
             </a>
-            <h2><i class="fas fa-chart-line"></i> Activity</h2>
+            <h2><i class="fas fa-chart-line"></i> Activity Logs</h2>
           </div>
-          <div id="activity-logs">
-                  Loading...
+          <div class="activity-log-container" id="activity-logs">
+            <h4>All logs</h4>
+            <div class="filters">
+              <label>Type:
+                <select id="filter-type">
+                  <option value="all">All</option>
+                  <option value="login">Login</option>
+                  <option value="logout">Logout</option>
+                </select>
+              </label>
+
+              <label>Date:
+                <input type="date" id="filter-date">
+              </label>
+
+              <label>From:
+                <input type="time" id="filter-time-from">
+              </label>
+
+              <label>To:
+                <input type="time" id="filter-time-to">
+              </label>
+
+              <button id="apply-filters">Apply</button>
+            </div>
+
+            <div class="activity-log-list" id="log-list">
+              Loading...
+            </div>
           </div>
         `;
 
-        try {
-          const response = await fetch('/api/activity', { credentials: 'include' });
-          if (!response.ok) throw new Error('Failed to fetch activity logs');
-          const logs = await response.json();
+        async function loadActivityLogs() {
+          try {
+            const response = await fetch('/api/activity', { credentials: 'include' });
+            if (!response.ok) throw new Error('Failed to fetch activity logs');
+            const logs = await response.json();
 
-          const logsContainer = document.getElementById('activity-logs');
-          if (logs.length === 0) {
-            logsContainer.innerHTML = `<p>No activity logs found.</p>`;
-          } else {
-            const list = logs.map(log => `
-              <div class="activity-entry">
-                <div class="${log.type.toLowerCase()}">
-                  <strong>${log.type.toUpperCase()}</strong> -  ${new Date(log.timestamp).toLocaleString()}
-                  ${log.metadata?.provider ? `via <span class="${log.type.toLowerCase()}">${log.metadata.provider}</span>` : '<span style="color: red">unable to solve provider.</span>'}
-                  ${log.metadata?.ip ? ` (IP: ${log.metadata.ip})` : '<span style="color: red">unable to solve IP.</span>'}
-                </div>
-              </div>
-            `).join('');
-            logsContainer.innerHTML = `
-                <div class="activity-log">
-                      <p>Your account activity logs.</p>
-                      ${list}
-                </div>`;
+            const logListContainer = document.getElementById('log-list');
+            if (!logListContainer) return;
+
+            const icons = {
+              login: '<i class="fas fa-sign-in-alt"></i>',
+              logout: '<i class="fas fa-sign-out-alt"></i>',
+            };
+
+            function renderLogs(filteredLogs) {
+              if (filteredLogs.length === 0) {
+                logListContainer.innerHTML = '<p>No activity logs found.</p>';
+                return;
               }
-            } catch (error) {
-              const logsContainer = document.getElementById('activity-logs');
-              logsContainer.innerHTML = `<p>Error loading activity: ${error.message}</p>`;
+
+              const list = filteredLogs.map(log => {
+                const icon = icons[log.type?.toLowerCase()] || '<i class="fas fa-question-circle"></i>';
+                return `
+                  <div class="activity-entry">
+                    <div class="${log.type.toLowerCase()}">
+                      <strong>${icon} ${log.type.toUpperCase()}</strong> - ${new Date(log.timestamp).toLocaleString()}
+                      ${log.metadata?.provider ? `via <span class="${log.type.toLowerCase()}">${log.metadata.provider}</span>` : '<span style="color: red">unable to solve provider.</span>'}
+                      ${log.metadata?.ip ? ` (IP: ${log.metadata.ip})` : '<span style="color: red">unable to solve IP.</span>'}
+                    </div>
+                  </div>
+                `;
+              }).join('');
+
+              logListContainer.innerHTML = list;
             }
-          break;
+
+            renderLogs(logs);
+
+            document.getElementById('apply-filters').addEventListener('click', () => {
+              const type = document.getElementById('filter-type').value;
+              const date = document.getElementById('filter-date').value;
+              const timeFrom = document.getElementById('filter-time-from').value;
+              const timeTo = document.getElementById('filter-time-to').value;
+
+              const filtered = logs.filter(log => {
+                const logDate = new Date(log.timestamp);
+
+                if (type !== 'all' && log.type.toLowerCase() !== type) return false;
+
+                if (date) {
+                  const logDateStr = logDate.toISOString().split('T')[0];
+                  if (logDateStr !== date) return false;
+                }
+
+                if (timeFrom) {
+                  const fromMinutes = parseInt(timeFrom.split(':')[0]) * 60 + parseInt(timeFrom.split(':')[1]);
+                  const logMinutes = logDate.getHours() * 60 + logDate.getMinutes();
+                  if (logMinutes < fromMinutes) return false;
+                }
+
+                if (timeTo) {
+                  const toMinutes = parseInt(timeTo.split(':')[0]) * 60 + parseInt(timeTo.split(':')[1]);
+                  const logMinutes = logDate.getHours() * 60 + logDate.getMinutes();
+                  if (logMinutes > toMinutes) return false;
+                }
+
+                return true;
+              });
+
+              renderLogs(filtered);
+            });
+
+          } catch (error) {
+            const logsContainer = document.getElementById('activity-logs');
+            if (logsContainer)
+              logsContainer.innerHTML = `<p>Error loading activity: ${error.message}</p>`;
+          }
+        }
+
+        // Chiamata alla funzione
+        loadActivityLogs();
+
+        break;
+
 
         case 'settings-notifications':
           content.innerHTML = `
@@ -1285,25 +1367,25 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-  document.querySelectorAll('.logout-btn').forEach(logoutBtn => {
-    logoutBtn.addEventListener('click', async e => {
-      e.preventDefault();
-      try {
-        const res = await fetch('/api/auth/logout', {
-          method: 'POST',
-          credentials: 'include',
-        });
+    document.querySelectorAll('.logout-btn').forEach(logoutBtn => {
+      logoutBtn.addEventListener('click', async e => {
+        e.preventDefault();
+        try {
+          const res = await fetch('/api/auth/logout', {
+            method: 'POST',
+            credentials: 'include',
+          });
 
-        if (res.ok) {
-          window.location.href = '/login.html';
-        } else {
-          showToast('Logout failed.', 'error');
+          if (res.ok) {
+            window.location.href = '/login.html';
+          } else {
+            showToast('Logout failed.', 'error');
+          }
+        } catch (err) {
+          showToast('Network error while logging out.', 'error');
         }
-      } catch (err) {
-        showToast('Network error while logging out.', 'error');
-      }
+      });
     });
-  });
     await fetchAndSetUser();
 
     const initialSection = window.location.hash.substring(1) || 'map';
