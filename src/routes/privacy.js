@@ -6,7 +6,7 @@ const User = require('../models/User');
 router.use(authMiddleware);
 
 // GET - Ottieni impostazioni privacy
-router.get('/', async (req, res) => {
+router.get('/privacy', async (req, res) => {
     try {
         const user = req.user;
         res.json({
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 });
 
 // PUT - Aggiorna le impostazioni privacy
-router.put('/', async (req, res) => {
+router.put('/privacy', async (req, res) => {
     try {
         const { visibility } = req.body;
         const allowedValues = ['friends', 'everyone', 'private'];

@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
   name: { type: String },
   uniquenick: {
     type: String,
+    unique: true,
     required: true,
     match: /^[a-z0-9._]+$/,
     lowercase: true,

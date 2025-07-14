@@ -201,3 +201,49 @@ input[type="file"] {
 #profilePicInput {
     border-radius: 50%;
 }
+
+.activity-log {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 10px;
+  border-radius: 12px;
+  background: #f8f9fa;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.activity-entry {
+  padding: 12px 16px;
+  background-color: white;
+  border-radius: 10px;
+  border-left: 4px solid var(--primary, #007bff);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  font-size: 14px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.activity-entry strong {
+  color: var(--primary, #007bff);
+  margin-right: 8px;
+}
+
+@media (max-width: 768px) {
+  .activity-entry {
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .activity-log {
+    padding: 8px;
+    gap: 10px;
+  }
+
+  .activity-entry {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}

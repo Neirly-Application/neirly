@@ -19,7 +19,7 @@ const upload = multer({
 
 router.use(authMiddleware);
 
-router.get('/', async (req, res) => {
+router.get('/profile', async (req, res) => {
   try {
     const user = req.user;
     res.json({
@@ -39,7 +39,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.put('/', upload.single('profilePicture'), async (req, res) => {
+router.put('/profile', upload.single('profilePicture'), async (req, res) => {
   try {
     const user = req.user;
     const updates = {};

@@ -10,7 +10,7 @@ async function getLocationFromIP(ip) {
         if (data.error) return 'Unknown';
         return `${data.city}, ${data.country_name}`;
     } catch (err) {
-        console.error('IP LOCATION FETCH ERROR:', err.message);
+        console.error('IP location fetch error:', err.message);
         return 'Unknown';
     }
 }

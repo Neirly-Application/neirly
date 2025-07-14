@@ -840,15 +840,41 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         break;
 
-        case 'settings-activity':
-          content.innerHTML = `
-            <div class="case-header">
-              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-              <h2><i class="fas fa-chart-line"></i> Activity</h2>
-            </div>
-              <p>Your account activity.</p>
-            `;
-          break;
+      case 'settings-activity':
+        content.innerHTML = `
+          <div class="case-header">
+            <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link">
+              <i class="fas fa-arrow-left"></i>
+            </a>
+            <h2><i class="fas fa-chart-line"></i> Activity</h2>
+          </div>
+          <p>Your account activity.</p>
+          <div id="activity-logs">Loading...</div>
+        `;
+
+        try {
+          const response = await fetch('/api/activity', { credentials: 'include' });
+          if (!response.ok) throw new Error('Failed to fetch activity logs');
+          const logs = await response.json();
+
+          const logsContainer = document.getElementById('activity-logs');
+          if (logs.length === 0) {
+            logsContainer.innerHTML = `<p>No activity logs found.</p>`;
+          } else {
+            const list = logs.map(log => `
+              <div class="activity-entry">
+                <strong>${log.type.toUpperCase()}</strong> - ${new Date(log.timestamp).toLocaleString()}
+                ${log.metadata?.provider ? `via ${log.metadata.provider}` : ''}
+                ${log.metadata?.ip ? ` (IP: ${log.metadata.ip})` : ''}
+              </div>
+            `).join('');
+            logsContainer.innerHTML = `<div class="activity-log">${list}</div>`;
+          }
+        } catch (error) {
+          const logsContainer = document.getElementById('activity-logs');
+          logsContainer.innerHTML = `<p>Error loading activity: ${error.message}</p>`;
+        }
+        break;
 
         case 'settings-notifications':
           content.innerHTML = `

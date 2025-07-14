@@ -9,11 +9,11 @@ router.post('/request', authMiddleware, async (req, res) => {
   const { email } = req.body;
 
   if (!email) return res.status(400).json({ message: 'Email richiesta' });
-  if (email === req.user.email) return res.status(400).json({ message: 'Non puoi aggiungere te stesso' });
+  if (email === req.user.email) return res.status(400).json({ message: "You can't add yourself!" });
 
   try {
     const targetUser = await User.findOne({ email });
-    if (!targetUser) return res.status(404).json({ message: 'Utente non trovato' });
+    if (!targetUser) return res.status(404).json({ message: 'User not found.' });
 
     // Verifica se già amici o già richiesta inviata
     const isAlreadyFriend = targetUser.friends?.includes(req.user._id);
@@ -24,14 +24,14 @@ router.post('/request', authMiddleware, async (req, res) => {
       read: false
     });
 
-    if (isAlreadyFriend) return res.status(400).json({ message: 'Siete già amici' });
-    if (alreadyRequested) return res.status(400).json({ message: 'Richiesta già inviata' });
+    if (isAlreadyFriend) return res.status(400).json({ message: "You're already friends." });
+    if (alreadyRequested) return res.status(400).json({ message: "A pending request has already been sent." });
 
     // Crea notifica
     const notifica = new Notification({
       userId: targetUser._id,
-      title: 'Nuova richiesta di amicizia',
-      message: `${req.user.name || req.user.email} ti ha inviato una richiesta di amicizia.`,
+      title: 'Friend Request.',
+      message: `${req.user.name || req.user.email} sent you a friend request!.`,
       type: 'friend_request',
       read: false,
       meta: {
@@ -43,10 +43,10 @@ router.post('/request', authMiddleware, async (req, res) => {
 
     await notifica.save();
 
-    res.json({ message: 'Richiesta inviata!' });
+    res.json({ message: 'Pending request.' });
   } catch (err) {
-    console.error('Errore richiesta amicizia:', err);
-    res.status(500).json({ message: 'Errore server' });
+    console.error('Friend request error:', err);
+    res.status(500).json({ message: 'Server error.' });
   }
 });
 
@@ -55,7 +55,7 @@ router.post('/respond', authMiddleware, async (req, res) => {
   const { notificationId, action } = req.body;
 
   if (!notificationId || !['accept', 'reject'].includes(action)) {
-    return res.status(400).json({ message: 'Parametri non validi' });
+    return res.status(400).json({ message: 'Invalid parameters' });
   }
 
   try {
@@ -65,7 +65,7 @@ router.post('/respond', authMiddleware, async (req, res) => {
       type: 'friend_request'
     });
 
-    if (!notification) return res.status(404).json({ message: 'Notifica non trovata' });
+    if (!notification) return res.status(404).json({ message: 'Notification not found.' });
 
     const senderId = notification.meta.from;
 
@@ -74,23 +74,23 @@ router.post('/respond', authMiddleware, async (req, res) => {
       await User.updateOne({ _id: senderId }, { $addToSet: { friends: req.user._id } });
 
       notification.read = true;
-      notification.message += ' (accettata)';
+      notification.message += ' (accepted)';
       await notification.save();
 
-      res.json({ message: 'Amicizia confermata!' });
+      res.json({ message: 'Friend request successfully accepted!' });
     } else {
       notification.read = true;
-      notification.message += ' (rifiutata)';
+      notification.message += ' (declined)';
       await notification.save();
-      res.json({ message: 'Richiesta rifiutata.' });
+      res.json({ message: 'Friend request successfully declined.' });
     }
   } catch (err) {
-    console.error('Errore risposta richiesta:', err);
-    res.status(500).json({ message: 'Errore server' });
+    console.error('Friend request error:', err);
+    res.status(500).json({ message: 'Server error.' });
   }
 });
 
-router.get('/', authMiddleware, async (req, res) => {
+router.get('/friends', authMiddleware, async (req, res) => {
   try {
     // Amici confermati
     const user = await User.findById(req.user._id).populate('friends', 'name email');
@@ -114,8 +114,8 @@ router.get('/', authMiddleware, async (req, res) => {
       pendingRequests
     });
   } catch (err) {
-    console.error('Errore caricamento amici:', err);
-    res.status(500).json({ message: 'Errore caricamento amici' });
+    console.error('Error while loading friends:', err);
+    res.status(500).json({ message: 'Error loading friends.' });
   }
 });
 

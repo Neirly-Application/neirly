@@ -10,7 +10,7 @@
   });
 
   // POST /api/devices
-  router.post('/', authMiddleware, async (req, res) => {
+  router.post('/devices', authMiddleware, async (req, res) => {
     try {
       const userAgent = req.headers['user-agent'] || 'Unknown';
       const parser = new UAParser(userAgent);

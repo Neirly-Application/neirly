@@ -7,6 +7,7 @@ const getLocationFromIP = require('../utils/getLocationFromIP');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
 const { authMiddleware, requireRole } = require('../authMiddleware/authMiddleware');
+const ActivityLog = require('../models/ActivityLogs');
 const { sendLoginMessage } = require('../discordBot');
 
 router.post('/register', async (req, res) => {
@@ -15,6 +16,14 @@ router.post('/register', async (req, res) => {
     const hash = await bcrypt.hash(password, 10);
     const user = new User({ email, passwordHash: hash, roles: 'user' });
     await user.save();
+    await ActivityLog.create({
+      userId: user._id,
+      type: 'login',
+      metadata: {
+        userAgent: req.headers['user-agent'],
+        ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip
+      }
+    });
     res.json({ message: 'Registration successfully completed!' });
   } catch (error) {
     console.error('Register error:', error);
@@ -72,6 +81,7 @@ router.post('/login', (req, res, next) => {
         id: user._id,
         email: user.email,
         name: user.name,
+        uniquenick: user.uniquenick,
         profileCompleted: user.profileCompleted,
         roles: user.roles,
         banned: user.banned,
@@ -95,6 +105,13 @@ router.delete('/delete-account', authMiddleware, async (req, res) => {
     await User.findByIdAndDelete(userId);
 
     res.clearCookie('token');
+    await ActivityLog.create({
+      userId: req.user._id,
+      type: 'logout',
+      metadata: {
+        ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip
+      }
+    });
     res.json({ message: 'Account and related notifications successfully deleted.' });
   } catch (error) {
     console.error('Account deletion error:', error);
@@ -105,11 +122,12 @@ router.delete('/delete-account', authMiddleware, async (req, res) => {
 router.get('/profile', authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('-passwordHash');
-    if (!user) return res.status(404).json({ message: 'Utente non trovato.' });
+    if (!user) return res.status(404).json({ message: 'User not found.' });
 
     res.json({
       id: user._id,
       name: user.name,
+      uniquenick: user.uniquenick,
       email: user.email,
       birthdate: user.birthdate,
       nickname: user.nickname,
@@ -156,6 +174,15 @@ router.get('/google/callback',
           });
         }
         await req.user.save();
+        await ActivityLog.create({
+          userId: req.user._id,
+          type: 'login',
+          metadata: {
+            provider: 'google',
+            email: req.user.email,
+            ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip
+          }
+        });
         console.log('✅ Device saved (Google)');
       } catch (err) {
         console.error('Device tracking error (Google):', err.message);
@@ -173,14 +200,13 @@ router.get('/google/callback',
   }
 );
 
-
 router.get('/discord', passport.authenticate('discord', {
   scope: ['identify', 'email']
 }));
 
 router.get('/discord/callback',
   passport.authenticate('discord', { session: false, failureRedirect: '/login.html?error=discord' }),
-  (req, res) => {
+    async (req, res) => {
     try {
       const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
         expiresIn: '7d'
@@ -207,6 +233,15 @@ router.get('/discord/callback',
           }
         
           await req.user.save();
+          await ActivityLog.create({
+            userId: req.user._id,
+            type: 'login',
+            metadata: {
+              provider: 'discord',
+              email: req.user.email,
+              ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip
+            }
+          });
           console.log('✅ Discord device saved');
         } catch (err) {
           console.error('Error saving Discord login device:', err.message);

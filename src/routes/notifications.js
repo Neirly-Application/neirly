@@ -3,7 +3,7 @@ const router = express.Router();
 const Notification = require('../models/Notification');
 const { authMiddleware } = require('../authMiddleware/authMiddleware');
 
-router.get('/', authMiddleware, async (req, res) => {
+router.get('/notifications', authMiddleware, async (req, res) => {
   try {
     const notifications = await Notification.find({ userId: req.user._id }).sort({ date: -1 });
     res.json(notifications);

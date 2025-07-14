@@ -16,9 +16,12 @@
 <body>
 <h1>Complete profile</h1>
 <form id="complete-profile-form" autocomplete="off" novalidate>
-  
-  <label for="username">Username:</label>
+
+  <label for="username">Display Name:</label>
   <input type="text" id="username" name="username" required value="" />
+
+  <label for="uniquenick">Nickname:</label>
+  <input type="text" id="uniquenick" name="uniquenick" maxlength="25" required value="" />
 
   <label for="birthdate">Date of birth:</label>
   <input type="date" id="birthdate" name="birthdate" required />

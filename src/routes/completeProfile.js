@@ -17,7 +17,7 @@ router.post('/complete-profile', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     user.name = username;
-    user.uniquenick = uniquenick;
+    user.uniquenick = typeof uniquenick === 'string' ? uniquenick.trim() : String(uniquenick).trim();
     user.birthdate = new Date(birthdate);
     user.passwordHash = hashedPassword;
     user.wantsUpdates = wantsUpdates === true;

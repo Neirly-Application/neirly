@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const { authMiddleware } = require('../authMiddleware/authMiddleware');
 const Notification = require('../models/Notification'); 
 
 function checkCEO(req, res, next) {
@@ -10,7 +11,7 @@ function checkCEO(req, res, next) {
   next();
 }
 
-router.delete('/:id', checkCEO, async (req, res) => {
+router.delete('/:id', authMiddleware, checkCEO, async (req, res) => {
   try {
     const userId = req.params.id;
 

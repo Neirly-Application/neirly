@@ -4,6 +4,7 @@ document.getElementById('complete-profile-form').addEventListener('submit', asyn
   const birthdate = document.getElementById('birthdate').value;
   const password = document.getElementById('password').value;
   const username = document.getElementById('username').value;
+  const uniquenick = document.getElementById('uniquenick').value.trim();
   const wantsUpdates = document.getElementById('wantsUpdates').checked;
   const acceptedTerms = document.getElementById('acceptedTerms').checked;
   const userId = new URLSearchParams(window.location.search).get('userId');
@@ -21,6 +22,19 @@ document.getElementById('complete-profile-form').addEventListener('submit', asyn
       return;
     }
 
+    if (!/^[a-z0-9._]+$/.test(uniquenick)) {
+      errorMsg.textContent = 'Nickname can only contain lowercase letters, numbers, underscores, and dots.';
+      return;
+    }
+
+    const nickCheck = await fetch(`/api/profile/check-nick?nick=${encodeURIComponent(uniquenick)}`);
+    const nickData = await nickCheck.json();
+
+    if (nickData.exists) {
+      errorMsg.textContent = 'This nickname is already in use. Choose another one.';
+      return;
+    }
+
     const res = await fetch('/api/auth/complete-profile', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -29,6 +43,7 @@ document.getElementById('complete-profile-form').addEventListener('submit', asyn
         birthdate,
         password,
         username,
+        uniquenick,
         wantsUpdates,
         acceptedTerms
       })
