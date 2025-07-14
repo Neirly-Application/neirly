@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         user = await res.json();
 
         if (welcomeMessage && user.name) {
-          welcomeMessage.textContent = `Welcome, ${user.name}!`;
+          welcomeMessage.textContent = `Welcome ${user.name}!`;
         }
 
         if (user && user.roles && user.roles.includes('ceo')) {
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function fetchUnreadCount() {
       try {
         const res = await fetch('/api/notifications/unread-count', { credentials: 'include' });
-        if (!res.ok) throw new Error('Failed to fetch unread notifications count');
+        if (!res.ok) throw new Error('Failed to fetch unread notifications count.');
         const data = await res.json();
         checkUnreadNotifications(data.unread || 0);
       } catch (err) {
@@ -864,8 +864,8 @@ document.addEventListener('DOMContentLoaded', async () => {
               <div class="activity-entry">
                 <div class="${log.type.toLowerCase()}">
                   <strong>${log.type.toUpperCase()}</strong> -  ${new Date(log.timestamp).toLocaleString()}
-                  ${log.metadata?.provider ? `via ${log.metadata.provider}` : 'unable to solve provider.'}
-                  ${log.metadata?.ip ? ` (IP: ${log.metadata.ip})` : 'unable to solve IP.'}
+                  ${log.metadata?.provider ? `via <span class="${log.type.toLowerCase()}">${log.metadata.provider}</span>` : '<span style="color: red">unable to solve provider.</span>'}
+                  ${log.metadata?.ip ? ` (IP: ${log.metadata.ip})` : '<span style="color: red">unable to solve IP.</span>'}
                 </div>
               </div>
             `).join('');

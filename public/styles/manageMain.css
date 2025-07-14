@@ -226,7 +226,6 @@ input[type="file"] {
 
 .activity-entry strong {
   color: var(--main-bg);
-  margin-right: 8px;
 }
 
 .activity-entry .login strong {
@@ -239,7 +238,7 @@ input[type="file"] {
 
 @media (max-width: 768px) {
   .activity-entry {
-    font-size: 13px;
+    font-size: 14px;
     padding: 10px 14px;
   }
 }
@@ -251,7 +250,7 @@ input[type="file"] {
   }
 
   .activity-entry {
-    font-size: 12px;
+    font-size: 13px;
     padding: 8px 12px;
   }
 }
