@@ -215,18 +215,26 @@ input[type="file"] {
 
 .activity-entry {
   padding: 12px 16px;
-  background-color: white;
+  background-color: var(--accent);
   border-radius: 10px;
-  border-left: 4px solid var(--primary, #007bff);
+  border-left: 4px solid var(--main-bg);
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   font-size: 14px;
-  color: #333;
+  color: var(--color-333);
   line-height: 1.5;
 }
 
 .activity-entry strong {
-  color: var(--primary, #007bff);
+  color: var(--main-bg);
   margin-right: 8px;
+}
+
+.activity-entry .login strong {
+  color: var(--login);
+}
+
+.activity-entry .logout strong {
+  color: var(--logout);
 }
 
 @media (max-width: 768px) {

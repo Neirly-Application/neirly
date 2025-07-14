@@ -822,8 +822,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             </a>
             <h2><i class="fas fa-chart-line"></i> Activity</h2>
           </div>
-          <p>Your account activity.</p>
-          <div id="activity-logs">Loading...</div>
+          <div id="activity-logs">
+                  Loading...
+          </div>
         `;
 
         try {
@@ -837,18 +838,24 @@ document.addEventListener('DOMContentLoaded', async () => {
           } else {
             const list = logs.map(log => `
               <div class="activity-entry">
-                <strong>${log.type.toUpperCase()}</strong> - ${new Date(log.timestamp).toLocaleString()}
-                ${log.metadata?.provider ? `via ${log.metadata.provider}` : ''}
-                ${log.metadata?.ip ? ` (IP: ${log.metadata.ip})` : ''}
+                <div class="${log.type.toLowerCase()}">
+                  <strong>${log.type.toUpperCase()}</strong> -  ${new Date(log.timestamp).toLocaleString()}
+                  ${log.metadata?.provider ? `via ${log.metadata.provider}` : 'unable to solve provider.'}
+                  ${log.metadata?.ip ? ` (IP: ${log.metadata.ip})` : 'unable to solve IP.'}
+                </div>
               </div>
             `).join('');
-            logsContainer.innerHTML = `<div class="activity-log">${list}</div>`;
-          }
-        } catch (error) {
-          const logsContainer = document.getElementById('activity-logs');
-          logsContainer.innerHTML = `<p>Error loading activity: ${error.message}</p>`;
-        }
-        break;
+            logsContainer.innerHTML = `
+                <div class="activity-log">
+                      <p>Your account activity logs.</p>
+                      ${list}
+                </div>`;
+              }
+            } catch (error) {
+              const logsContainer = document.getElementById('activity-logs');
+              logsContainer.innerHTML = `<p>Error loading activity: ${error.message}</p>`;
+            }
+          break;
 
         case 'settings-notifications':
           content.innerHTML = `
