@@ -58,7 +58,7 @@
 #btn-center-map {
   margin: 20px auto 0 auto;
   padding: 10px 16px;
-  background-color: var(--secondary);
+  background-color: var(--main-bg);
   color: var(--accent);
   border: none;
   border-radius: 999px;
@@ -68,11 +68,6 @@
   box-shadow: 0 4px 12px var(--color-rgba-000-02);
   z-index: 1000;
   transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-#btn-center-map:hover {
-  background-color: var(--main-bg);
-  transform: scale(1.05);
 }
 
 #btn-center-map:active {

@@ -40,7 +40,7 @@
   font-size: 24px;
 }
 
-.profile-pic-wrapper:hover .edit-icon {
+.profile-pic-wrapper:active .edit-icon {
   opacity: 1;
 }
 
@@ -62,7 +62,7 @@ input[type="file"] {
   cursor: pointer;
 }
 
-.btn-submit:hover {
+.btn-submit:active {
   background-color: var(--color-0056b3);
 }
 
@@ -75,7 +75,7 @@ input[type="file"] {
   cursor: pointer;
 }
 
-.btn-delete-account:hover {
+.btn-delete-account:active {
   background-color: var(--color-c0392b);
 }
 
@@ -154,7 +154,7 @@ input[type="file"] {
   transition: background-color 0.3s ease;
 }
 
-.friend-btn:hover {
+.friend-btn:active {
   background-color: var(--color-2980b9);
 }
 
@@ -179,7 +179,7 @@ input[type="file"] {
   color: var(--color-fff);
 }
 
-.friend-request-card .accept-btn:hover {
+.friend-request-card .accept-btn:active {
   background-color: #27ae60;
 }
 
@@ -189,7 +189,7 @@ input[type="file"] {
   margin-right: 0;
 }
 
-.friend-request-card .reject-btn:hover {
+.friend-request-card .reject-btn:active {
   background-color: #c0392b;
 }
 

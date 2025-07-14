@@ -122,14 +122,28 @@ body {
   white-space: nowrap;
 }
 
-.nav-item:hover,
-.nav-item:focus-visible,
-.nav-item.active {
+@media (hover: hover) and (pointer: fine) {
+  .nav-item:hover {
+    background-color: var(--secondary);
+    color: var(--primary);
+    outline-offset: 3px;
+    outline: none;
+    transform: translateY(-4px);
+  }
+}
+
+.nav-item:active,
+.nav-item:focus-visible {
   background-color: var(--secondary);
   color: var(--primary);
   outline-offset: 3px;
   outline: none;
   transform: translateY(-4px);
+}
+
+.active {
+  background-color: var(--secondary);
+  color: var(--primary);
 }
 
 .nav-item:focus-visible {
@@ -334,6 +348,11 @@ form button:focus-visible {
   display: none;
 }
 
+.bottom-navbar .active {
+  background-color: var(--secondary);
+  color: var(--primary);
+}
+
 .bottom-navbar .nav-item {
   position: relative;
   display: flex;
@@ -373,7 +392,6 @@ form button:focus-visible {
     position: relative;
     margin-top: 5px;
     text-align: center;
-    color: var(--accent);
     text-decoration: none;
     font-size: 0.8rem;
     display: flex;
@@ -479,7 +497,7 @@ form button:focus-visible {
     border-bottom: none;
   }
 
-  .menu-dropdown a.nav-item:hover {
+  .menu-dropdown a.nav-item:active {
     background: var(--light-bg);
   }
 
