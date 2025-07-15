@@ -381,6 +381,8 @@ form button:focus-visible {
     left: 0;
     right: 0;
     height: 60px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
     background: var(--primary);
     display: flex;
     justify-content: space-around;
