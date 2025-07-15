@@ -49,7 +49,7 @@
   });
 
   // PATCH /api/devices/ping
-  router.patch('devices/ping', authMiddleware, async (req, res) => {
+  router.patch('/devices/ping', authMiddleware, async (req, res) => {
     try {
       const userAgent = req.headers['user-agent'] || 'Unknown';
       const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
@@ -72,7 +72,7 @@
   });
 
   // DELETE /api/devices/:index
-  router.delete('/:index', authMiddleware, async (req, res) => {
+  router.delete('/devices/:index', authMiddleware, async (req, res) => {
     const index = parseInt(req.params.index, 10);
     if (
       isNaN(index) ||

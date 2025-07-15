@@ -1,0 +1,89 @@
+.toggle-view {
+  text-align: center;
+  margin: 20px;
+  font-size: 1rem;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  padding: 24px;
+}
+
+.theme-card {
+  position: relative;
+  flex: 1 1 260px;
+  max-width: 300px;
+  min-width: 220px;
+  background-color: #fdfdfd;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 24px 20px;
+  box-sizing: border-box;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  text-align: center;
+}
+
+.theme-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  background-color: #f5faff;
+  cursor: pointer;
+}
+
+.theme-card .emoji {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.theme-card h3 {
+  margin: 0 0 10px;
+  font-size: 1.25rem;
+  color: #222;
+}
+
+.theme-card .card-desc {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 16px;
+}
+
+.select-btn {
+  background-color: #0077ff;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.select-btn:hover {
+  background-color: #005fd1;
+}
+
+.badge {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  top: 10px;
+  left: 10px;
+  background-color: #ff3b30;
+  color: white;
+  font-size: 0.75rem;
+  padding: 4px 4px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.badge i {
+    align-self: center;
+}
+
+.theme-card.condensed .emoji,
+.theme-card.condensed .card-desc {
+  display: none;
+}
