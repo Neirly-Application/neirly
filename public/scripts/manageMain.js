@@ -434,7 +434,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                       <div class="form-group about-group" style="position:relative;">
                         <label>About me:</label>
                         <div style="position:relative;">
-                          <textarea id="aboutme-input" placeholder="What's on your mind?..." style="padding: 10px 75px 50px 10px; resize: vertical; min-height: 100px;">${user.about_me || ''}</textarea>
+                          <textarea id="aboutme-input" placeholder="${user.about_me || ''}" style="padding: 10px 75px 50px 10px; resize: vertical; min-height: 100px;">${user.about_me || ''}</textarea>
                           <span id="about-counter"
                                 style="position:absolute;bottom:6px;right:12px;font-size:0.75em;color:#888;pointer-events:none;">
                             250
