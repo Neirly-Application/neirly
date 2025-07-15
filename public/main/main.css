@@ -860,10 +860,36 @@ body.subsection-active {
 }
 
 .map-card {
+    position: relative;
+    background: url(../media/map-introducer.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 200px;
+    height: 300px;
+    position: relative;
+}
+
+.map-card .profile-avatar {
+    cursor: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    object-fit: cover;
+    position: absolute;
+    z-index: 10;
+}
+
+.map-card .random-avatar {
+  cursor: none;
+  object-fit: cover;
+}
+
+.profile-avatar, .random-avatar {
+  transition: left 2s ease, top 2s ease;
 }
 
 .map-button {
@@ -875,6 +901,7 @@ body.subsection-active {
     border-radius: 8px;
     cursor: pointer;
     transition: background 0.3s;
+    z-index: 5;
 }
 
 .map-button:hover {
