@@ -853,7 +853,10 @@ document.addEventListener('DOMContentLoaded', async () => {
           </div>
           <div class="activity-log-container" id="activity-logs">
             <h4>All logs</h4>
-            <div class="filters">
+            <div class="activity-log-list" id="log-list">
+              Loading...
+            </div>
+                        <div class="filters">
               <label>Type:
                 <select id="filter-type">
                   <option value="all">All</option>
@@ -875,10 +878,6 @@ document.addEventListener('DOMContentLoaded', async () => {
               </label>
 
               <button id="apply-filters">Apply</button>
-            </div>
-
-            <div class="activity-log-list" id="log-list">
-              Loading...
             </div>
           </div>
         `;
