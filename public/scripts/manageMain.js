@@ -404,13 +404,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     <form id="profile-form" class="profile-form" enctype="multipart/form-data" autocomplete="off">
                       <div class="form-group">
-                        <div class="profile-pic-wrapper" style="position:relative;display:inline-block;">
+                        <div class="profile-pic-wrapper">
                           <img id="profile-pic"
                               src="${user.profilePictureUrl || '../media/user.png'}"
                               alt="Profile Picture"
                               class="profile-img" />
-                          <div class="edit-icon"
-                              style="position:absolute;bottom:5px;right:5px;background:rgba(0,0,0,0.6);border-radius:50%;padding:5px;">
+                          <div class="edit-icon">
                             <i class="fas fa-pen" style="color:white;"></i>
                           </div>
                         </div>
@@ -419,24 +418,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                       <div class="form-group">
                         <label>Display name:</label>
-                        <input type="text" id="nickname-input" value="${user.nickname || user.name || 'User'}">
+                        <input type="text" id="nickname-input" value="${user.nickname || user.name || 'User'}" placeholder="${user.nickname || user.name || 'User'}">
                       </div>
 
                       <div class="form-group">
                         <label>Nickname:</label>
                         <input type="text" id="uniquenick-input"
                               value="${user.uniquenick || ''}"
+                              placeholder="${user.uniquenick || ''}"
                               maxlength="24"
                               ${canEditUniquenick ? '' : 'disabled'}
                               title="${canEditUniquenick ? '' : 'You can change your nickname every 7 days.'}">
-                        ${canEditUniquenick ? '' : `<small style="color:#888;">Next change: ${nextChangeDateReadable}</small>`}
+                        ${canEditUniquenick ? '' : `<small style="color: var(--color-888);">Next change: ${nextChangeDateReadable}</small>`}
                       </div>
                       <div class="form-group about-group" style="position:relative;">
                         <label>About me:</label>
                         <div style="position:relative;">
-                          <textarea id="aboutme-input" placeholder="${user.about_me || ''}" style="padding: 10px 75px 50px 10px; resize: vertical; min-height: 100px;">${user.about_me || ''}</textarea>
-                          <span id="about-counter"
-                                style="position:absolute;bottom:6px;right:12px;font-size:0.75em;color:#888;pointer-events:none;">
+                          <textarea id="aboutme-input" 
+                            placeholder="Who are you? What are you passionate about? Tell us about you here, in a few lines.">${user.about_me || 'Who are you? What are you passionate about? Tell us about you here, in a few lines.'}
+                          </textarea>
+                          <span id="about-counter">
                             250
                           </span>
                         </div>
@@ -456,11 +457,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                       <button id="save-changes-btn" class="btn-submit">Save</button>
                     </div>
 
-                    <div id="cropper-modal" class="profile-img-editor" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:1000;">
-                      <div class="profile-img-editor-content" style="background:white;padding:20px;border-radius:10px;text-align:center;">
+                    <div id="cropper-modal" class="profile-img-editor">
+                      <div class="profile-img-editor-content">
                         <h3>Edit Image</h3>
                         <div style="width:300px;height:300px;margin:auto;">
-                          <img id="cropper-image" style="width:300px;height:300px;object-fit:cover;">
+                          <img id="cropper-image">
                         </div>
                         <div style="margin-top:15px;">
                           <button id="crop-confirm" class="btn-submit">Upload</button>
@@ -588,7 +589,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     const currentLength = document.getElementById('aboutme-input').value.length;
                     if (currentLength > maxLen) {
-                      showToast('Too many characters in the About Me section.', 'error');
+                      showToast('Too many characters in the "About Me" section.', 'error');
                       return;
                     }
                   

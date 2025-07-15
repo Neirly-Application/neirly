@@ -208,6 +208,7 @@ form textarea {
   resize: none;
   min-height: 100px;
   max-height: 150px;
+  padding: 10px 75px 50px 10px;
 }
 
 form input:focus,
