@@ -106,7 +106,6 @@ export default async function loadProfileSection(content, user) {
       s.about !== originalState.about ||
       !!croppedBlob
     );
-    console.log('detectChanges', diff);
     toggleBanner(diff);
     return diff;
   };
@@ -200,7 +199,7 @@ export default async function loadProfileSection(content, user) {
 
   saveBtn.onclick = () => {
     if (!detectChanges()) return;
-    form.requestSubmit(); // Trigghera form.onsubmit
+    form.requestSubmit(); 
   };
 
   form.onsubmit = async e => {

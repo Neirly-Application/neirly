@@ -144,6 +144,7 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
     await user.save();
 
     res.json({
+      success: true,
       message: 'Profile successfully updated!',
       updatedFields,
       profilePictureUrl: user.profilePictureUrl,

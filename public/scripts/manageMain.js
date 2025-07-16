@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function caricaSezione(section) {
       content.innerHTML = '<div class="loading">Loading...</div>';
 
-      const disablePull = ['map-screen', 'settings', 'settings-account', 'settings-activity', 'settings-chats', 'settings-danger', 'settings-devices', 'settings-info', 'settings-language', 'settings-notifications', 'settings-privacy', 'settings-theme'];
+      const disablePull = ['profile', 'map-screen', 'settings', 'settings-account', 'settings-chats', 'settings-danger', 'settings-info', 'settings-language', 'settings-notifications', 'settings-privacy', 'settings-theme'];
       window.disablePullToRefresh = disablePull.includes(section);
 
       switch (section) {
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         case 'settings-notifications': await loadSettingsNotificationsSection(content, user); break;
         case 'settings-privacy': await loadSettingsPrivacySection(content, user); break;
         case 'settings-theme': await loadSettingsThemeSection(content, user); break;
-        default: content.innerHTML = '<p>Sezione non trovata</p>'; break;
+        default: content.innerHTML = '<p style="font-weight: bold; justify-content: center; font-size: 2rem">Section not found</p>'; break;
       }
     }
 

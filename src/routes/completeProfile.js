@@ -17,7 +17,6 @@ router.post('/complete-profile', authMiddleware, async (req, res) => {
 
     const newUniquenick = typeof uniquenick === 'string' ? uniquenick.trim().toLowerCase() : String(uniquenick).trim().toLowerCase();
 
-    // Controllo validità formato uniquenick
     const isValidUniquenick = /^[a-z0-9._]+$/.test(newUniquenick);
     if (!isValidUniquenick) {
       return res.status(400).json({
@@ -25,7 +24,6 @@ router.post('/complete-profile', authMiddleware, async (req, res) => {
       });
     }
 
-    // Controllo se uniquenick è già usato da un altro user (escludendo l’utente corrente)
     const existingUser = await User.findOne({
       uniquenick: newUniquenick,
       _id: { $ne: user._id }
