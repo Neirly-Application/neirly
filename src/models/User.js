@@ -62,7 +62,21 @@ const userSchema = new mongoose.Schema({
                     required: function () {
                         return this.profileCompleted;
                     }
-                  }
+                  },
+homeSettings: {
+  address: {
+    city: { type: String, required: true },
+    country: { type: String, required: true },
+    province: { type: String, required: true },
+    street: { type: String, required: true },
+    zipCode: { type: String, required: true },
+    },
+    pets: {
+      hasPets: { type: Boolean, default: false },
+      petTypes: [{ type: String }]
+    },
+  },
+                  
 });
 
 const User = mongoose.model('User', userSchema);

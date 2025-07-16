@@ -46,7 +46,7 @@ export default async function loadMapSection(content, user) {
 
       const mapPreview = L.map('preview-map', {
         center: [latitude, longitude],
-        zoom: 15,
+        zoom: 20,
         zoomControl: false,
         dragging: false,
         scrollWheelZoom: false,
@@ -57,13 +57,11 @@ export default async function loadMapSection(content, user) {
         attributionControl: false,
       });
 
-      // Modalità satellite
       L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/' +
         'World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles © Esri'
       }).addTo(mapPreview);
 
-      // 👤 Avatar come marker
       const icon = L.icon({
         iconUrl: avatar,
         iconSize: [40, 40],
