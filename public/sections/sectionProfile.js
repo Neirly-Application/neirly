@@ -1,4 +1,4 @@
-export default async function loadProfileSection(content, user, customPopup) {
+export default async function loadProfileSection(content, user) {
   content.innerHTML = '<h2><i class="fas fa-user"></i> Profile</h2><p>Loading data…</p>';
   
   if (!user) {
@@ -189,39 +189,18 @@ export default async function loadProfileSection(content, user, customPopup) {
       }, 'image/jpeg');
   };
 
-  cancelBtn.onclick = async () => {
-    if (!detectChanges()) return;
-
-    const confirmed = await customPopup({
-      title: 'Discard changes?',
-      description: 'You have unsaved changes. Are you sure you want to cancel?',
-      yesText: 'Yes, discard',
-      noText: 'No, keep editing'
-    });
-
-    if (confirmed) {
-      document.getElementById('nickname-input').value = originalState.nickname;
-      document.getElementById('uniquenick-input').value = originalState.uniquenick;
-      document.getElementById('aboutme-input').value = originalState.about;
-      croppedBlob = null;
-      profilePicImg.src = user.profilePictureUrl || '../media/user.png';
-      detectChanges();
-    }
+  cancelBtn.onclick = () => {
+    document.getElementById('nickname-input').value = originalState.nickname;
+    document.getElementById('uniquenick-input').value = originalState.uniquenick;
+    document.getElementById('aboutme-input').value = originalState.about;
+    croppedBlob = null;
+    profilePicImg.src = user.profilePictureUrl || '../media/user.png';
+    detectChanges();
   };
 
-  saveBtn.onclick = async () => {
+  saveBtn.onclick = () => {
     if (!detectChanges()) return;
-
-    const confirmed = await customPopup({
-      title: 'Save changes?',
-      description: 'Do you want to save your profile changes?',
-      yesText: 'Save',
-      noText: 'Cancel'
-    });
-
-    if (confirmed) {
-      form.requestSubmit();
-    }
+    form.requestSubmit(); // Trigghera form.onsubmit
   };
 
   form.onsubmit = async e => {

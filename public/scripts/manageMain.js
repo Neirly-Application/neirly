@@ -1,5 +1,3 @@
-import { customPopup } from './notification.js';
-
 import loadCeoSection from '../sections/sectionCeo.js';
 import loadFriendListSection from '../sections/sectionFriendList.js';
 import loadMapSection from '../sections/sectionMap.js';
@@ -105,7 +103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         case 'map-screen': await loadMapScreenSection(content, user); break;
         case 'messages': await loadMessagesSection(content, user); break;
         case 'notifications': await loadNotificationsSection(content, user); break;
-        case 'profile': await loadProfileSection(content, user, customPopup); break;
+        case 'profile': await loadProfileSection(content, user); break;
         case 'settings': await loadSettingsSection(content, user); break;
         case 'settings-account': await loadSettingsAccountSection(content, user); break;
         case 'settings-activity': await loadSettingsActivitySection(content, user); break;
