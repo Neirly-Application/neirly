@@ -73,6 +73,10 @@
   background-color: #00000064;
 }
 
+#profilePicInput {
+    border-radius: 50%;
+}
+
 input[type="text"],
 input[type="email"],
 input[type="date"],
@@ -231,10 +235,6 @@ input[type="file"] {
 .friend-item {
   border-bottom: 1px solid var(--inputs-border-color);
   padding: 10px;
-}
-
-#profilePicInput {
-    border-radius: 50%;
 }
 
 .activity-log-container {
