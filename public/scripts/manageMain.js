@@ -27,6 +27,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     let allNotifications = [];
     let user = null;
 
+    // Flag globale per disabilitare pull-to-refresh
+    window.disablePullToRefresh = false;
+
     async function fetchAndSetUser() {
       try {
         const res = await fetch('/api/profile', { credentials: 'include' });
@@ -90,6 +93,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function caricaSezione(section) {
       content.innerHTML = '<div class="loading">Loading...</div>';
+
+      const disablePull = ['map-screen','settings', 'settings-account', 'settings-activity', 'settings-chats', 'settings-danger', 'settings-devices', 'settings-info', 'settings-language', 'settings-notifications', 'settings-privacy', 'settings-theme'];
+      window.disablePullToRefresh = disablePull.includes(section);
+
       switch (section) {
         case 'ceo': await loadCeoSection(content, user); break;
         case 'friend-list': await loadFriendListSection(content, user); break;
@@ -150,6 +157,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       let isRefreshing = false;
 
       document.addEventListener('touchstart', (e) => {
+        if (window.disablePullToRefresh) return; // disabilita se flag attivo
+
         if (window.scrollY === 0 && !isRefreshing) {
           isTouching = true;
           startY = e.touches[0].clientY;
@@ -157,16 +166,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
 
       document.addEventListener('touchmove', (e) => {
-        if (!isTouching || isRefreshing) return;
+        if (!isTouching || isRefreshing || window.disablePullToRefresh) return;
 
         const moveY = e.touches[0].clientY;
         const distance = moveY - startY;
 
         if (distance > 0) {
-          e.preventDefault();
+          e.preventDefault(); // ⚠️ SOLO se pull-to-refresh attivo
           const translateY = Math.min(distance / 2, refreshThreshold + 30);
           refreshContainer.style.transform = `translateY(${translateY}px)`;
-          content.style.transform = `translateY(${translateY}px)`;  // Sposta anche il contenuto
+          content.style.transform = `translateY(${translateY}px)`;
         }
       }, { passive: false });
 
