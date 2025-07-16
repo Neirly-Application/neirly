@@ -14,15 +14,15 @@
   />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
   <link rel="stylesheet" href="./main.css" />
   <link rel="stylesheet" href="../styles/offline.css" />
   <link rel="stylesheet" href="../styles/manageMain.css" />
   <link rel="stylesheet" href="../styles/map.css" />
   <link rel="stylesheet" href="../styles/themes.css" />
-
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
 
   <link rel="icon" type="image/png" sizes="16x16" href="/media/neirly.png">
@@ -78,7 +78,7 @@
 
   <nav class="sidebar">
     <div class="nav-header">
-      <img src="../media/neirly.png" alt="Neirly Logo" class="nav-logo" />
+      <img src="../media/neirly.png" alt="Neirly Logo" class="nav-logo" oncontextmenu="return false;"/>
           <div id="welcomeMessage"></div>
     </div>
     
@@ -143,7 +143,7 @@
 
   <div id="offlineOverlay" style="display:none;">
     <div class="offline-content">
-      <img src="../media/offline.png" alt="Offline" />
+      <img src="../media/offline.png" alt="Offline" oncontextmenu="return false;"/>
       <h1>No internet connection.</h1>
       <p>Check your connection and try again.</p>
     </div>
@@ -152,7 +152,7 @@
   <div id="custom-confirm-overlay" class="confirm-overlay" style="display:none;">
     <div class="confirm-box">
       <div class="confirm-header">
-        <img src="../media/handstop.png" alt="Alert Icon" class="confirm-icon" aria-hidden="true">
+        <img src="../media/handstop.png" alt="Alert Icon" class="confirm-icon" aria-hidden="true" oncontextmenu="return false;">
         <h2 id="confirm-title">Oop... wait a second...</h2>
       </div>
       <p id="confirm-message">Are you sure?</p>
@@ -169,6 +169,7 @@
   <script type="module" src="../scripts/manageMain.js"></script>
   <script src="../scripts/offline.js"></script>
   <script src="../scripts/notification.js"></script>
+  <script src="../scripts/script.js"></script>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -244,28 +245,23 @@
       }
     }
 
-    // Debounced resize handler
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(checkScreenSize, 150);
     });
 
-    // Default to 'map' if no hash
     if (!location.hash) {
       location.hash = '#map';
     }
 
-    // Initial nav activation and swipe setup
     updateActiveNavItem(location.hash.replace('#', ''));
     checkScreenSize();
 
-    // Update nav item on hash change
     window.addEventListener('hashchange', () => {
       const section = location.hash.replace('#', '') || 'map';
       updateActiveNavItem(section);
     });
 
-    // Click handler for bottom navbar
     document.querySelectorAll('.bottom-navbar .nav-item').forEach(link => {
       link.addEventListener('click', (e) => {
         const targetHash = link.getAttribute('href');
@@ -275,7 +271,6 @@
       });
     });
 
-    // Dropdown menu toggle
     document.addEventListener('click', function (e) {
       const btn = document.querySelector('.menu-button');
       const dropdown = document.querySelector('.menu-dropdown');
@@ -314,7 +309,6 @@
       }
     });
 
-    // Dropdown nav item click
     document.querySelectorAll('.menu-dropdown .nav-item').forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
@@ -363,5 +357,20 @@
     window.addEventListener('DOMContentLoaded', updateBottomNavbar);
     window.addEventListener('resize', updateBottomNavbar);
 </script>
+
+<script>
+  document.addEventListener('contextmenu', event => event.preventDefault());
+
+  document.addEventListener('keydown', function (event) {
+    if (
+      event.key === 'F12' ||
+      (event.ctrlKey && event.shiftKey && ['I', 'C', 'J'].includes(event.key)) ||
+      (event.ctrlKey && ['U', 'S'].includes(event.key))
+    ) {
+      event.preventDefault();
+    }
+  });
+</script>
+
 </body>
 </html>

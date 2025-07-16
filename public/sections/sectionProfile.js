@@ -27,7 +27,7 @@ export default async function loadProfileSection(content, user) {
                           <img id="profile-pic"
                               src="${user.profilePictureUrl || '../media/user.png'}"
                               alt="Profile Picture"
-                              class="profile-img" />
+                              class="profile-img" oncontextmenu="return false;"/>
                           <div class="edit-icon">
                             <i class="fas fa-pen" style="color:white;"></i>
                           </div>
@@ -80,7 +80,7 @@ export default async function loadProfileSection(content, user) {
                       <div class="profile-img-editor-content">
                         <h3>Edit Image</h3>
                         <div style="width:300px;height:300px;margin:auto;">
-                          <img id="cropper-image">
+                          <img id="cropper-image" oncontextmenu="return false;">
                         </div>
                         <div style="margin-top:15px;">
                           <button id="crop-confirm" class="btn-submit">Upload</button>

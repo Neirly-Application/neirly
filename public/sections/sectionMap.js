@@ -7,7 +7,7 @@ export default async function loadMapSection(content, user) {
   content.innerHTML = `
     <h2><i class="fas fa-map"></i> Map</h2>
     <div class="card map-card" style="position: relative; overflow: hidden;">
-      <img src="${avatar}" alt="Profile" class="profile-avatar" style="position: absolute;">
+      <div id="preview-map"></div>
     </div>
 
     <a href="#map-screen" class="btn map-button">
@@ -17,7 +17,7 @@ export default async function loadMapSection(content, user) {
     <div class="fancy-line"></div>
 
     <div class="card profile-card">
-      <img src="${avatar}" alt="User Profile">
+      <img src="${avatar}" alt="User Profile" oncontextmenu="return false;">
       <div class="profile-info">
         <h3>${username}</h3>
         <p>${nickname}</p>
@@ -35,143 +35,45 @@ export default async function loadMapSection(content, user) {
     </div>
   `;
 
-  const container = document.querySelector('.map-card');
-  const padding = 30;
-  const avatarSize = 30;
-  const mainAvatarSize = 20;
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(position => {
+      const { latitude, longitude } = position.coords;
 
-  const people = [];
-
-  function getRandomPosition(size) {
-    const maxLeft = container.clientWidth - size - padding;
-    const maxTop = container.clientHeight - size - padding;
-    const left = Math.random() * (maxLeft - padding) + padding;
-    const top = Math.random() * (maxTop - padding) + padding;
-    return { left, top };
-  }
-
-  function distanzaTraPunti(x1, y1, x2, y2) {
-    return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
-  }
-
-  function generatePeople() {
-    const count = Math.floor(Math.random() * 3) + 3;
-    const minDistance = 60;
-
-    let positions = [];
-
-    for (let i = 0; i < count; i++) {
-      let tries = 0;
-      let pos;
-      do {
-        pos = getRandomPosition(avatarSize);
-        const troppoVicino = positions.some(p => distanzaTraPunti(pos.left, pos.top, p.left, p.top) < minDistance);
-        tries++;
-        if (!troppoVicino || tries > 100) break;
-      } while(true);
-
-      positions.push(pos);
-    }
-
-    container.querySelectorAll('.random-avatar').forEach(e => e.remove());
-
-    positions.forEach(pos => {
-      const img = document.createElement('img');
-      img.src = '../media/neirly.png';
-      img.classList.add('random-avatar');
-      img.style.position = 'absolute';
-      img.style.width = '30px';
-      img.style.height = '30px';
-      img.style.borderRadius = '50%';
-      img.style.boxShadow = '0 0 10px rgba(0,0,0,0.3)';
-      img.style.objectFit = 'cover';
-      img.style.cursor = 'none';
-      img.style.zIndex = '10';
-      img.style.left = pos.left + 'px';
-      img.style.top = pos.top + 'px';
-      container.appendChild(img);
-
-      people.push({
-        el: img,
-        left: pos.left,
-        top: pos.top,
-        size: avatarSize
+      const mapPreview = L.map('preview-map', {
+        center: [latitude, longitude],
+        zoom: 15,
+        zoomControl: false,
+        dragging: false,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
+        boxZoom: false,
+        keyboard: false,
+        touchZoom: false,
+        attributionControl: false,
       });
+
+      // Modalità satellite
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/' +
+        'World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles © Esri'
+      }).addTo(mapPreview);
+
+      // 👤 Avatar come marker
+      const icon = L.icon({
+        iconUrl: avatar,
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+        className: 'user-map-icon',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        shadowSize: [41, 41],
+        shadowAnchor: [12, 41],
+      });
+
+      L.marker([latitude, longitude], { icon }).addTo(mapPreview);
+
+      setTimeout(() => {
+        mapPreview.invalidateSize();
+      }, 100);
     });
   }
-
-  function positionMainAvatar() {
-    const mainAvatar = document.querySelector('.profile-avatar');
-    if (!mainAvatar) return;
-
-    let pos;
-    let tries = 0;
-    do {
-      pos = getRandomPosition(mainAvatarSize);
-      const troppoVicino = people.some(p => distanzaTraPunti(pos.left, pos.top, p.left, p.top) < 60);
-      tries++;
-      if (!troppoVicino || tries > 100) break;
-    } while(true);
-
-    people.push({
-      el: mainAvatar,
-      left: pos.left,
-      top: pos.top,
-      size: mainAvatarSize
-    });
-  }
-
-  function movePerson(person) {
-    const speed = 10; 
-    const minDistance = 60;
-
-    function step() {
-      if (Math.random() > 0.3) {
-        let tries = 0;
-        let newLeft, newTop;
-
-        do {
-          const deltaX = (Math.random() - 0.5) * speed * 2;
-          const deltaY = (Math.random() - 0.5) * speed * 2;
-
-          newLeft = person.left + deltaX;
-          newTop = person.top + deltaY;
-
-          if (newLeft < padding) newLeft = padding;
-          if (newTop < padding) newTop = padding;
-          if (newLeft > container.clientWidth - person.size - padding) newLeft = container.clientWidth - person.size - padding;
-          if (newTop > container.clientHeight - person.size - padding) newTop = container.clientHeight - person.size - padding;
-
-          const troppoVicino = people.some(other => {
-            if (other === person) return false;
-            return distanzaTraPunti(newLeft, newTop, other.left, other.top) < minDistance;
-          });
-
-          tries++;
-          if (!troppoVicino || tries > 100) break;
-        } while(true);
-
-        person.left = newLeft;
-        person.top = newTop;
-
-        person.el.style.left = newLeft + 'px';
-        person.el.style.top = newTop + 'px';
-      }
-      const delay = 1500 + Math.random() * 2000;
-      setTimeout(step, delay);
-    }
-
-    step();
-  }
-
-  function movePeople() {
-    people.forEach(person => {
-      movePerson(person);
-    });
-  }
-
-
-  generatePeople();
-  positionMainAvatar();
-  movePeople();
 }

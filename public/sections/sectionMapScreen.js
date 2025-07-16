@@ -79,7 +79,7 @@ export default async function loadMapScreenSection(content, user) {
               .addTo(map)
               .bindPopup(`
                 <div style="text-align:center;">
-                  <img src="${profileImgUrl}" alt="Profile" style="width: 40px; height:40px; border-radius:50%; border:2px solid #333; box-shadow: 0 0 5px rgba(0,0,0,0.3); margin-bottom:5px;">
+                  <img src="${profileImgUrl}" alt="Profile" style="width: 40px; height:40px; border-radius:50%; border:2px solid #333; box-shadow: 0 0 5px rgba(0,0,0,0.3); margin-bottom:5px;" oncontextmenu="return false;">
                   <h4>${nickname}</h4>
                   <a href="#" id="wrong-pos">Wrong Position?</a>
                 </div>
@@ -96,7 +96,7 @@ export default async function loadMapScreenSection(content, user) {
               userMarker.setLatLng(userCoords);
               userMarker.setPopupContent(`
                 <div style="text-align:center;">
-                  <img src="${profileImgUrl}" alt="Profile" style="width: 40px; height: 40px; border-radius:50%; border:2px solid #333; box-shadow: 0 0 5px rgba(0,0,0,0.3); margin-bottom:5px;">
+                  <img src="${profileImgUrl}" alt="Profile" style="width: 40px; height: 40px; border-radius:50%; border:2px solid #333; box-shadow: 0 0 5px rgba(0,0,0,0.3); margin-bottom:5px;" oncontextmenu="return false;">
                   <h4>${nickname}</h4>
                   <a href="#wrong-pos">Wrong Position?</a>
                 </div>

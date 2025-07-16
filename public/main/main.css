@@ -20,6 +20,11 @@ body {
   transition: background-color 0.3s ease;
 }
 
+img {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
 .mobile-toggle {
   display: none;
   position: fixed;
@@ -856,24 +861,19 @@ body.subsection-active {
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     margin-bottom: 20px;
-    padding: 20px;
 }
 
 .map-card {
     position: relative;
-    background: url(../media/map-introducer.png);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 300px;
-    position: relative;
 }
 
 .map-card .profile-avatar {
-    cursor: none;
+    cursor: pointer;
+    pointer-events: none;
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -883,13 +883,16 @@ body.subsection-active {
     z-index: 10;
 }
 
-.map-card .random-avatar {
-  cursor: none;
-  object-fit: cover;
+.profile-avatar {
+  transition: left 2s ease, top 2s ease;
 }
 
-.profile-avatar, .random-avatar {
-  transition: left 2s ease, top 2s ease;
+#preview-map {
+  height: 100%; 
+  width: 100%; 
+  pointer-events: none; 
+  filter: grayscale(10%) brightness(1); 
+  border-radius: 10px;
 }
 
 .map-button {
@@ -913,6 +916,7 @@ body.subsection-active {
     align-items: center;
     gap: 15px;
     flex-wrap: wrap;
+    padding: 30px;
 }
 
 .profile-card img {
