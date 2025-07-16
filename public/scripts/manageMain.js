@@ -19,13 +19,12 @@ import loadSettingsThemeSection from '../sections/sectionSettingsTheme.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const navItems = document.querySelectorAll('.nav-item');
+    
     const content = document.querySelector('.content');
     const welcomeMessage = document.getElementById('welcomeMessage');
     const adminSection = document.getElementById('admin-section');
 
     let allNotifications = [];
-    let openNotificationId = null;
     let user = null;
 
     async function fetchAndSetUser() {
@@ -41,11 +40,10 @@ document.addEventListener('DOMContentLoaded', async () => {
           welcomeMessage.textContent = `Welcome ${user.name}!`;
         }
 
-        if (user && user.roles && user.roles.includes('ceo')) {
-          // Mostra la sezione admin
-          if (adminSection) adminSection.style.display = 'flex';
+        if (user.roles?.includes('ceo')) {
+          adminSection && (adminSection.style.display = 'flex');
         } else {
-          if (adminSection) adminSection.style.display = 'none';
+          adminSection && (adminSection.style.display = 'none');
         }
       } catch (err) {
         console.error('Failed to fetch user profile on load:', err);
@@ -73,9 +71,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const res = await fetch('/api/notifications', { credentials: 'include' });
         if (res.ok) {
           allNotifications = await res.json();
-          // Puoi poi fare render o aggiornamenti se serve
-        } else {
-          console.error('Failed to preload notifications, status:', res.status);
         }
       } catch (err) {
         console.error('Error preloading notifications:', err);
@@ -85,7 +80,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function fetchUnreadCount() {
       try {
         const res = await fetch('/api/notifications/unread-count', { credentials: 'include' });
-        if (!res.ok) throw new Error('Failed to fetch unread notifications count.');
+        if (!res.ok) throw new Error();
         const data = await res.json();
         checkUnreadNotifications(data.unread || 0);
       } catch (err) {
@@ -93,70 +88,28 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    await fetchAndSetUser();
-    await preloadNotifications();
-    await fetchUnreadCount();
-
     async function caricaSezione(section) {
       content.innerHTML = '<div class="loading">Loading...</div>';
       switch (section) {
-        case 'ceo':
-          await loadCeoSection(content, user);
-          break;
-        case 'friend-list':
-          await loadFriendListSection(content, user);
-          break;
-        case 'map':
-          await loadMapSection(content, user);
-          break;
-        case 'map-screen':
-          await loadMapScreenSection(content, user);
-          break;
-        case 'messages':
-          await loadMessagesSection(content, user);
-          break;
-        case 'notifications':
-          await loadNotificationsSection(content, user);
-          break;
-        case 'profile':
-          await loadProfileSection(content, user);
-          break;
-        case 'settings':
-          await loadSettingsSection(content, user);
-          break;
-        case 'settings-account':
-          await loadSettingsAccountSection(content, user);
-          break;
-        case 'settings-activity':
-          await loadSettingsActivitySection(content, user);
-          break;
-        case 'settings-chats':
-          await loadSettingsChatsSection(content, user);
-          break;
-        case 'settings-danger':
-          await loadSettingsDangerSection(content, user);
-          break;
-        case 'settings-devices':
-          await loadSettingsDevicesSection(content, user);
-          break;
-        case 'settings-info':
-          await loadSettingsInfoSection(content, user);
-          break;
-        case 'settings-language':
-          await loadSettingsLanguageSection(content, user);
-          break;
-        case 'settings-notifications':
-          await loadSettingsNotificationsSection(content, user);
-          break;
-        case 'settings-privacy':
-          await loadSettingsPrivacySection(content, user);
-          break;
-        case 'settings-theme':
-          await loadSettingsThemeSection(content, user);
-          break;
-        default:
-          content.innerHTML = '<p>Sezione non trovata</p>';
-          break;
+        case 'ceo': await loadCeoSection(content, user); break;
+        case 'friend-list': await loadFriendListSection(content, user); break;
+        case 'map': await loadMapSection(content, user); break;
+        case 'map-screen': await loadMapScreenSection(content, user); break;
+        case 'messages': await loadMessagesSection(content, user); break;
+        case 'notifications': await loadNotificationsSection(content, user); break;
+        case 'profile': await loadProfileSection(content, user); break;
+        case 'settings': await loadSettingsSection(content, user); break;
+        case 'settings-account': await loadSettingsAccountSection(content, user); break;
+        case 'settings-activity': await loadSettingsActivitySection(content, user); break;
+        case 'settings-chats': await loadSettingsChatsSection(content, user); break;
+        case 'settings-danger': await loadSettingsDangerSection(content, user); break;
+        case 'settings-devices': await loadSettingsDevicesSection(content, user); break;
+        case 'settings-info': await loadSettingsInfoSection(content, user); break;
+        case 'settings-language': await loadSettingsLanguageSection(content, user); break;
+        case 'settings-notifications': await loadSettingsNotificationsSection(content, user); break;
+        case 'settings-privacy': await loadSettingsPrivacySection(content, user); break;
+        case 'settings-theme': await loadSettingsThemeSection(content, user); break;
+        default: content.innerHTML = '<p>Sezione non trovata</p>'; break;
       }
     }
 
@@ -168,18 +121,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             method: 'POST',
             credentials: 'include',
           });
-
-          if (res.ok) {
-            window.location.href = '/login.html';
-          } else {
-            showToast('Logout failed.', 'error');
-          }
+          res.ok ? window.location.href = '/login.html' : showToast('Logout failed.', 'error');
         } catch (err) {
           showToast('Network error while logging out.', 'error');
         }
       });
     });
+
     await fetchAndSetUser();
+    await preloadNotifications();
+    await fetchUnreadCount();
 
     const initialSection = window.location.hash.substring(1) || 'map';
     caricaSezione(initialSection);
@@ -188,6 +139,68 @@ document.addEventListener('DOMContentLoaded', async () => {
       const section = window.location.hash.substring(1) || 'map';
       caricaSezione(section);
     });
+
+    // ✅ Pull-to-refresh setup
+    function setupPullToRefresh() {
+      const refreshThreshold = 70;
+      const refreshContainer = document.getElementById('pull-to-refresh');
+
+      let startY = 0;
+      let isTouching = false;
+      let isRefreshing = false;
+
+      document.addEventListener('touchstart', (e) => {
+        if (window.scrollY === 0 && !isRefreshing) {
+          isTouching = true;
+          startY = e.touches[0].clientY;
+        }
+      });
+
+      document.addEventListener('touchmove', (e) => {
+        if (!isTouching || isRefreshing) return;
+
+        const moveY = e.touches[0].clientY;
+        const distance = moveY - startY;
+
+        if (distance > 0) {
+          e.preventDefault();
+          const translateY = Math.min(distance / 2, refreshThreshold + 30);
+          refreshContainer.style.transform = `translateY(${translateY}px)`;
+          content.style.transform = `translateY(${translateY}px)`;  // Sposta anche il contenuto
+        }
+      }, { passive: false });
+
+      document.addEventListener('touchend', async () => {
+        if (!isTouching || isRefreshing) return;
+
+        const match = refreshContainer.style.transform.match(/translateY\(([\d.-]+)px\)/);
+        const currentTransform = match ? parseFloat(match[1]) : 0;
+
+        if (currentTransform >= refreshThreshold) {
+          refreshContainer.classList.add('active');
+          refreshContainer.style.transform = `translateY(60px)`;
+          content.style.transform = `translateY(60px)`;  // Mantieni spostato anche il contenuto
+          isRefreshing = true;
+
+          const currentSection = window.location.hash.replace('#', '') || 'map';
+          await caricaSezione(currentSection);
+
+          setTimeout(() => {
+            refreshContainer.classList.remove('active');
+            refreshContainer.style.transform = `translateY(-60px)`;
+            content.style.transform = `translateY(0px)`;  // Riporta contenuto in posizione
+            isRefreshing = false;
+          }, 1000);
+        } else {
+          refreshContainer.style.transform = `translateY(-60px)`;
+          content.style.transform = `translateY(0px)`;  // Riporta contenuto in posizione
+        }
+
+        isTouching = false;
+      });
+    }
+
+    setupPullToRefresh();
 
   } catch (err) {
     console.error(err);

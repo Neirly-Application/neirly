@@ -25,12 +25,17 @@ export default async function loadMapSection(content, user) {
         <span class="status">Online</span>
       </div>
       <div class="profile-actions">
+
+      <a href="#profile" data-section="profile">
         <button class="view-btn">
-          <i class="fas fa-user"></i> <span>View Profile</span>
+          <i class="fas fa-pen"></i> <span>Edit Profile</span>
         </button>
-        <button class="request-btn">
-          <i class="fas fa-user-plus"></i> <span>Add as Friend</span>
+      </a>
+      <a>
+        <button class="settings-btn">
+          <i class="fas fa-cog"></i> <span>Map Settings</span>
         </button>
+      </a>
       </div>
     </div>
   `;

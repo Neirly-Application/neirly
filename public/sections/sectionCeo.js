@@ -1,9 +1,9 @@
 export default async function loadCeoSection(content, user) {
-              content.innerHTML = `
-                <h2><i class="fas fa-user-shield"></i> CEO</h2>
-                <input type="text" id="searchEmail" class="input-search-email" placeholder="Cerca per email..." />
-                <div id="userList">Loading users...</div>
-              `;
+          content.innerHTML = `
+            <h2><i class="fas fa-user-shield"></i> CEO</h2>
+            <input type="text" id="searchEmail" class="input-search-email" placeholder="Cerca per email..." />
+            <div id="userList">Loading users...</div>
+          `;
 
           if (user.roles && user.roles.includes('ceo')) {
             document.querySelectorAll('#admin-section').forEach(el => {

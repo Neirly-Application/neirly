@@ -70,6 +70,7 @@
 
 .profile-pic-wrapper:hover .edit-icon {
   opacity: 1;
+  background-color: #00000064;
 }
 
 input[type="text"],
