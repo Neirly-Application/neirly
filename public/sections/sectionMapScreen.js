@@ -87,23 +87,6 @@ export default async function loadMapScreenSection(content, user) {
       .openPopup();
 
     userCoords = [latitude, longitude];
-
-    // ** Qui disabilitiamo il pull-to-refresh durante l’interazione con la mappa **
-    map.on('dragstart', () => {
-      window.disablePullToRefresh = true;
-    });
-
-    map.on('dragend', () => {
-      window.disablePullToRefresh = false;
-    });
-
-    map.on('zoomstart', () => {
-      window.disablePullToRefresh = true;
-    });
-
-    map.on('zoomend', () => {
-      window.disablePullToRefresh = false;
-    });
   }
 
   function updateUserLocation(position, profileImgUrl, nickname) {

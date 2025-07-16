@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function caricaSezione(section) {
       content.innerHTML = '<div class="loading">Loading...</div>';
 
-      const disablePull = ['map-screen','settings', 'settings-account', 'settings-activity', 'settings-chats', 'settings-danger', 'settings-devices', 'settings-info', 'settings-language', 'settings-notifications', 'settings-privacy', 'settings-theme'];
+      const disablePull = ['map-screen', 'settings', 'settings-account', 'settings-activity', 'settings-chats', 'settings-danger', 'settings-devices', 'settings-info', 'settings-language', 'settings-notifications', 'settings-privacy', 'settings-theme'];
       window.disablePullToRefresh = disablePull.includes(section);
 
       switch (section) {
@@ -147,7 +147,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       caricaSezione(section);
     });
 
-    // ✅ Pull-to-refresh setup
     function setupPullToRefresh() {
       const refreshThreshold = 70;
       const refreshContainer = document.getElementById('pull-to-refresh');
@@ -157,7 +156,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       let isRefreshing = false;
 
       document.addEventListener('touchstart', (e) => {
-        if (window.disablePullToRefresh) return; // disabilita se flag attivo
+        if (window.disablePullToRefresh) return;
 
         if (window.scrollY === 0 && !isRefreshing) {
           isTouching = true;
@@ -172,7 +171,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const distance = moveY - startY;
 
         if (distance > 0) {
-          e.preventDefault(); // ⚠️ SOLO se pull-to-refresh attivo
+          e.preventDefault(); 
           const translateY = Math.min(distance / 2, refreshThreshold + 30);
           refreshContainer.style.transform = `translateY(${translateY}px)`;
           content.style.transform = `translateY(${translateY}px)`;
@@ -188,7 +187,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (currentTransform >= refreshThreshold) {
           refreshContainer.classList.add('active');
           refreshContainer.style.transform = `translateY(60px)`;
-          content.style.transform = `translateY(60px)`;  // Mantieni spostato anche il contenuto
+          content.style.transform = `translateY(60px)`;
           isRefreshing = true;
 
           const currentSection = window.location.hash.replace('#', '') || 'map';
@@ -197,12 +196,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           setTimeout(() => {
             refreshContainer.classList.remove('active');
             refreshContainer.style.transform = `translateY(-60px)`;
-            content.style.transform = `translateY(0px)`;  // Riporta contenuto in posizione
+            content.style.transform = `translateY(0px)`;
             isRefreshing = false;
           }, 1000);
         } else {
           refreshContainer.style.transform = `translateY(-60px)`;
-          content.style.transform = `translateY(0px)`;  // Riporta contenuto in posizione
+          content.style.transform = `translateY(0px)`;
         }
 
         isTouching = false;
