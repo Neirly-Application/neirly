@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     let allNotifications = [];
     let user = null;
 
-    // Flag globale per disabilitare pull-to-refresh
     window.disablePullToRefresh = false;
 
     async function fetchAndSetUser() {

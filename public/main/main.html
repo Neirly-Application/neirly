@@ -180,8 +180,11 @@
     const sections = ['map', 'messages', 'profile', 'friend-list'];
     let touchStartX = 0;
     let touchEndX = 0;
+    let touchStartY = 0;
+    let touchEndY = 0;
     let swipeActive = false;
     let resizeTimeout;
+
 
     function updateActiveNavItem(section) {
       document.querySelectorAll('.nav-item').forEach(el => {
@@ -202,11 +205,11 @@
       return index !== -1 ? index : -1;
     }
 
-    function handleSwipeNavigation() {
+    function handleSwipeNavigation(deltaX) {
       const currentIndex = getCurrentSectionIndex();
       if (currentIndex === -1) return;
 
-      const direction = touchEndX < touchStartX ? 1 : -1;
+      const direction = deltaX < 0 ? 1 : -1;
       const nextIndex = currentIndex + direction;
 
       if (nextIndex >= 0 && nextIndex < sections.length) {
@@ -216,12 +219,18 @@
 
     function onTouchStart(e) {
       touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
     }
 
     function onTouchEnd(e) {
       touchEndX = e.changedTouches[0].screenX;
-      if (Math.abs(touchEndX - touchStartX) > 50) {
-        handleSwipeNavigation();
+      touchEndY = e.changedTouches[0].screenY;
+
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchEndY - touchStartY;
+
+      if (Math.abs(deltaX) > 70 && Math.abs(deltaY) < 40) {
+        handleSwipeNavigation(deltaX);
       }
     }
 
