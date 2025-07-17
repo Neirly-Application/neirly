@@ -1,6 +1,6 @@
 export default async function loadProfileSection(content, user) {
   content.innerHTML = '<h2><i class="fas fa-user"></i> Profile</h2><p>Loading data…</p>';
-  
+
   if (!user) {
     console.warn('DEBUG: user object missing – redirecting');
     content.innerHTML = '<p>User data not loaded. Please refresh.</p>';
@@ -55,11 +55,8 @@ export default async function loadProfileSection(content, user) {
         <label>About me:</label>
         <div style="position:relative;">
           <textarea id="aboutme-input" 
-            placeholder="Who are you? What are you passionate about? Tell us about you here, in a few lines.">${user.about_me || 'Who are you? What are you passionate about? Tell us about you here, in a few lines.'}
-          </textarea>
-          <span id="about-counter">
-            250
-          </span>
+            placeholder="Who are you? What are you passionate about? Tell us about you here, in a few lines.">${user.about_me || 'Who are you? What are you passionate about? Tell us about you here, in a few lines.'}</textarea>
+          <span id="about-counter">250</span>
         </div>
       </div>
 
@@ -71,24 +68,35 @@ export default async function loadProfileSection(content, user) {
       </div>
     </form>
 
-    <div id="cropper-modal" class="profile-img-editor">
-      <div class="profile-img-editor-content">
-        <h3>Edit Image</h3>
-        <div style="width:300px;height:300px;margin:auto;">
-          <img id="cropper-image" oncontextmenu="return false;">
-        </div>
-        <div style="margin-top:15px;">
-          <button id="crop-confirm" class="btn-submit">Upload</button>
-          <button id="crop-cancel" class="btn-cancel">Cancel</button>
-        </div>
-      </div>
+<div id="cropper-modal" class="profile-img-editor">
+  <div class="profile-img-editor-content">
+    <h3 style="margin-bottom: 10px;">Edit Image</h3>
+    <div style="width: 300px; height: 300px; margin: auto; border-radius: 50%; overflow: hidden;">
+      <img id="cropper-image" oncontextmenu="return false;" style="width: 100%; height: 100%; object-fit: cover;" />
     </div>
+    <div style="margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+      <i class="fas fa-search-minus"></i>
+      <input type="range" id="cropper-zoom" min="0.5" max="2" step="0.01" value="1" style="width: 150px;">
+      <i class="fas fa-search-plus"></i>
+    </div>
+    <div style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
+      <button id="crop-reset" class="btn-cancel">
+        <i class="fas fa-undo-alt" style="margin-right: 5px;"></i>Reset
+      </button>
+      <button id="crop-cancel" class="btn-cancel">Cancel</button>
+      <button id="crop-confirm" class="btn-submit">Apply</button>
+    </div>
+  </div>
+</div>
+
+
   `;
 
   const profilePicInput = document.getElementById('profilePicInput');
   const profilePicImg = document.getElementById('profile-pic');
   const cropperModal = document.getElementById('cropper-modal');
   const cropperImage = document.getElementById('cropper-image');
+  const cropperZoom = document.getElementById('cropper-zoom');
   const form = document.getElementById('profile-form');
   const saveBtn = document.getElementById('save-changes-btn');
   const cancelBtn = document.getElementById('cancel-changes-btn');
@@ -155,20 +163,50 @@ export default async function loadProfileSection(content, user) {
 
   document.querySelector('.profile-pic-wrapper').onclick = () => profilePicInput.click();
 
-  profilePicInput.onchange = () => {
-    const file = profilePicInput.files[0];
-    if (!file) return;
+profilePicInput.onchange = () => {
+  const file = profilePicInput.files[0];
+  if (!file) return;
 
-    cropperImage.src = URL.createObjectURL(file);
-    cropperModal.style.display = 'flex';
+  cropperImage.onload = () => {
+    const imgWidth = cropperImage.naturalWidth;
+    const imgHeight = cropperImage.naturalHeight;
+    const containerSize = 300;
+    const minZoom = Math.max(containerSize / imgWidth, containerSize / imgHeight);
 
     if (cropper) cropper.destroy();
     cropper = new Cropper(cropperImage, {
       aspectRatio: 1,
       viewMode: 1,
       background: false,
-      guides: false
+      guides: false,
+      zoomOnWheel: false,
+      minZoom: minZoom,
+      ready() {
+        cropper.zoomTo(minZoom);
+        cropperZoom.min = minZoom.toFixed(2);
+        cropperZoom.max = '2';
+        cropperZoom.step = '0.01';
+        cropperZoom.value = minZoom.toFixed(2);
+      }
     });
+  };
+
+  cropperImage.src = URL.createObjectURL(file);
+  cropperModal.style.display = 'flex';
+};
+
+
+  cropperZoom.oninput = () => {
+    if (cropper) {
+      cropper.zoomTo(parseFloat(cropperZoom.value));
+    }
+  };
+
+  document.getElementById('crop-reset').onclick = () => {
+    if (cropper) {
+      cropper.reset();
+      cropperZoom.value = 1;
+    }
   };
 
   document.getElementById('crop-cancel').onclick = () => {
