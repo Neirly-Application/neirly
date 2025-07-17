@@ -1,10 +1,22 @@
+const red = '\x1b[31m';
+const brightRed = '\x1b[91m';
+const yellow = '\x1b[33m';
+const green = '\x1b[32m';
+const reset = '\x1b[0m';
+
 const DEBUG = true;
 const DEBUG_VERBOSE = false;
 
-if (DEBUG) console.log("[DEBUG] Loading environment variables...");
+const logDebug = msg => DEBUG && console.log(`${red}[DEBUG]${reset} ${msg}`);
+const logVerbose = msg => DEBUG_VERBOSE && console.log(`${red}[DEBUG]${reset} ${msg}`);
+const logWarn = msg => console.warn(`${yellow}[WARN]${reset} ${msg}`);
+const logError = msg => console.error(`${brightRed}[ERROR]${reset} ${msg}`);
+const logInfo = msg => console.log(`${green}[INFO]${reset} ${msg}`);
+
+logDebug("Loading environment variables...");
 require('dotenv').config();
 
-if (DEBUG) console.log("[DEBUG] Importing core modules...");
+logDebug("Importing core modules...");
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -14,64 +26,63 @@ const path = require('path');
 
 const app = express();
 
-if (DEBUG) console.log("[DEBUG] Importing custom middleware and routers...");
-
-if (DEBUG_VERBOSE) console.log("[DEBUG] Importing authMiddleware...");
+logDebug("Importing custom middleware and routers...");
+logVerbose("Importing authMiddleware...");
 const { authMiddleware } = require('./src/authMiddleware/authMiddleware');
 
-if (DEBUG_VERBOSE) console.log("[DEBUG] Importing profileRouter...");
+logVerbose("Importing profileRouter...");
 const profileRouter = require('./src/routes/profile');
 
-if (DEBUG_VERBOSE) console.log("[DEBUG] Importing notificationsRouter...");
+logVerbose("Importing notificationsRouter...");
 const notificationsRouter = require('./src/routes/notifications');
 
-if (DEBUG_VERBOSE) console.log("[DEBUG] Importing friendsRouter...");
+logVerbose("Importing friendsRouter...");
 const friendsRouter = require('./src/routes/friends');
 
-if (DEBUG_VERBOSE) console.log("[DEBUG] Importing privacyRouter...");
+logVerbose("Importing privacyRouter...");
 const privacyRouter = require('./src/routes/privacy');
 
-if (DEBUG_VERBOSE) console.log("[DEBUG] Importing activityRouter...");
+logVerbose("Importing activityRouter...");
 const activityRouter = require('./src/routes/activity');
 
-if (DEBUG_VERBOSE) console.log("[DEBUG] Importing authenticateRouter...");
+logVerbose("Importing authenticateRouter...");
 const authenticateRouter = require('./src/routes/auth');
 
-if (DEBUG_VERBOSE) console.log("[DEBUG] Importing completeProfileRouter...");
+logVerbose("Importing completeProfileRouter...");
 const completeProfileRouter = require('./src/routes/completeProfile');
 
-if (DEBUG_VERBOSE) console.log("[DEBUG] Importing adminRouter...");
+logVerbose("Importing adminRouter...");
 const adminRouter = require('./src/routes/adminRouter');
 
-if (DEBUG_VERBOSE) console.log("[DEBUG] Importing forceLogoutRouter...");
+logVerbose("Importing forceLogoutRouter...");
 const forceLogoutRouter = require('./src/routes/forceLogout');
 
-if (DEBUG_VERBOSE) console.log("[DEBUG] Importing banUserRouter...");
+logVerbose("Importing banUserRouter...");
 const banUserRouter = require('./src/routes/banUser');
 
-if (DEBUG_VERBOSE) console.log("[DEBUG] Importing devicesRouter...");
+logVerbose("Importing devicesRouter...");
 const devicesRouter = require('./src/routes/devices');
 
-if (DEBUG_VERBOSE) console.log("[DEBUG] Importing deleteUserRouter...");
+logVerbose("Importing deleteUserRouter...");
 const deleteUserRouter = require('./src/routes/deleteUser');
 
-if (DEBUG_VERBOSE) console.log("[DEBUG] Importing nearMeRouter...");
+logVerbose("Importing nearMeRouter...");
 const nearMeRouter = require('./src/routes/nearMe');
 
-if (DEBUG) console.log("[DEBUG] Initializing passport configuration...");
+logDebug("Initializing passport configuration...");
 require('./src/config/passport');
 
-if (DEBUG) console.log("[DEBUG] Starting Discord bot...");
+logDebug("Starting Discord bot...");
 require('./src/discordBot');
 
-if (DEBUG) console.log("[DEBUG] Applying express middleware...");
+logDebug("Applying express middleware...");
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
-if (DEBUG) console.log("[DEBUG] Registering routes...");
+logDebug("Registering routes...");
 app.use('/user_pfps', express.static(path.join(__dirname, 'user_pfps')));
 app.use('/api/auth', authenticateRouter);
 app.use('/api/auth', forceLogoutRouter);
@@ -91,28 +102,28 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-if (DEBUG) console.log("[DEBUG] JWT_SECRET loaded:", process.env.JWT_SECRET);
-if (DEBUG) console.log("[DEBUG] Connecting to MongoDB...");
+logDebug("JWT_SECRET loaded: " + process.env.JWT_SECRET);
+logDebug("Connecting to MongoDB...");
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
   .then(() => {
-    if (DEBUG) console.log("[DEBUG] MongoDB connection successful");
+    logDebug("MongoDB connection successful");
     const port = process.env.PORT || 3000;
     app.listen(port, () => {
-      console.log("Server started on port", port);
+      console.log("✅ Server started on port", port);
     });
 
     process.stdin.resume();
     process.stdin.pause();
   })
   .catch((err) => {
-    console.error("[ERROR] Failed to connect to MongoDB:", err);
+    logError("Failed to connect to MongoDB: " + err);
   });
 
 app.use((req, res, next) => {
-  console.warn("[WARN] 404 - Not found:", req.originalUrl);
+  logWarn(`404 - Not found: ${req.originalUrl}`);
   res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
 });

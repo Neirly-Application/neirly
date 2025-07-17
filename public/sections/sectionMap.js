@@ -7,7 +7,8 @@ export default async function loadMapSection(content, user) {
   content.innerHTML = `
     <h2><i class="fas fa-map"></i> Map</h2>
     <div class="card map-card" style="position: relative; overflow: hidden;">
-      <div id="preview-map"></div>
+      <div id="preview-map">
+      </div>
     </div>
 
     <a href="#map-screen" class="btn map-button">

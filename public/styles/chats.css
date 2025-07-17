@@ -1,0 +1,119 @@
+@import url(./variables.css);
+
+.recent-chats {
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 10px;
+  background: transparent;
+  border-radius: 8px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #eee;
+}
+
+.chat-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 10px;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.chat-item:last-child {
+  border-bottom: none;
+}
+
+.chat-item:hover {
+  background-color: var(--chat-hover);
+}
+
+.chat-item img.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+  border: 2px solid var(--secondary) 
+}
+
+.chat-details {
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.chat-details .chat-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-details .chat-last-message {
+  font-size: 0.9rem;
+  color: #8b8b8b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-unread-badge {
+  background-color: var(--main-bg); 
+  color: white;
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 700;
+  min-width: 24px;
+  text-align: center;
+  user-select: none;
+}
+
+@media (max-width: 768px) {
+  .chat-item {
+    padding: 10px 6px;
+  }
+
+  .chat-item img.avatar {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
+
+  .chat-details .chat-name {
+    font-size: 1rem;
+  }
+
+  .chat-details .chat-last-message {
+    font-size: 0.8rem;
+  }
+
+  .chat-unread-badge {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-item img.avatar {
+    width: 36px;
+    height: 36px;
+    margin-right: 8px;
+  }
+
+  .chat-details .chat-name {
+    font-size: 0.95rem;
+  }
+
+  .chat-details .chat-last-message {
+    font-size: 0.75rem;
+  }
+
+  .chat-unread-badge {
+    font-size: 0.65rem;
+    padding: 2px 5px;
+  }
+}
