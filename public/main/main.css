@@ -301,51 +301,79 @@ form button:focus-visible {
 
 .profile-img-editor {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
-  display: flex;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 9999;
 }
 
 .profile-img-editor-content {
-  background: var(--accent);
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 90%;
-  position: relative;
-  z-index: 1001;
+  background: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: fadeInUp 0.3s ease;
 }
 
-.cropper-circle-mask {
-  position: absolute;
-  top: 0; left: 0;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.cropper-circle-mask::after {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  border-radius: 50%;
-  border: 2px dashed rgba(255,255,255,0.8);
-  box-shadow: 0 0 0 9999px rgba(0,0,0,0.6);
-  pointer-events: none;
-  z-index: 2;
+.profile-img-editor-content h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: #333;
 }
 
 #cropper-image {
-  position: relative;
-  z-index: 3;
-  width: 300px;
-  height: 300px;
-  object-fit: cover;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 0 0 2px #ccc inset;
 }
+
+.profile-img-editor-content button {
+  padding: 10px 18px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.profile-img-editor-content .btn-submit {
+  background-color: #5865F2;
+  color: white;
+  margin-right: 10px;
+}
+
+.profile-img-editor-content .btn-submit:hover {
+  background-color: #4752C4;
+}
+
+.profile-img-editor-content .btn-cancel {
+  background-color: #E3E5E8;
+  color: #333;
+}
+
+.profile-img-editor-content .btn-cancel:hover {
+  background-color: #d1d5db;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 
 .profile-form {
   margin-top: 20px;
