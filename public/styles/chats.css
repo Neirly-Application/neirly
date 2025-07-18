@@ -8,7 +8,7 @@
   background: transparent;
   border-radius: 8px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #eee;
+  color: #757575;
 }
 
 .chat-item {
@@ -72,6 +72,14 @@
   user-select: none;
 }
 
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
 @media (max-width: 768px) {
   .chat-item {
     padding: 10px 6px;
@@ -116,4 +124,36 @@
     font-size: 0.65rem;
     padding: 2px 5px;
   }
+}
+
+.friend-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid #333;
+}
+
+.friend-item:active {
+  background-color: var(--chat-hover);
+}
+
+.friend-item img.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+  border: 2px solid var(--secondary);
+}
+
+.friend-name {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
 }
