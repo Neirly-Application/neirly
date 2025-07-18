@@ -1,3 +1,5 @@
+import { showToast } from './notification.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('login-form');
   form.addEventListener('submit', async (e) => {

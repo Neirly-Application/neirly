@@ -65,7 +65,7 @@ router.post('/login', (req, res, next) => {
       return res.status(500).json({ message: 'Internal error.' });
     }
     if (!user) {
-      return res.status(400).json({ message: 'Credenziali errate' });
+      return res.status(400).json({ message: 'Invalid credentials.' });
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
