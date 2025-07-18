@@ -11,7 +11,11 @@ export default async function loadProfileSection(content, user) {
     const [u, d] = email.split('@');
     if (!d) return email;
     if (u.length <= 2) return u[0] + '*'.repeat(u.length - 1) + '@' + d;
-    return `${u[0]}${'*'.repeat(u.length - 2)}${u.slice(-1)}@${d}`;
+    const visibleStart = u[0];
+    const visibleEnd = u.slice(-1);
+    const maskLength = u.length - 2;
+    const mask = '*'.repeat(maskLength);
+    return `${visibleStart}${mask}${visibleEnd}@${d}`;
   };
 
   const lastUniquenickChange = new Date(user.uniquenickChangedAt || 0);
@@ -61,7 +65,7 @@ export default async function loadProfileSection(content, user) {
       </div>
 
       <div class="form-group"><label>Email:</label>
-        <input type="email" value="${maskEmail(user.email)}" readonly>
+      <input type="email" value="${maskEmail(user.email)}" readonly style="font-family: monospace;">
       </div>
       <div class="form-group"><label>Date of birth:</label>
         <input type="date" value="${user.birthdate ? user.birthdate.split('T')[0] : ''}" readonly>
