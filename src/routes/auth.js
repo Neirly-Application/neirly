@@ -15,22 +15,48 @@ router.post('/register', async (req, res) => {
   try {
     const { email, password } = req.body;
     const hash = await bcrypt.hash(password, 10);
+
     const user = new User({ email, passwordHash: hash, roles: 'user' });
     await user.save();
+
     await ActivityLog.create({
       userId: user._id,
-      type: 'login',
+      type: 'register',
       metadata: {
         userAgent: req.headers['user-agent'],
         ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip
       }
     });
-    res.json({ message: 'Registration successfully completed!' });
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '7d'
+    });
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000 
+    });
+
+    res.json({
+      message: 'Registration successfully completed!',
+      user: {
+        id: user._id,
+        email: user.email,
+        profileCompleted: user.profileCompleted,
+        roles: user.roles,
+        banned: user.banned,
+        profilePictureUrl: '/media/user.png'
+      }
+    });
+
   } catch (error) {
     console.error('Register error:', error);
     res.status(500).json({ message: 'Error while registering.' });
   }
 });
+
 
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', { session: false }, (err, user) => {

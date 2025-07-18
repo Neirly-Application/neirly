@@ -5,7 +5,6 @@
 @import url(./cards.css);
 @import url(./notifications.css);
 @import url(./footer.css);
-@import url(./setup.css);
 
 * {
   box-sizing: border-box;

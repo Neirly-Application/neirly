@@ -1,3 +1,5 @@
+import { showToast } from '../scripts/notification.js';
+
 export default async function loadCeoSection(content, user) {
           content.innerHTML = `
             <h2><i class="fas fa-user-shield"></i> CEO</h2>

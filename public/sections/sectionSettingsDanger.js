@@ -1,3 +1,5 @@
+import { showToast, customConfirm } from '../scripts/notification.js';
+
 export default async function loadSettingsDangerSection(content, user) {
               content.innerHTML = `
             <div class="case-header">

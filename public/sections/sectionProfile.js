@@ -1,3 +1,5 @@
+import { showToast } from '../scripts/notification.js';
+
 export default async function loadProfileSection(content, user) {
   content.innerHTML = '<h2><i class="fas fa-user"></i> Profile</h2><p>Loading data…</p>';
 

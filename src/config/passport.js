@@ -6,7 +6,6 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
 
-// Funzione per creare un uniquenick valido e univoco
 async function generateUniqueNick(base) {
   let clean = base
     .toLowerCase()
@@ -26,18 +25,43 @@ async function generateUniqueNick(base) {
   return uniquenick;
 }
 
-passport.use(new LocalStrategy({ usernameField: 'email' },
-  async (email, password, done) => {
-    try {
-      const user = await User.findOne({ email });
-      if (!user) return done(null, false);
-      const ok = await bcrypt.compare(password, user.passwordHash);
-      return done(null, ok ? user : false);
-    } catch (err) {
-      done(err);
+passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
+  try {
+    let user = await User.findOne({ email });
+
+    if (user) {
+      const isValid = await bcrypt.compare(password, user.passwordHash);
+      return done(null, isValid ? user : false);
     }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const uniquenick = await generateUniqueNick(email.split('@')[0]);
+
+    const newUser = await User.create({
+      email,
+      name: email.split('@')[0],
+      uniquenick,
+      passwordHash: hashedPassword,
+      provider: 'local',
+      profileCompleted: false,
+      join_date: new Date(),
+      roles: ['user'],
+      banned: false,
+      forceLogout: false,
+      about_me: "👋 Hello there! I'm a Neirly user!",
+    });
+
+    await Notification.create({
+      userId: newUser._id,
+      message: `Welcome ${newUser.name || newUser.email}! This is just a simple welcome notification. Don't take care of what there's in here thanks :3`,
+      imageUrl: '../media/notification.png'
+    });
+
+    return done(null, newUser);
+  } catch (err) {
+    return done(err);
   }
-));
+}));
 
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,

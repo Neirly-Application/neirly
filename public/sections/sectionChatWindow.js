@@ -8,7 +8,7 @@ export default async function loadChatWindow(content, user, chatUserId, onBack) 
 
     content.innerHTML = `
       <button id="back-btn">⬅️ Back</button>
-      <div style="display:flex; flex-direction: column; height: 400px; border: 1px solid #ccc; padding: 10px;">
+      <div style="display:flex; flex-direction: column; height: 100%; border: 1px solid #ccc; padding: 10px;">
         <div class="chat-messages" style="flex-grow: 1; overflow-y: auto; margin-bottom: 10px;">
           ${messages.map(m => `
             <div class="message ${m.userId === chatUserId ? 'incoming' : 'outgoing'}">
@@ -42,7 +42,7 @@ export default async function loadChatWindow(content, user, chatUserId, onBack) 
       if (sendRes.ok) {
         loadChatWindow(content, user, chatUserId, onBack);
       } else {
-        alert('Failed to send message');
+        alert('Failed to send message.');
       }
     });
 

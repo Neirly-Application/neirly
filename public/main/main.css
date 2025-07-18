@@ -169,7 +169,7 @@ img {
   padding: 35px 50px;
   background: var(--light-bg);
   transition: padding 0.3s ease, background-color 0.3s ease;
-  min-height: auto;
+  height: 100%;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   transition: transform 0.3s ease;
@@ -705,13 +705,13 @@ form button:focus-visible {
   position: absolute;
   top: -4px;
   right: -6px;
-  background: red;
-  color: white;
+  background: var(--secondary);
+  color: var(--main-bg);
   border-radius: 50px;
   margin-inline: 5px;
-  padding: 4px 10px;
+  padding: 4px 8px;
   font-size: 12px !important;
-  font-weight: bold;
+  font-weight: 500;
   pointer-events: none;
   user-select: none;
   min-width: 16px;

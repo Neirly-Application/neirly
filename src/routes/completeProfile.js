@@ -5,9 +5,12 @@ const { authMiddleware } = require('../authMiddleware/authMiddleware');
 const router = express.Router();
 
 router.post('/complete-profile', authMiddleware, async (req, res) => {
-  const { userId, username, uniquenick, birthdate, password, wantsUpdates, acceptedTerms, profilePictureUrl } = req.body;
+  const { username, uniquenick, birthdate, password, wantsUpdates, acceptedTerms, profilePictureUrl } = req.body;
 
-  if (!userId || !username || !uniquenick || !birthdate || !password || acceptedTerms !== true) {
+  const accepted = acceptedTerms === true || acceptedTerms === 'true';
+  const userId = req.user._id;
+
+  if (!username || !uniquenick || !birthdate || !password || !accepted) {
     return res.status(400).json({ message: 'All required fields must be filled and terms must be accepted.' });
   }
 
@@ -33,7 +36,6 @@ router.post('/complete-profile', authMiddleware, async (req, res) => {
       return res.status(409).json({ message: 'This nickname is already in use.' });
     }
 
-    // Tutto ok, assegna i campi
     const hashedPassword = await bcrypt.hash(password, 10);
 
     user.name = username;

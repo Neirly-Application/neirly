@@ -1,4 +1,4 @@
-import { showNotification } from './notifications.js';
+import { showToast } from './notification.js';
 
 document.getElementById('register-form').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -23,7 +23,7 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
 
     if (res.ok) {
       showToast(data.message, 'success');
-      setTimeout(() => window.location.href = '/src/login.html', 1500);
+      setTimeout(() => window.location.href = './main/complete-profile.html', 300);
     } else {
       showToast(data.message || 'Error while registering.', 'error');
     }

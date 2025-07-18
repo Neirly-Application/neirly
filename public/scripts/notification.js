@@ -74,3 +74,5 @@ function customConfirm(message) {
     document.body.appendChild(overlay);
   });
 }
+
+export { showToast, customConfirm };

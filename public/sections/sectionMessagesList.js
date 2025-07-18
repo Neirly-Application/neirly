@@ -1,5 +1,4 @@
 export default async function loadMessagesList(content, user, onChatUserClick) {
-  console.log('Loading messages list');
   content.innerHTML = '<p>Loading chats...</p>';
   try {
     const res = await fetch('/api/chats/friends-and-chats');

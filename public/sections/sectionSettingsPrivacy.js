@@ -1,3 +1,5 @@
+import { showToast } from '../scripts/notification.js';
+
 export default async function loadSettingsPrivacySection(content, user) {
                 content.innerHTML = `
             <div class="case-header">

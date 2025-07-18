@@ -17,14 +17,12 @@ document.getElementById('complete-profile-form').addEventListener('submit', asyn
     return;
   }
 
-  // Password: almeno 8 caratteri, 1 maiuscola, 1 numero
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
   if (!passwordRegex.test(password)) {
     errorMsg.textContent = 'Password must be at least 8 characters long, contain one uppercase letter and one number.';
     return;
   }
 
-  // unicikenick solo lettere minuscole, numeri, punto e underscore
   if (!/^[a-z0-9._]+$/.test(uniquenick)) {
     errorMsg.textContent = 'Nickname can only contain lowercase letters, numbers, underscores, and dots.';
     return;
@@ -42,7 +40,6 @@ try {
       return;
     }
 
-    // Chiamata POST per completare il profilo
     const res = await fetch('/api/auth/complete-profile', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -60,7 +57,6 @@ try {
     const data = await res.json();
 
     if (res.ok) {
-      // redirect dopo successo
       window.location.href = `/main/main.html?name=${encodeURIComponent(username)}`;
     } else {
       errorMsg.textContent = data.message || 'Error while saving.';
