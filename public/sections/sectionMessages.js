@@ -31,9 +31,9 @@ export default async function loadMessagesSection(content, user) {
     content.innerHTML = `
       <h2><i class="fas fa-comment-alt"></i> Messages</h2>
       
-      <div class="recent-chats">${recentChatsHTML || '<p>No recent chats</p>'}</div>
+      <div class="recent-chats">${recentChatsHTML || '<p>No recent chats</p>'}</div><br>
       
-      <h3>Select a friend to start chat:</h3>
+      <h4>Select a friend to start chat:</h4>
       <div class="friends-list">${friendsHTML || '<p>No friends found</p>'}</div>
 
       <div id="chat-window" style="margin-top:20px;">

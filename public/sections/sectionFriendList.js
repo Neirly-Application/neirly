@@ -97,8 +97,8 @@ export default async function loadFriendListSection(content, user) {
                 html += '<h3>Friends</h3>';
                 html += confirmedFriends.map(friend => `
                       <div class="friend-item">
-                        <strong>${friend.name || '-'}</strong><br>
-                        <small>${friend.email}</small>
+                        <img src="/api/users/${friend._id}/profile-picture" alt="Avatar" class="avatar" />
+                        <strong>${friend.name || '-'}</strong>
                       </div>
                     `).join('');
               } else if (pendingRequests.length === 0) {
