@@ -4,7 +4,6 @@ const { authMiddleware } = require('../authMiddleware/authMiddleware');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
 
-// Richiesta amicizia
 router.post('/request', authMiddleware, async (req, res) => {
   const { email } = req.body;
 
@@ -15,7 +14,6 @@ router.post('/request', authMiddleware, async (req, res) => {
     const targetUser = await User.findOne({ email });
     if (!targetUser) return res.status(404).json({ message: 'User not found.' });
 
-    // Verifica se già amici o già richiesta inviata
     const isAlreadyFriend = targetUser.friends?.includes(req.user._id);
     const alreadyRequested = await Notification.findOne({
       userId: targetUser._id,
@@ -27,7 +25,6 @@ router.post('/request', authMiddleware, async (req, res) => {
     if (isAlreadyFriend) return res.status(400).json({ message: "You're already friends." });
     if (alreadyRequested) return res.status(400).json({ message: "A pending request has already been sent." });
 
-    // Crea notifica
     const notifica = new Notification({
       userId: targetUser._id,
       title: 'Friend Request.',
@@ -50,7 +47,6 @@ router.post('/request', authMiddleware, async (req, res) => {
   }
 });
 
-// Accetta/rifiuta richiesta
 router.post('/respond', authMiddleware, async (req, res) => {
   const { notificationId, action } = req.body;
 
@@ -92,17 +88,14 @@ router.post('/respond', authMiddleware, async (req, res) => {
 
 router.get('/friends', authMiddleware, async (req, res) => {
   try {
-    // Amici confermati
     const user = await User.findById(req.user._id).populate('friends', 'name email');
 
-    // Richieste pendenti: notifiche non lette di tipo friend_request
     const pendingNotifs = await Notification.find({
       userId: req.user._id,
       type: 'friend_request',
       read: false
     }).populate('meta.from', 'name email');
 
-    // Mappa le notifiche per avere solo i dati essenziali della richiesta
     const pendingRequests = pendingNotifs.map(n => ({
       _id: n._id,
       name: n.meta.from?.name || '-',

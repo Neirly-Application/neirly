@@ -39,6 +39,9 @@ const notificationsRouter = require('./src/routes/notifications');
 logVerbose("Importing chatsRouter...");
 const chatsRouter = require('./src/routes/chatsRouter');
 
+logVerbose("Importing getUserRouter...");
+const getUser = require('./src/routes/getUserRouter');
+
 logVerbose("Importing friendsRouter...");
 const friendsRouter = require('./src/routes/friends');
 
@@ -101,6 +104,7 @@ app.use('/api', privacyRouter);
 app.use('/api', devicesRouter);
 app.use('/api', nearMeRouter);
 app.use('/api', chatsRouter);
+app.use('/api', getUser);
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));

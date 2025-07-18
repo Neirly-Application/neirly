@@ -175,24 +175,33 @@ router.post('/logout', authMiddleware, async (req, res) => {
   res.json({ message: 'Logged out successfully!' });
 });
 
+const Message = require('../models/Message'); // o come si chiama il tuo model
+
 router.delete('/delete-account', authMiddleware, async (req, res) => {
   try {
     const userId = req.user._id;
 
     await Notification.deleteMany({ userId });
     await Activity.deleteMany({ userId });
+    await Message.deleteMany({
+      $or: [
+        { sender: userId },
+        { recipient: userId }
+      ]
+    });
 
     await User.findByIdAndDelete(userId);
 
     res.clearCookie('token');
     await ActivityLog.create({
-      userId: req.user._id,
+      userId,
       type: 'logout & deleting account',
       metadata: {
         ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip
       }
     });
-    res.json({ message: 'Account and related notifications successfully deleted.' });
+
+    res.json({ message: 'Account and all related data successfully deleted.' });
   } catch (error) {
     console.error('Account deletion error:', error);
     res.status(500).json({ message: 'Error while deleting account.' });

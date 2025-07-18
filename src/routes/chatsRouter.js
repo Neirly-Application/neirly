@@ -33,8 +33,8 @@ router.get('/chats/messages/:userId', authMiddleware, async (req, res) => {
   try {
     const messages = await Message.find({
       $or: [
-        { sender: userId, recipient: otherUserId },
-        { sender: otherUserId, recipient: userId }
+        { sender: userId, recipient: otherUserId, deletedBySender: { $ne: true } },
+        { sender: otherUserId, recipient: userId, deletedByRecipient: { $ne: true } }
       ]
     }).sort('timestamp').lean();
 
@@ -49,8 +49,13 @@ router.post('/chats/messages', authMiddleware, async (req, res) => {
   const senderId = req.user._id;
   const { to, content, type = 'text' } = req.body;
 
-  if (!to || !content) {
-    return res.status(400).json({ message: 'Missing recipient or content' });
+  const allowedTypes = ['text', 'image', 'video', 'audio', 'file', 'system'];
+  if (!to || !allowedTypes.includes(type)) {
+    return res.status(400).json({ message: 'Invalid recipient or message type' });
+  }
+
+  if (type === 'text' && (!content || content.trim() === '')) {
+    return res.status(400).json({ message: 'Text content required' });
   }
 
   try {
@@ -62,14 +67,8 @@ router.post('/chats/messages', authMiddleware, async (req, res) => {
       timestamp: new Date()
     });
 
-    await User.updateOne(
-      { _id: senderId },
-      { $addToSet: { recentChats: to } }
-    );
-    await User.updateOne(
-      { _id: to },
-      { $addToSet: { recentChats: senderId } }
-    );
+    await User.updateOne({ _id: senderId }, { $addToSet: { recentChats: to } });
+    await User.updateOne({ _id: to }, { $addToSet: { recentChats: senderId } });
 
     res.status(201).json(newMessage);
   } catch (err) {
@@ -85,14 +84,13 @@ router.get('/users/:id/profile-picture', async (req, res) => {
 
     const defaultPath = path.join(__dirname, '../../public/media/user.png');
     const baseDir = path.join(__dirname, '../user_pfps');
-    
+
     if (!user.profilePictureUrl) {
       return res.sendFile(defaultPath);
     }
 
-    const imgPath = user.profilePictureUrl.startsWith('/')
-      ? path.join(__dirname, '../', user.profilePictureUrl)
-      : path.join(baseDir, user.profilePictureUrl);
+    const safeFilename = path.basename(user.profilePictureUrl);
+    const imgPath = path.join(baseDir, safeFilename);
 
     if (!fs.existsSync(imgPath)) {
       return res.sendFile(defaultPath);
