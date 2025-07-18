@@ -39,6 +39,37 @@ router.post('/register', async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000 
     });
 
+      try {
+        const userAgent = req.headers['user-agent'] || 'Unknown';
+        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
+        const location = await getLocationFromIP(ip);
+        const existingDevice = req.user.devices.find(dev =>
+          dev.name === userAgent && dev.location === location
+        );
+        if (existingDevice) {
+          existingDevice.lastActive = new Date();
+        } else {
+          req.user.devices.push({
+            name: userAgent,
+            location,
+            lastActive: new Date()
+          });
+        }
+        await req.user.save();
+        await ActivityLog.create({
+          userId: req.user._id,
+          type: 'Account Creation',
+          metadata: {
+            provider: 'google',
+            email: req.user.email,
+            ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip
+          }
+        });
+        console.log('✅ Device saved (Local)');
+      } catch (err) {
+        console.error('Device tracking error (Local):', err.message);
+      }
+
     res.json({
       message: 'Registration successfully completed!',
       user: {
@@ -94,6 +125,16 @@ router.post('/login', (req, res, next) => {
             lastActive: new Date()
           });
         }
+        await req.user.save();
+        await ActivityLog.create({
+          userId: req.user._id,
+          type: 'login',
+          metadata: {
+            provider: 'local',
+            email: req.user.email,
+            ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip
+          }
+        });
       
         await user.save();
         console.log('✅ Device saved');
