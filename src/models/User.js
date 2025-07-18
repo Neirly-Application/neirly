@@ -58,7 +58,8 @@ const userSchema = new mongoose.Schema({
   passwordHash: { type: String },
   provider: { type: String, enum: ['local', 'google', 'discord'], default: 'local' },
   profileCompleted: { type: Boolean, default: false },
-  roles: { type: [String], enum: ['user', 'supporter','moderator', 'ceo' ], default: ['user']},  acceptedTerms: { type: Boolean,
+  roles: { type: [String], enum: ['user', 'supporter', 'alpha_tester', 'moderator', 'ceo' ], default: ['user']},
+  acceptedTerms: { type: Boolean,
                     required: function () {
                         return this.profileCompleted;
                     }
@@ -76,7 +77,7 @@ homeSettings: {
       petTypes: [{ type: String }]
     },
   },
-                  
+  coins: { type: Number, default: 100 },
 });
 
 const User = mongoose.model('User', userSchema);
