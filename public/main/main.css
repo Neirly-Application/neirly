@@ -717,6 +717,13 @@ form button:focus-visible {
   min-width: 16px;
   text-align: center;
   z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.active .notification-badge {
+  background: var(--main-bg);
+  color: var(--secondary);
+  transition: all 0.2s ease;
 }
 
 @keyframes light-shake {
@@ -729,8 +736,8 @@ form button:focus-visible {
 }
 
 .notification-badge.vibrate {
-  animation: light-shake 0.4s ease-in-out;
-  animation-delay: 2.5s;
+  animation: light-shake 1s ease-in-out;
+  animation-delay: 0;
   animation-iteration-count: infinite;
 }
 
