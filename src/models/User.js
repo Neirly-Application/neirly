@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema({
   forceLogout: { type: Boolean, default: false },
   banned: { type: Boolean, default: false },
   forceLogout: { type: Boolean, default: false },
+  recentChats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   profilePictureUrl: { type: String, default: '/media/user.png' },
   discordId: String,
