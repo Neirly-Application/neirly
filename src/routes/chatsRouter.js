@@ -16,8 +16,6 @@ router.get('/chats/friends-and-chats', authMiddleware, async (req, res) => {
 
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    console.log('Recent chats:', user.recentChats);
-
     res.json({
       friends: user.friends,
       recentChats: user.recentChats,

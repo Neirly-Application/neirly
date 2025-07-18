@@ -396,7 +396,7 @@ form button:focus-visible {
 
 
 #cropper-zoom {
-  -webkit-appearance: none;
+  --webkit-appearance: none;
   width: 150px;
   height: 6px;
   background: #ccc;

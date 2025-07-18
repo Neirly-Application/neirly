@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         case 'friend-list': await loadFriendListSection(content, user); break;
         case 'map': await loadMapSection(content, user); break;
         case 'map-screen': await loadMapScreenSection(content, user); break;
-        case 'messages': await loadMessagesSection(content, user); break;
+        case 'messages':await loadMessagesSection(content, user); break;
         case 'notifications': await loadNotificationsSection(content, user); break;
         case 'profile': await loadProfileSection(content, user); break;
         case 'settings': await loadSettingsSection(content, user); break;
