@@ -78,6 +78,7 @@ homeSettings: {
     },
   },
   coins: { type: Number, default: 100 },
+  hasPremium: { type: Boolean, default: false },
 });
 
 const User = mongoose.model('User', userSchema);
