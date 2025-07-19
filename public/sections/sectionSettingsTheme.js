@@ -1,43 +1,49 @@
 export default async function loadSettingsThemeSection(content, user) {
-              content.innerHTML = `
-            <div class="case-header">
-              <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-              <h2><i class="fas fa-palette"></i> App Theme</h2>
-            </div>
-              <p>Scegli il tema della tua app.</p>
+  document.body.style.background = '';
+  document.body.style.transition = 'background 0.3s ease-in-out';
 
-            <div class="toggle-view">
-              <label>
-                <input type="checkbox" id="viewToggle" />
-                Vista rapida
-              </label>
-            </div>
+  content.style.background = '';
+  content.style.transition = 'background 0.3s ease-in-out';
 
-            <div class="card-container">
-              <div class="theme-card">
-                <span class="badge"><i class="fas fa-fire"></i></span>
-                <div class="emoji">🎨</div>
-                <h3>Tema Creativo</h3>
-                <p class="card-desc">Un tema perfetto per designer e artisti visivi.</p>
-                <button class="select-btn">Scegli Tema</button>
-              </div>
+  content.innerHTML = `
+    <div class="case-header">
+      <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+      <h2><i class="fas fa-palette"></i> App Theme</h2>
+    </div>
+      <p>Scegli il tema della tua app.</p>
 
-              <div class="theme-card">
-                <span class="badge"><i class="fas fa-star"></i></span>
-                <div class="emoji">🌙</div>
-                <h3>Tema Notturno</h3>
-                <p class="card-desc">Ideale per lavorare di notte con meno affaticamento visivo.</p>
-                <button class="select-btn">Scegli Tema</button>
-              </div>
-            </div>
-            `;
+    <div class="toggle-view">
+      <label>
+        <input type="checkbox" id="viewToggle" />
+        Vista rapida
+      </label>
+    </div>
 
-              const toggle = document.getElementById('viewToggle');
-              const cards = document.querySelectorAll('.theme-card');
+    <div class="card-container">
+      <div class="theme-card">
+        <span class="badge"><i class="fas fa-fire"></i></span>
+        <div class="emoji">🎨</div>
+        <h3>Tema Creativo</h3>
+        <p class="card-desc">Un tema perfetto per designer e artisti visivi.</p>
+        <button class="select-btn">Scegli Tema</button>
+      </div>
 
-              toggle.addEventListener('change', () => {
-                cards.forEach(card => {
-                  card.classList.toggle('condensed', toggle.checked);
-                });
-              });
+      <div class="theme-card">
+        <span class="badge"><i class="fas fa-star"></i></span>
+        <div class="emoji">🌙</div>
+        <h3>Tema Notturno</h3>
+        <p class="card-desc">Ideale per lavorare di notte con meno affaticamento visivo.</p>
+        <button class="select-btn">Scegli Tema</button>
+      </div>
+    </div>
+    `;
+
+      const toggle = document.getElementById('viewToggle');
+      const cards = document.querySelectorAll('.theme-card');
+
+      toggle.addEventListener('change', () => {
+        cards.forEach(card => {
+          card.classList.toggle('condensed', toggle.checked);
+        });
+      });
 }

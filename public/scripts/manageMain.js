@@ -1,4 +1,5 @@
 import loadCeoSection from '../sections/sectionCeo.js';
+import loadPremiumSection from '../sections/sectionPremium.js';
 import loadFriendListSection from '../sections/sectionFriendList.js';
 import loadMapSection from '../sections/sectionMap.js';
 import loadMapScreenSection from '../sections/sectionMapScreen.js';
@@ -98,6 +99,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       switch (section) {
         case 'ceo': await loadCeoSection(content, user); break;
+        case 'premium': await loadPremiumSection(content, user); break;
         case 'friend-list': await loadFriendListSection(content, user); break;
         case 'map': await loadMapSection(content, user); break;
         case 'map-screen': await loadMapScreenSection(content, user); break;

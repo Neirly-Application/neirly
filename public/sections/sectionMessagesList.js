@@ -1,4 +1,10 @@
 export default async function loadMessagesList(content, user, onChatUserClick) {
+  document.body.style.background = '';
+  document.body.style.transition = 'background 0.3s ease-in-out';
+
+  content.style.background = '';
+  content.style.transition = 'background 0.3s ease-in-out';
+  
   content.innerHTML = '<p>Loading chats...</p>';
   try {
     const res = await fetch('/api/chats/friends-and-chats');

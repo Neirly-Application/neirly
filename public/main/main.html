@@ -43,6 +43,9 @@
       <span class="topbar-title">Neirly</span>
     </div>
     <div class="topbar-menu">
+      <a href="#premium" class="nav-item premium" title="Premium" data-section="premium">
+        <i class="fas fa-crown"></i>
+      </a>
       <a href="#notifications" class="nav-item" title="Notifications" data-section="notifications">
         <i class="fas fa-bell">
           <span class="notification-badge"></span>
@@ -106,6 +109,10 @@
         <i class="fas fa-user"></i> 
         <span>Profile</span>
       </a>
+      <a href="#premium" class="nav-item premium" title="Premium" data-section="premium">
+        <i class="fas fa-crown"></i>
+        <span>Premium</span>
+      </a>
       <a href="#ceo" class="nav-item" data-section="ceo" id="admin-section" style="display:none;">
         <i class="fas fa-user-shield"></i> 
         <span>Actions</span>
@@ -128,12 +135,6 @@
     </div>
   </nav>
 
-    <div id="unsaved-notification" class="unsaved-notification" style="display: none;">
-      <span>You have unsaved changes.</span>
-      <button id="cancel-changes-btn" class="btn-cancel">Cancel</button>
-      <button id="save-changes-btn" class="btn-submit">Save</button>
-    </div>
-
   <nav class="bottom-navbar">
     <a href="#map" class="nav-item" data-section="map">
       <i class="fas fa-map"></i>
@@ -151,6 +152,12 @@
   </div>
 
   <main class="content"></main>
+  
+  <div id="unsaved-notification" class="unsaved-notification" style="display: none;">
+    <span>You have unsaved changes.</span>
+    <button id="cancel-changes-btn" class="btn-cancel">Cancel</button>
+    <button id="save-changes-btn" class="btn-submit">Save</button>
+  </div>
 
   <div id="offlineOverlay" style="display:none;">
     <div class="offline-content">

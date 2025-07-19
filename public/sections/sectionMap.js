@@ -1,4 +1,10 @@
 export default async function loadMapSection(content, user) {
+  document.body.style.background = '';
+  document.body.style.transition = 'background 0.3s ease-in-out';
+
+  content.style.background = '';
+  content.style.transition = 'background 0.3s ease-in-out';
+
   const avatar = user?.profilePictureUrl || '../media/user.png';
   const username = user?.name || 'Username';
   const nickname = user?.uniquenick ? `@${user.uniquenick}` : '@uniquenick';

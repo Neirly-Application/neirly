@@ -2,6 +2,12 @@ import loadMessagesList from './sectionMessagesList.js';
 import loadChatWindow from './sectionChatWindow.js';
 
 export default async function loadMessagesSection(content, user, subSection = 'list', subSectionParams = {}) {
+  document.body.style.background = '';
+  document.body.style.transition = 'background 0.3s ease-in-out';
+
+  content.style.background = '';
+  content.style.transition = 'background 0.3s ease-in-out';
+  
   const topNavbar = document.querySelector('.mobile-topbar');
   const bottomNavbar = document.querySelector('.bottom-navbar');
 
