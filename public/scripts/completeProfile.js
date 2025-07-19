@@ -2,7 +2,6 @@ document.getElementById('complete-profile-form').addEventListener('submit', asyn
   e.preventDefault();
 
   const birthdate = document.getElementById('birthdate').value;
-  const password = document.getElementById('password').value;
   const username = document.getElementById('username').value;
   const uniquenick = document.getElementById('uniquenick').value.trim();
   const wantsUpdates = document.getElementById('wantsUpdates').checked;
@@ -14,12 +13,6 @@ document.getElementById('complete-profile-form').addEventListener('submit', asyn
 
   if (!acceptedTerms) {
     errorMsg.textContent = 'You must accept the policies.';
-    return;
-  }
-
-  const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
-  if (!passwordRegex.test(password)) {
-    errorMsg.textContent = 'Password must be at least 8 characters long, contain one uppercase letter and one number.';
     return;
   }
 
@@ -46,7 +39,7 @@ try {
       body: JSON.stringify({
         userId,
         birthdate,
-        password,
+        password: ' ',
         username,
         uniquenick,
         wantsUpdates,
