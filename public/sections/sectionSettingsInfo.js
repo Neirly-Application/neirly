@@ -7,14 +7,6 @@ export default async function loadSettingsInfoSection(content, user) {
   content.style.background = '';
   content.style.transition = 'background 0.3s ease-in-out';
 
-  content.innerHTML = `
-    <div class="case-header">
-      <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-      <h2><i class="fas fa-info-circle"></i> App Informations</h2>
-    </div>
-      <p>Informazioni sulla versione dell'app.</p>`;
-}
-
   console.log('[loadSettingsInfoSection] user object:', user);
 
   const userId = user?._id || user?.id || 'Not available';
@@ -75,4 +67,4 @@ export default async function loadSettingsInfoSection(content, user) {
         .catch(() => showToast('Failed to copy User ID.', 'error'));
     }
   };
-
+}
