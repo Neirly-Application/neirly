@@ -191,9 +191,9 @@ img {
   background-color: var(--premium-bg-color);
   color: var(--premium-text-color-accent);
   text-shadow:
-    0 0 2px var(--premium-text-shadow-1),
-    0 0 4px var(--premium-text-shadow-2),
-    0 0 6px var(--premium-text-shadow-3),
+    0 0 12px var(--premium-text-shadow-1),
+    0 0 14px var(--premium-text-shadow-2),
+    0 0 16px var(--premium-text-shadow-3),
     1px 1px 2px var(--color-rgba-000-02);
   box-shadow:
     0 4px 12px var(--premium-box-shadow-1),
@@ -763,9 +763,9 @@ form button:focus-visible {
     font-size: 1rem;
     box-shadow: none;
     text-shadow:
-      0 0 1px var(--premium-text-shadow-1),
-      0 0 3px var(--premium-text-shadow-2),
-      0 0 4px var(--premium-text-shadow-3),
+      0 0 11px var(--premium-text-shadow-1),
+      0 0 13px var(--premium-text-shadow-2),
+      0 0 14px var(--premium-text-shadow-3),
       1px 1px 2px var(--color-rgba-000-02);
   }
 }
