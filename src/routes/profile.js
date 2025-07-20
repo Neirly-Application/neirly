@@ -42,6 +42,7 @@ router.get('/profile/check-nick', async (req, res) => {
 router.get('/profile', async (req, res) => {
   try {
     const user = req.user;
+
     res.json({
       id: user._id,
       email: user.email,
@@ -54,12 +55,18 @@ router.get('/profile', async (req, res) => {
       about_me: user.about_me || '',
       bioLimit: user.bioLimit,
       uniquenickChangedAt: user.uniquenickChangedAt || null,
+      provider: user.provider || 'Not set',
+      acceptedTerms: !!user.acceptedTerms,
+      join_date: user.join_date || null,
+      coins: typeof user.coins === 'number' ? user.coins : 0,
+      hasPremium: !!user.hasPremium,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error.' });
   }
 });
+
 
 router.put('/profile', upload.single('profilePicture'), async (req, res) => {
   try {
