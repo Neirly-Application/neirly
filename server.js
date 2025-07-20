@@ -1,3 +1,5 @@
+const { spawnSync } = require('child_process');
+
 const red = '\x1b[31m';
 const brightRed = '\x1b[91m';
 const yellow = '\x1b[33m';
@@ -12,6 +14,49 @@ const logVerbose = msg => DEBUG_VERBOSE && console.log(`${red}[DEBUG]${reset} ${
 const logWarn = msg => console.warn(`${yellow}[WARN]${reset} ${msg}`);
 const logError = msg => console.error(`${brightRed}[ERROR]${reset} ${msg}`);
 const logInfo = msg => console.log(`${green}[INFO]${reset} ${msg}`);
+
+const requiredPackages = [
+  "bcrypt",
+  "cookie-parser",
+  "cors",
+  "discord.js",
+  "dotenv",
+  "express",
+  "express-session",
+  "jsonwebtoken",
+  "leo-profanity",
+  "mongo",
+  "mongoose",
+  "multer",
+  "ngrok",
+  "node-fetch",
+  "nodemailer",
+  "passport",
+  "passport-discord",
+  "passport-google-oauth20",
+  "passport-local",
+  "ua-parser-js"
+];
+
+function checkAndInstall(packageName) {
+  try {
+    require.resolve(packageName);
+    logInfo(`Package "${packageName}" is installed.`);
+  } catch {
+    logWarn(`Package "${packageName}" not found. Installing...`);
+    const result = spawnSync('npm', ['install', packageName, '--save'], { stdio: 'inherit' });
+    if (result.status !== 0) {
+      logError(`Failed to install package "${packageName}". Please install it manually.`);
+      process.exit(1);
+    }
+    logInfo(`Package "${packageName}" installed successfully.`);
+  }
+}
+
+logDebug("Checking and installing required packages...");
+for (const pkg of requiredPackages) {
+  checkAndInstall(pkg);
+}
 
 logDebug("Loading environment variables...");
 require('dotenv').config();
