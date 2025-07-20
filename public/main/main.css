@@ -331,7 +331,12 @@ form button:focus-visible {
 
   .nav-item i {
     font-size: 1.1rem;
-    margin-right: 12px;
+    margin-right: 4px;
+  }
+
+  .nav-item i {
+    font-size: 1.1rem;
+    margin-inline: 2px;
   }
 
   .content {
@@ -654,7 +659,7 @@ form button:focus-visible {
   }
 
   .menu-button {
-    margin-inline: 12px 16px;
+    margin-inline: 0 0 0 16px;
     background: none;
     border: none;
     color: var(--accent);
