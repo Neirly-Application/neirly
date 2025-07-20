@@ -1,0 +1,89 @@
+@import url(./variables.css);
+
+.premium-container {
+  margin-top: 30px;
+  align-items: center;
+  place-content: center;
+}
+
+.pricing-container {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, auto));
+  gap: 24px;
+  justify-content: center;
+  place-items: center;
+}
+
+.pricing-card {
+  width: 100%;
+  background: var(--premium-color-bg-card);
+  border: 1px solid var(--color-border-card);
+  border-radius: 10px;
+  padding: 30px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pricing-card:hover, .pricing-card:active {
+  cursor: pointer;
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px var(--premium-color-box-shadow);
+  transition: 0.3s ease;
+}
+
+.pricing-card h3 {
+  margin-top: 0;
+  color: var(--premium-color-text-li);
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+
+.price {
+  font-size: 1.8rem;
+  color: var(--premium-color-price);
+  margin-bottom: 20px;
+}
+
+.pricing-card ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.pricing-card ul li {
+  margin: 8px 0;
+  font-size: 0.95rem;
+  color: var(--premium-color-text-li);
+}
+
+button {
+  background: var(--premium-color-button-bg);
+  color: var(--premium-color-button-text);
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 520;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--premium-color-button-bg);
+  outline-offset: 3px;
+}
+
+.highlighted {
+  border: 2px solid var(--premium-color-highlighted-border);
+  background: var(--premium-color-highlighted-bg);
+}
+
+@media (max-width: 480px) {
+  .pricing-card {
+    padding: 20px;
+  }
+
+  .price {
+    font-size: 1.5rem;
+  }
+}

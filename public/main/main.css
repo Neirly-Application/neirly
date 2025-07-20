@@ -52,6 +52,7 @@ img {
 
 .sidebar {
   width: 250px;
+  height: 100vh;
   background-color: var(--primary);
   color: var(--accent);
   display: flex;
@@ -60,6 +61,7 @@ img {
   box-shadow: 2px 0 12px rgba(0, 0, 0, 0.12);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   will-change: transform, box-shadow;
+  overflow: hidden;
   flex-shrink: 0;
 }
 
@@ -209,8 +211,8 @@ img {
   padding: 35px 50px;
   background: var(--light-bg);
   transition: padding 0.3s ease, background-color 0.3s ease;
-  height: 100%;
-  overflow: auto;
+  height: 100vh;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   transition: transform 0.3s ease;
 }
