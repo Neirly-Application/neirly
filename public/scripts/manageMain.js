@@ -222,3 +222,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.location.href = '/login.html';
   }
 });
+
+
+
+function detectDevTools() {
+  const threshold = 160;
+  const widthDiff = window.outerWidth - window.innerWidth > threshold;
+  const heightDiff = window.outerHeight - window.innerHeight > threshold;
+
+  return widthDiff || heightDiff;
+}
+
+setInterval(() => {
+  if (detectDevTools()) {
+    console.clear();
+    console.log(
+      '%cSTOP HERE!',
+      'color: red; font-size: 150px; font-weight: bold; text-shadow: 2px 2px 0 black;'
+    );
+    console.log('%c⚠️ WARNING: Do not paste anything here!', 'color: orange; font-size: 20px; font-weight: bold;');
+    console.log('%cThis console is intended for developers. If someone told you to paste code here, they might be trying to steal your account or sensitive data.', 'color: white; font-size: 16px;');
+    console.log('%cPasting unknown code can allow attackers to impersonate you, access private data, or take control of your account.', 'color: white; font-size: 16px;');
+    console.log('%cIf you are not sure what you are doing, close the DevTools immediately.', 'color: #ff4444; font-size: 16px; font-weight: bold;');
+    console.log('%cFrom Neirly Security Team.', 'color: #1a43ebff; font-size: 16px; font-weight: bold;');
+  }
+}, 1000);
