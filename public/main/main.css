@@ -15,7 +15,7 @@ body {
   min-height: 100vh;
   background: var(--light-bg);
   color: var(--dark-text);
-  overflow-x: hidden;
+  overflow: hidden;
   display: flex;
   flex-direction: row;
   transition: background-color 0.3s ease;
@@ -214,7 +214,7 @@ img {
   transition: padding 0.3s ease, background-color 0.3s ease;
   height: 100vh;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  --webkit-overflow-scrolling: touch;
   transition: transform 0.3s ease;
 }
 
@@ -341,7 +341,7 @@ form button:focus-visible {
   }
 
   .content {
-    padding: 20px 25px;
+    padding: 150px 25px;
     padding-top: 25px;
     transition: transform 0.3s ease;
   }

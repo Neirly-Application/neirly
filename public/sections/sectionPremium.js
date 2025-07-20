@@ -8,8 +8,9 @@ export default async function loadPremiumSection(content, user) {
   content.innerHTML = `
     <div class="premium-section">
       <div class="case-header premium-header" style="align-items: center; justify-content: center;">
-      <h2 style="font-size: 3rem;"><i class="fas fa-crown"></i> Premium</h2>
-    </div>
+        <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+        <h1><i class="fas fa-crown"></i> Premium</h1>
+      </div>
 
     
     <div class="premium-container">

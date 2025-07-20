@@ -1,9 +1,12 @@
+const fs = require('fs');
+const path = require('path');
 const { spawnSync } = require('child_process');
 
 const red = '\x1b[31m';
 const brightRed = '\x1b[91m';
 const yellow = '\x1b[33m';
 const green = '\x1b[32m';
+const blue = '\x1b[34m';
 const reset = '\x1b[0m';
 
 const DEBUG = true;
@@ -13,7 +16,8 @@ const logDebug = msg => DEBUG && console.log(`${red}[DEBUG]${reset} ${msg}`);
 const logVerbose = msg => DEBUG_VERBOSE && console.log(`${red}[DEBUG]${reset} ${msg}`);
 const logWarn = msg => console.warn(`${yellow}[WARN]${reset} ${msg}`);
 const logError = msg => console.error(`${brightRed}[ERROR]${reset} ${msg}`);
-const logInfo = msg => console.log(`${green}[INFO]${reset} ${msg}`);
+const logInfo = msg => console.log(`${blue}[INFO]${reset} ${msg}`);
+const logSuccess = msg => console.log(`${green}[SUCCESS]${reset} ${msg}`);
 
 const requiredPackages = [
   "bcrypt",
@@ -38,19 +42,33 @@ const requiredPackages = [
   "ua-parser-js"
 ];
 
+const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json')));
+const installedDeps = {
+  ...packageJson.dependencies,
+  ...packageJson.devDependencies,
+};
+
 function checkAndInstall(packageName) {
+  const isInPackageJson = installedDeps.hasOwnProperty(packageName);
+  let isResolvable = false;
+
   try {
     require.resolve(packageName);
-    logInfo(`Package "${packageName}" is installed.`);
-  } catch {
-    logWarn(`Package "${packageName}" not found. Installing...`);
-    const result = spawnSync('npm', ['install', packageName, '--save'], { stdio: 'inherit' });
-    if (result.status !== 0) {
-      logError(`Failed to install package "${packageName}". Please install it manually.`);
-      process.exit(1);
-    }
-    logInfo(`Package "${packageName}" installed successfully.`);
+    isResolvable = true;
+  } catch (_) {}
+
+  if (isInPackageJson && isResolvable) {
+    logInfo(`Package "${packageName}" is already installed.`);
+    return;
   }
+
+  logWarn(`Package "${packageName}" is missing or broken. Installing...`);
+  const result = spawnSync('npm', ['install', packageName], { stdio: 'inherit' });
+  if (result.status !== 0) {
+    logError(`Failed to install "${packageName}".`);
+    process.exit(1);
+  }
+  logSuccess(`Installed "${packageName}".`);
 }
 
 logDebug("Checking and installing required packages...");
@@ -67,57 +85,26 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const path = require('path');
+const pathModule = require('path');
 
 const app = express();
 
 logDebug("Importing custom middleware and routers...");
-logVerbose("Importing authMiddleware...");
 const { authMiddleware } = require('./src/authMiddleware/authMiddleware');
-
-logVerbose("Importing profileRouter...");
 const profileRouter = require('./src/routes/profile');
-
-logVerbose("Importing notificationsRouter...");
 const notificationsRouter = require('./src/routes/notifications');
-
-logVerbose("Importing chatsRouter...");
 const chatsRouter = require('./src/routes/chatsRouter');
-
-logVerbose("Importing getUserRouter...");
 const getUser = require('./src/routes/getUserRouter');
-
-logVerbose("Importing friendsRouter...");
 const friendsRouter = require('./src/routes/friends');
-
-logVerbose("Importing privacyRouter...");
 const privacyRouter = require('./src/routes/privacy');
-
-logVerbose("Importing activityRouter...");
 const activityRouter = require('./src/routes/activity');
-
-logVerbose("Importing authenticateRouter...");
 const authenticateRouter = require('./src/routes/auth');
-
-logVerbose("Importing completeProfileRouter...");
 const completeProfileRouter = require('./src/routes/completeProfile');
-
-logVerbose("Importing adminRouter...");
 const adminRouter = require('./src/routes/adminRouter');
-
-logVerbose("Importing forceLogoutRouter...");
 const forceLogoutRouter = require('./src/routes/forceLogout');
-
-logVerbose("Importing banUserRouter...");
 const banUserRouter = require('./src/routes/banUser');
-
-logVerbose("Importing devicesRouter...");
 const devicesRouter = require('./src/routes/devices');
-
-logVerbose("Importing deleteUserRouter...");
 const deleteUserRouter = require('./src/routes/deleteUser');
-
-logVerbose("Importing nearMeRouter...");
 const nearMeRouter = require('./src/routes/nearMe');
 
 logDebug("Initializing passport configuration...");
@@ -130,11 +117,11 @@ logDebug("Applying express middleware...");
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(pathModule.join(__dirname, 'public')));
 app.use(passport.initialize());
 
 logDebug("Registering routes...");
-app.use('/user_pfps', express.static(path.join(__dirname, 'user_pfps')));
+app.use('/user_pfps', express.static(pathModule.join(__dirname, 'user_pfps')));
 app.use('/api/auth', authenticateRouter);
 app.use('/api/auth', forceLogoutRouter);
 app.use('/api/auth', banUserRouter);
@@ -152,7 +139,7 @@ app.use('/api', chatsRouter);
 app.use('/api', getUser);
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(pathModule.join(__dirname, 'index.html'));
 });
 
 logDebug("JWT_SECRET loaded: " + process.env.JWT_SECRET);
@@ -163,10 +150,10 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true
 })
   .then(() => {
-    logDebug("MongoDB connection successful");
+    logSuccess("MongoDB connection successful");
     const port = process.env.PORT || 3000;
     app.listen(port, () => {
-      console.log("✅ Server started on port", port);
+      logSuccess(`Server started on port ${port}`);
     });
 
     process.stdin.resume();
@@ -178,5 +165,5 @@ mongoose.connect(process.env.MONGO_URI, {
 
 app.use((req, res, next) => {
   logWarn(`404 - Not found: ${req.originalUrl}`);
-  res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
+  res.status(404).sendFile(pathModule.join(__dirname, 'public', '404.html'));
 });

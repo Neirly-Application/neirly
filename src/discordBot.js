@@ -17,7 +17,7 @@ const infractions = new Map();
 const logChannelId = process.env.DISCORD_LOG_CHANNEL_ID;
 
 client.once('ready', async () => {
-  console.log(`🤖 Bot online as ${client.user.tag}`);
+  console.log(`Bot online as ${client.user.tag}`);
   await updateBotStatus();
   setInterval(updateBotStatus, 5 * 60 * 1000);
 });
