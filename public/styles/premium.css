@@ -80,6 +80,7 @@ button:focus-visible {
 
 @media (max-width: 480px) {
   .pricing-card {
+    max-width: 230px;
     padding: 20px;
   }
 

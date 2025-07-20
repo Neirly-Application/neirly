@@ -13,6 +13,7 @@ export default async function loadSettingsSection(content, user) {
         <div class="settings-container">
           <ul class="settings-menu">
             <li><a href="#settings-account"><i class="fas fa-user-shield"></i> Account & Security</a></li>
+            <li><a href="#settings-payments" class="premium"><i class="fas fa-wallet"></i> Plan & Payments</a></li>
             <li><a href="#settings-devices"><i class="fas fa-laptop"></i> Devices</a></li>
             <li><a href="#settings-privacy"><i class="fas fa-lock"></i> Privacy</a></li>
             <li><a href="#settings-activity"><i class="fas fa-chart-line"></i> Activit Logs</a></li>

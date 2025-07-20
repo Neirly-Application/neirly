@@ -1025,6 +1025,10 @@ form button:focus-visible {
   color: #d9534f;
 }
 
+.settings-menu a.premium {
+  color: var(--premium-bg-color-accent);
+}
+
 .settings-menu a:hover {
   background: var(--main-bg);
   color: var(--secondary);
@@ -1033,6 +1037,11 @@ form button:focus-visible {
 .settings-menu a.danger:hover {
   background: #d9534f;
   color: #ffd2d0;
+}
+
+.settings-menu a.premium:hover {
+  background: var(--premium-bg-color);
+  color: var(--premium-text-color-accent);
 }
 
 .subsection-header {

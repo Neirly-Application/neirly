@@ -151,6 +151,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function setupPullToRefresh() {
       const refreshThreshold = 70;
       const refreshContainer = document.getElementById('pull-to-refresh');
+      const content = document.getElementById('content');
 
       let startY = 0;
       let isTouching = false;
@@ -159,7 +160,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.addEventListener('touchstart', (e) => {
         if (window.disablePullToRefresh) return;
 
-        if (window.scrollY === 0 && !isRefreshing) {
+        if (content.scrollTop <= 0 && !isRefreshing) {
           isTouching = true;
           startY = e.touches[0].clientY;
         }
@@ -168,11 +169,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.addEventListener('touchmove', (e) => {
         if (!isTouching || isRefreshing || window.disablePullToRefresh) return;
 
+        if (content.scrollTop > 0) {
+          isTouching = false;
+          return;
+        }
+
         const moveY = e.touches[0].clientY;
         const distance = moveY - startY;
 
         if (distance > 0) {
-          e.preventDefault(); 
+          e.preventDefault();
           const translateY = Math.min(distance / 2, refreshThreshold + 30);
           refreshContainer.style.transform = `translateY(${translateY}px)`;
           content.style.transform = `translateY(${translateY}px)`;
