@@ -1,10 +1,12 @@
 export default async function loadChatWindow(content, user, chatUserId, onBack) {
   document.body.style.background = '';
+  document.body.style.animation = '';
+  document.body.style.backgroundSize = '';
   document.body.style.transition = 'background 0.3s ease-in-out';
 
   content.style.background = '';
   content.style.transition = 'background 0.3s ease-in-out';
-  
+
   content.innerHTML = '<p>Loading chat...</p>';
 
   const escapeHTML = str =>

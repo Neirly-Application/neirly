@@ -12,7 +12,7 @@
     --premium-bg-color-accent: #c7a900;
     --premium-text-color: #fff0ca;
     --premium-text-color-accent: #786127;
-    --premium-section-bg: #c1b10043;
+    --premium-section-bg: linear-gradient(-45deg, #2f250c, #7a642c, #e1cb93, #4b3d1a);
     --premium-text-shadow-1: #fff2cc;
     --premium-text-shadow-2: #ffe066;
     --premium-text-shadow-3: #ffcc00;
@@ -22,13 +22,13 @@
     
     --premium-color-bg-card: rgba(53, 48, 10, 0.562);
     --premium-color-border-card: #333;
-    --premium-color-box-shadow: rgba(118, 114, 0, 0.69);
+    --premium-color-box-shadow: rgba(255, 254, 210, 0.917);
     --premium-color-price: #fbe226;
     --premium-color-text-li: #ccc;
     --premium-color-button-bg: #fbe226;
     --premium-color-button-text: #555555;
     --premium-color-highlighted-border: #fff5ac;
-    --premium-color-highlighted-bg: #6f62009d;
+    --premium-color-highlighted-bg: #9a8800;
 
     --main-bg: #2c4296;
 

@@ -1,5 +1,7 @@
 export default async function loadNotificationsSection(content, user) {
   document.body.style.background = '';
+  document.body.style.animation = '';
+  document.body.style.backgroundSize = '';
   document.body.style.transition = 'background 0.3s ease-in-out';
 
   content.style.background = '';

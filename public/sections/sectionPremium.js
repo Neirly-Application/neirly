@@ -1,5 +1,7 @@
 export default async function loadPremiumSection(content, user) {
   document.body.style.background = 'var(--premium-section-bg)';
+  document.body.style.animation = 'gradient 10s ease infinite';
+  document.body.style.backgroundSize = '400% 400%';
   document.body.style.transition = 'background 0.5s ease-in-out';
 
   content.style.background = 'transparent';
@@ -7,8 +9,14 @@ export default async function loadPremiumSection(content, user) {
 
   content.innerHTML = `
     <div class="premium-section">
-      <div class="case-header premium-header" style="align-items: center; justify-content: center;">
-        <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+      <div class="case-header premium-header" style="color: var(--premium-text-color-accent); align-items: center; justify-content: center;
+                text-shadow:
+                  0 0 20px var(--premium-text-shadow-1),
+                  0 0 20px var(--premium-text-shadow-2),
+                  0 0 20px var(--premium-text-shadow-3),
+                  5px 5px 6px var(--color-rgba-000-02);
+                  ">
+        <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link" style="color: var(--premium-text-color-accent)"><i class="fas fa-arrow-left"></i></a>
         <h1><i class="fas fa-crown"></i> Premium</h1>
       </div>
 
