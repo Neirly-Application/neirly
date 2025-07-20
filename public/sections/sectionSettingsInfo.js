@@ -1,7 +1,6 @@
 import { showToast } from '../scripts/notification.js';
 
 export default async function loadSettingsInfoSection(content, user) {
-<<<<<<< HEAD
   document.body.style.background = '';
   document.body.style.transition = 'background 0.3s ease-in-out';
 
@@ -15,7 +14,7 @@ export default async function loadSettingsInfoSection(content, user) {
     </div>
       <p>Informazioni sulla versione dell'app.</p>`;
 }
-=======
+
   console.log('[loadSettingsInfoSection] user object:', user);
 
   const userId = user?._id || user?.id || 'Not available';
@@ -76,5 +75,4 @@ export default async function loadSettingsInfoSection(content, user) {
         .catch(() => showToast('Failed to copy User ID.', 'error'));
     }
   };
-}
->>>>>>> 156e7f5 (Add app information section with user and platform details)
+
