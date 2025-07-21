@@ -18,11 +18,16 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: row;
+  user-select: none;
   transition: background-color 0.3s ease;
 }
 
+body::-webkit-scrollbar {
+  display: none;
+}
+
 img {
-  -webkit-user-drag: none;
+  --webkit-user-drag: none;
 }
 
 .mobile-toggle {
@@ -454,7 +459,7 @@ form button:focus-visible {
 }
 
 #cropper-zoom::-webkit-slider-thumb {
-  -webkit-appearance: none;
+  --webkit-appearance: none;
   appearance: none;
   width: 14px;
   height: 14px;
@@ -809,24 +814,6 @@ form button:focus-visible {
   animation: light-shake 1s ease-in-out;
   animation-delay: 0;
   animation-iteration-count: infinite;
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--dark-text);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 10px;
-  border: 1px solid var(--accent);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--main-bg);
 }
 
 @media (hover: none) and (pointer: coarse) {

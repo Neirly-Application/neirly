@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function caricaSezione(section) {
       content.innerHTML = '<div class="loading">Loading...</div>';
 
-      const disablePull = ['profile', 'map-screen', 'settings', 'settings-account', 'settings-chats', 'settings-danger', 'settings-info', 'settings-language', 'settings-notifications', 'settings-privacy', 'settings-theme'];
+      const disablePull = ['premium', 'profile', 'map-screen', 'settings', 'settings-account', 'settings-chats', 'settings-danger', 'settings-info', 'settings-language', 'settings-notifications', 'settings-privacy', 'settings-theme'];
       window.disablePullToRefresh = disablePull.includes(section);
 
       switch (section) {

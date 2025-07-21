@@ -24,11 +24,15 @@ export default async function loadPremiumSection(content, user) {
   content.innerHTML = `
     <div class="premium-section">
       <div class="case-header premium-header" style="color: var(--premium-text-color-accent); align-items: center; justify-content: center;
-                text-shadow:
-                  0 0 20px var(--premium-text-shadow-1),
-                  0 0 20px var(--premium-text-shadow-2),
-                  0 0 20px var(--premium-text-shadow-3),
-                  5px 5px 6px var(--color-rgba-000-02);
+        text-shadow:
+          -1px -1px 0 var(--premium-color-highlighted-border),
+           1px -1px 0 var(--premium-color-highlighted-bg),
+          -1px 1px 0 var(--premium-color-highlighted-bg),
+           1px 1px 0 var(--premium-color-highlighted-bg),
+          0 0 30px var(--premium-text-shadow-1),
+          0 0 30px var(--premium-text-shadow-2),
+          0 0 30px var(--premium-text-shadow-3),
+          5px 5px 10px var(--color-rgba-000-02);
                   ">
         <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link" style="color: var(--premium-text-color-accent)"><i class="fas fa-arrow-left"></i></a>
         <h1><i class="fas fa-crown"></i> Premium</h1>
@@ -36,7 +40,13 @@ export default async function loadPremiumSection(content, user) {
 
     
     <div class="premium-container">
-      <h1>Monthly Plans</h1>
+      <h1 style="
+        text-shadow:
+          -1px -1px 0 var(--premium-color-highlighted-border),
+           1px -1px 0 var(--premium-color-highlighted-bg),
+          -1px 1px 0 var(--premium-color-highlighted-bg),
+           1px 1px 0 var(--premium-color-highlighted-bg);
+        ">Monthly Plans</h1>
       <div class="pricing-container">
         <div class="pricing-card">
           <h3>Basic</h3>
@@ -85,7 +95,13 @@ export default async function loadPremiumSection(content, user) {
     </div>
 
     <div class="premium-container">
-      <h1>Yearly Plans</h1>
+      <h1 style="
+        text-shadow:
+          -1px -1px 0 var(--premium-color-highlighted-border),
+           1px -1px 0 var(--premium-color-highlighted-bg),
+          -1px 1px 0 var(--premium-color-highlighted-bg),
+           1px 1px 0 var(--premium-color-highlighted-bg);
+        ">Yearly Plans</h1>
       <div class="pricing-container">
         <div class="pricing-card">
           <h3>Basic</h3>

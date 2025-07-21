@@ -13,16 +13,16 @@
     --premium-bg-color-accent: #c7a900;
     --premium-text-color: #fff0ca;
     --premium-text-color-accent: #786127;
-    --premium-section-bg: linear-gradient(-45deg, #2f250c, #7a642c, #94855e, #4b3d1a);
-    --premium-text-shadow-1: #fff2cc;
-    --premium-text-shadow-2: #ffe066;
-    --premium-text-shadow-3: #ffcc00;
+    --premium-section-bg: linear-gradient(-45deg, #161000, #30260a, #685421, #b29b62, #685421, #30260a, #161000);
+    --premium-text-shadow-1: #fff2cce8;
+    --premium-text-shadow-2: #ffe066e8;
+    --premium-text-shadow-3: #ffcc00e8;
     --premium-box-shadow-1: rgba(255, 204, 0, 0.3);
     --premium-box-shadow-2: rgba(255, 238, 153, 0.4);
     --premium-box-shadow-3: rgba(255, 255, 255, 0.1);
     
     --premium-color-bg-card: rgb(70, 64, 16);
-    --premium-color-border-card: #333;
+    --premium-color-border-card: #fbe226a0;
     --premium-color-box-shadow: rgba(255, 254, 210, 0.917);
     --premium-color-price: #fbe226;
     --premium-color-text-li: #ccc;
