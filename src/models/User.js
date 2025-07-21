@@ -79,6 +79,20 @@ homeSettings: {
   },
   coins: { type: Number, default: 100 },
   hasPremium: { type: Boolean, default: false },
+  premiumSubscriptionPlan: {
+    type: String,
+    enum: ['free', 'monthly', 'yearly'],
+    default: 'free'
+  },
+  premiumPlanType: {
+    type: String,
+    enum: ['free', 'basic', 'pro', 'legend', 'champion'],
+    default: 'free'
+  },
+  premiumExpiration: { type: Date, default: null },
+}, {
+  timestamps: true,
+  versionKey: false
 });
 
 const User = mongoose.model('User', userSchema);

@@ -99,12 +99,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       switch (section) {
         case 'ceo': await loadCeoSection(content, user); break;
-        case 'premium': await loadPremiumSection(content, user); break;
         case 'friend-list': await loadFriendListSection(content, user); break;
         case 'map': await loadMapSection(content, user); break;
         case 'map-screen': await loadMapScreenSection(content, user); break;
         case 'messages':await loadMessagesSection(content, user); break;
         case 'notifications': await loadNotificationsSection(content, user); break;
+        case 'premium': await loadPremiumSection(content, user); break;
         case 'profile': await loadProfileSection(content, user); break;
         case 'settings': await loadSettingsSection(content, user); break;
         case 'settings-account': await loadSettingsAccountSection(content, user); break;
