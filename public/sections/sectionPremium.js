@@ -89,55 +89,33 @@ export default async function loadPremiumSection(content, user) {
 const card = content.querySelector('.premium-user-card');
 if (!card) return;
 
-let animationFrame;
-let lastX = 50;
-let lastY = 50;
 const light = card.querySelector('.light-effect');
-const rect = card.getBoundingClientRect();
 
 card.style.transition = 'transform 0.2s ease';
 card.style.transformStyle = 'preserve-3d';
 card.style.willChange = 'transform';
 
-let lastTime = 0;
+let angle = 0;
 
-card.addEventListener('mousemove', (e) => {
-  const now = performance.now();
-  if (now - lastTime < 33) return;
-  lastTime = now;
+function animateCard() {
+  const rotateX = Math.sin(angle * 1.5) * 6;
+  const rotateY = Math.cos(angle) * 12;
 
-  cancelAnimationFrame(animationFrame);
-  animationFrame = requestAnimationFrame(() => {
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = Math.max(Math.min(-(y - centerY) / 12, 15), -15);
-    const rotateY = Math.max(Math.min((x - centerX) / 12, 15), -15);
+  card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
-    card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-
-    if (light) {
-      const percentX = (x / rect.width) * 100;
-      const percentY = (y / rect.height) * 100;
-
-      lastX += (percentX - lastX) * 0.15;
-      lastY += (percentY - lastY) * 0.15;
-
-      light.style.transform = `translate(-50%, -50%) translate(${lastX - 50}%, ${lastY - 50}%)`;
-      light.style.opacity = '1';
-    }
-  });
-});
-
-card.addEventListener('mouseleave', () => {
-  cancelAnimationFrame(animationFrame);
-  card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg)';
   if (light) {
-    light.style.opacity = '0';
-  }
-});
+    const percentX = 50 - rotateY * 2; 
+    const percentY = 50 + rotateX * 2; 
 
+    light.style.transform = `translate(-50%, -50%) translate(${percentX - 50}%, ${percentY - 50}%)`;
+    light.style.opacity = '1';
+  }
+
+  angle += 0.015;
+  requestAnimationFrame(animateCard);
+}
+
+animateCard();
 
 function animateCards(content) {
   const pricingCards = content.querySelectorAll('.pricing-card');

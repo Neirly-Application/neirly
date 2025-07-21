@@ -155,7 +155,7 @@ button:focus-visible {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: var(--accent);
+  background-color: var(--premium-color-bg-card);
   border-radius: 10px;
   padding: 40px;
   max-width: 650px;
@@ -191,9 +191,9 @@ button:focus-visible {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.485) 45%,
-    rgba(255, 255, 255, 1) 50%,
-    rgba(255, 255, 255, 0.485) 55%,
+    rgba(255, 255, 255, 0.511) 47%,
+    rgb(255, 255, 255) 50%,
+    rgba(255, 255, 255, 0.511) 53%,
     transparent 100%
   );
   filter:
@@ -226,6 +226,7 @@ button:focus-visible {
 }
 
 .premium-user-card-info h2 {
+  color: var(--premium-card-color-before);
   font-size: 24px;
   margin: 0;
   margin-bottom: 10px;
@@ -233,15 +234,18 @@ button:focus-visible {
 }
 
 .premium-user-card-info p {
+  color: var(--premium-card-text-color);
   font-size: 14px;
   margin-bottom: 10px;
 }
 
 .premium-user-card-info p:last-child {
+  color: var(--premium-card-text-color);
   margin-bottom: 0;
 }
 
 .premium-user-card-info p span {
+  color: var(--premium-card-text-color);
   font-weight: 700;
   margin-right: 5px;
 }

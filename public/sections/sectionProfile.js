@@ -290,6 +290,7 @@ profilePicInput.onchange = () => {
       user.uniquenick = uniquenick;
 
       showToast('Profile updated successfully!', 'success');
+      window.location.reload();
       detectChanges();
     } catch (error) {
       showToast(error.message, 'error');
