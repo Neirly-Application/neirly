@@ -45,7 +45,7 @@ export default async function loadPremiumSection(content, user) {
             <h2>${user.nickname || user.name || 'User'}</h2>
             <p><span>Biography:</span>${user.about_me || '<i>No biography</i>'}</p>
             <div class="premium-fancy-line-2"></div>
-            <p><strong>One year of neirly?</strong></p>
+            <p><strong>One year of Neirly Premium?</strong></p>
             <p>Redeem this card now, and it'll be delivered <strong>straight</strong> to your door!<br>
                 What's on offer?<br>
                 Here you'll find the new offers and surprises perfect for you!<br>
