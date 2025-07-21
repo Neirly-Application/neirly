@@ -75,6 +75,6 @@ export default async function loadChatWindow(content, user, chatUserId, onBack) 
   } catch (e) {
     content.innerHTML = `<p>Error loading chat: ${e.message}</p>`;
   }
+  
+  stopBGAnimation();
 };
-
-stopBGAnimation();

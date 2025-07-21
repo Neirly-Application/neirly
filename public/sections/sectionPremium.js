@@ -25,40 +25,37 @@ export default async function loadPremiumSection(content, user) {
 
   content.innerHTML = `
     <div class="premium-section">
-      <div class="case-header premium-header" style="color: var(--premium-text-color-accent); align-items: center; justify-content: center;
+      <div class="case-header premium-header" style="color: var(--accent); align-items: center; justify-content: center;
         text-shadow:
-          -1px -1px 0 var(--premium-color-highlighted-border),
-           1px -1px 0 var(--premium-color-highlighted-bg),
-          -1px 1px 0 var(--premium-color-highlighted-bg),
-           1px 1px 0 var(--premium-color-highlighted-bg),
-          0 0 30px var(--premium-text-shadow-1),
-          0 0 30px var(--premium-text-shadow-2),
-          0 0 30px var(--premium-text-shadow-3),
-          5px 5px 10px var(--color-rgba-000-02);
-                  ">
+          -1px -1px 0 var(--premium-color-bg-card),
+           1px -1px 0 var(--premium-color-bg-card),
+          -1px  1px 0 var(--premium-color-bg-card),
+           1px  1px 0 var(--premium-color-bg-card);
+      ">
         <h1><i class="fas fa-crown"></i> Premium</h1>
       </div>
 
       <div class="premium-wrapper">
         <div class="premium-user-card">
-            <div class="premium-user-card-img">
-              <img src="${user.profilePictureUrl || '../media/user.png'}" alt="User Avatar">
-            </div>
-            <div class="premium-user-card-info">
-              <h2>${user.nickname || user.name || 'User'}</h2>
-              <p><span>Biography:</span>${user.about_me || '<i>No biography</i>'}</p>
-            </div>
+        <div class="light-effect"></div>
+          <div class="premium-user-card-img">
+            <img src="${user.profilePictureUrl || '../media/user.png'}" alt="User Avatar">
+          </div>
+          <div class="premium-user-card-info">
+            <h2>${user.nickname || user.name || 'User'}</h2>
+            <p><span>Biography:</span>${user.about_me || '<i>No biography</i>'}</p>
+          </div>
         </div>
       </div>
 
       <div class="premium-container">
-        <h1 style="
-          text-shadow:
-            -1px -1px 0 var(--premium-color-highlighted-border),
-             1px -1px 0 var(--premium-color-highlighted-bg),
-            -1px 1px 0 var(--premium-color-highlighted-bg),
-             1px 1px 0 var(--premium-color-highlighted-bg);
-          ">Monthly Plans</h1>
+        <h1 style="text-shadow:
+          -1px -1px 0 var(--premium-color-bg-card),
+           1px -1px 0 var(--premium-color-highlighted-bg),
+          -1px 1px 0 var(--premium-color-highlighted-bg),
+           1px 1px 0 var(--premium-color-highlighted-bg);">
+          Monthly Plans
+        </h1>
         <div class="pricing-container">
           <div class="pricing-card"><h3>Basic</h3><p class="price">€ 5,50/mo</p><ul><li>Something 1</li><li>Something 2</li><li>Something 3</li></ul><button>Choose</button></div>
           <div class="pricing-card highlighted"><h3>Pro</h3><p class="price"><u>€ 14,99/mo</u></p><ul><li>Something 1</li><li>Something 2</li><li>Something 3</li></ul><button>Choose</button></div>
@@ -68,13 +65,13 @@ export default async function loadPremiumSection(content, user) {
       </div>
 
       <div class="premium-container">
-        <h1 style="
-          text-shadow:
-            -1px -1px 0 var(--premium-color-highlighted-border),
-             1px -1px 0 var(--premium-color-highlighted-bg),
-            -1px 1px 0 var(--premium-color-highlighted-bg),
-             1px 1px 0 var(--premium-color-highlighted-bg);
-          ">Yearly Plans</h1>
+        <h1 style="text-shadow:
+          -1px -1px 0 var(--premium-color-bg-card),
+           1px -1px 0 var(--premium-color-highlighted-bg),
+          -1px 1px 0 var(--premium-color-highlighted-bg),
+           1px 1px 0 var(--premium-color-highlighted-bg);">
+          Yearly Plans
+        </h1>
         <div class="pricing-container">
           <div class="pricing-card"><h3>Basic</h3><p class="price">€ 5,50/year</p><ul><li>Something 1</li><li>Something 2</li><li>Something 3</li></ul><button>Choose</button></div>
           <div class="pricing-card highlighted"><h3>Pro</h3><p class="price"><u>€ 14,99/year</u></p><ul><li>Something 1</li><li>Something 2</li><li>Something 3</li></ul><button>Choose</button></div>
@@ -87,7 +84,60 @@ export default async function loadPremiumSection(content, user) {
 
   animateCards(content);
   setupBubblesAnimation();
-}
+  startBGAnimation();
+
+const card = content.querySelector('.premium-user-card');
+if (!card) return;
+
+let animationFrame;
+let lastX = 50;
+let lastY = 50;
+const light = card.querySelector('.light-effect');
+const rect = card.getBoundingClientRect();
+
+card.style.transition = 'transform 0.2s ease';
+card.style.transformStyle = 'preserve-3d';
+card.style.willChange = 'transform';
+
+let lastTime = 0;
+
+card.addEventListener('mousemove', (e) => {
+  const now = performance.now();
+  if (now - lastTime < 33) return;
+  lastTime = now;
+
+  cancelAnimationFrame(animationFrame);
+  animationFrame = requestAnimationFrame(() => {
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = Math.max(Math.min(-(y - centerY) / 12, 15), -15);
+    const rotateY = Math.max(Math.min((x - centerX) / 12, 15), -15);
+
+    card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+    if (light) {
+      const percentX = (x / rect.width) * 100;
+      const percentY = (y / rect.height) * 100;
+
+      lastX += (percentX - lastX) * 0.15;
+      lastY += (percentY - lastY) * 0.15;
+
+      light.style.transform = `translate(-50%, -50%) translate(${lastX - 50}%, ${lastY - 50}%)`;
+      light.style.opacity = '1';
+    }
+  });
+});
+
+card.addEventListener('mouseleave', () => {
+  cancelAnimationFrame(animationFrame);
+  card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg)';
+  if (light) {
+    light.style.opacity = '0';
+  }
+});
+
 
 function animateCards(content) {
   const pricingCards = content.querySelectorAll('.pricing-card');
@@ -97,7 +147,6 @@ function animateCards(content) {
     }, index * 200);
   });
 }
-
 
 function setupBubblesAnimation() {
   const canvas = document.getElementById('bubbles-canvas');
@@ -155,7 +204,5 @@ function setupBubblesAnimation() {
   }
 
   animate();
-};
-
-startBGAnimation();
-animateCards(content);
+}
+}

@@ -134,6 +134,6 @@ export default async function loadNotificationsSection(content, user) {
   }
 
   loadAndRenderNotifications();
-};
 
-stopBGAnimation();
+  stopBGAnimation();
+};

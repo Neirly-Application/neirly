@@ -15,6 +15,6 @@ export default async function loadSettingsChatsSection(content, user) {
         <h2><i class="fas fa-comment-alt"></i> Chats</h2>
       </div>
         <p>Your chat settings.</p>`;
-};
 
-stopBGAnimation();
+  stopBGAnimation();
+};

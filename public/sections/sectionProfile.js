@@ -297,6 +297,5 @@ profilePicInput.onchange = () => {
   };
 
   detectChanges();
+  stopBGAnimation();
 };
-
-stopBGAnimation();

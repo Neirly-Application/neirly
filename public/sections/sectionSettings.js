@@ -30,6 +30,6 @@ export default async function loadSettingsSection(content, user) {
           </ul>
         </div>
       `;
-};
 
-stopBGAnimation();
+  stopBGAnimation();
+};

@@ -90,6 +90,6 @@ export default async function loadMapSection(content, user) {
       }, 100);
     });
   }
-};
 
-stopBGAnimation();
+  stopBGAnimation();
+};

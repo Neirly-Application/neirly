@@ -50,6 +50,6 @@ export default async function loadSettingsThemeSection(content, user) {
           card.classList.toggle('condensed', toggle.checked);
         });
       });
-};
 
-stopBGAnimation();
+  stopBGAnimation();
+};

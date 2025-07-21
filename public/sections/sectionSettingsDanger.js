@@ -38,6 +38,6 @@ export default async function loadSettingsDangerSection(content, user) {
       }
     }
   });
-};
 
-stopBGAnimation();
+  stopBGAnimation();
+};

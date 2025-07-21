@@ -43,6 +43,6 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
     console.error(e);
     content.innerHTML = `<p>Error loading chats: ${e.message}</p>`;
   }
-};
 
-stopBGAnimation();
+  stopBGAnimation();
+};

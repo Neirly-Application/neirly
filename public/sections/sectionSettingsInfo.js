@@ -70,6 +70,6 @@ export default async function loadSettingsInfoSection(content, user) {
         .catch(() => showToast('Failed to copy User ID.', 'error'));
     }
   };
-};
 
-stopBGAnimation();
+  stopBGAnimation();
+};

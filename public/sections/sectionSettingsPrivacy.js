@@ -71,6 +71,6 @@ export default async function loadSettingsPrivacySection(content, user) {
         showToast('Network error while saving settings.', 'error');
       }
     });
-};
 
-stopBGAnimation();
+  stopBGAnimation();
+};

@@ -143,6 +143,6 @@ export default async function loadMapScreenSection(content, user) {
       }
     }
   });
-};
 
-stopBGAnimation();
+  stopBGAnimation();
+};

@@ -139,6 +139,5 @@ export default async function loadFriendListSection(content, user) {
   }
 
   loadFriends();
+  stopBGAnimation();
 };
-
-stopBGAnimation();

@@ -138,6 +138,6 @@ export default async function loadCeoSection(content, user) {
   });
 
   fetchUsers();
+  
+  stopBGAnimation();
 };
-
-stopBGAnimation();

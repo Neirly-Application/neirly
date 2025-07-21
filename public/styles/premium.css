@@ -7,6 +7,7 @@ body::-webkit-scrollbar {
 .premium-container {
   margin-top: 40px;
   text-align: center;
+  color: var(--accent);
 }
 
 .pricing-container {
@@ -144,8 +145,9 @@ button:focus-visible {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 12%;
-  margin-block: 50px;
+  padding-top: 5%;
+  padding-bottom: 5%;
+  margin-block: 20px;
 }
 
 .premium-user-card {
@@ -161,6 +163,10 @@ button:focus-visible {
   position: relative;
   overflow: hidden;
   box-shadow: 0 2px 20px -5px var(--color-rgba-000-06);
+  transform-origin: center;
+  will-change: transform;
+  perspective: 1000px;
+  transition: transform 0.2s ease;
 }
 
 .premium-user-card:before {
@@ -175,6 +181,32 @@ button:focus-visible {
   transform: rotate(17deg);
 }
 
+.premium-user-card .light-effect {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 220%;
+  height: 220%;
+  border-radius: 10px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.485) 45%,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(255, 255, 255, 0.485) 55%,
+    transparent 100%
+  );
+  filter:
+    blur(30px);
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  z-index: 1000;
+  transition: opacity 0.4s ease;
+  transform: translate(-50%, -50%) translate3d(0, 0, 0);
+  will-change: transform, opacity;
+}
+
 .premium-user-card-img {
   display: flex;
   justify-content: center;
@@ -183,8 +215,8 @@ button:focus-visible {
 }
 
 .premium-user-card-img img {
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   object-fit: cover;
   border-radius: 50%;
 }

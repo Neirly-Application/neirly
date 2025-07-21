@@ -15,6 +15,6 @@ export default async function loadSettingsLanguageSection(content, user) {
       <h2><i class="fas fa-globe"></i> Language</h2>
     </div>
       <p>Imposta la lingua e la regione.</p>`;
-};
 
-stopBGAnimation();
+  stopBGAnimation();
+};

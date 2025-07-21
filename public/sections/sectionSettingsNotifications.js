@@ -15,6 +15,6 @@ export default async function loadSettingsNotificationsSection(content, user) {
       <h2><i class="fas fa-bell"></i> Notifications</h2>
     </div>
       <p>Gestisci le tue preferenze di notifica.</p>`;
-};
 
-stopBGAnimation();
+  stopBGAnimation();
+};

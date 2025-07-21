@@ -17,6 +17,6 @@ export default async function loadSettingsAccountSection(content, user) {
             <button class="btn">Change Password</button>
             <button class="btn">Enable 2FA</button>
         `;
-};
 
-stopBGAnimation();
+  stopBGAnimation();
+};

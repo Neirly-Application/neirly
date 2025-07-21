@@ -162,6 +162,6 @@ export default async function loadSettingsDevicesSection(content, user) {
       }
     }
   });
-}
 
-stopBGAnimation();
+  stopBGAnimation();
+}

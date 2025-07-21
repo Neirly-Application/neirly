@@ -126,6 +126,5 @@ export default async function loadSettingsActivitySection(content, user) {
     }
   }
   loadActivityLogs();
+  stopBGAnimation();
 };
-
-stopBGAnimation();
