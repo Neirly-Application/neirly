@@ -7,7 +7,10 @@ body {
   margin: 2rem auto;
   padding: 1rem;
   box-sizing: border-box;
-  background-color: var(--accent);
+  background: var(--animated-bg-complete-profile);
+  background-size: 400% 400%;
+  animation: gradient 10s ease infinite;
+  transition: background 0.5s ease-in-out;
   color: var(--soft-dark-text);
 }
 
@@ -121,4 +124,16 @@ select:focus {
   border: solid var(--secondary);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
 }

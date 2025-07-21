@@ -7,12 +7,13 @@
     --soft-dark-text: #333;
     --neutral-grey: #D3D3D3;
     --general-shadow: rgba(26, 73, 104, 0.562);
+    --animated-bg-complete-profile: linear-gradient(-45deg, #0033ff38, #b1c1ff26, #6b89ff89, #0033ff43);
 
     --premium-bg-color: #FFD700;
     --premium-bg-color-accent: #c7a900;
     --premium-text-color: #fff0ca;
     --premium-text-color-accent: #786127;
-    --premium-section-bg: linear-gradient(-45deg, #2f250c, #7a642c, #e1cb93, #4b3d1a);
+    --premium-section-bg: linear-gradient(-45deg, #2f250c, #7a642c, #94855e, #4b3d1a);
     --premium-text-shadow-1: #fff2cc;
     --premium-text-shadow-2: #ffe066;
     --premium-text-shadow-3: #ffcc00;
@@ -20,7 +21,7 @@
     --premium-box-shadow-2: rgba(255, 238, 153, 0.4);
     --premium-box-shadow-3: rgba(255, 255, 255, 0.1);
     
-    --premium-color-bg-card: rgba(53, 48, 10, 0.562);
+    --premium-color-bg-card: rgb(70, 64, 16);
     --premium-color-border-card: #333;
     --premium-color-box-shadow: rgba(255, 254, 210, 0.917);
     --premium-color-price: #fbe226;
