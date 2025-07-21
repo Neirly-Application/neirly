@@ -155,7 +155,7 @@ button:focus-visible {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: var(--premium-color-bg-card);
+  background-color: var(--premium-card-bg-color);
   border-radius: 10px;
   padding: 40px;
   max-width: 650px;
@@ -189,11 +189,11 @@ button:focus-visible {
   height: 220%;
   border-radius: 10px;
   background: linear-gradient(
-    90deg,
+    100deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.511) 47%,
+    rgba(255, 255, 255, 0.26) 48%,
     rgb(255, 255, 255) 50%,
-    rgba(255, 255, 255, 0.511) 53%,
+    rgba(255, 255, 255, 0.26) 52%,
     transparent 100%
   );
   filter:
@@ -250,6 +250,10 @@ button:focus-visible {
   margin-right: 5px;
 }
 
+.premium-user-card-info strong {
+  color: var(--accent);
+}
+
 @media only screen and (min-width: 768px) {
   .premium-user-card {
     flex-direction: row;
@@ -296,3 +300,20 @@ button:focus-visible {
   }
 }
  
+.premium-fancy-line {
+  height: 2px;
+  background: linear-gradient(to right, var(--premium-bg-color), var(--premium-text-color-accent), var(--premium-bg-color));
+  border: none;
+  border-radius: 100%;
+  margin: 20px 0;
+  opacity: 0.5;
+}
+
+.premium-fancy-line-2 {
+  height: 2px;
+  background: linear-gradient(to right, var(--premium-text-color-accent), var(--premium-bg-color), var(--premium-text-color-accent));
+  border: none;
+  border-radius: 100%;
+  margin: 10px 0;
+  opacity: 0.5;
+}
