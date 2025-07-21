@@ -48,7 +48,7 @@ body::-webkit-scrollbar {
 .pricing-card:hover,
 .pricing-card:active {
   cursor: pointer;
-  transform: rotateY(0);
+  transform: rotateY(0) translateZ(-10px);
   box-shadow: 0 0 20px var(--premium-color-box-shadow);
 }
 
@@ -112,13 +112,19 @@ button:focus-visible {
 
 @keyframes gradient {
   0% {
-    background-position: 0% 50%;
+    background-position: 0% 0%;
+  }
+  25% {
+    background-position: 50% 100%;
   }
   50% {
     background-position: 100% 50%;
   }
+  75% {
+    background-position: 50% 0%;
+  }
   100% {
-    background-position: 0% 50%;
+    background-position: 0% 0%;
   }
 }
 

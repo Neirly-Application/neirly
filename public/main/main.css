@@ -765,9 +765,14 @@ form button:focus-visible {
 
   .nav-item.premium.active {
     background-color: transparent;
+    color: var(--premium-color-highlighted-bg);
     font-size: 1rem;
     box-shadow: none;
     text-shadow:
+      -1px -1px 0 var(--premium-bg-color),
+        1px -1px 0 var(--premium-bg-color),
+      -1px 1px 0 var(--premium-bg-color),
+        1px 1px 0 var(--premium-bg-color),
       0 0 11px var(--premium-text-shadow-1),
       0 0 13px var(--premium-text-shadow-2),
       0 0 14px var(--premium-text-shadow-3),

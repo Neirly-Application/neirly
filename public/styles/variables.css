@@ -11,9 +11,9 @@
 
     --premium-bg-color: #FFD700;
     --premium-bg-color-accent: #c7a900;
-    --premium-text-color: #fff0ca;
+    --premium-text-color: #eee7d7;
     --premium-text-color-accent: #786127;
-    --premium-section-bg: linear-gradient(-45deg, #161000, #30260a, #685421, #b29b62, #685421, #30260a, #161000);
+    --premium-section-bg: linear-gradient(45deg, #161000, #30260a, #685421, #b29b62, #685421, #30260a, #161000);
     --premium-text-shadow-1: #fff2cce8;
     --premium-text-shadow-2: #ffe066e8;
     --premium-text-shadow-3: #ffcc00e8;

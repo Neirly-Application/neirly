@@ -144,4 +144,17 @@ function setupBubblesAnimation() {
   animate();
 }
 
+const section = document.documentElement;
+let angle = 0;
+
+function animateBG() {
+  angle = (angle + 0.5) % 360;
+  const newGradient = `linear-gradient(${angle}deg, #161000, #30260a, #685421, #b29b62, #685421, #30260a, #161000)`;
+  section.style.setProperty('--premium-section-bg', newGradient);
+
+  requestAnimationFrame(animateBG);
+}
+
+animateBG();
+
 animateCards(content);
