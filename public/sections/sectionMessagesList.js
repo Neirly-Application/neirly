@@ -1,3 +1,5 @@
+import { stopBGAnimation } from '../scripts/premiumBg.js';
+
 export default async function loadMessagesList(content, user, onChatUserClick) {
   document.body.style.background = '';
   document.body.style.animation = '';
@@ -41,4 +43,6 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
     console.error(e);
     content.innerHTML = `<p>Error loading chats: ${e.message}</p>`;
   }
-}
+};
+
+stopBGAnimation();

@@ -1,3 +1,5 @@
+import { startBGAnimation } from '../scripts/premiumBg.js';
+
 export default async function loadPremiumSection(content, user) {
   document.body.style.background = 'var(--premium-section-bg)';
   document.body.style.animation = 'gradient 10s ease infinite';
@@ -34,8 +36,19 @@ export default async function loadPremiumSection(content, user) {
           0 0 30px var(--premium-text-shadow-3),
           5px 5px 10px var(--color-rgba-000-02);
                   ">
-        <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link" style="color: var(--premium-text-color-accent)"><i class="fas fa-arrow-left"></i></a>
         <h1><i class="fas fa-crown"></i> Premium</h1>
+      </div>
+
+      <div class="premium-wrapper">
+        <div class="premium-user-card">
+            <div class="premium-user-card-img">
+              <img src="${user.profilePictureUrl || '../media/user.png'}" alt="User Avatar">
+            </div>
+            <div class="premium-user-card-info">
+              <h2>${user.nickname || user.name || 'User'}</h2>
+              <p><span>Biography:</span>${user.about_me || '<i>No biography</i>'}</p>
+            </div>
+        </div>
       </div>
 
       <div class="premium-container">
@@ -142,19 +155,7 @@ function setupBubblesAnimation() {
   }
 
   animate();
-}
+};
 
-const section = document.documentElement;
-let angle = 0;
-
-function animateBG() {
-  angle = (angle + 0.5) % 360;
-  const newGradient = `linear-gradient(${angle}deg, #161000, #30260a, #685421, #b29b62, #685421, #30260a, #161000)`;
-  section.style.setProperty('--premium-section-bg', newGradient);
-
-  requestAnimationFrame(animateBG);
-}
-
-animateBG();
-
+startBGAnimation();
 animateCards(content);

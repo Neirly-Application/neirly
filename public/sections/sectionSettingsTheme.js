@@ -1,3 +1,5 @@
+import { stopBGAnimation } from '../scripts/premiumBg.js';
+
 export default async function loadSettingsThemeSection(content, user) {
   document.body.style.background = '';
   document.body.style.animation = '';
@@ -48,4 +50,6 @@ export default async function loadSettingsThemeSection(content, user) {
           card.classList.toggle('condensed', toggle.checked);
         });
       });
-}
+};
+
+stopBGAnimation();

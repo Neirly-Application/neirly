@@ -1,3 +1,5 @@
+import { stopBGAnimation } from '../scripts/premiumBg.js';
+
 export default async function loadSettingsAccountSection(content, user) {
   document.body.style.background = '';
   document.body.style.animation = '';
@@ -15,4 +17,6 @@ export default async function loadSettingsAccountSection(content, user) {
             <button class="btn">Change Password</button>
             <button class="btn">Enable 2FA</button>
         `;
-}
+};
+
+stopBGAnimation();

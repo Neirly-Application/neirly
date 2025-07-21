@@ -1,4 +1,5 @@
 import { showToast } from '../scripts/notification.js';
+import { stopBGAnimation } from '../scripts/premiumBg.js';
 
 export default async function loadSettingsPrivacySection(content, user) {
   document.body.style.background = '';
@@ -70,4 +71,6 @@ export default async function loadSettingsPrivacySection(content, user) {
         showToast('Network error while saving settings.', 'error');
       }
     });
-}
+};
+
+stopBGAnimation();

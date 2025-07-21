@@ -1,4 +1,5 @@
 import { showToast } from '../scripts/notification.js';
+import { stopBGAnimation } from '../scripts/premiumBg.js';
 
 export default async function loadCeoSection(content, user) {
   document.body.style.background = '';
@@ -137,4 +138,6 @@ export default async function loadCeoSection(content, user) {
   });
 
   fetchUsers();
-}
+};
+
+stopBGAnimation();

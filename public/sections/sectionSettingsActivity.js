@@ -1,3 +1,5 @@
+import { stopBGAnimation } from '../scripts/premiumBg.js';
+
 export default async function loadSettingsActivitySection(content, user) {
   document.body.style.background = '';
   document.body.style.animation = '';
@@ -124,4 +126,6 @@ export default async function loadSettingsActivitySection(content, user) {
     }
   }
   loadActivityLogs();
-}
+};
+
+stopBGAnimation();

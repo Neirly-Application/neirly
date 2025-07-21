@@ -1,4 +1,5 @@
 import { showToast } from '../scripts/notification.js';
+import { stopBGAnimation } from '../scripts/premiumBg.js';
 
 export default async function loadSettingsInfoSection(content, user) {
   document.body.style.background = '';
@@ -69,4 +70,6 @@ export default async function loadSettingsInfoSection(content, user) {
         .catch(() => showToast('Failed to copy User ID.', 'error'));
     }
   };
-}
+};
+
+stopBGAnimation();

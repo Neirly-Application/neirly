@@ -137,3 +137,126 @@ button:focus-visible {
   z-index: -1;
   pointer-events: none;
 }
+
+
+
+.premium-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 12%;
+  margin-block: 50px;
+}
+
+.premium-user-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--accent);
+  border-radius: 10px;
+  padding: 40px;
+  max-width: 650px;
+  min-width: 300px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 20px -5px var(--color-rgba-000-06);
+}
+
+.premium-user-card:before {
+  content: '';
+  position: absolute;
+  height: 300%;
+  width: 173px;
+  background: var(--premium-card-color-before);
+  top: -60px;
+  left: -125px;
+  z-index: 0;
+  transform: rotate(17deg);
+}
+
+.premium-user-card-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;   
+  z-index: 3;
+}
+
+.premium-user-card-img img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.premium-user-card-info {
+  text-align: center;
+}
+
+.premium-user-card-info h2 {
+  font-size: 24px;
+  margin: 0;
+  margin-bottom: 10px;
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+.premium-user-card-info p {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.premium-user-card-info p:last-child {
+  margin-bottom: 0;
+}
+
+.premium-user-card-info p span {
+  font-weight: 700;
+  margin-right: 5px;
+}
+
+@media only screen and (min-width: 768px) {
+  .premium-user-card {
+    flex-direction: row;
+    align-items: flex-start;
+  }   
+  .premium-user-card-img {
+    margin-right: 20px;
+    margin-bottom: 0;
+  }
+
+  .premium-user-card-info {
+    text-align: left;
+  }
+}
+
+@media (max-width: 767px){
+  .premium-wrapper{
+    padding-top: 3%;
+  }
+  .premium-user-card:before {
+    width: 200%;
+    height: 200px;
+    text-align: left;
+    justify-content: left;
+    transform: rotate(0);
+  }
+  .premium-user-card-info h2 {
+    margin-top: 25px;
+    font-size: 25px;
+  }
+  .premium-user-card-info p {
+    margin-bottom: 15px;
+  }
+  .premium-user-card-info p span {
+    display: block;
+    font-size: 16px;
+  }
+
+  .premium-user-card-img img {
+    max-width: 120px;
+    max-height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+}
+ 

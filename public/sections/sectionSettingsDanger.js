@@ -1,4 +1,5 @@
 import { showToast, customConfirm } from '../scripts/notification.js';
+import { stopBGAnimation } from '../scripts/premiumBg.js';
 
 export default async function loadSettingsDangerSection(content, user) {
   document.body.style.background = '';
@@ -37,4 +38,6 @@ export default async function loadSettingsDangerSection(content, user) {
       }
     }
   });
-}
+};
+
+stopBGAnimation();

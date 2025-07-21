@@ -1,3 +1,5 @@
+import { stopBGAnimation } from '../scripts/premiumBg.js';
+
 export default async function loadSettingsSection(content, user) {
   document.body.style.background = '';
   document.body.style.animation = '';
@@ -28,4 +30,6 @@ export default async function loadSettingsSection(content, user) {
           </ul>
         </div>
       `;
-}
+};
+
+stopBGAnimation();

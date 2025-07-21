@@ -1,3 +1,5 @@
+import { stopBGAnimation } from '../scripts/premiumBg.js';
+
 export default async function loadSettingsNotificationsSection(content, user) {
   document.body.style.background = '';
   document.body.style.animation = '';
@@ -13,4 +15,6 @@ export default async function loadSettingsNotificationsSection(content, user) {
       <h2><i class="fas fa-bell"></i> Notifications</h2>
     </div>
       <p>Gestisci le tue preferenze di notifica.</p>`;
-}
+};
+
+stopBGAnimation();

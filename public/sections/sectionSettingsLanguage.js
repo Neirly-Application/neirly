@@ -1,3 +1,5 @@
+import { stopBGAnimation } from '../scripts/premiumBg.js';
+
 export default async function loadSettingsLanguageSection(content, user) {
   document.body.style.background = '';
   document.body.style.animation = '';
@@ -13,4 +15,6 @@ export default async function loadSettingsLanguageSection(content, user) {
       <h2><i class="fas fa-globe"></i> Language</h2>
     </div>
       <p>Imposta la lingua e la regione.</p>`;
-}
+};
+
+stopBGAnimation();

@@ -1,3 +1,5 @@
+import { stopBGAnimation } from '../scripts/premiumBg.js';
+
 export default async function loadSettingsChatsSection(content, user) {
   document.body.style.background = '';
   document.body.style.animation = '';
@@ -13,4 +15,6 @@ export default async function loadSettingsChatsSection(content, user) {
         <h2><i class="fas fa-comment-alt"></i> Chats</h2>
       </div>
         <p>Your chat settings.</p>`;
-}
+};
+
+stopBGAnimation();
