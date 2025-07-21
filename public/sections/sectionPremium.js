@@ -38,120 +38,53 @@ export default async function loadPremiumSection(content, user) {
         <h1><i class="fas fa-crown"></i> Premium</h1>
       </div>
 
-    
-    <div class="premium-container">
-      <h1 style="
-        text-shadow:
-          -1px -1px 0 var(--premium-color-highlighted-border),
-           1px -1px 0 var(--premium-color-highlighted-bg),
-          -1px 1px 0 var(--premium-color-highlighted-bg),
-           1px 1px 0 var(--premium-color-highlighted-bg);
-        ">Monthly Plans</h1>
-      <div class="pricing-container">
-        <div class="pricing-card">
-          <h3>Basic</h3>
-          <p class="price">€ 5,50/mo</p>
-          <ul>
-            <li>Something 1</li>
-            <li>Something 2</li>
-            <li>Something 3</li>
-          </ul>
-          <button>Choose</button>
-        </div>
-
-        <div class="pricing-card highlighted">
-          <h3>Pro</h3>
-          <p class="price"><u>€ 14,99/mo</u></p>
-          <ul>
-            <li>Something 1</li>
-            <li>Something 2</li>
-            <li>Something 3</li>
-          </ul>
-          <button>Choose</button>
-        </div>
-
-        <div class="pricing-card">
-          <h3>Legend</h3>
-          <p class="price">€ 29,99/mo</p>
-          <ul>
-            <li>Something 1</li>
-            <li>Something 2</li>
-            <li>Something 3</li>
-          </ul>
-          <button>Choose</button>
-        </div>
-
-        <div class="pricing-card">
-          <h3>Champion</h3>
-          <p class="price">€ 49,99/mo</p>
-          <ul>
-            <li>Something 1</li>
-            <li>Something 2</li>
-            <li>Something 3</li>
-          </ul>
-          <button>Choose</button>
+      <div class="premium-container">
+        <h1 style="
+          text-shadow:
+            -1px -1px 0 var(--premium-color-highlighted-border),
+             1px -1px 0 var(--premium-color-highlighted-bg),
+            -1px 1px 0 var(--premium-color-highlighted-bg),
+             1px 1px 0 var(--premium-color-highlighted-bg);
+          ">Monthly Plans</h1>
+        <div class="pricing-container">
+          <div class="pricing-card"><h3>Basic</h3><p class="price">€ 5,50/mo</p><ul><li>Something 1</li><li>Something 2</li><li>Something 3</li></ul><button>Choose</button></div>
+          <div class="pricing-card highlighted"><h3>Pro</h3><p class="price"><u>€ 14,99/mo</u></p><ul><li>Something 1</li><li>Something 2</li><li>Something 3</li></ul><button>Choose</button></div>
+          <div class="pricing-card"><h3>Legend</h3><p class="price">€ 29,99/mo</p><ul><li>Something 1</li><li>Something 2</li><li>Something 3</li></ul><button>Choose</button></div>
+          <div class="pricing-card"><h3>Champion</h3><p class="price">€ 49,99/mo</p><ul><li>Something 1</li><li>Something 2</li><li>Something 3</li></ul><button>Choose</button></div>
         </div>
       </div>
-    </div>
 
-    <div class="premium-container">
-      <h1 style="
-        text-shadow:
-          -1px -1px 0 var(--premium-color-highlighted-border),
-           1px -1px 0 var(--premium-color-highlighted-bg),
-          -1px 1px 0 var(--premium-color-highlighted-bg),
-           1px 1px 0 var(--premium-color-highlighted-bg);
-        ">Yearly Plans</h1>
-      <div class="pricing-container">
-        <div class="pricing-card">
-          <h3>Basic</h3>
-          <p class="price">€ 5,50/year</p>
-          <ul>
-            <li>Something 1</li>
-            <li>Something 2</li>
-            <li>Something 3</li>
-          </ul>
-          <button>Choose</button>
-        </div>
-
-        <div class="pricing-card highlighted">
-          <h3>Pro</h3>
-          <p class="price"><u>€ 14,99/year</u></p>
-          <ul>
-            <li>Something 1</li>
-            <li>Something 2</li>
-            <li>Something 3</li>
-          </ul>
-          <button>Choose</button>
-        </div>
-
-        <div class="pricing-card">
-          <h3>Legend</h3>
-          <p class="price">€ 29,99/year</p>
-          <ul>
-            <li>Something 1</li>
-            <li>Something 2</li>
-            <li>Something 3</li>
-          </ul>
-          <button>Choose</button>
-        </div>
-
-        <div class="pricing-card">
-          <h3>Champion</h3>
-          <p class="price">€ 49,99/year</p>
-          <ul>
-            <li>Something 1</li>
-            <li>Something 2</li>
-            <li>Something 3</li>
-          </ul>
-          <button>Choose</button>
+      <div class="premium-container">
+        <h1 style="
+          text-shadow:
+            -1px -1px 0 var(--premium-color-highlighted-border),
+             1px -1px 0 var(--premium-color-highlighted-bg),
+            -1px 1px 0 var(--premium-color-highlighted-bg),
+             1px 1px 0 var(--premium-color-highlighted-bg);
+          ">Yearly Plans</h1>
+        <div class="pricing-container">
+          <div class="pricing-card"><h3>Basic</h3><p class="price">€ 5,50/year</p><ul><li>Something 1</li><li>Something 2</li><li>Something 3</li></ul><button>Choose</button></div>
+          <div class="pricing-card highlighted"><h3>Pro</h3><p class="price"><u>€ 14,99/year</u></p><ul><li>Something 1</li><li>Something 2</li><li>Something 3</li></ul><button>Choose</button></div>
+          <div class="pricing-card"><h3>Legend</h3><p class="price">€ 29,99/year</p><ul><li>Something 1</li><li>Something 2</li><li>Something 3</li></ul><button>Choose</button></div>
+          <div class="pricing-card"><h3>Champion</h3><p class="price">€ 49,99/year</p><ul><li>Something 1</li><li>Something 2</li><li>Something 3</li></ul><button>Choose</button></div>
         </div>
       </div>
     </div>
   `;
-  
+
+  animateCards(content);
   setupBubblesAnimation();
 }
+
+function animateCards(content) {
+  const pricingCards = content.querySelectorAll('.pricing-card');
+  pricingCards.forEach((card, index) => {
+    setTimeout(() => {
+      card.classList.add('visible');
+    }, index * 200);
+  });
+}
+
 
 function setupBubblesAnimation() {
   const canvas = document.getElementById('bubbles-canvas');
@@ -172,14 +105,14 @@ function setupBubblesAnimation() {
       this.x = Math.random() * canvas.width;
       this.y = canvas.height + Math.random() * 100;
       this.radius = 5 + Math.random() * 30;
-      this.speed = 0.3 + Math.random() * 1.2; 
+      this.speed = 0.3 + Math.random() * 1.2;
       this.alpha = 0.1 + Math.random() * 0.3;
       this.wind = (Math.random() - 0.5) * 0.5;
     }
     update() {
       this.y -= this.speed;
       this.x += this.wind;
-      this.alpha -= 0.001; 
+      this.alpha -= 0.001;
       if (this.y + this.radius < 0 || this.alpha <= 0) {
         this.reset();
       }
@@ -210,3 +143,5 @@ function setupBubblesAnimation() {
 
   animate();
 }
+
+animateCards(content);
