@@ -157,12 +157,17 @@ form {
     display: none;
   }
 
+  .nav-links li {
+    list-style: none;
+  }
+
   .nav-links {
+    all: unset;
     position: static;
     transform: none;
     height: auto;
     width: 100%;
-    background-color: transparent;
+    background: none;
     padding: 0;
     gap: 15px;
     display: flex;
@@ -171,7 +176,6 @@ form {
   }
 
   .nav-links a {
-    color: var(--accent);
     font-size: 1rem;
     text-align: right;
   }

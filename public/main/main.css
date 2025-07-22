@@ -27,7 +27,8 @@ body::-webkit-scrollbar {
 }
 
 img {
-  --webkit-user-drag: none;
+  -webkit-user-drag: none;
+  pointer-events: auto;
 }
 
 .mobile-toggle {
@@ -141,7 +142,7 @@ img {
 
 @media (hover: hover) and (pointer: fine) {
   .nav-item:hover {
-    background-color: var(--secondary);
+    background-color: var(--secondary-hover);
     color: var(--primary);
     outline-offset: 3px;
     outline: none;
@@ -149,7 +150,7 @@ img {
   }
 
   .nav-item.premium:hover {
-    background-color: var(--premium-bg-color);
+    background-color: var(--premium-bg-color-hover);
     color: var(--premium-text-color-accent);
     outline-offset: 3px;
     outline: none;
@@ -216,20 +217,23 @@ img {
   flex-grow: 1;
   padding: 35px 50px;
   background: var(--light-bg);
+  color: var(--dark-text);
   transition: padding 0.3s ease, background-color 0.3s ease;
   height: 100vh;
   overflow-y: auto;
-  --webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch;
   transition: transform 0.3s ease;
 }
 
 .content i {
   margin-right: 10px;
+  color: var(--dark-text);
 }
 
 .content h2 {
   font-size: 20px;
   margin-bottom: 20px;
+  color: var(--dark-text);
 }
 
 form label {
@@ -346,13 +350,14 @@ form button:focus-visible {
   }
 
   .content {
-    padding: 150px 25px;
-    padding-top: 25px;
+    padding: 130px 25px;
+    padding-top: 10px;
     transition: transform 0.3s ease;
   }
 }
 
 .profile-img-editor {
+  height: 100vh;
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
@@ -440,7 +445,7 @@ form button:focus-visible {
 
 .cropper-face {
   border-radius: 50% !important;
-  background-color: rgba(255, 255, 255, 0.02) !important;
+  background-color: rgba(60, 60, 60, 0.02) !important;
 }
 
 .cropper-point {
@@ -459,7 +464,7 @@ form button:focus-visible {
 }
 
 #cropper-zoom::-webkit-slider-thumb {
-  --webkit-appearance: none;
+  -webkit-appearance: none;
   appearance: none;
   width: 14px;
   height: 14px;
@@ -538,19 +543,29 @@ form button:focus-visible {
   display: none;
 }
 
-.bottom-navbar .active {
-  background-color: var(--secondary);
-  color: var(--primary);
-}
-
 .bottom-navbar .nav-item {
+  color: var(--neutral-grey);
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 8px 0;
   gap: 4px;
+  transform: none;
+}
+
+.bottom-navbar .active {
+  border-radius: 0;
+  padding: 2px 20px;
+  background: none;
+  color: var(--secondary);
+  border-bottom: 3px solid var(--secondary);
+  transform: none;
+  transition: all 0.2s ease;
+}
+
+.bottom-navbar .nav-item:active {
+  background: none;
 }
 
 .bottom-navbar .nav-item i {
@@ -570,8 +585,6 @@ form button:focus-visible {
     left: 0;
     right: 0;
     height: 60px;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
     background: var(--primary);
     display: flex;
     justify-content: space-around;
@@ -618,7 +631,7 @@ form button:focus-visible {
     top: 0;
     left: 0;
     right: 0;
-    height: 70px;
+    height: 55px;
     background-color: var(--primary);
     color: var(--accent);
     display: flex;
@@ -635,14 +648,18 @@ form button:focus-visible {
     gap: 10px;
   }
 
+  .topbar-left img {
+    width: 30px;
+    height: 30px;
+  }
+
   .topbar-logo {
     height: 28px;
     width: auto;
   }
 
   .topbar-title {
-    font-size: 1.1rem;
-    font-weight: bold;
+    font-size: 1.2rem;
   }
 
   .topbar-menu {
@@ -656,12 +673,16 @@ form button:focus-visible {
     all: unset;
     position: relative;
     display: block;
-    padding: 12px 8px;
+    padding: 14px 10px;
     text-decoration: none;
     color: var(--accent);
     font-size: 1rem;
     border-bottom: 1px solid rgba(0,0,0,0.05);
     cursor: pointer;
+  }
+
+  .topbar-menu i {
+    font-size: 1.3rem;
   }
 
   .menu-button {

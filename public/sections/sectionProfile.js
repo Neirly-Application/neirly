@@ -83,26 +83,26 @@ export default async function loadProfileSection(content, user) {
       </div>
     </form>
 
-<div id="cropper-modal" class="profile-img-editor">
-  <div class="profile-img-editor-content">
-    <h3 style="margin-bottom: 10px;">Edit Image</h3>
-    <div style="width: 300px; height: 300px; margin: auto; border-radius: 50%; overflow: hidden;">
-      <img id="cropper-image" oncontextmenu="return false;" style="width: 100%; height: 100%; object-fit: cover;" />
+    <div id="cropper-modal" class="profile-img-editor">
+      <div class="profile-img-editor-content">
+        <h3 style="margin-bottom: 10px;">Edit Image</h3>
+        <div style="width: 300px; height: 300px; margin: auto; border-radius: 50%; overflow: hidden;">
+          <img id="cropper-image" oncontextmenu="return false;" style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
+        <div style="margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+          <i class="fas fa-search-minus"></i>
+          <input type="range" id="cropper-zoom" min="0.5" max="2" step="0.01" value="1" style="width: 150px;">
+          <i class="fas fa-search-plus"></i>
+        </div>
+        <div style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
+          <button id="crop-reset" class="btn-cancel">
+            <i class="fas fa-undo-alt" style="margin-right: 5px;"></i>Reset
+          </button>
+          <button id="crop-cancel" class="btn-cancel">Cancel</button>
+          <button id="crop-confirm" class="btn-submit">Apply</button>
+        </div>
+      </div>
     </div>
-    <div style="margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 10px;">
-      <i class="fas fa-search-minus"></i>
-      <input type="range" id="cropper-zoom" min="0.5" max="2" step="0.01" value="1" style="width: 150px;">
-      <i class="fas fa-search-plus"></i>
-    </div>
-    <div style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
-      <button id="crop-reset" class="btn-cancel">
-        <i class="fas fa-undo-alt" style="margin-right: 5px;"></i>Reset
-      </button>
-      <button id="crop-cancel" class="btn-cancel">Cancel</button>
-      <button id="crop-confirm" class="btn-submit">Apply</button>
-    </div>
-  </div>
-</div>
 
 
   `;

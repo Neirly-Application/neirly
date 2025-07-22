@@ -4,6 +4,11 @@ body::-webkit-scrollbar {
   display: none;
 }
 
+img {
+  -webkit-user-drag: none;
+  pointer-events: auto;
+}
+
 .premium-container {
   margin-top: 40px;
   text-align: center;
@@ -15,7 +20,7 @@ body::-webkit-scrollbar {
   margin-top: 35px;
   display: flex;
   overflow-x: auto;
-  gap: 26px;
+  gap: 10px;
   justify-content: flex-start;
   place-items: flex-start;
   scroll-snap-type: x mandatory;

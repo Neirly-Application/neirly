@@ -223,8 +223,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-
-
 function detectDevTools() {
   const threshold = 160;
   const widthDiff = window.outerWidth - window.innerWidth > threshold;

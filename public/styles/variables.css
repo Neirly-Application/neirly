@@ -1,6 +1,7 @@
 :root {
     --primary: #1A2A6C;
-    --secondary: #66D9EF;
+    --secondary: #66d8ef;
+    --secondary-hover: #c9f6ffd2;
     --accent: #ffffff;
     --light-bg: #F9F9F9;
     --dark-text: #2E2E2E;
@@ -10,6 +11,7 @@
     --animated-bg-complete-profile: linear-gradient(-45deg, #0033ff38, #b1c1ff26, #6b89ff89, #0033ff43);
 
     --premium-bg-color: #FFD700;
+    --premium-bg-color-hover: #fff3afd2;
     --premium-bg-color-accent: #c7a900;
     --premium-text-color: #eee7d7;
     --premium-text-color-accent: #786127;
