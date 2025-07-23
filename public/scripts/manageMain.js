@@ -14,6 +14,7 @@ import loadSettingsChatsSection from '../sections/sectionSettingsChats.js';
 import loadSettingsDangerSection from '../sections/sectionSettingsDanger.js';
 import loadSettingsDevicesSection from '../sections/sectionSettingsDevices.js';
 import loadSettingsInfoSection from '../sections/sectionSettingsInfo.js';
+import loadSettingsDeveloperSection from '../sections/sectionSettingsDeveloper.js';
 import loadSettingsLanguageSection from '../sections/sectionSettingsLanguage.js';
 import loadSettingsNotificationsSection from '../sections/sectionSettingsNotifications.js';
 import loadSettingsPrivacySection from '../sections/sectionSettingsPrivacy.js';
@@ -115,6 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         case 'settings-danger': await loadSettingsDangerSection(content, user); break;
         case 'settings-devices': await loadSettingsDevicesSection(content, user); break;
         case 'settings-info': await loadSettingsInfoSection(content, user); break;
+        case 'settings-developer': await loadSettingsDeveloperSection(content, user); break;
         case 'settings-language': await loadSettingsLanguageSection(content, user); break;
         case 'settings-notifications': await loadSettingsNotificationsSection(content, user); break;
         case 'settings-privacy': await loadSettingsPrivacySection(content, user); break;
