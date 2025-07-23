@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           content.style.transform = `translateY(60px)`;
           isRefreshing = true;
 
-          const currentSection = window.location.hash.replace('#', '') || 'map';
+          const currentSection = window.location.hash.replace('#', '') || 'home';
           await loadSection(currentSection);
 
           setTimeout(() => {

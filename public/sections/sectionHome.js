@@ -18,9 +18,9 @@ export default async function loadHomeSection(content, user) {
     <div class="stories-container">
       <div style="text-align: center;">
         <div class="story" data-image="../media/neirly-logo.png">
-          <img src="../media/neirly-logo.png" alt="User 1" />
+          <img src="${user.profilePictureUrl || '../media/user.png'}" alt="Your Story" />
         </div>
-        <div class="story-label">Story Template</div>
+        <div class="story-label">Your Story</div>
       </div>
     </div>
     
@@ -41,7 +41,7 @@ export default async function loadHomeSection(content, user) {
     overlay.classList.add('story-overlay');
     overlay.innerHTML = `
       <span class="close-btn">&times;</span>
-      <img src="${imageUrl}" alt="Story Image" />
+      <img src="${imageUrl}" alt="Story Content" />
     `;
 
     document.body.appendChild(overlay);
