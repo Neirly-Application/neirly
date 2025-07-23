@@ -27,6 +27,7 @@ export default async function loadSettingsSection(content, user) {
             <li><a href="#settings-theme"><i class="fas fa-palette"></i> App Theme</a></li>
             <li><a href="#settings-language"><i class="fas fa-globe"></i> Language</a></li>
             <li><a href="#settings-info"><i class="fas fa-info-circle"></i> App Information</a></li>
+            <li><a href="#settings-developer"><i class="fas fa-code"></i> Developer Settings</a></li>
             <li><a href="#settings-danger" class="danger"><i class="fas fa-exclamation-triangle"></i> Dangerous Actions</a></li>
           </ul>
         </div>
