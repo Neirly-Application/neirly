@@ -1,6 +1,7 @@
 .stories-container {
   width: 100%;
-  overflow: hidden;
+  overflow-y: hidden;
+  overflow-x: scroll;
   display: flex;
   gap: 10px;
   margin-top: 20px;
@@ -8,6 +9,10 @@
   background-color: var(--story-box-bg-color);
   border-bottom: 1px solid var(--story-box-border-radius-color);
   border-radius: 20px;
+}
+
+.stories-container::-webkit-scrollbar {
+  display: none;
 }
 
 .story {

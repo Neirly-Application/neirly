@@ -548,10 +548,12 @@ form button:focus-visible {
 .bottom-navbar {
   width: 100%;
   height: 100%;
+  gap: 5px;
 }
 
 .bottom-navbar .nav-item {
   color: var(--neutral-grey);
+  width: 5px;
   display: block;
   flex-direction: column;
   align-items: center;
@@ -563,9 +565,9 @@ form button:focus-visible {
   width: auto;
   border-radius: 0;
   background: none;
-  padding: 1px 16px;
+  padding: 1px auto;
   color: var(--secondary);
-  border-bottom: 3px solid var(--secondary);
+  border-bottom: 10px solid var(--secondary);
   transform: none;
   transition: all 0.3s ease;
 }
