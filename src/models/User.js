@@ -26,6 +26,17 @@ const userSchema = new mongoose.Schema({
   passwordHash: {
     type: String,
   },
+  apiKey: {
+  key: { type: String, default: null },
+  description: { type: String },
+  createdAt: { type: Date },
+  status: {
+    type: String,
+    enum: ['active', 'revoked'],
+    default: 'active'
+  },
+  lastUsed: { type: Date }
+  },
   provider: { 
   type: String, 
   enum: ['local', 'google', 'discord'], 
