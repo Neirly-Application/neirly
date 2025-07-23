@@ -5,6 +5,7 @@ export default async function loadHomeSection(content, user) {
   document.body.style.animation = '';
   document.body.style.backgroundSize = '';
   document.body.style.transition = 'background 0.3s ease-in-out';
+  document.title = 'Home';
 
   content.style.background = '';
   content.style.transition = 'background 0.3s ease-in-out';
@@ -22,6 +23,8 @@ export default async function loadHomeSection(content, user) {
         <div class="story-label">Story Template</div>
       </div>
     </div>
+    
+    <div class="fancy-line"></div>
   `;
 
   stopBGAnimation();

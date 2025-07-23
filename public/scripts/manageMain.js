@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    async function caricaSezione(section) {
+    async function loadSection(section) {
       content.innerHTML = '<div class="loading">Loading...</div>';
 
       const disablePull = ['premium', 'profile', 'map-screen', 'settings', 'settings-account', 'settings-chats', 'settings-danger', 'settings-info', 'settings-language', 'settings-notifications', 'settings-privacy', 'settings-theme'];
@@ -143,11 +143,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     await fetchUnreadCount();
 
     const initialSection = window.location.hash.substring(1) || 'home';
-    caricaSezione(initialSection);
+    loadSection(initialSection);
 
     window.addEventListener('hashchange', () => {
       const section = window.location.hash.substring(1) || 'home';
-      caricaSezione(section);
+      loadSection(section);
     });
 
     function setupPullToRefresh() {
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           isRefreshing = true;
 
           const currentSection = window.location.hash.replace('#', '') || 'map';
-          await caricaSezione(currentSection);
+          await loadSection(currentSection);
 
           setTimeout(() => {
             refreshContainer.classList.remove('active');

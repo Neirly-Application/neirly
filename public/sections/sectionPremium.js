@@ -5,6 +5,7 @@ export default async function loadPremiumSection(content, user) {
   document.body.style.animation = 'gradient 10s ease infinite';
   document.body.style.backgroundSize = '400% 400%';
   document.body.style.transition = 'background 0.5s ease-in-out';
+  document.title = `Premium`;
 
   content.style.background = 'transparent';
   content.style.transition = 'background 0.2s ease-in-out';

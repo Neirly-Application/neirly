@@ -5,6 +5,7 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
   document.body.style.animation = '';
   document.body.style.backgroundSize = '';
   document.body.style.transition = 'background 0.3s ease-in-out';
+  document.title = `Messages`;
 
   content.style.background = '';
   content.style.transition = 'background 0.3s ease-in-out';

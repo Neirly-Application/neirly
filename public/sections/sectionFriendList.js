@@ -6,6 +6,7 @@ export default async function loadFriendListSection(content, user) {
   document.body.style.animation = '';
   document.body.style.backgroundSize = '';
   document.body.style.transition = 'background 0.3s ease-in-out';
+  document.title = `Friend List`;
 
   content.style.background = '';
   content.style.transition = 'background 0.3s ease-in-out';
