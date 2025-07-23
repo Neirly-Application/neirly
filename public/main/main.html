@@ -136,15 +136,18 @@
   </nav>
 
   <nav class="bottom-navbar">
-    <a href="#map" class="nav-item" data-section="map">
-      <i class="fas fa-map"></i>
-    </a>
-    <a href="#messages" class="nav-item" data-section="messages">
-      <i class="fas fa-comment-alt"></i>
-    </a>
-    <a href="#profile" class="nav-item" data-section="profile">
-      <i class="fas fa-user"></i>
-    </a>
+      <a href="#home" class="nav-item" data-section="home">
+        <i class="fas fa-home"></i>
+      </a>
+      <a href="#map" class="nav-item" data-section="map">
+        <i class="fas fa-map"></i>
+      </a>
+      <a href="#messages" class="nav-item" data-section="messages">
+        <i class="fas fa-comment-alt"></i>
+      </a>
+      <a href="#profile" class="nav-item" data-section="profile">
+        <i class="fas fa-user"></i>
+      </a>
   </nav>
 
   <div id="pull-to-refresh">
@@ -191,7 +194,7 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const sections = ['map', 'messages', 'profile', 'friend-list'];
+    const sections = ['home', 'map', 'messages', 'profile'];
     let touchStartX = 0;
     let touchEndX = 0;
     let touchStartY = 0;
@@ -278,14 +281,14 @@
     });
 
     if (!location.hash) {
-      location.hash = '#map';
+      location.hash = '#home';
     }
 
     updateActiveNavItem(location.hash.replace('#', ''));
     checkScreenSize();
 
     window.addEventListener('hashchange', () => {
-      const section = location.hash.replace('#', '') || 'map';
+      const section = location.hash.replace('#', '') || 'home';
       updateActiveNavItem(section);
     });
 
@@ -360,29 +363,29 @@
 </script>
 
 <script>
-    function updateBottomNavbar() {
-      const navbar = document.querySelector('.bottom-navbar');
+//    function updateBottomNavbar() {
+//      const navbar = document.querySelector('.bottom-navbar');
 
-      if (!navbar) return;
+//      if (!navbar) return;
 
-      let extraItem = navbar.querySelector('.nav-item.extra');
+//      let extraItem = navbar.querySelector('.nav-item.extra');
 
-      if (window.innerWidth >= 440) {
-        if (!extraItem) {
-          const newItem = document.createElement('a');
-          newItem.href = '#friend-list';
-          newItem.classList.add('nav-item', 'extra');
-          newItem.dataset.section = 'friend-list';
-          newItem.innerHTML = '<i class="fas fa-user-friends"></i>';
-          navbar.appendChild(newItem);
-        }
-      } else {
-        if (extraItem) extraItem.remove();
-      }
-    }
+//      if (window.innerWidth >= 440) {
+//        if (!extraItem) {
+//          const newItem = document.createElement('a');
+//          newItem.href = '#friend-list';
+//          newItem.classList.add('nav-item', 'extra');
+//          newItem.dataset.section = 'friend-list';
+//          newItem.innerHTML = '<i class="fas fa-user-friends"></i>';
+//          navbar.appendChild(newItem);
+//        }
+//      } else {
+//        if (extraItem) extraItem.remove();
+//      }
+//    }
 
-    window.addEventListener('DOMContentLoaded', updateBottomNavbar);
-    window.addEventListener('resize', updateBottomNavbar);
+//    window.addEventListener('DOMContentLoaded', updateBottomNavbar);
+//    window.addEventListener('resize', updateBottomNavbar);
 </script>
 
 <script>

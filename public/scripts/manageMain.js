@@ -1,6 +1,7 @@
 import loadCeoSection from '../sections/sectionCeo.js';
 import loadPremiumSection from '../sections/sectionPremium.js';
 import loadFriendListSection from '../sections/sectionFriendList.js';
+import loadHomeSection from '../sections/sectionHome.js';
 import loadMapSection from '../sections/sectionMap.js';
 import loadMapScreenSection from '../sections/sectionMapScreen.js';
 import loadMessagesSection from '../sections/sectionMessages.js';
@@ -100,6 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       switch (section) {
         case 'ceo': await loadCeoSection(content, user); break;
         case 'friend-list': await loadFriendListSection(content, user); break;
+        case 'home': await loadHomeSection(content, user); break;
         case 'map': await loadMapSection(content, user); break;
         case 'map-screen': await loadMapScreenSection(content, user); break;
         case 'messages':await loadMessagesSection(content, user); break;
@@ -140,11 +142,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     await preloadNotifications();
     await fetchUnreadCount();
 
-    const initialSection = window.location.hash.substring(1) || 'map';
+    const initialSection = window.location.hash.substring(1) || 'home';
     caricaSezione(initialSection);
 
     window.addEventListener('hashchange', () => {
-      const section = window.location.hash.substring(1) || 'map';
+      const section = window.location.hash.substring(1) || 'home';
       caricaSezione(section);
     });
 
