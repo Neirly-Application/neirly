@@ -58,13 +58,13 @@ img {
 }
 
 .sidebar {
-  width: 250px;
+  width: 270px;
   height: 100vh;
   background-color: var(--primary);
   color: var(--accent);
   display: flex;
   flex-direction: column;
-  padding: 0;
+  padding-block: 5px;
   box-shadow: 2px 0 12px rgba(0, 0, 0, 0.12);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   will-change: transform, box-shadow;
@@ -80,7 +80,6 @@ img {
 .nav-header {
   padding: 25px 20px;
   text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .nav-logo {
@@ -92,18 +91,24 @@ img {
 }
 
 .nav-links {
+  margin-block: 5px;
+  background-color: var(--main-bg);
   flex-grow: 1;
   padding: 20px 0;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  overflow-y: none;
+  overflow-y: scroll;
+}
+
+.nav-links::-webkit-scrollbar {
+  display: none;
 }
 
 .nav-item {
   position: relative;
-  padding: 16px;
-  margin-inline: 16px;
+  padding: 20px;
+  margin-inline: 10px;
   color: var(--accent);
   text-decoration: none;
   cursor: pointer;
@@ -185,8 +190,7 @@ img {
 }
 
 .nav-footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 20px 0;
+  padding: 5px 0;
   text-align: center;
   font-size: 0.9rem;
   color: var(--accent);

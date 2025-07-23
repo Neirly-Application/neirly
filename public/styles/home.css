@@ -1,0 +1,92 @@
+.stories-container {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 10px 15px;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  border-radius: 20px;
+}
+
+.story {
+  flex: 0 0 auto;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px solid #002082;
+  padding: 2px;
+  background: linear-gradient(45deg, #9ffaff, #49b3ff, #0040ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.story img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.story-label {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 5px;
+  color: #333;
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: bold;
+  white-space: wrap;
+}
+
+.story-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.story-overlay img {
+  max-width: 90vw;
+  max-height: auto;
+  border-radius: 12px;
+}
+
+.story-overlay .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+@media (max-width: 768px) {
+    .story-overlay .close-btn {
+        top: 60px;
+    }
+
+    .story-overlay img {
+        max-width: 60vw;
+        max-height: auto;
+        border-radius: 12px;
+    }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
