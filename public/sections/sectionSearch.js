@@ -44,7 +44,6 @@ export default async function loadSearchSection(content, user) {
     }
 
     results.innerHTML = `
-      <p class="search-title">Users</p>
       <ul class="search-list">
         ${users.map(user => `
           <li>
@@ -66,7 +65,6 @@ export default async function loadSearchSection(content, user) {
 
     results.innerHTML = `
       ${users.length ? `
-        <p class="search-title">Users</p>
         <ul class="search-list">
           ${users.map(user => `
             <li>
@@ -78,14 +76,12 @@ export default async function loadSearchSection(content, user) {
       ` : ''}
 
       ${posts.length ? `
-        <p class="search-title">Posts</p>
         <ul class="search-list">
           ${posts.map(post => `<li>${post.title || 'Untitled post'}</li>`).join('')}
         </ul>
       ` : ''}
 
       ${tags.length ? `
-        <p class="search-title">Tags</p>
         <ul class="search-list">
           ${tags.map(tag => `<li>#${tag.name}</li>`).join('')}
         </ul>
