@@ -18,19 +18,19 @@ export default async function loadChatWindow(content, user, chatUserId, onBack) 
 
   try {
     const [messagesRes, userRes] = await Promise.all([
-      fetch(`/api/chats/messages/${chatUserId}`),
-      fetch(`/api/users/${chatUserId}`) 
+      fetch(`/api/chats/messages/${chatUserId}`, { credentials: 'include' }),
+      fetch(`/api/users/${chatUserId}`, { credentials: 'include' })
     ]);
 
     if (!messagesRes.ok || !userRes.ok) throw new Error('Failed to load messages or user');
 
     const messages = await messagesRes.json();
-    const chatUser = await userRes.json(); 
+    const chatUser = await userRes.json();
 
     content.innerHTML = `
-      <button id="back-btn">⬅️ Back</button>
-      <h2 style="margin: 0 0 10px 0;">Chat with ${escapeHTML(chatUser.name || 'User')}</h2>
-      <div style="display:flex; flex-direction: column; height: 100%; border: 1px solid #ccc; padding: 10px;">
+      <button id="back-btn" class="back-button">⬅️ Back</button>
+      <div class="chat-box">
+        <h2 style="margin-bottom: 10px;">Chat with ${escapeHTML(chatUser.name || 'User')}</h2>
         <div class="chat-messages" style="flex-grow: 1; overflow-y: auto; margin-bottom: 10px; max-height: 70vh;">
           ${messages.map(m => `
             <div class="message ${m.sender === chatUserId ? 'incoming' : 'outgoing'}" style="margin-bottom: 10px;">
@@ -41,34 +41,47 @@ export default async function loadChatWindow(content, user, chatUserId, onBack) 
           `).join('')}
         </div>
         <form id="send-message-form" style="display:flex; gap:5px;">
-          <input type="text" id="message-input" placeholder="Type your message..." required style="flex-grow:1;" />
+          <input type="text" id="message-input" placeholder="Type your message..." required style="flex-grow:1;" autocomplete="off" />
           <button type="submit">Send</button>
         </form>
       </div>
     `;
-    
+
     document.title = `${escapeHTML(chatUser.name || 'User')}`;
 
     const chatMessages = content.querySelector('.chat-messages');
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    content.querySelector('#back-btn').addEventListener('click', onBack);
+    content.querySelector('#back-btn').addEventListener('click', () => {
+      onBack?.();
+    });
 
-    content.querySelector('#send-message-form').addEventListener('submit', async e => {
+    const form = content.querySelector('#send-message-form');
+    const input = content.querySelector('#message-input');
+
+    form.addEventListener('submit', async e => {
       e.preventDefault();
-      const input = content.querySelector('#message-input');
       const message = input.value.trim();
       if (!message) return;
 
       const sendRes = await fetch('/api/chats/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ to: chatUserId, content: message })
       });
 
       if (sendRes.ok) {
+        const newMsg = await sendRes.json();
+        chatMessages.innerHTML += `
+          <div class="message outgoing" style="margin-bottom: 10px;">
+            <strong>You</strong><br />
+            ${escapeHTML(newMsg.content)}<br />
+            <small style="font-size: 10px; color: #767676e0;">${new Date(newMsg.timestamp).toLocaleString()}</small>
+          </div>
+        `;
         input.value = '';
-        await loadChatWindow(content, user, chatUserId, onBack);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
       } else {
         alert('Failed to send message.');
       }
@@ -77,6 +90,6 @@ export default async function loadChatWindow(content, user, chatUserId, onBack) 
   } catch (e) {
     content.innerHTML = `<p>Error loading chat: ${e.message}</p>`;
   }
-  
+
   stopBGAnimation();
-};
+}

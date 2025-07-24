@@ -36,6 +36,13 @@
     --premium-card-text-color: #fff6bc;
     --premium-card-bg-color: rgb(32, 29, 0);
 
+    --story-box-bg-color: #fff;
+    --story-box-border-radius-color: #ddd;
+    --story-border-color: #002082;
+    --story-bg-color: #002082;
+    --story-image-bg-color: linear-gradient(100deg, #9ffaff, #0090f7, #0033cb, #001143);
+    --story-content-overlay: rgb(0, 0, 0);
+
     --main-bg: #2c4296;
 
     --chat-hover: #a2dbf588;

@@ -1,7 +1,6 @@
 @import url(./variables.css);
 
 .recent-chats {
-  max-width: 100%;
   width: 100%;
   margin: 0;
   background: transparent;
@@ -23,26 +22,28 @@
   border-bottom: none;
 }
 
-.chat-item:active {
+.chat-item:active,
+.chat-item:hover {
   background-color: var(--chat-hover);
 }
 
 .chat-item img.avatar {
-  width: 48px;
-  height: 48px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--secondary) 
+  border: 2px solid var(--secondary);
+  margin-right: 12px;
 }
 
 .chat-details {
-  flex-grow: 1;
+  flex: 1;
   overflow: hidden;
 }
 
-.chat-details .chat-name {
-  font-weight: 600;
-  font-size: 1.1rem;
+.chat-name {
+  font-weight: bold;
+  font-size: 1rem;
   color: #333;
   margin-bottom: 4px;
   white-space: nowrap;
@@ -50,8 +51,8 @@
   text-overflow: ellipsis;
 }
 
-.chat-details .chat-last-message {
-  font-size: 0.9rem;
+.chat-last-message {
+  font-size: 1.4rem;
   color: #8b8b8b;
   white-space: nowrap;
   overflow: hidden;
@@ -59,7 +60,7 @@
 }
 
 .chat-unread-badge {
-  background-color: var(--main-bg); 
+  background-color: var(--main-bg);
   color: white;
   font-size: 0.75rem;
   padding: 4px 8px;
@@ -71,8 +72,8 @@
 }
 
 .avatar {
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   object-fit: cover;
   margin-right: 10px;
@@ -84,22 +85,21 @@
   }
 
   .chat-item img.avatar {
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
+    width: 60px;
+    height: 60px;
   }
 
-  .chat-details .chat-name {
-    font-size: 1.2rem;
+  .chat-name {
+    font-size: 1rem;
   }
 
-  .chat-details .chat-last-message {
+  .chat-last-message {
     font-size: 1rem;
   }
 
   .chat-unread-badge {
-    font-size: 0.8rem;
-    padding: 3px 6px;
+    font-size: 0.9rem;
+    padding: 6px 12px;
   }
 }
 
@@ -107,49 +107,28 @@
   .chat-item img.avatar {
     width: 50px;
     height: 50px;
-    margin-right: 8px;
   }
 
-  .chat-details .chat-name {
+  .chat-name {
     font-size: 1.2rem;
   }
 
-  .chat-details .chat-last-message {
-    font-size: 1rem;
+  .chat-last-message {
+    font-size: 09rem;
   }
 
   .chat-unread-badge {
     font-size: 0.8rem;
-    padding: 3px 6px;
+    padding: 4px 10px;
   }
 }
 
-.friend-item {
+.chat-box {
+  width: 100%;
+  height: 100vh !important;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
-  align-items: center;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  border-bottom: 1px solid #333;
-}
-
-.friend-item:active {
-  background-color: var(--chat-hover);
-}
-
-.friend-item img.avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--secondary);
-}
-
-.friend-name {
-  font-weight: 600;
-  font-size: 1.05rem;
-  color: #333;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2;
+  flex-direction: column;
+  padding: 16px;
 }

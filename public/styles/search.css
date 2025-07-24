@@ -1,0 +1,125 @@
+.search-bar {
+  display: flex;
+  height: auto;
+  align-items: center;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  background: #dedede;
+}
+
+.search-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+}
+
+.search-results {
+  display: block;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  text-align: center;
+  margin-top: 10px;
+  width: 100%;
+  height: auto;
+}
+
+.search-results::-webkit-scrollbar {
+  display: none;
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 20px;
+}
+
+.search-bar i {
+  margin-left: 8px;
+  color: #888;
+  font-size: 20px;
+}
+
+.search-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 16px 0 10px;
+  color: var(--text-primary, #333);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.search-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.search-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  padding-block: 16px;
+  background: var(--search-item-bg, #f9f9f9);
+  margin-bottom: 0;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+  border-bottom: 1px solid rgba(44, 44, 44, 0.696);
+}
+
+.search-list li:last-child {
+  border-bottom: none;
+}
+
+.search-list li:hover {
+  background: var(--search-item-hover, #eaeaea);
+  transform: translateY(-1px);
+}
+
+.search-user-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--secondary, #ccc);
+}
+
+.search-user-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-secondary, #555);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 60px);
+}
+
+@media (max-width: 600px) {
+  .search-user-img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .search-user-name {
+    font-size: 1rem;
+  }
+
+  .search-list li {
+    padding: 10px;
+    padding-block: 16px;
+  }
+}

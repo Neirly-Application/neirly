@@ -7,6 +7,7 @@ import loadMapScreenSection from '../sections/sectionMapScreen.js';
 import loadMessagesSection from '../sections/sectionMessages.js';
 import loadNotificationsSection from '../sections/sectionNotifications.js';
 import loadProfileSection from '../sections/sectionProfile.js';
+import loadSearchSection from '../sections/sectionSearch.js';
 import loadSettingsSection from '../sections/sectionSettings.js';
 import loadSettingsAccountSection from '../sections/sectionSettingsAccount.js';
 import loadSettingsActivitySection from '../sections/sectionSettingsActivity.js';
@@ -22,7 +23,6 @@ import loadSettingsThemeSection from '../sections/sectionSettingsTheme.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    
     const content = document.querySelector('.content');
     const welcomeMessage = document.getElementById('welcomeMessage');
     const adminSection = document.getElementById('admin-section');
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let user = null;
 
     window.disablePullToRefresh = false;
+    let currentLoadToken = null; 
 
     async function fetchAndSetUser() {
       try {
@@ -94,9 +95,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function loadSection(section) {
+      const thisToken = Symbol('load');
+      currentLoadToken = thisToken;
+
       content.innerHTML = '<div class="loading">Loading...</div>';
 
-      const disablePull = ['premium', 'profile', 'map-screen', 'settings', 'settings-account', 'settings-chats', 'settings-danger', 'settings-info', 'settings-language', 'settings-notifications', 'settings-privacy', 'settings-theme'];
+      const disablePull = ['search', 'premium', 'profile', 'map-screen', 'settings', 'settings-account', 'settings-chats', 'settings-danger', 'settings-info', 'settings-language', 'settings-notifications', 'settings-privacy', 'settings-theme'];
       window.disablePullToRefresh = disablePull.includes(section);
 
       switch (section) {
@@ -105,10 +109,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         case 'home': await loadHomeSection(content, user); break;
         case 'map': await loadMapSection(content, user); break;
         case 'map-screen': await loadMapScreenSection(content, user); break;
-        case 'messages':await loadMessagesSection(content, user); break;
+        case 'messages': await loadMessagesSection(content, user); break;
         case 'notifications': await loadNotificationsSection(content, user); break;
         case 'premium': await loadPremiumSection(content, user); break;
         case 'profile': await loadProfileSection(content, user); break;
+        case 'search': await loadSearchSection(content, user); break;
         case 'settings': await loadSettingsSection(content, user); break;
         case 'settings-account': await loadSettingsAccountSection(content, user); break;
         case 'settings-activity': await loadSettingsActivitySection(content, user); break;
@@ -121,8 +126,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         case 'settings-notifications': await loadSettingsNotificationsSection(content, user); break;
         case 'settings-privacy': await loadSettingsPrivacySection(content, user); break;
         case 'settings-theme': await loadSettingsThemeSection(content, user); break;
-        default: content.innerHTML = '<p style="font-weight: bold; justify-content: center; font-size: 2rem">Section not found</p>'; break;
+        default:
+          if (currentLoadToken === thisToken) {
+            content.innerHTML = '<p style="font-weight: bold; justify-content: center; font-size: 2rem">Section not found</p>';
+          }
+          return;
       }
+
+      if (currentLoadToken !== thisToken) return; 
     }
 
     document.querySelectorAll('.logout-btn').forEach(logoutBtn => {
@@ -160,6 +171,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       let startY = 0;
       let isTouching = false;
       let isRefreshing = false;
+      let activeRefreshToken = null;
+
+      window.addEventListener('hashchange', () => {
+        if (isRefreshing) {
+          isRefreshing = false;
+          activeRefreshToken = null;
+          refreshContainer.classList.remove('active');
+          refreshContainer.style.transform = `translateY(-60px)`;
+          content.style.transform = `translateY(0px)`;
+        }
+      });
 
       document.addEventListener('touchstart', (e) => {
         if (window.disablePullToRefresh) return;
@@ -195,27 +217,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         const match = refreshContainer.style.transform.match(/translateY\(([\d.-]+)px\)/);
         const currentTransform = match ? parseFloat(match[1]) : 0;
 
+        isTouching = false;
+
         if (currentTransform >= refreshThreshold) {
+          isRefreshing = true;
+          const refreshToken = Symbol('refresh');
+          activeRefreshToken = refreshToken;
+
           refreshContainer.classList.add('active');
           refreshContainer.style.transform = `translateY(60px)`;
           content.style.transform = `translateY(60px)`;
-          isRefreshing = true;
 
-          const currentSection = window.location.hash.replace('#', '') || 'map';
+          const currentSection = window.location.hash.replace('#', '') || 'home';
           await loadSection(currentSection);
 
-          setTimeout(() => {
-            refreshContainer.classList.remove('active');
-            refreshContainer.style.transform = `translateY(-60px)`;
-            content.style.transform = `translateY(0px)`;
-            isRefreshing = false;
-          }, 1000);
+          if (activeRefreshToken !== refreshToken) return;
+
+          refreshContainer.classList.remove('active');
+          refreshContainer.style.transform = `translateY(-60px)`;
+          content.style.transform = `translateY(0px)`;
+          isRefreshing = false;
         } else {
           refreshContainer.style.transform = `translateY(-60px)`;
           content.style.transform = `translateY(0px)`;
         }
-
-        isTouching = false;
       });
     }
 
@@ -246,6 +271,5 @@ setInterval(() => {
     console.log('%cThis console is intended for developers. If someone told you to paste code here, they might be trying to steal your account or sensitive data.', 'color: white; font-size: 16px;');
     console.log('%cPasting unknown code can allow attackers to impersonate you, access private data, or take control of your account.', 'color: white; font-size: 16px;');
     console.log('%cIf you are not sure what you are doing, close the DevTools immediately.', 'color: #ff4444; font-size: 16px; font-weight: bold;');
-    console.log('%cFrom Neirly Security Team.', 'color: #1a43ebff; font-size: 16px; font-weight: bold;');
   }
 }, 1000);
