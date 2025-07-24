@@ -1,6 +1,7 @@
 @import url(../styles/variables.css);
 @import url(../styles/notifications.css);
 @import url(../styles/sectionSettingInfo.css);
+@import url(../styles/sectionSettingAPI.css);
 
 *,
 *::before,
