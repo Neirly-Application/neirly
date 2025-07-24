@@ -14,7 +14,7 @@ import loadSettingsChatsSection from '../sections/sectionSettingsChats.js';
 import loadSettingsDangerSection from '../sections/sectionSettingsDanger.js';
 import loadSettingsDevicesSection from '../sections/sectionSettingsDevices.js';
 import loadSettingsInfoSection from '../sections/sectionSettingsInfo.js';
-import loadSettingsDeveloperSection from '../sections/sectionSettingsDeveloper.js';
+import loadSettingsDeveloperSection from '../sections/sectionSettingsAPI.js';
 import loadSettingsLanguageSection from '../sections/sectionSettingsLanguage.js';
 import loadSettingsNotificationsSection from '../sections/sectionSettingsNotifications.js';
 import loadSettingsPrivacySection from '../sections/sectionSettingsPrivacy.js';

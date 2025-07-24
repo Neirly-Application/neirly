@@ -106,6 +106,7 @@ const banUserRouter = require('./src/routes/banUser');
 const devicesRouter = require('./src/routes/devices');
 const deleteUserRouter = require('./src/routes/deleteUser');
 const nearMeRouter = require('./src/routes/nearMe');
+const apiRouter = require('./src/routes/api');
 
 logDebug("Initializing passport configuration...");
 require('./src/config/passport');
@@ -137,6 +138,7 @@ app.use('/api', devicesRouter);
 app.use('/api', nearMeRouter);
 app.use('/api', chatsRouter);
 app.use('/api', getUser);
+app.use ('/api', apiRouter);
 
 app.get('/', (req, res) => {
   res.sendFile(pathModule.join(__dirname, 'index.html'));
