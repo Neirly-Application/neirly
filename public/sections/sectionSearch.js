@@ -13,7 +13,7 @@ export default async function loadSearchSection(content, user) {
   content.innerHTML = `
     <div class="search-bar">
       <div class="search-content">
-        <input type="search" placeholder="Search..." id="searchInput" />
+        <input type="search" placeholder="Search..." id="searchInput" autocomplete="off"/>
         <button type="submit" id="searchBtn" class="search-btn">
           <i class="fas fa-search"></i>
         </button>

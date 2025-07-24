@@ -109,7 +109,7 @@ export default async function loadFriendListSection(content, user) {
         html += '<h3>Friends</h3>';
         html += confirmedFriends.map(friend => `
               <div class="friend-item">
-                <img src="/api/users/${friend._id}/profile-picture" alt="Avatar" class="avatar" />
+                <img src="${friend.profilePictureUrl || '../media/user.png'}" alt="Avatar" class="avatar" />
                 <strong>${friend.name || '-'}</strong>
               </div>
             `).join('');
