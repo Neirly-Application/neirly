@@ -19,7 +19,7 @@ export default async function loadSearchSection(content, user) {
         </button>
       </div>
     </div>
-    
+
     <div class="fancy-line"></div>
 
     <div class="search-results" id="search-results">
@@ -28,37 +28,112 @@ export default async function loadSearchSection(content, user) {
   `;
 
   const input = document.getElementById('searchInput');
-  const button = document.getElementById('searchBtn');
   const results = document.getElementById('search-results');
+
+  let currentTimeout = null;
+  let lastQuery = '';
 
   const showDefaultMessage = () => {
     results.innerHTML = `<p class="search-placeholder">Your recent searches</p>`;
   };
 
-  const handleSearch = () => {
+  const renderUsers = (users = []) => {
+    if (!users.length) {
+      results.innerHTML = `<p>No users found.</p>`;
+      return;
+    }
+
+    results.innerHTML = `
+      <p class="search-title">Users</p>
+      <ul class="search-list">
+        ${users.map(user => `
+          <li>
+            <img src="${user.profilePictureUrl || '../media/user.png'}" alt="${user.nickname}" class="search-user-img"/>
+            <span class="search-user-name">@${user.uniquenick}</span>
+          </li>
+        `).join('')}
+      </ul>
+    `;
+  };
+
+  const renderGenericResults = (data = {}) => {
+    const { posts = [], tags = [], users = [] } = data;
+
+    if (!posts.length && !tags.length && !users.length) {
+      results.innerHTML = `<p>No results found.</p>`;
+      return;
+    }
+
+    results.innerHTML = `
+      ${users.length ? `
+        <p class="search-title">Users</p>
+        <ul class="search-list">
+          ${users.map(user => `
+            <li>
+              <img src="${user.profilePictureUrl || '../media/user.png'}" alt="${user.nickname}" class="search-user-img"/>
+              <span class="search-user-name">@${user.uniquenick}</span>
+            </li>
+          `).join('')}
+        </ul>
+      ` : ''}
+
+      ${posts.length ? `
+        <p class="search-title">Posts</p>
+        <ul class="search-list">
+          ${posts.map(post => `<li>${post.title || 'Untitled post'}</li>`).join('')}
+        </ul>
+      ` : ''}
+
+      ${tags.length ? `
+        <p class="search-title">Tags</p>
+        <ul class="search-list">
+          ${tags.map(tag => `<li>#${tag.name}</li>`).join('')}
+        </ul>
+      ` : ''}
+    `;
+  };
+
+  const handleSearch = async () => {
     const query = input.value.trim();
+
+    if (query === lastQuery) return;
+    lastQuery = query;
+
     if (!query) {
       showDefaultMessage();
       return;
     }
 
-    results.innerHTML = `
-      <p class="search-title">Results for: <strong>${query}</strong></p>
-      <ul class="search-list">
-        <li>Example result 1</li>
-        <li>Example result 2</li>
-        <li>Example result 3</li>
-      </ul>
-    `;
+    results.innerHTML = `<p class="search-title">Searching for: <strong>${query}</strong>...</p>`;
+
+    try {
+      if (query.startsWith('@')) {
+        const nickname = query.slice(1);
+        const res = await fetch(`/api/search/users?q=${encodeURIComponent(nickname)}`, {
+          credentials: 'include'
+        });
+        const json = await res.json();
+        renderUsers(json.users || []);
+      } else {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`, {
+          credentials: 'include'
+        });
+        const json = await res.json();
+        renderGenericResults(json);
+      }
+    } catch (err) {
+      console.error('Search error:', err);
+      results.innerHTML = `<p class="search-error">Something went wrong. Try again.</p>`;
+    }
   };
 
-  button.addEventListener('click', handleSearch);
-
-  input.addEventListener('keyup', (e) => {
-    if (e.key === 'Enter') handleSearch();
+  input.addEventListener('input', () => {
+    clearTimeout(currentTimeout);
+    currentTimeout = setTimeout(handleSearch, 300); // debounce 300ms
   });
 
-  showDefaultMessage();
+  document.getElementById('searchBtn').addEventListener('click', handleSearch);
 
+  showDefaultMessage();
   stopBGAnimation();
 }
