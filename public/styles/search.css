@@ -53,3 +53,68 @@
   align-items: center;
   justify-content: center;
 }
+
+.search-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 16px 0 10px;
+  color: var(--text-primary, #333);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.search-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.search-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--search-item-bg, #f9f9f9);
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.search-list li:hover {
+  background: var(--search-item-hover, #eaeaea);
+  transform: translateY(-1px);
+}
+
+.search-user-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--secondary, #ccc);
+}
+
+.search-user-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-secondary, #555);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 60px);
+}
+
+@media (max-width: 600px) {
+  .search-user-img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .search-user-name {
+    font-size: 0.95rem;
+  }
+
+  .search-list li {
+    padding: 10px;
+  }
+}

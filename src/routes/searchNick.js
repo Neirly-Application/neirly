@@ -16,8 +16,8 @@ router.get('/search/users', async (req, res) => {
     const users = await User.find({
       uniquenick: { $regex: `^${query}`, $options: 'i' }
     })
-      .limit(10)
-      .select('nickname uniquenick profilePictureUrl');
+      .limit(100)
+      .select('name uniquenick profilePictureUrl');
 
     return res.json({ users });
   } catch (err) {

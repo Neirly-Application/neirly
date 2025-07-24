@@ -22,18 +22,9 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
       <h2>Messages</h2>
       <div class="recent-chats">
         ${recentChats.map(c => `
-          <div class="chat-item" data-userid="${c._id}">
+          <div class="chat-item chat-name" data-userid="${c._id}">
             <img src="${c.profilePictureUrl || '../media/user.png'}" alt="Avatar" class="avatar"/>
             <span>${c.name || c.uniquenick || 'Unknown'}</span>
-          </div>
-        `).join('')}
-      </div>
-      <h4>Friends</h4>
-      <div class="friends-list">
-        ${friends.map(f => `
-          <div class="friend-item" data-userid="${f._id}">
-            <img src="${f.profilePictureUrl || '../media/user.png'}" alt="Avatar" class="avatar"/>
-            <span>${f.name || f.uniquenick || 'Unknown'}</span>
           </div>
         `).join('')}
       </div>

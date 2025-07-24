@@ -48,8 +48,8 @@ export default async function loadSearchSection(content, user) {
       <ul class="search-list">
         ${users.map(user => `
           <li>
-            <img src="${user.profilePictureUrl || '../media/user.png'}" alt="${user.nickname}" class="search-user-img"/>
-            <span class="search-user-name">@${user.uniquenick}</span>
+            <img src="${user.profilePictureUrl || '../media/user.png'}" alt="${user.name}" class="search-user-img"/>
+            <span class="search-user-name">${user.name}</span> - <span class="search-user-name">@${user.uniquenick}</span>
           </li>
         `).join('')}
       </ul>
@@ -70,8 +70,8 @@ export default async function loadSearchSection(content, user) {
         <ul class="search-list">
           ${users.map(user => `
             <li>
-              <img src="${user.profilePictureUrl || '../media/user.png'}" alt="${user.nickname}" class="search-user-img"/>
-              <span class="search-user-name">@${user.uniquenick}</span>
+              <img src="${user.profilePictureUrl || '../media/user.png'}" alt="${user.name}" class="search-user-img"/>
+              <span class="search-user-name">${user.name}</span> - <span class="search-user-name">@${user.uniquenick}</span>
             </li>
           `).join('')}
         </ul>
@@ -108,8 +108,8 @@ export default async function loadSearchSection(content, user) {
 
     try {
       if (query.startsWith('@')) {
-        const nickname = query.slice(1);
-        const res = await fetch(`/api/search/users?q=${encodeURIComponent(nickname)}`, {
+        const name = query.slice(1);
+        const res = await fetch(`/api/search/users?q=${encodeURIComponent(name)}`, {
           credentials: 'include'
         });
         const json = await res.json();
@@ -129,7 +129,7 @@ export default async function loadSearchSection(content, user) {
 
   input.addEventListener('input', () => {
     clearTimeout(currentTimeout);
-    currentTimeout = setTimeout(handleSearch, 300); // debounce 300ms
+    currentTimeout = setTimeout(handleSearch, 300); 
   });
 
   document.getElementById('searchBtn').addEventListener('click', handleSearch);
