@@ -73,12 +73,16 @@
   align-items: center;
   gap: 12px;
   padding: 12px;
-  border-radius: 8px;
+  padding-block: 16px;
   background: var(--search-item-bg, #f9f9f9);
-  margin-bottom: 10px;
+  margin-bottom: 0;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.1s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(44, 44, 44, 0.696);
+}
+
+.search-list li:last-child {
+  border-bottom: none;
 }
 
 .search-list li:hover {
@@ -106,15 +110,16 @@
 
 @media (max-width: 600px) {
   .search-user-img {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
   }
 
   .search-user-name {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
 
   .search-list li {
     padding: 10px;
+    padding-block: 16px;
   }
 }
