@@ -89,6 +89,9 @@ const pathModule = require('path');
 
 const app = express();
 
+// PUBLIC API
+const profilePublicRouter = require('./src/routes/public/profilePublic.js');
+
 logDebug("Importing custom middleware and routers...");
 const { authMiddleware } = require('./src/authMiddleware/authMiddleware');
 const profileRouter = require('./src/routes/profile');
@@ -109,6 +112,8 @@ const nearMeRouter = require('./src/routes/nearMe');
 const apiRouter = require('./src/routes/api');
 const searchNickRouter = require('./src/routes/searchNick.js');
 
+
+
 logDebug("Initializing passport configuration...");
 require('./src/config/passport');
 
@@ -121,6 +126,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(pathModule.join(__dirname, 'public')));
 app.use(passport.initialize());
+
+// PUBLIC API
+app.use('/api/public', profilePublicRouter)
 
 logDebug("Registering routes...");
 app.use('/user_pfps', express.static(pathModule.join(__dirname, 'user_pfps')));
@@ -141,7 +149,6 @@ app.use('/api', chatsRouter);
 app.use('/api', getUser);
 app.use('/api', searchNickRouter);
 app.use ('/api', apiRouter);
-app.use ('/api', searchNickRouter);
 
 app.get('/', (req, res) => {
   res.sendFile(pathModule.join(__dirname, 'index.html'));
