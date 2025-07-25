@@ -1,55 +1,84 @@
-const { Client, GatewayIntentBits, ActivityType } = require('discord.js');
-const mongoose = require('mongoose');
-const User = require('./models/User');
-const leoProfanity = require('leo-profanity');
-leoProfanity.loadDictionary(); 
-
+const fs = require('fs');
+const path = require('path');
+const {
+  joinVoiceChannel,
+  createAudioPlayer,
+  createAudioResource,
+  AudioPlayerStatus,
+  entersState,
+  VoiceConnectionStatus
+} = require('@discordjs/voice');
+const { Client, GatewayIntentBits } = require('discord.js');
 require('dotenv').config();
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
 });
-
-const SPAM_WINDOW_MS = 5000;
-const MAX_MESSAGES = 5;
-const CAPS_PERCENTAGE_THRESHOLD = 0.7;
-const infractions = new Map();
-const logChannelId = process.env.DISCORD_LOG_CHANNEL_ID;
 
 client.once('ready', async () => {
-  console.log(`Bot online as ${client.user.tag}`);
-  await updateBotStatus();
-  setInterval(updateBotStatus, 5 * 60 * 1000);
+  console.log(`✅ Bot online as ${client.user.tag}`);
+
+  const voiceChannelId = process.env.DISCORD_VOICE_CHANNEL_ID;
+  const guild = client.guilds.cache.first(); 
+
+  if (!voiceChannelId || !guild) {
+    console.error('❌ Voice channel not found.');
+    return;
+  }
+
+  const voiceChannel = guild.channels.cache.get(voiceChannelId);
+  if (!voiceChannel || voiceChannel.type !== 2) {
+    console.error('❌ Channel ID not valid.');
+    return;
+  }
+
+  const songs = fs.readdirSync(path.join(__dirname, 'music')).filter(file => file.endsWith('.mp3'));
+  if (songs.length === 0) {
+    console.error('❌ No song found in /music.');
+    return;
+  }
+
+  const connection = joinVoiceChannel({
+    channelId: voiceChannel.id,
+    guildId: guild.id,
+    adapterCreator: voiceChannel.guild.voiceAdapterCreator
+  });
+
+  try {
+    await entersState(connection, VoiceConnectionStatus.Ready, 30_000);
+  } catch (err) {
+    console.error('❌ Voice connection failed:', err);
+    return;
+  }
+
+  const player = createAudioPlayer();
+  connection.subscribe(player);
+
+  function playRandomSong() {
+    const randomSong = songs[Math.floor(Math.random() * songs.length)];
+    const filePath = path.join(__dirname, 'music', randomSong);
+
+    const resource = createAudioResource(filePath, {
+      inlineVolume: true
+    });
+
+    resource.volume.setVolume(0.3);
+
+    console.log(`🎶 Playing: ${randomSong} at 30% volume`);
+    player.play(resource);
+  }
+
+  playRandomSong();
+
+  player.on(AudioPlayerStatus.Idle, () => {
+    console.log('🔁 Song ended. Playing next...');
+    setTimeout(playRandomSong, 1000);
+  });
+
+  player.on('error', err => {
+    console.error('❌ Audio error:', err);
+    setTimeout(playRandomSong, 1000);
+  });
 });
 
-async function updateBotStatus() {
-  try {
-    const count = await User.countDocuments();
-    client.user.setActivity(`${count} users registered in.`, {
-      type: ActivityType.Watching,
-    });
-  } catch (err) {
-    console.error('Error while updating bot status:', err);
-  }
-}
-
-async function sendLoginMessage(username, discordId) {
-  const channelId = process.env.DISCORD_WELCOME_CHANNEL_ID;
-  try {
-    const channel = await client.channels.fetch(channelId);
-    if (!channel) {
-      console.error('❌ Discord channel not found!');
-      return;
-    }
-
-    channel.send(`🎉 <@${discordId}> has just logged in to the site using **Discord**!`);
-
-    await updateBotStatus();
-  } catch (err) {
-    console.error('Error sending message or updating bot status:', err);
-  }
-}
-
 client.login(process.env.DISCORD_BOT_TOKEN);
-
-module.exports = { sendLoginMessage, updateBotStatus };
