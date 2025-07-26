@@ -1,5 +1,15 @@
+import { showToast } from '../scripts/notification.js';
+
 export default async function loadSettingsApiKeysSection(content, user) {
+  document.body.style.background = '';
+  document.body.style.animation = '';
+  document.body.style.backgroundSize = '';
+  document.body.style.transition = 'background 0.3s ease-in-out';
   document.title = 'Settings – API Keys';
+
+  content.style.background = '';
+  content.style.transition = 'background 0.3s ease-in-out';
+  
   content.innerHTML = `
     <div class="api-section">
       <div class="case-header">
@@ -38,7 +48,7 @@ export default async function loadSettingsApiKeysSection(content, user) {
     try {
       const res = await fetch('/api/developer/current-key', { credentials: 'include' });
       if (res.status === 404) {
-        container.innerHTML = '<p>No active API key.</p>';
+        showToast('No active API key.', 'error');
         return;
       }
       const { key, description, createdAt, status, lastUsed } = await res.json();
@@ -68,18 +78,18 @@ export default async function loadSettingsApiKeysSection(content, user) {
       document.getElementById('copy-key').onclick = () => {
         const input = document.getElementById('api-key-input');
         navigator.clipboard.writeText(input.value);
-        notify('API key copied to clipboard.', 'success');
+        showToast('API key copied to clipboard.', 'success');
       };
 
     } catch (err) {
       console.error(err);
-      container.innerHTML = '<p style="color:red;">Error loading API key.</p>';
+      showToast('Error loading API key.', 'error');
     }
   }
 
   btnGen.onclick = async () => {
     const desc = prompt('What will you use this key for? (min 10 characters)');
-    if (!desc || desc.trim().length < 10) return notify('Description too short.', 'error');
+    if (!desc || desc.trim().length < 10) return showToast('Description too short.', 'error');
 
     try {
       btnGen.disabled = true;
@@ -91,10 +101,10 @@ export default async function loadSettingsApiKeysSection(content, user) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
-      notify('API key generated.', 'success');
+      showToast('API key generated.', 'success');
       await refresh();
     } catch (err) {
-      notify(err.message || 'Error generating key.', 'error');
+      showToast(err.message || 'Error generating key.', 'error');
     } finally {
       btnGen.disabled = false;
     }
@@ -111,10 +121,10 @@ export default async function loadSettingsApiKeysSection(content, user) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
-      notify('API key revoked.', 'info');
-      container.innerHTML = '<p>No active API key.</p>';
+      showToast('API key revoked.', 'info');
+      showToast('No active API key.', 'error');
     } catch (err) {
-      notify(err.message || 'Error revoking key.', 'error');
+      showToast(err.message || 'Error revoking key.', 'error');
     }
   };
 

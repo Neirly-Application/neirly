@@ -28,13 +28,17 @@ export default async function loadChatWindow(content, user, chatUserId, onBack) 
     const chatUser = await userRes.json();
 
     content.innerHTML = `
-      <button id="back-btn" class="back-button">⬅️ Back</button>
       <div class="chat-box">
-        <h2 style="margin-bottom: 10px;">Chat with ${escapeHTML(chatUser.name || 'User')}</h2>
+        <div class="chat-header">
+          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link">
+            <i class="fas fa-arrow-left"></i>
+          </a>
+          <h2>Chat with ${escapeHTML(chatUser.name || 'User')}</h2>
+        </div>
         <div class="chat-messages" style="flex-grow: 1; overflow-y: auto; margin-bottom: 10px; max-height: 70vh;">
           ${messages.map(m => `
             <div class="message ${m.sender === chatUserId ? 'incoming' : 'outgoing'}" style="margin-bottom: 10px;">
-              <strong>${m.sender === chatUserId ? escapeHTML(chatUser.name) : 'You'}</strong><br />
+              <strong>${m.sender === chatUserId ? escapeHTML(chatUser.name) : 'You'}</strong>
               ${escapeHTML(m.content)}<br />
               <small style="font-size: 10px; color: #767676e0;">${new Date(m.timestamp).toLocaleString()}</small>
             </div>
@@ -42,7 +46,7 @@ export default async function loadChatWindow(content, user, chatUserId, onBack) 
         </div>
         <form id="send-message-form" style="display:flex; gap:5px;">
           <input type="text" id="message-input" placeholder="Type your message..." required style="flex-grow:1;" autocomplete="off" />
-          <button type="submit">Send</button>
+          <button type="submit"><i class="fas fa-paper-plane"></i></button>
         </form>
       </div>
     `;
@@ -51,10 +55,6 @@ export default async function loadChatWindow(content, user, chatUserId, onBack) 
 
     const chatMessages = content.querySelector('.chat-messages');
     chatMessages.scrollTop = chatMessages.scrollHeight;
-
-    content.querySelector('#back-btn').addEventListener('click', () => {
-      onBack?.();
-    });
 
     const form = content.querySelector('#send-message-form');
     const input = content.querySelector('#message-input');
@@ -75,7 +75,7 @@ export default async function loadChatWindow(content, user, chatUserId, onBack) 
         const newMsg = await sendRes.json();
         chatMessages.innerHTML += `
           <div class="message outgoing" style="margin-bottom: 10px;">
-            <strong>You</strong><br />
+            <strong>You</strong>
             ${escapeHTML(newMsg.content)}<br />
             <small style="font-size: 10px; color: #767676e0;">${new Date(newMsg.timestamp).toLocaleString()}</small>
           </div>

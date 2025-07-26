@@ -1,4 +1,5 @@
 import { stopBGAnimation } from '../scripts/premiumBg.js';
+import { showToast, customConfirm } from '../scripts/notification.js';
 
 export default async function loadSettingsDevicesSection(content, user) {
   document.body.style.background = '';
