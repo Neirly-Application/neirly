@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
+const play = require('play-dl');
 const {
   joinVoiceChannel,
   createAudioPlayer,
@@ -17,7 +19,6 @@ const {
   ButtonStyle,
   StringSelectMenuBuilder
 } = require('discord.js');
-require('dotenv').config();
 
 const client = new Client({
   intents: [
@@ -34,6 +35,7 @@ let currentResource;
 let voiceChannel;
 let lastNowPlayingMessage = null;
 let isSongReported = false;
+let currentVolume = 0.3;
 
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
@@ -95,7 +97,7 @@ client.once('ready', async () => {
           metadata: { songName }
         });
 
-        currentResource.volume.setVolume(0.3);
+        currentResource.volume.setVolume(currentVolume);
 
         console.log(`🎶 Playing: ${randomSong}`);
         player.play(currentResource);
@@ -116,7 +118,7 @@ client.once('ready', async () => {
               .setCustomId('report_song')
               .setLabel('Report 🚩')
               .setStyle(ButtonStyle.Danger)
-              .setDisabled(isSongReported) 
+              .setDisabled(isSongReported)
           )
         ];
 
@@ -193,12 +195,11 @@ client.once('ready', async () => {
           const volumeArg = args[0];
 
           if (!volumeArg || volumeArg.toLowerCase() === 'default' || volumeArg.toLowerCase() === 'reset') {
-            if (currentResource && currentResource.volume) {
-              currentResource.volume.setVolume(0.3);
-              return message.channel.send('🔊 Volume reset to default (30%)');
-            } else {
-              return message.channel.send('⚠️ No audio is currently playing.');
+            currentVolume = 0.3;
+            if (currentResource?.volume) {
+              currentResource.volume.setVolume(currentVolume);
             }
+            return message.channel.send('🔊 Volume reset to default (30%)');
           }
 
           const volume = parseInt(volumeArg, 10);
@@ -214,13 +215,95 @@ client.once('ready', async () => {
             });
           }
 
+          currentVolume = volume / 100;
+
           if (currentResource && currentResource.volume) {
-            currentResource.volume.setVolume(volume / 100);
+            currentResource.volume.setVolume(currentVolume);
             message.channel.send(`🔊 Volume set to **${volume}%**`);
           } else {
-            message.channel.send('⚠️ No audio is currently playing.');
+            message.channel.send(`🔊 Volume set to **${volume}%**, will apply to next song.`);
           }
         }
+
+        if (command === '!play') {
+          const query = args.join(' ');
+          if (!query) {
+            return message.channel.send('❌ Please, enter a Youtube link or a song name.');
+          }
+
+          const DJ_ROLE_ID = process.env.DISCORD_DJ_ROLE_ID;
+          const member = message.guild.members.cache.get(message.author.id);
+          const hasDJRole = member?.roles.cache.has(DJ_ROLE_ID);
+          const userVoiceChannel = member?.voice?.channel;
+
+          if (!hasDJRole || !userVoiceChannel || userVoiceChannel.id !== voiceChannel.id) {
+            return message.reply({
+              content: '⛔ You need the **DJ Role** and join the Voice Channel to use this command.',
+              ephemeral: true
+            });
+          }
+
+          try {
+            let streamInfo;
+
+            const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
+            if (youtubeRegex.test(query)) {
+              streamInfo = await play.stream(query);
+            } else {
+              const searchResults = await play.search(query, { limit: 1 });
+              if (!searchResults.length) {
+                return message.channel.send('❌ No result found on Youtube.');
+              }
+              streamInfo = await play.stream(searchResults[0].url);
+            }
+
+            const resource = createAudioResource(streamInfo.stream, {
+              inputType: streamInfo.type,
+              inlineVolume: true,
+              metadata: { songName: query }
+            });
+
+            currentResource = resource;
+            currentResource.volume.setVolume(currentVolume);
+
+            player.play(currentResource);
+            isSongReported = false;
+
+            const embed = new EmbedBuilder()
+              .setColor(0x2ECC71)
+              .setDescription(`▶️ Now playing: ${query}`);
+
+            const components = [
+              new ActionRowBuilder().addComponents(
+                new ButtonBuilder()
+                  .setCustomId('skip_song')
+                  .setLabel('Skip ▶️')
+                  .setStyle(ButtonStyle.Primary),
+                new ButtonBuilder()
+                  .setCustomId('report_song')
+                  .setLabel('Report 🚩')
+                  .setStyle(ButtonStyle.Danger)
+                  .setDisabled(isSongReported)
+              )
+            ];
+
+            if (lastNowPlayingMessage) {
+              try {
+                lastNowPlayingMessage = await lastNowPlayingMessage.edit({ embeds: [embed], components });
+              } catch {
+                lastNowPlayingMessage = await message.channel.send({ embeds: [embed], components });
+              }
+            } else {
+              lastNowPlayingMessage = await message.channel.send({ embeds: [embed], components });
+            }
+
+          } catch (err) {
+            console.error('Error on the !play command:', err);
+            return message.channel.send('❌ Cannot play the requested song.');
+          }
+        }
+
+
       } catch (err) {
         console.error('Error handling messageCreate:', err);
       }

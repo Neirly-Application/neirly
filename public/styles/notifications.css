@@ -20,6 +20,23 @@
   pointer-events: auto;
 }
 
+@media (max-width: 480px) {
+  .toast-container {
+    top: 5px;
+    bottom: auto;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  .toast-container .toast {
+    width: 100%;
+    max-width: 95%;
+    box-sizing: border-box;
+  }
+}
+
 .toast.success {
   background-color: var(--color-28a745);
 }

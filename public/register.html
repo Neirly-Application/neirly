@@ -52,19 +52,16 @@
                         <div class="fancy-line"></div>
 
                     <div id="email-register-form" class="email-form hidden">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" placeholder="Enter your email address" required />
+                        <input type="email" id="email" placeholder="Email" autocomplete="off" required />
 
-                        <label for="password-register">Password</label>
                         <div class="password-wrapper">
-                            <input type="password" id="password-register" placeholder="Create a password" required />
+                            <input type="password" id="password-register" placeholder="Password" autocomplete="off" required />
                             <button type="button" class="toggle-password" aria-label="Show/Hide password">
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
 
-                        <label for="password-repeat">Confirm Password</label>
-                        <input type="password" id="password-repeat" placeholder="Confirm your password" required />
+                        <input type="password" id="password-repeat" placeholder="Confirm password" autocomplete="off" required />
 
                         <button type="submit" id="register-button" class="cta-button">
                             <i class="fas fa-user-plus"></i> Register

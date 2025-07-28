@@ -5,9 +5,18 @@ export default async function loadChatWindow(content, user, chatUserId, onBack) 
   document.body.style.animation = '';
   document.body.style.backgroundSize = '';
   document.body.style.transition = 'background 0.3s ease-in-out';
+  document.body.style.padding = '0';
 
   content.style.background = '';
   content.style.transition = 'background 0.3s ease-in-out';
+  content.style.display = 'flex';
+  content.style.flexDirection = 'column';
+  content.style.justifyContent = 'flex-start';
+  content.style.alignItems = 'stretch';
+  content.style.height = '100vh';
+  content.style.overflow = 'hidden';
+  content.style.padding = '0';
+  content.style.margin = '0';
 
   content.innerHTML = '<p>Loading chat...</p>';
 
