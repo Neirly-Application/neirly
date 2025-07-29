@@ -246,6 +246,7 @@ profilePicInput.onchange = () => {
     document.getElementById('nickname-input').value = originalState.nickname;
     document.getElementById('uniquenick-input').value = originalState.uniquenick;
     document.getElementById('aboutme-input').value = originalState.about;
+    updateAboutCounter();
     croppedBlob = null;
     profilePicImg.src = user.profilePictureUrl || '../media/user.png';
     detectChanges();
