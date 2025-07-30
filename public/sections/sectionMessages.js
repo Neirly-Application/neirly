@@ -11,6 +11,14 @@ export default async function loadMessagesSection(content, user, subSection = 'l
 
   content.style.background = '';
   content.style.transition = 'background 0.3s ease-in-out';
+  content.style.display = '';
+  content.style.flexDirection = '';
+  content.style.justifyContent = '';
+  content.style.alignItems = '';
+  content.style.height = '';
+  content.style.overflow = '';
+  content.style.padding = '';
+  content.style.margin = '';
 
   const topNavbar = document.querySelector('.mobile-topbar');
   const bottomNavbar = document.querySelector('.bottom-navbar');

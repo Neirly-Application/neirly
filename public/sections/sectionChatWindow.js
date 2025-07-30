@@ -39,7 +39,7 @@ export default async function loadChatWindow(content, user, chatUserId, onBack) 
     content.innerHTML = `
       <div class="chat-box">
         <div class="chat-header">
-          <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link">
+          <a href="#messages" onclick="location.hash = ''; location.hash = '#messages';" class="back-arrow-link">
             <i class="fas fa-arrow-left"></i>
           </a>
           <h2>Chat with ${escapeHTML(chatUser.name || 'User')}</h2>

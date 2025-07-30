@@ -10,6 +10,14 @@ export default async function loadSettingsInfoSection(content, user) {
 
   content.style.background = '';
   content.style.transition = 'background 0.3s ease-in-out';
+  content.style.display = '';
+  content.style.flexDirection = '';
+  content.style.justifyContent = '';
+  content.style.alignItems = '';
+  content.style.height = '';
+  content.style.overflow = '';
+  content.style.padding = '';
+  content.style.margin = '';
 
   console.log('[loadSettingsInfoSection] user object:', user);
 
