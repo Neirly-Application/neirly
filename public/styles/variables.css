@@ -43,6 +43,11 @@
     --story-image-bg-color: linear-gradient(180deg, #9ffaff, #0090f7, #0033cb, #001143);
     --story-content-overlay: rgb(0, 0, 0);
 
+    --chat-outgoing-message: #d1ecf1;
+    --chat-incoming-message: #f1f1f1;
+    --chat-strong-message: #0277bd;
+    --chat-small-message: #767676e0;
+
     --main-bg: #2c4296;
 
     --chat-hover: #a2dbf588;

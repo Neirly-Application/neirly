@@ -238,6 +238,9 @@ input[type="file"] {
 }
 
 .friend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   border-bottom: 1px solid var(--inputs-border-color);
   padding: 10px;
 }
