@@ -180,18 +180,12 @@
   display: inline-block;
 }
 
-.back-arrow-link {
+.chat-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  color: inherit;
-  text-decoration: none;
-  cursor: pointer;
+  gap: 10px; 
 }
 
 .chat-header h2 {
-  flex-grow: 1;
   margin: 0;
 }
