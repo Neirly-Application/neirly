@@ -40,16 +40,24 @@ export default async function loadHomeSection(content, user) {
           <h2>Test.</h2>
           <p>Community posts.</p>
         </div>
-        <div class="post-fancy-line"></div>
         <small>Here you can find some community posts you might like!</small>
+        <div class="post-fancy-line"></div>
+
+        <div class="post-actions">
+          <li><a class="like" id="like"><i class="far fa-heart"></i></a></li>
+        </div>
       </div>
       <div class="home-post-card">
         <div class="home-post-card-content">
           <h2>Test.</h2>
           <p>Community posts.</p>
         </div>
-        <div class="post-fancy-line"></div>
         <small>Here you can find some community posts you might like!</small>
+        <div class="post-fancy-line"></div>
+
+        <div class="post-actions">
+          <li><a class="like" id="like"><i class="far fa-heart"></i></a></li>
+        </div>
       </div>
     </div>
   `;

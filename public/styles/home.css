@@ -158,3 +158,37 @@
     margin: 20px 0;
   }
 }
+
+.post-actions {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+  font-size: 24px;
+}
+
+.post-actions li {
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.like {
+  color: var(--post-like-color);
+}
+
+@media (min-width: 1025px) {
+  .post-actions li:hover {
+    transform: scale(1.1);
+    color: var(--post-like-color, #012bd5);
+  }
+}
+
+@media (max-width: 1024px) {
+  .post-actions li:active {
+    transform: scale(1.1);
+    color: var(--post-like-color, #012bd5);
+  }
+}
