@@ -188,20 +188,6 @@ input[type="file"] {
   box-sizing: border-box;
 }
 
-.friend-btn {
-  padding: 8px 16px;
-  cursor: pointer;
-  background-color: #3498db;
-  border: none;
-  border-radius: 4px;
-  color: var(--color-fff);
-  transition: background-color 0.3s ease;
-}
-
-.friend-btn:active {
-  background-color: var(--color-2980b9);
-}
-
 .friend-request-card {
   border: 1px solid var(--color-eee);
   padding: 10px;
@@ -255,8 +241,34 @@ input[type="file"] {
 
 .friend-info {
   display: flex;
-  align-items: center;
   gap: 10px;
+}
+
+.friend-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.friend-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-secondary, #555);
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  max-width: 100%;
+}
+
+.friend-nick {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--text-tertiary, #888);
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  max-width: 100%;
+  margin-top: 2px;
 }
 
 .friend-actions {
@@ -287,6 +299,14 @@ input[type="file"] {
 }
 
 .message-btn:hover {
+  color: #007bff;
+}
+
+.settings-btn {
+  color: var(--primary);
+}
+
+.settings-btn:hover {
   color: #007bff;
 }
 

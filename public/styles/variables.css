@@ -48,6 +48,11 @@
     --chat-strong-message: #0277bd;
     --chat-small-message: #767676e0;
 
+    --home-post-card-bg: #1a2a6c1a;
+    --home-post-card-text-color: #333;
+    --home-post-card-text-color-small: rgb(114, 114, 114);
+    --home-post-card-gradient-line: linear-gradient(to right, #333, #6a6a6a, #333);
+
     --main-bg: #2c4296;
 
     --chat-hover: #a2dbf588;

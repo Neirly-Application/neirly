@@ -56,7 +56,10 @@ export default async function loadSearchSection(content, user) {
         ${users.map(user => `
           <li>
             <img src="${user.profilePictureUrl || '../media/user.png'}" alt="${user.name}" class="search-user-img"/>
-            <span class="search-user-name">${user.name}</span> - <span class="search-user-name">@${user.uniquenick}</span>
+                <div class="search-user-info">
+                  <span class="search-user-name">${user.name}</span>
+                  <span class="search-user-nick">@${user.uniquenick}</span>
+                </div>
           </li>
         `).join('')}
       </ul>
@@ -77,7 +80,10 @@ export default async function loadSearchSection(content, user) {
           ${users.map(user => `
             <li>
               <img src="${user.profilePictureUrl || '../media/user.png'}" alt="${user.name}" class="search-user-img"/>
-              <span class="search-user-name">${user.name}</span> - <span class="search-user-name">@${user.uniquenick}</span>
+                <div class="search-user-info">
+                  <span class="search-user-name">${user.name}</span>
+                  <span class="search-user-nick">@${user.uniquenick}</span>
+                </div>
             </li>
           `).join('')}
         </ul>

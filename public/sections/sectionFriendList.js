@@ -114,19 +114,25 @@ export default async function loadFriendListSection(content, user) {
 
       if (confirmedFriends.length > 0) {
         confirmedFriends.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-        html += '<h3>Friends</h3>';
+        html += '<h3>Friends</h3><br>';
         html += confirmedFriends.map(friend => `
           <div class="friend-item">
             <div class="friend-info">
               <img src="${friend.profilePictureUrl || '../media/user.png'}" alt="Avatar" class="avatar" />
-              <strong>${friend.name || '-'}</strong>
+              <div class="friend-name-nick">
+                <strong>${friend.name || '-'}</strong><br>
+                <small class="friend-nick">@${friend.uniquenick || ''}</small>
+              </div>
             </div>
             <div class="friend-actions">
-              <button class="message-btn" title="Message" data-id="${friend._id}">
+              <button class="message-btn" title="Message Friend" data-id="${friend._id}" data-name="${friend.name || '-'}" id="message-friend">
                 <i class="fas fa-comment-alt"></i> 
               </button>
-              <button class="remove-btn" title="Remove" data-id="${friend._id}" data-name="${friend.name || '-'}">
+              <button class="remove-btn" title="Remove Friend" data-id="${friend._id}" data-name="${friend.name || '-'}" id="remove-friend">
                 <i class="fas fa-user-minus"></i>
+              </button>
+              <button class="settings-btn" title="Friend Settings" data-id="${friend._id}" data-name="${friend.name || '-'}" id="friend-settings">
+                <i class="fas fa-cog"></i>
               </button>
             </div>
           </div>

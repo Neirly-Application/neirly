@@ -87,7 +87,6 @@
 
 .search-list li:hover {
   background: var(--search-item-hover, #eaeaea);
-  transform: translateY(-1px);
 }
 
 .search-user-img {
@@ -98,14 +97,34 @@
   border: 2px solid var(--secondary, #ccc);
 }
 
+.search-user-info {
+  display: flex;
+  text-align: left;
+  justify-content: left;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
 .search-user-name {
   font-size: 1rem;
   font-weight: 500;
   color: var(--text-secondary, #555);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: calc(100% - 60px);
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  max-width: 100%;
+}
+
+.search-user-nick {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--text-tertiary, #888);
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  max-width: 100%;
+  margin-top: 2px;
 }
 
 @media (max-width: 600px) {

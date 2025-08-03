@@ -34,7 +34,7 @@ function customConfirm(message) {
     img.className = 'confirm-icon';
 
     const title = document.createElement('h2');
-    title.textContent = 'Oop... wait a second...';
+    title.textContent = 'Wait a second...';
 
     header.appendChild(img);
     header.appendChild(title);

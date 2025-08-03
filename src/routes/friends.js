@@ -88,19 +88,20 @@ router.post('/respond', authMiddleware, async (req, res) => {
 
 router.get('/friends', authMiddleware, async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).populate('friends', 'name email profilePictureUrl');
+    const user = await User.findById(req.user._id).populate('friends', 'name email profilePictureUrl uniquenick');
 
     const pendingNotifs = await Notification.find({
       userId: req.user._id,
       type: 'friend_request',
       read: false
-    }).populate('meta.from', 'name email profilePictureUrl');
+    }).populate('meta.from', 'name email profilePictureUrl uniquenick');
 
     const pendingRequests = pendingNotifs.map(n => ({
       profilePictureUrl: n.meta.from?.profilePictureUrl,
       _id: n._id,
       name: n.meta.from?.name || '-',
-      email: n.meta.from?.email || '-'
+      email: n.meta.from?.email || '-',
+      uniquenick: n.meta.from?.uniquenick || ''
     }));
 
     res.json({

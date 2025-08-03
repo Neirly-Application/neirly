@@ -14,7 +14,10 @@ router.get('/search/users', async (req, res) => {
     const query = q.trim().toLowerCase().replace(/^@/, '');
 
     const users = await User.find({
-      uniquenick: { $regex: `^${query}`, $options: 'i' }
+      $or: [
+        { uniquenick: { $regex: query, $options: 'i' } },
+        { name: { $regex: query, $options: 'i' } }
+      ]
     })
       .limit(100)
       .select('name uniquenick profilePictureUrl');
@@ -34,24 +37,22 @@ router.get('/search', authMiddleware, async (req, res) => {
       return res.status(400).json({ message: 'Query too short.' });
     }
 
-    const query = q.trim();
+    const query = q.trim().toLowerCase();
 
-    if (query.startsWith('@')) {
-      return res.status(400).json({ message: 'User search must be done via /search/users' });
-    }
+    const users = await User.find({
+      $or: [
+        { name: { $regex: query, $options: 'i' } },
+        { uniquenick: { $regex: query, $options: 'i' } }
+      ]
+    })
+      .limit(100)
+      .select('name uniquenick profilePictureUrl');
 
-    const results = {
-      posts: [],
-      tags: [],
-      users: [],
-    };
-
-    return res.json(results);
+    return res.json({ users });
   } catch (err) {
     console.error('[ERROR] /search:', err);
     res.status(500).json({ message: 'Internal server error.' });
   }
 });
-
 
 module.exports = router;
