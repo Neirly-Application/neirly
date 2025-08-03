@@ -5,6 +5,16 @@ img {
 
 .profile-form {
   max-width: 500px;
+  width: 100%;
+  padding: 0 16px;
+}
+
+@media (max-width: 768px) {
+  .profile-form {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 12px;
+  }
 }
 
 .form-group {
@@ -21,11 +31,38 @@ img {
 
 .profile-pic-wrapper {
   position: relative;
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 150px;
   height: 150px;
-  margin-bottom: 10px;
+  margin-bottom: 40px;
+  margin-left: auto;
+  margin-right: auto;
   cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .profile-pic-wrapper {
+    display: flex;
+  }
+}
+
+.edit-icon {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-icon {
+  bottom: 8px;
+  right: 8px;
 }
 
 .profile-img {
@@ -37,20 +74,45 @@ img {
 }
 
 .profile-img-editor {
-  display:none;
-  position:fixed;
-  inset:0;
+  display: none;
+  position: fixed;
+  inset: 0;
   background: var(--color-rgba-000-06);
-  justify-content:center;
-  align-items:center;
-  z-index:1000;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .profile-img-editor-content {
   background: var(--accent);
-  padding:20px;
-  border-radius:10px;
-  text-align:center;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.fas-input {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+}
+
+.fas-input .icon-left {
+  font-size: 1.4rem;
+  color: #555;
+  line-height: 1.5;
+  padding-top: 10px;
+}
+
+.fas-input input,
+.fas-input textarea {
+  flex: 1;
+  font-size: 1rem;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .edit-icon {

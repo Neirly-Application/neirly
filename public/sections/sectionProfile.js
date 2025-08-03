@@ -47,73 +47,54 @@ export default async function loadProfileSection(content, user) {
     <h2><i class="fas fa-user"></i> Profile</h2>
 
     <form id="profile-form" class="profile-form" enctype="multipart/form-data" autocomplete="off">
-      <div class="form-group">
-        <div class="profile-pic-wrapper">
-          <img id="profile-pic"
-              src="${user.profilePictureUrl || '../media/user.png'}"
-              alt="Profile Picture"
-              class="profile-img" oncontextmenu="return false;"/>
-          <div class="edit-icon">
-            <i class="fas fa-pen" style="color:white;"></i>
-          </div>
+    <div class="form-group">
+      <div class="profile-pic-wrapper">
+        <img id="profile-pic"
+            src="${user.profilePictureUrl || '../media/user.png'}"
+            alt="Profile Picture"
+            class="profile-img"
+            oncontextmenu="return false;" />
+
+        <div class="edit-icon" title="Edit avatar">
+          <i class="fas fa-pen" style="color:white;"></i>
         </div>
-        <input type="file" id="profilePicInput" accept="image/*" style="display:none;">
       </div>
+      <input type="file" id="profilePicInput" accept="image/*" style="display:none;">
+    </div>
 
-      <div class="form-group">
-        <label>Display name:</label>
-        <input type="text" id="nickname-input" value="${user.nickname || user.name || 'User'}" placeholder="${user.nickname || user.name || 'User'}">
-      </div>
+    <div class="form-group fas-input">
+      <i class="fas fa-user-tag icon-left"></i>
+      <input type="text" id="nickname-input" value="${user.nickname || user.name || 'User'}" placeholder="Display name">
+    </div>
 
-      <div class="form-group">
-        <label>Nickname:</label>
-        <input type="text" id="uniquenick-input"
+    <div class="form-group fas-input">
+      <i class="fas fa-at icon-left"></i>
+      <input type="text" id="uniquenick-input"
               value="${user.uniquenick || ''}"
-              placeholder="${user.uniquenick || ''}"
+              placeholder="Nickname"
               maxlength="24"
               ${canEditUniquenick ? '' : 'disabled'}
               title="${canEditUniquenick ? '' : 'You can change your nickname every 7 days.'}">
-        ${canEditUniquenick ? '' : `<small style="color: var(--color-888);">Next change: ${nextChangeDateReadable}</small>`}
-      </div>
-      <div class="form-group about-group" style="position:relative;">
-        <label>About me:</label>
-        <div style="position:relative;">
-          <textarea id="aboutme-input" 
-            placeholder="Who are you? What are you passionate about? Tell us about you here, in a few lines.">${user.about_me || 'Who are you? What are you passionate about? Tell us about you here, in a few lines.'}</textarea>
-          <span id="about-counter">250</span>
-        </div>
-      </div>
-
-      <div class="form-group"><label>Email:</label>
-      <input type="email" value="${maskEmail(user.email)}" readonly style="font-family: monospace;">
-      </div>
-      <div class="form-group"><label>Date of birth:</label>
-        <input type="date" value="${user.birthdate ? user.birthdate.split('T')[0] : ''}" readonly>
-      </div>
-    </form>
-
-    <div id="cropper-modal" class="profile-img-editor">
-      <div class="profile-img-editor-content">
-        <h3 style="margin-bottom: 10px;">Edit Image</h3>
-        <div style="width: 300px; height: 300px; margin: auto; border-radius: 50%; overflow: hidden;">
-          <img id="cropper-image" oncontextmenu="return false;" style="width: 100%; height: 100%; object-fit: cover;" />
-        </div>
-        <div style="margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 10px;">
-          <i class="fas fa-search-minus"></i>
-          <input type="range" id="cropper-zoom" min="0.5" max="2" step="0.01" value="1" style="width: 150px;">
-          <i class="fas fa-search-plus"></i>
-        </div>
-        <div style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
-          <button id="crop-reset" class="btn-cancel">
-            <i class="fas fa-undo-alt" style="margin-right: 5px;"></i>Reset
-          </button>
-          <button id="crop-cancel" class="btn-cancel">Cancel</button>
-          <button id="crop-confirm" class="btn-submit">Apply</button>
-        </div>
-      </div>
+      ${canEditUniquenick ? '' : `<small style="color: var(--color-888);">Next change: ${nextChangeDateReadable}</small>`}
     </div>
 
+    <div class="form-group fas-input about-group">
+      <i class="fas fa-user-circle icon-left"></i>
+      <textarea id="aboutme-input"
+                placeholder="Who are you? What are you passionate about?">${user.about_me || ''}</textarea>
+      <span id="about-counter">250</span>
+    </div>
 
+    <div class="form-group fas-input">
+      <i class="fas fa-envelope icon-left"></i>
+      <input type="email" value="${maskEmail(user.email)}" readonly style="font-family: monospace;">
+    </div>
+
+    <div class="form-group fas-input">
+      <i class="fas fa-birthday-cake icon-left"></i>
+      <input type="date" value="${user.birthdate ? user.birthdate.split('T')[0] : ''}" readonly>
+    </div>
+    </form>
   `;
 
   const profilePicInput = document.getElementById('profilePicInput');
@@ -187,7 +168,7 @@ export default async function loadProfileSection(content, user) {
 
   document.querySelector('.profile-pic-wrapper').onclick = () => profilePicInput.click();
 
-profilePicInput.onchange = () => {
+  profilePicInput.onchange = () => {
   const file = profilePicInput.files[0];
   if (!file) return;
 
