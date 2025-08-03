@@ -113,4 +113,22 @@ router.get('/friends', authMiddleware, async (req, res) => {
   }
 });
 
+router.delete('/remove/:friendId', authMiddleware, async (req, res) => {
+  const { friendId } = req.params;
+
+  if (!friendId) {
+    return res.status(400).json({ message: 'Friend ID is required.' });
+  }
+
+  try {
+    await User.updateOne({ _id: req.user._id }, { $pull: { friends: friendId } });
+    await User.updateOne({ _id: friendId }, { $pull: { friends: req.user._id } });
+
+    res.json({ message: 'Friend removed successfully.' });
+  } catch (err) {
+    console.error('Error removing friend:', err);
+    res.status(500).json({ message: 'Error while removing friend.' });
+  }
+});
+
 module.exports = router;

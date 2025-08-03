@@ -5,7 +5,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--light-bg);
+  background-color: transparent;
   padding: 4rem 2rem;
   min-height: 100vh;
 }
@@ -54,20 +54,22 @@ form {
 }
 
 .swap-link {
-  margin-top: 1rem;
   font-size: 0.9rem;
   text-align: center;
   color: var(--dark-text);
 }
 
 .swap-link a {
-  color: var(--primary);
+  color: var(--accent);
   text-decoration: none;
+  border-radius: 10px;
+  background-color: var(--main-bg);
+  padding: 8px;
   font-weight: 500;
 }
 
 .swap-link a:hover {
-  text-decoration: underline;
+  cursor: pointer;
 }
 
 .social-login {
@@ -194,6 +196,9 @@ form {
   flex-direction: column;
   gap: 1rem;
   margin-top: 20px;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--primary);
   animation: fadeIn 0.4s ease-in-out;
 }
 
@@ -229,4 +234,28 @@ form {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+body {
+  font-family: Arial, sans-serif;
+  min-width: 400px;
+  margin: auto;
+  box-sizing: border-box;
+  background: var(--animated-bg-complete-profile);
+  background-size: 400% 400%;
+  animation: gradient 10s ease infinite;
+  transition: background 0.5s ease-in-out;
+  color: var(--soft-dark-text);
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
 }

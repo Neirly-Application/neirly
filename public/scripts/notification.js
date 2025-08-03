@@ -4,7 +4,7 @@ function showToast(message, type = 'info', duration = 4000) {
 
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
-  toast.title = 'Oop... wait a second...';
+  toast.title = 'Wait a second...';
   toast.textContent = message;
 
   container.appendChild(toast);

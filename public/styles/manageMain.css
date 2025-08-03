@@ -245,6 +245,51 @@ input[type="file"] {
   padding: 10px;
 }
 
+.friend-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--inputs-border-color);
+  padding: 10px;
+}
+
+.friend-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.friend-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.friend-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.2s ease;
+}
+
+.remove-btn {
+  color: rgb(134, 0, 0);
+}
+
+.remove-btn:hover {
+  color: rgb(251, 17, 17);
+}
+
+.message-btn {
+  color: var(--primary);
+}
+
+.message-btn:hover {
+  color: #007bff;
+}
+
 .activity-log-container {
   margin-top: 20px;
   display: flex;
@@ -320,14 +365,12 @@ input[type="file"] {
   align-items: center;
 }
 
-/* Label e input/select impilati verticalmente */
 .filters label {
   font-size: 14px;
   display: flex;
   flex-direction: column;
 }
 
-/* Input, select e button di base */
 .filters select,
 .filters input[type="date"],
 .filters input[type="time"] {

@@ -8,7 +8,7 @@
     --soft-dark-text: #333;
     --neutral-grey: #D3D3D3;
     --general-shadow: rgba(26, 73, 104, 0.562);
-    --animated-bg-complete-profile: linear-gradient(-45deg, #0033ff38, #b1c1ff26, #6b89ff89, #0033ff43);
+    --animated-bg-complete-profile: linear-gradient(180deg, #1A2A6C, #eff3ff, #1A2A6C);
 
     --premium-bg-color: #FFD700;
     --premium-bg-color-hover: #fff3afd2;

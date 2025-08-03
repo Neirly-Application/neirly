@@ -1,4 +1,4 @@
-import { showToast } from '../scripts/notification.js';
+import { showToast, customConfirm } from '../scripts/notification.js';
 import { stopBGAnimation } from '../scripts/premiumBg.js';
 
 export default async function loadFriendListSection(content, user) {
@@ -22,10 +22,10 @@ export default async function loadFriendListSection(content, user) {
   content.innerHTML = `
     <h2><i class="fas fa-user-friends"></i> Friend List</h2>
     <form id="addFriendForm" class="friend-form">
-      <input type="email" id="friendEmail" placeholder="Email dell'amico" required class="friend-input" />
+      <input type="email" id="friendEmail" placeholder="Friend's email" required class="friend-input" />
       <button type="submit" class="friend-btn">Send Request</button>
     </form>
-    <div id="friendsList">Loading friends...</div>
+    <div id="friendsList"></div>
   `;
 
   const addFriendForm = document.getElementById('addFriendForm');
@@ -92,7 +92,7 @@ export default async function loadFriendListSection(content, user) {
       const data = await res.json();
 
       if (!res.ok) {
-        friendsList.innerHTML = '<p>Errore durante il caricamento amici.</p>';
+        friendsList.innerHTML = '<p>Error while loading friends.</p>';
         return;
       }
 
@@ -116,13 +116,23 @@ export default async function loadFriendListSection(content, user) {
         confirmedFriends.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
         html += '<h3>Friends</h3>';
         html += confirmedFriends.map(friend => `
-              <div class="friend-item">
-                <img src="${friend.profilePictureUrl || '../media/user.png'}" alt="Avatar" class="avatar" />
-                <strong>${friend.name || '-'}</strong>
-              </div>
-            `).join('');
+          <div class="friend-item">
+            <div class="friend-info">
+              <img src="${friend.profilePictureUrl || '../media/user.png'}" alt="Avatar" class="avatar" />
+              <strong>${friend.name || '-'}</strong>
+            </div>
+            <div class="friend-actions">
+              <button class="message-btn" title="Message" data-id="${friend._id}">
+                <i class="fas fa-comment-alt"></i> 
+              </button>
+              <button class="remove-btn" title="Remove" data-id="${friend._id}" data-name="${friend.name || '-'}">
+                <i class="fas fa-user-minus"></i>
+              </button>
+            </div>
+          </div>
+        `).join('');
       } else if (pendingRequests.length === 0) {
-        html += '<p>Nessun amico ancora.</p>';
+        html += '<p>No friend yet.</p>';
       }
 
       friendsList.innerHTML = html;
@@ -141,9 +151,37 @@ export default async function loadFriendListSection(content, user) {
         });
       });
 
+      document.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const friendId = btn.dataset.id;
+          const friendName = btn.dataset.name;
+          const confirmRemoval = await customConfirm(`Are you sure you want to remove ${friendName} from your friend list?`);
+          if (!confirmRemoval) return;
+
+          try {
+            const res = await fetch(`/api/friends/remove/${friendId}`, {
+              method: 'DELETE',
+              credentials: 'include',
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+              showToast(data.message || 'Friend successfully removed.', 'success');
+              loadFriends();
+            } else {
+              showToast(data.message || 'Error while removing friend.', 'error');
+            }
+          } catch (err) {
+            console.error('Network error:', err);
+            showToast('Network error while removing friend.', 'error');
+          }
+        });
+      });
+
     } catch (err) {
       console.error('Errore fetch amici:', err);
-      friendsList.innerHTML = '<p>Errore durante il caricamento amici.</p>';
+      friendsList.innerHTML = '<p>Error while loading friends.</p>';
     }
   }
 
