@@ -16,6 +16,7 @@ import loadSettingsDangerSection from '../sections/sectionSettingsDanger.js';
 import loadSettingsDevicesSection from '../sections/sectionSettingsDevices.js';
 import loadSettingsInfoSection from '../sections/sectionSettingsInfo.js';
 import loadSettingsDeveloperSection from '../sections/sectionSettingsAPI.js';
+import loadSettingsBackupSection from '../sections/sectionSettingsBackup.js';
 import loadSettingsLanguageSection from '../sections/sectionSettingsLanguage.js';
 import loadSettingsNotificationsSection from '../sections/sectionSettingsNotifications.js';
 import loadSettingsPrivacySection from '../sections/sectionSettingsPrivacy.js';
@@ -62,7 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       badges.forEach(badge => {
         if (unreadCount > 0) {
           badge.style.display = 'inline-block';
-          badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+          // badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
           badge.classList.add('vibrate');
         } else {
           badge.style.display = 'none';
@@ -122,6 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         case 'settings-devices': await loadSettingsDevicesSection(content, user); break;
         case 'settings-info': await loadSettingsInfoSection(content, user); break;
         case 'settings-developer': await loadSettingsDeveloperSection(content, user); break;
+        case 'settings-backup': await loadSettingsBackupSection(content, user); break;
         case 'settings-language': await loadSettingsLanguageSection(content, user); break;
         case 'settings-notifications': await loadSettingsNotificationsSection(content, user); break;
         case 'settings-privacy': await loadSettingsPrivacySection(content, user); break;

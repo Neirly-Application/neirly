@@ -1,6 +1,6 @@
 import { stopBGAnimation, stopBubblesAnimation } from '../scripts/premiumBg.js';
 
-export default async function loadSettingsChatsSection(content, user) {
+export default async function loadHomeSection(content, user) {
   stopBubblesAnimation();
   stopBGAnimation();
 
@@ -8,7 +8,7 @@ export default async function loadSettingsChatsSection(content, user) {
   document.body.style.animation = '';
   document.body.style.backgroundSize = '';
   document.body.style.transition = 'background 0.3s ease-in-out';
-  document.title = `Settings - Chats`;
+  document.title = 'Home';
 
   content.style.background = '';
   content.style.transition = 'background 0.3s ease-in-out';
@@ -22,11 +22,17 @@ export default async function loadSettingsChatsSection(content, user) {
   content.style.margin = '';
 
   content.innerHTML = `
+    <div class="backup-section">
       <div class="case-header">
-        <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
-        <h2><i class="fas fa-comment-alt"></i> Chats</h2>
+        <a onclick="history.back()" class="back-arrow-link">
+          <i class="fas fa-arrow-left"></i>
+        </a>
+        <h2><i class="fas fa-floppy-disk"></i> Backups</h2>
       </div>
-        <p>Your chat settings.</p>`;
+
+      <div id="backup" class="backup"></div>
+    </div>
+  `;
 
   
-};
+}

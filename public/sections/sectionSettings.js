@@ -1,6 +1,9 @@
-import { stopBGAnimation } from '../scripts/premiumBg.js';
+import { stopBGAnimation, stopBubblesAnimation } from '../scripts/premiumBg.js';
 
 export default async function loadSettingsSection(content, user) {
+  stopBubblesAnimation();
+  stopBGAnimation();
+
   document.body.style.background = '';
   document.body.style.animation = '';
   document.body.style.backgroundSize = '';
@@ -26,6 +29,7 @@ export default async function loadSettingsSection(content, user) {
         <div class="settings-container">
           <ul class="settings-menu">
             <li><a href="#settings-account"><i class="fas fa-user-shield"></i> Account & Security</a></li>
+            <li><a href="#settings-backup"><i class="fas fa-floppy-disk"></i> Backup</a></li>
             <li><a href="#settings-payments" class="premium"><i class="fas fa-wallet"></i> Plan & Payments</a></li>
             <li><a href="#settings-devices"><i class="fas fa-laptop"></i> Devices</a></li>
             <li><a href="#settings-privacy"><i class="fas fa-lock"></i> Privacy</a></li>
@@ -41,5 +45,5 @@ export default async function loadSettingsSection(content, user) {
         </div>
       `;
 
-  stopBGAnimation();
+  
 };

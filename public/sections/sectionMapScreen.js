@@ -1,6 +1,9 @@
-import { stopBGAnimation } from '../scripts/premiumBg.js';
+import { stopBGAnimation, stopBubblesAnimation } from '../scripts/premiumBg.js';
 
 export default async function loadMapScreenSection(content, user) {
+  stopBubblesAnimation();
+  stopBGAnimation();
+
   document.body.style.background = '';
   document.body.style.animation = '';
   document.body.style.backgroundSize = '';
@@ -153,5 +156,5 @@ export default async function loadMapScreenSection(content, user) {
     }
   });
 
-  stopBGAnimation();
+  
 };

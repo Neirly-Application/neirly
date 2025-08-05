@@ -70,6 +70,7 @@ img {
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
+  border: 1px solid var(--primary);
   display: block;
 }
 
@@ -99,7 +100,7 @@ img {
 
 .fas-input .icon-left {
   font-size: 1.4rem;
-  color: #555;
+  color: var(--primary);
   line-height: 1.5;
   padding-top: 10px;
 }
@@ -109,7 +110,7 @@ img {
   flex: 1;
   font-size: 1rem;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--primary);
   border-radius: 4px;
   width: 100%;
   box-sizing: border-box;
@@ -288,16 +289,8 @@ input[type="file"] {
 .friend-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid var(--inputs-border-color);
-  padding: 10px;
-}
-
-.friend-item {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--inputs-border-color);
+  border-bottom: 1px solid var(--secondary);
   padding: 10px;
 }
 
@@ -315,7 +308,7 @@ input[type="file"] {
 .friend-name {
   font-size: 1rem;
   font-weight: 500;
-  color: var(--text-secondary, #555);
+  color: var(--primary, #555);
   white-space: normal;
   overflow: visible;
   text-overflow: unset;
@@ -325,7 +318,7 @@ input[type="file"] {
 .friend-nick {
   font-size: 0.9rem;
   font-weight: 400;
-  color: var(--text-tertiary, #888);
+  color: var(--main-bg, #888);
   white-space: normal;
   overflow: visible;
   text-overflow: unset;

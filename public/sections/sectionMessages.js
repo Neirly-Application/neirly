@@ -1,8 +1,11 @@
 import loadMessagesList from './sectionMessagesList.js';
 import loadChatWindow from './sectionChatWindow.js';
-import { stopBGAnimation } from '../scripts/premiumBg.js';
+import { stopBGAnimation, stopBubblesAnimation } from '../scripts/premiumBg.js';
 
 export default async function loadMessagesSection(content, user, subSection = 'list', subSectionParams = {}) {
+  stopBubblesAnimation();
+  stopBGAnimation();
+
   document.body.style.background = '';
   document.body.style.animation = '';
   document.body.style.backgroundSize = '';
@@ -49,5 +52,5 @@ export default async function loadMessagesSection(content, user, subSection = 'l
     });
   }
 
-  stopBGAnimation();
+  
 };

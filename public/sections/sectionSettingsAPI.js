@@ -1,6 +1,9 @@
 import { showToast } from '../scripts/notification.js';
 
 export default async function loadSettingsApiKeysSection(content, user) {
+  stopBubblesAnimation();
+  stopBGAnimation();
+
   document.body.style.background = '';
   document.body.style.animation = '';
   document.body.style.backgroundSize = '';

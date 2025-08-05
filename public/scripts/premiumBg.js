@@ -19,3 +19,8 @@ export function stopBGAnimation() {
     rafId = null;
   }
 }
+
+export function stopBubblesAnimation() {
+  const canvas = document.getElementById('bubbles-canvas');
+  if (canvas) canvas.remove();
+}

@@ -1,7 +1,10 @@
 import { showToast, customConfirm } from '../scripts/notification.js';
-import { stopBGAnimation } from '../scripts/premiumBg.js';
+import { stopBGAnimation, stopBubblesAnimation } from '../scripts/premiumBg.js';
 
 export default async function loadFriendListSection(content, user) {
+  stopBubblesAnimation();
+  stopBGAnimation();
+
   document.body.style.background = '';
   document.body.style.animation = '';
   document.body.style.backgroundSize = '';
@@ -119,7 +122,7 @@ export default async function loadFriendListSection(content, user) {
           <div class="friend-item">
             <div class="friend-info">
               <img src="${friend.profilePictureUrl || '../media/user.png'}" alt="Avatar" class="avatar" />
-              <div class="friend-name-nick">
+              <div class="friend-name">
                 <strong>${friend.name || '-'}</strong><br>
                 <small class="friend-nick">@${friend.uniquenick || ''}</small>
               </div>
@@ -192,5 +195,5 @@ export default async function loadFriendListSection(content, user) {
   }
 
   loadFriends();
-  stopBGAnimation();
+  
 };
