@@ -1,4 +1,5 @@
 import { showToast } from '../scripts/notification.js';
+import { stopBGAnimation, stopBubblesAnimation } from '../scripts/premiumBg.js';
 
 export default async function loadSettingsApiKeysSection(content, user) {
   stopBubblesAnimation();

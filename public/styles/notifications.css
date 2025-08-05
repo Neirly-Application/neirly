@@ -20,19 +20,21 @@
   pointer-events: auto;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .toast-container {
     top: 5px;
     bottom: auto;
-    flex-direction: column;
+    flex-direction: column-reverse;
     align-items: center;
     width: 100%;
     padding: 0 10px;
   }
 
   .toast-container .toast {
+    justify-self: center;
+    align-self: center;
     width: 100%;
-    max-width: 95%;
+    max-width: 300px;
     box-sizing: border-box;
   }
 }
