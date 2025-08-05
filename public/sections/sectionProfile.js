@@ -90,7 +90,7 @@ export default async function loadProfileSection(content, user) {
 
     <div class="form-group fas-input">
       <i class="fas fa-envelope icon-left"></i>
-      <input type="email" value="${maskEmail(user.email)}" disabled style="font-family: monospace;">
+      <input type="email" value="${maskEmail(user.email)}" disabled style="font-family: 'Inter', sans-serif;">
     </div>
 
     <div class="form-group fas-input">

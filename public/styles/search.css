@@ -59,7 +59,7 @@
   font-weight: 600;
   margin: 16px 0 10px;
   color: var(--text-primary, #333);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 .search-list {

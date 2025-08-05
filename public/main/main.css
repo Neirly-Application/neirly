@@ -12,7 +12,7 @@
 }
 
 body {
-  font-family: 'Inter', Arial, sans-serif;
+  font-family: 'Inter', sans-serif;
   min-height: 100vh;
   background: var(--animated-bg-main);
   background-size: 100% 200%;
@@ -278,7 +278,7 @@ form textarea {
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  font-family: inherit;
+  font-family: 'Inter', sans-serif;
   color: var(--dark-text);
   resize: vertical;
   box-sizing: border-box;

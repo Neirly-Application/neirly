@@ -44,7 +44,7 @@ p {
 }
 
 code, pre {
-  font-family: 'Fira Mono', Consolas, Monaco, 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
   border-radius: 5px;
   word-break: break-word;
   white-space: pre-wrap;
