@@ -7,4 +7,6 @@ const ActivityLogSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now }
 });
 
+ActivityLogSchema.index({ userId: 1, type: 1, timestamp: -1 });
+
 module.exports = mongoose.model('ActivityLog', ActivityLogSchema);

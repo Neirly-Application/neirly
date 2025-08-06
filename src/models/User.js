@@ -75,19 +75,19 @@ const userSchema = new mongoose.Schema({
                         return this.profileCompleted;
                     }
                   },
-homeSettings: {
-  address: {
-    city: { type: String },
-    country: { type: String },
-    province: { type: String },
-    street: { type: String },
-    zipCode: { type: String },
+  homeSettings: {
+    address: {
+      city: { type: String },
+      country: { type: String },
+      province: { type: String },
+      street: { type: String },
+      zipCode: { type: String },
+      },
+      pets: {
+        hasPets: { type: Boolean, default: false },
+        petTypes: [{ type: String }]
+      },
     },
-    pets: {
-      hasPets: { type: Boolean, default: false },
-      petTypes: [{ type: String }]
-    },
-  },
   coins: { type: Number, default: 100 },
   hasPremium: { type: Boolean, default: false },
   premiumSubscriptionPlan: {
@@ -105,6 +105,16 @@ homeSettings: {
   timestamps: true,
   versionKey: false
 });
+
+userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ uniquenick: 1 }, { unique: true });
+userSchema.index({ roles: 1 });
+userSchema.index({ profileCompleted: 1 });
+userSchema.index({ hasPremium: 1 });
+userSchema.index({ 'apiKey.key': 1 }, { sparse: true, unique: true });
+userSchema.index({ friends: 1 });
+userSchema.index({ recentChats: 1 });
+userSchema.index({ provider: 1 });
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;

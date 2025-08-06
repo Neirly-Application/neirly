@@ -28,6 +28,15 @@ export default async function loadFriendListSection(content, user) {
       <input type="email" id="friendEmail" placeholder="Friend's email" required class="friend-input" />
       <button type="submit" class="friend-btn">Send Request</button>
     </form>
+
+    <div class="friend-requests">
+      <span class="friend-requests-text">You have 0 friend requests</span>
+      <div class="friend-requests-icon-with-badge">
+        <i class="fas fa-user-friends friend-requests-icon"></i>
+        <span class="friend-requests-badge">0</span>
+      </div>
+    </div>
+
     <div id="friendsList"></div>
   `;
 
@@ -100,6 +109,13 @@ export default async function loadFriendListSection(content, user) {
       }
 
       const { confirmedFriends = [], pendingRequests = [] } = data;
+      const reqText = document.querySelector('.friend-requests-text');
+      const reqBadge = document.querySelector('.friend-requests-badge');
+
+      if (reqText && reqBadge) {
+        reqText.textContent = `You have ${pendingRequests.length} friend request${pendingRequests.length !== 1 ? 's' : ''}`;
+        reqBadge.textContent = pendingRequests.length;
+      }
 
       let html = '';
 

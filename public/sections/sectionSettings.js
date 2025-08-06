@@ -33,7 +33,7 @@ export default async function loadSettingsSection(content, user) {
             <li><a href="#settings-payments" class="premium"><i class="fas fa-wallet"></i> Plan & Payments</a></li>
             <li><a href="#settings-devices"><i class="fas fa-laptop"></i> Devices</a></li>
             <li><a href="#settings-privacy"><i class="fas fa-lock"></i> Privacy</a></li>
-            <li><a href="#settings-activity"><i class="fas fa-chart-line"></i> Activit Logs</a></li>
+            <li><a href="#settings-activity"><i class="fas fa-chart-line"></i> Activity Logs</a></li>
             <li><a href="#settings-chats"><i class="fas fa-comment-alt"></i> Chats</a></li>
             <li><a href="#settings-notifications"><i class="fas fa-bell"></i> Notifications</a></li>
             <li><a href="#settings-theme"><i class="fas fa-palette"></i> App Theme</a></li>
@@ -44,6 +44,4 @@ export default async function loadSettingsSection(content, user) {
           </ul>
         </div>
       `;
-
-  
 };
