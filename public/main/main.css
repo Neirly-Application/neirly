@@ -1311,6 +1311,7 @@ body.subsection-active {
 
 .back-arrow-link:hover {
   background-color: #e0e0e0;
+  cursor: pointer;
 }
 
 #pull-to-refresh {

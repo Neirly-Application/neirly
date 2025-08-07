@@ -5,6 +5,9 @@
   margin-bottom: 1rem;
   position: relative;
 }
+.api-key-card:first-child {
+  margin-top: 1rem;
+}
 .api-key-card .label {
   font-weight: 600;
   margin-bottom: 0.5rem;

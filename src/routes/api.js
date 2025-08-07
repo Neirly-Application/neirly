@@ -1,4 +1,3 @@
-// src/routes/api.js  ← montato con app.use('/api/developer', router)
 const express  = require('express');
 const router   = express.Router();
 const crypto   = require('crypto');
