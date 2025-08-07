@@ -145,3 +145,13 @@
     padding-block: 16px;
   }
 }
+
+.remove-search {
+  background: transparent;
+  border: none;
+  color: #f44336;
+  font-size: 18px;
+  margin-left: auto;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}

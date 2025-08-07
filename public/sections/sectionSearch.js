@@ -86,15 +86,38 @@ export default async function loadSearchSection(content, user) {
     results.innerHTML = users.length
       ? `<ul class="search-list">
           ${users.map(ru => `
-            <li class="user-result" data-nick="${ru.uniquenick}" data-name="${ru.name}" data-img="${ru.profilePictureUrl || '../media/user.png'}">
+            <li class="user-result" data-id="${ru._id}" data-nick="${ru.uniquenick}" data-name="${ru.name}" data-img="${ru.profilePictureUrl || '../media/user.png'}">
               <img src="${ru.profilePictureUrl || '../media/user.png'}" alt="${ru.name}" class="search-user-img"/>
               <div class="search-user-info">
                 <span class="search-user-name">${ru.name}</span>
                 <span class="search-user-nick">@${ru.uniquenick}</span>
               </div>
+              <button class="remove-search" title="Remove">&#10005;</button>
             </li>`).join('')}
         </ul>`
       : `<p>No users found.</p>`;
+
+    document.querySelectorAll('.remove-search').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+
+        const li = btn.closest('.user-result');
+        const userId = li.dataset.id;
+
+        try {
+          await fetch(`/api/search/remove-search`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ userId })
+          });
+
+          li.remove();
+        } catch (err) {
+          console.error('Failed to remove search.', err);
+        }
+      });
+    });
 
     document.querySelectorAll('.user-result').forEach(li => {
       li.addEventListener('click', async () => {
@@ -108,6 +131,7 @@ export default async function loadSearchSection(content, user) {
       });
     });
   };
+
 
   const renderGenericResults = ({ posts = [], tags = [], users = [] }) => {
     if (!users.length && !posts.length && !tags.length) {

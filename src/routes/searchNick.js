@@ -68,6 +68,23 @@ router.get('/search/last-searches', authMiddleware, async (req, res) => {
   }
 });
 
+router.post('/search/remove-search', authMiddleware, async (req, res) => {
+  const { userId } = req.body;
+
+  if (!userId) return res.status(400).json({ error: 'Missing userId' });
+
+  try {
+    await User.findByIdAndUpdate(req.user._id, {
+      $pull: { lastSearches: userId }
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to remove search' });
+  }
+});
+
 router.post('/search/add-search', authMiddleware, async (req, res) => {
   const { targetUniquenick } = req.body;
 

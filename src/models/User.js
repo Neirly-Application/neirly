@@ -26,10 +26,7 @@ const userSchema = new mongoose.Schema({
   passwordHash: {
     type: String,
   },
-  lastSearches: [{
-    targetId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    searchedAt: { type: Date, default: Date.now }
-  }],
+  lastSearches: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   apiKey: {
   key: { type: String, default: null },
   description: { type: String },
