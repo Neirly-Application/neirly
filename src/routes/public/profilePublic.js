@@ -1,32 +1,28 @@
 const express = require('express');
-const router = express.Router();
-const User = require('../../models/User');
+const router  = express.Router();
+const User    = require('../../models/User');
+const ApiKey  = require('../../models/ApiKey');
 
-// GET /api/public/profile?nick={uniquenick}
-router.get('/profile', async (req, res) => {
-  try {
-    const nick = req.query.nick;
-    if (!nick) {
-      return res.status(400).json({ message: 'Missing ?nick query parameter.' });
-    }
+router.get('/user-info', async (req, res) => {
+  const apiKey = req.headers.authorization;
+  const nick   = (req.query.nick || '').toLowerCase();
 
-    const user = await require('../../models/User').findOne({ uniquenick: nick.toLowerCase() });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
+  if (!apiKey?.length || !nick)
+    return res.status(400).json({ message: 'Missing API key or ?nick' });
 
-    return res.json({
-      nickname: user.name,
-      uniquenick: user.uniquenick,
-      profilePictureUrl: user.profilePictureUrl || null,
-      about_me: user.about_me || '',
-      join_date: user.join_date,
-      hasPremium: !!user.hasPremium,
-      coins: typeof user.coins === 'number' ? user.coins : 0
-    });
-  } catch (error) {
-    console.error('Error fetching public profile:', error);
-    return res.status(500).json({ message: 'Internal server error.' });
-  }
+  const valid = await ApiKey.findOne({ key: apiKey, status: 'active' });
+  if (!valid)   return res.status(403).json({ message: 'Invalid or revoked API key' });
+
+  const user = await User.findOne({ uniquenick: nick });
+  if (!user)    return res.status(404).json({ message: 'User not found' });
+
+  res.json({
+    username: user.name,
+    profilePictureUrl: user.profilePictureUrl,
+    uniquenick: user.uniquenick,
+    about: user.about_me,
+    id: user._id
+  });
 });
+
 module.exports = router;
