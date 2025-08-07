@@ -4,25 +4,18 @@ export default async function loadSearchSection(content, user) {
   stopBubblesAnimation();
   stopBGAnimation();
 
-  Object.assign(document.body.style, {
-    background: '',
-    animation: '',
-    backgroundSize: '',
-    transition: 'background 0.2s ease-in-out',
-  });
-
-  Object.assign(content.style, {
-    background: '',
-    transition: 'background 0.2s ease-in-out',
-    display: '',
-    flexDirection: '',
-    justifyContent: '',
-    alignItems: '',
-    height: '',
-    overflow: '',
-    padding: '',
-    margin: '',
-  });
+  document.body.style.transition = 'background 0.2s ease-in-out';
+  content.style.transition = 'background 0.2s ease-in-out';
+  document.body.style.background = '';
+  content.style.background = '';
+  content.style.display = '';
+  content.style.flexDirection = '';
+  content.style.justifyContent = '';
+  content.style.alignItems = '';
+  content.style.height = '';
+  content.style.overflow = '';
+  content.style.padding = '';
+  content.style.margin = '';
 
   document.title = 'Search';
 
@@ -53,85 +46,43 @@ export default async function loadSearchSection(content, user) {
     if (query === recentSavedQuery) return;
     recentSavedQuery = query;
 
-    try {
-      await fetch('/api/search/add-search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ query }),
-      });
-    } catch (err) {
-      console.warn('Failed to save text search', err);
-    }
+    fetch('/api/search/add-search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ query }),
+    }).catch(err => console.warn('Failed to save text search', err));
   };
 
-  const saveUserSearch = async (user) => {
-    try {
-      await fetch('/api/search/add-search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({
-          targetUniquenick: user.uniquenick,
-          name: user.name,
-          profilePictureUrl: user.profilePictureUrl
-        }),
-      });
-    } catch (err) {
-      console.warn('Failed to save user search', err);
-    }
+  const saveUserSearch = (user) => {
+    fetch('/api/search/add-search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ targetUniquenick: user.uniquenick }),
+    }).catch(err => console.warn('Failed to save user search', err));
   };
 
   const renderUsers = (users = []) => {
-    results.innerHTML = users.length
-      ? `<ul class="search-list">
-          ${users.map(ru => `
-            <li class="user-result" data-id="${ru._id}" data-nick="${ru.uniquenick}" data-name="${ru.name}" data-img="${ru.profilePictureUrl || '../media/user.png'}">
-              <img src="${ru.profilePictureUrl || '../media/user.png'}" alt="${ru.name}" class="search-user-img"/>
-              <div class="search-user-info">
-                <span class="search-user-name">${ru.name}</span>
-                <span class="search-user-nick">@${ru.uniquenick}</span>
-              </div>
-              <button class="remove-search" title="Remove">&#10005;</button>
-            </li>`).join('')}
-        </ul>`
-      : `<p>Search now for a user you are interested to know!.</p>`;
+    if (!users.length) {
+      results.innerHTML = `<p>Search now for a user you are interested to know!.</p>`;
+      return;
+    }
 
-    document.querySelectorAll('.remove-search').forEach(btn => {
-      btn.addEventListener('click', async (e) => {
-        e.stopPropagation();
-
-        const li = btn.closest('.user-result');
-        const userId = li.dataset.id;
-
-        try {
-          await fetch(`/api/search/remove-search`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ userId })
-          });
-
-          li.remove();
-        } catch (err) {
-          console.error('Failed to remove search.', err);
-        }
-      });
-    });
-
-    document.querySelectorAll('.user-result').forEach(li => {
-      li.addEventListener('click', async () => {
-        const user = {
-          name: li.dataset.name,
-          uniquenick: li.dataset.nick,
-          profilePictureUrl: li.dataset.img
-        };
-        await saveUserSearch(user);
-        // Profile navigation or other behaviors here.
-      });
-    });
+    results.innerHTML = `
+      <ul class="search-list">
+        ${users.map(ru => `
+          <li class="user-result" data-id="${ru._id}" data-nick="${ru.uniquenick}" data-name="${ru.name}" data-img="${ru.profilePictureUrl || '../media/user.png'}">
+            <img src="${ru.profilePictureUrl || '../media/user.png'}" alt="${ru.name}" class="search-user-img"/>
+            <div class="search-user-info">
+              <span class="search-user-name">${ru.name}</span>
+              <span class="search-user-nick">@${ru.uniquenick}</span>
+            </div>
+            <button class="remove-search" title="Remove">&#10005;</button>
+          </li>`).join('')}
+      </ul>
+    `;
   };
-
 
   const renderGenericResults = ({ posts = [], tags = [], users = [] }) => {
     if (!users.length && !posts.length && !tags.length) {
@@ -162,18 +113,41 @@ export default async function loadSearchSection(content, user) {
           ${tags.map(t => `<li>#${t.name}</li>`).join('')}
         </ul>` : ''}
     `;
-
-    document.querySelectorAll('.user-result').forEach(li => {
-      li.addEventListener('click', async () => {
-        const user = {
-          name: li.dataset.name,
-          uniquenick: li.dataset.nick,
-          profilePictureUrl: li.dataset.img
-        };
-        await saveUserSearch(user);
-      });
-    });
   };
+
+  results.addEventListener('click', async (e) => {
+    const target = e.target;
+
+    if (target.classList.contains('remove-search')) {
+      e.stopPropagation();
+      const li = target.closest('.user-result');
+      if (!li) return;
+
+      const userId = li.dataset.id;
+      try {
+        await fetch(`/api/search/remove-search`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ userId }),
+        });
+        li.remove();
+      } catch (err) {
+        console.error('Failed to remove search.', err);
+      }
+      return;
+    }
+
+    const li = target.closest('.user-result');
+    if (li) {
+      const user = {
+        name: li.dataset.name,
+        uniquenick: li.dataset.nick,
+        profilePictureUrl: li.dataset.img,
+      };
+      saveUserSearch(user);
+    }
+  });
 
   const loadLastSearches = async () => {
     try {
@@ -207,7 +181,7 @@ export default async function loadSearchSection(content, user) {
         const json = await res.json();
         renderUsers(json?.users || []);
       } else {
-        await saveTextSearch(query);
+        saveTextSearch(query); // non aspetto
 
         const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`, { credentials: 'include' });
         const json = await res.json();

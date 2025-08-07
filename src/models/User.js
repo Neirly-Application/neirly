@@ -107,6 +107,7 @@ const userSchema = new mongoose.Schema({
   versionKey: false
 });
 
+UserSchema.index({ name: 1 });
 userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ uniquenick: 1 }, { unique: true });
 userSchema.index({ roles: 1 });
