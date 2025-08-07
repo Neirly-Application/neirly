@@ -95,7 +95,7 @@ export default async function loadSearchSection(content, user) {
               <button class="remove-search" title="Remove">&#10005;</button>
             </li>`).join('')}
         </ul>`
-      : `<p>No users found.</p>`;
+      : `<p>Search now for a user you are interested to know!.</p>`;
 
     document.querySelectorAll('.remove-search').forEach(btn => {
       btn.addEventListener('click', async (e) => {
