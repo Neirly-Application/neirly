@@ -1,7 +1,10 @@
 .app-info-container {
   padding: 20px;
   line-height: 1.6;
-  font-size: 15px;
+  font-size: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+  margin-top: 20px;
 }
 
 .info-section {
@@ -10,12 +13,13 @@
 
 .info-section h3 {
   margin-bottom: 10px;
-  color: #333;
-  font-size: 16px;
+  color: var(--primary);
+  font-size: 1.1rem;
   text-transform: uppercase;
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .info-line {
@@ -23,6 +27,8 @@
   align-items: center;
   gap: 8px;
   margin-bottom: 8px;
+  flex-wrap: wrap;
+  word-break: break-word;
 }
 
 .copy-icon {
@@ -41,4 +47,41 @@ code {
   border-radius: 4px;
   font-family: 'Inter', sans-serif;
   font-size: 13px;
+  word-break: break-word;
+}
+
+/* 🌐 Responsive adjustments */
+@media (max-width: 768px) {
+  .app-info-container {
+    padding: 15px;
+    font-size: 14px;
+  }
+
+  .info-section h3 {
+    font-size: 15px;
+  }
+
+  .info-line {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  code {
+    font-size: 12px;
+    padding: 2px 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-info-container {
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 1.1rem;
+  }
+
+  .info-section h3 {
+    color: var(--primary);
+    font-size: 1.3rem;
+  }
 }
