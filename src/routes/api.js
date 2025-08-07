@@ -1,83 +1,62 @@
-// routes/api.js
-const express = require('express');
-const router = express.Router();
-const User = require('../models/User');
+// src/routes/api.js  ← montato con app.use('/api/developer', router)
+const express  = require('express');
+const router   = express.Router();
+const crypto   = require('crypto');
+const bcrypt   = require('bcryptjs');
+const ApiKey   = require('../models/ApiKey');
 const { authMiddleware } = require('../authMiddleware/authMiddleware');
 
-// --- API key generator ---
-function generateApiKey({ env = 'live', type = 'sk', prefix = 'neirly', length = 32 } = {}) {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let random = '';
-  for (let i = 0; i < length; i++) {
-    random += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return `${prefix}_${type}_${env}_${random}`;
+function generateApiKey() {
+  const randomHex = crypto.randomBytes(24)      // 48 hex → 24 byte
+                         .toString('hex')       // es. "a04d2745d66625f0…"
+                         .toUpperCase()
+                         .slice(0, 32);         // = 32 char
+
+  return `neirly_live_${randomHex}`;            // es. neirly_live_A04D2745D66625F048693E749F9F04BB
 }
 
-// GET current key
-router.get('/developer/current-key', authMiddleware, async (req, res) => {
-  const user = await User.findById(req.user._id);
-  if (!user.apiKey || user.apiKey.status !== 'active' || !user.apiKey.key) {
-    return res.status(404).json({ message: 'No active API key.' });
-  }
-  const { key, description, createdAt, status, lastUsed } = user.apiKey;
-  res.json({ key, description, createdAt, status, lastUsed });
-});
+/* POST /api/developer/generate-key */
+router.post('/generate-key', authMiddleware, async (req,res)=>{
+  const { description='' } = req.body;
+  if (description.trim().length < 10)
+      return res.status(400).json({ message:'Description min 10 chars' });
 
-// POST generate key
-router.post('/developer/generate-key', authMiddleware, async (req, res) => {
-  const user = await User.findById(req.user._id);
-  const { description } = req.body;
+  const exists = await ApiKey.findOne({ owner:req.user._id, status:'active' });
+  if (exists)  return res.status(403).json({ message:'Active key already exists' });
 
-  if (!description || description.trim().length < 10) {
-    return res.status(400).json({ message: 'Please describe how the key will be used (min 10 characters).' });
-  }
+  const key  = generateApiKey();
+  const hash = await bcrypt.hash(key,12);
 
-  if (user.apiKey?.status === 'active' && user.apiKey?.key) {
-    return res.status(403).json({ message: 'An active API key already exists. Revoke it first.' });
-  }
-
-  const key = generateApiKey();
-  user.apiKey = {
+  await ApiKey.create({
     key,
+    hashedKey: hash,
     description: description.trim(),
-    createdAt: new Date(),
-    status: 'active',
-    lastUsed: null
-  };
-  await user.save();
+    owner: req.user._id,
+    permissions:['read:profile']
+  });
 
-  res.status(200).json({ key });
+  res.status(201).json({ key });
 });
 
-// POST revoke key
-router.post('/developer/revoke-key', authMiddleware, async (req, res) => {
-  const user = await User.findById(req.user._id);
-  if (!user.apiKey || user.apiKey.status !== 'active' || !user.apiKey.key) {
-    return res.status(400).json({ message: 'No active API key to revoke.' });
-  }
-  user.apiKey.status = 'revoked';
-  await user.save();
-  res.status(200).json({ message: 'API key revoked.' });
-});
-
-// PUBLIC API for SDK-like usage
-router.get('/public/user-info', async (req, res) => {
-  const apiKey = req.headers['authorization'];
-  if (!apiKey || typeof apiKey !== 'string') return res.status(401).json({ message: 'API key required.' });
-
-  const user = await User.findOne({ 'apiKey.key': apiKey, 'apiKey.status': 'active' });
-  if (!user) return res.status(403).json({ message: 'Invalid or revoked API key.' });
-
-  // Example public info response
+/* GET /api/developer/current-key */
+router.get('/current-key', authMiddleware, async (req,res)=>{
+  const doc=await ApiKey.findOne({ owner:req.user._id, status:'active' });
+  if(!doc) return res.status(404).json({ message:'No active API key' });
   res.json({
-    username: user.name,
-    profilePictureUrl: user.profilePictureUrl,
-    uniquenick: user.uniquenick,
-    about: user.about_me,
-    id: user._id
+    key:         doc.key,
+    description: doc.description,
+    createdAt:   doc.createdAt,
+    status:      doc.status,
+    lastUsed:    doc.lastUsedAt
   });
 });
 
+/* POST /api/developer/revoke-key */
+router.post('/revoke-key', authMiddleware, async (req,res)=>{
+  const doc=await ApiKey.findOne({ owner:req.user._id, status:'active' });
+  if(!doc) return res.status(400).json({ message:'No active key to revoke' });
+  doc.status='revoked'; await doc.save();
+  res.json({ message:'API key revoked' });
+});
 
 module.exports = router;
