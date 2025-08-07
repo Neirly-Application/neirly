@@ -111,7 +111,6 @@ userSchema.index({ uniquenick: 1 }, { unique: true });
 userSchema.index({ roles: 1 });
 userSchema.index({ profileCompleted: 1 });
 userSchema.index({ hasPremium: 1 });
-userSchema.index({ 'apiKey.key': 1 }, { sparse: true, unique: true });
 userSchema.index({ friends: 1 });
 userSchema.index({ recentChats: 1 });
 userSchema.index({ provider: 1 });

@@ -6,21 +6,36 @@ const Notification = require('../models/Notification');
 const mongoose = require('mongoose');
 
 router.post('/friends/request', authMiddleware, async (req, res) => {
-  const { email } = req.body;
-  if (!email) return res.status(400).json({ message: 'Email richiesta' });
-  if (email === req.user.email) return res.status(400).json({ message: "You can't add yourself!" });
+  const { uniquenick } = req.body;
+
+  if (!uniquenick) {
+    return res.status(400).json({ message: 'Nickname is required.' });
+  }
 
   try {
     const [targetUser, requestingUser] = await Promise.all([
-      User.findOne({ email }).select('_id friends').lean(),
-      User.findById(req.user._id).select('friends').lean()
+      User.findOne({ uniquenick }).select('_id friends').lean(),
+      User.findById(req.user._id).select('friends name email uniquenick').lean()
     ]);
 
-    if (!targetUser) return res.status(404).json({ message: 'User not found.' });
-    if (!requestingUser) return res.status(404).json({ message: 'Authenticated user not found.' });
+    if (!targetUser) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
 
-    const alreadyFriends = targetUser.friends?.includes(req.user._id) || requestingUser.friends?.includes(targetUser._id);
-    if (alreadyFriends) return res.status(400).json({ message: "You're already friends." });
+    if (!requestingUser) {
+      return res.status(404).json({ message: 'Authenticated user not found.' });
+    }
+
+    if (targetUser._id.toString() === req.user._id.toString()) {
+      return res.status(400).json({ message: "You can't add yourself." });
+    }
+
+    const alreadyFriends =
+      targetUser.friends?.includes(req.user._id) ||
+      requestingUser.friends?.includes(targetUser._id);
+    if (alreadyFriends) {
+      return res.status(400).json({ message: "You're already friends." });
+    }
 
     const alreadyRequested = await Notification.exists({
       userId: targetUser._id,
@@ -39,24 +54,27 @@ router.post('/friends/request', authMiddleware, async (req, res) => {
       read: false
     });
     if (heAlreadyRequestedMe) {
-      return res.status(400).json({ message: "This user has already sent you a friend request. You can accept it instead." });
+      return res.status(400).json({
+        message: "This user already sent you a friend request. You can accept it instead."
+      });
     }
 
-    const notifica = new Notification({
+    const notification = new Notification({
       userId: targetUser._id,
-      title: 'Friend Request.',
-      message: `${req.user.name || req.user.email} sent you a friend request!`,
+      title: 'Friend Request',
+      message: `${requestingUser.name || requestingUser.uniquenick} sent you a friend request!`,
       type: 'friend_request',
       read: false,
       meta: {
         from: req.user._id,
-        fromName: req.user.name || req.user.email
+        fromName: requestingUser.name || requestingUser.uniquenick
       },
       date: new Date()
     });
 
-    await notifica.save();
-    res.json({ message: 'Pending request.' });
+    await notification.save();
+    res.json({ message: 'Friend request sent.' });
+
   } catch (err) {
     console.error('Friend request error:', err);
     res.status(500).json({ message: 'Server error.' });
@@ -105,9 +123,31 @@ router.post('/friends/respond', authMiddleware, async (req, res) => {
   }
 });
 
+router.delete('/friends/cancel/:notificationId', authMiddleware, async (req, res) => {
+  const { notificationId } = req.params;
+
+  try {
+    const notif = await Notification.findOne({
+      _id: notificationId,
+      'meta.from': req.user._id,
+      type: 'friend_request',
+      read: false
+    });
+
+    if (!notif) return res.status(404).json({ message: 'Request not found.' });
+
+    await notif.deleteOne();
+    res.json({ message: 'Request successfully cancelled.' });
+
+  } catch (err) {
+    console.error('Error cancelling request:', err);
+    res.status(500).json({ message: 'Server error.' });
+  }
+});
+
 router.get('/friends', authMiddleware, async (req, res) => {
   try {
-    const [user, pendingNotifs] = await Promise.all([
+    const [user, receivedNotifs, sentNotifs] = await Promise.all([
       User.findById(req.user._id)
         .populate('friends', 'name email profilePictureUrl uniquenick')
         .lean(),
@@ -116,13 +156,20 @@ router.get('/friends', authMiddleware, async (req, res) => {
         type: 'friend_request',
         read: false
       })
-      .populate('meta.from', 'name email profilePictureUrl uniquenick')
-      .lean()
+        .populate('meta.from', 'name email profilePictureUrl uniquenick')
+        .lean(),
+      Notification.find({
+        'meta.from': req.user._id,
+        type: 'friend_request',
+        read: false
+      })
+        .populate('userId', 'name email profilePictureUrl uniquenick')
+        .lean()
     ]);
 
     if (!user) return res.status(404).json({ message: 'User not found.' });
 
-    const pendingRequests = pendingNotifs.map(n => ({
+    const pendingRequests = receivedNotifs.map(n => ({
       profilePictureUrl: n.meta.from?.profilePictureUrl,
       _id: n._id,
       name: n.meta.from?.name || '-',
@@ -130,9 +177,18 @@ router.get('/friends', authMiddleware, async (req, res) => {
       uniquenick: n.meta.from?.uniquenick || ''
     }));
 
+    const sentRequests = sentNotifs.map(n => ({
+      profilePictureUrl: n.userId?.profilePictureUrl,
+      _id: n._id,
+      name: n.userId?.name || '-',
+      email: n.userId?.email || '-',
+      uniquenick: n.userId?.uniquenick || ''
+    }));
+
     res.json({
       confirmedFriends: user.friends || [],
-      pendingRequests
+      pendingRequests,
+      sentRequests
     });
   } catch (err) {
     console.error('Error while loading friends:', err);

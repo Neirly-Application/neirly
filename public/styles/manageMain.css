@@ -238,20 +238,54 @@ input[type="file"] {
 }
 
 .friend-form {
-  margin-bottom: 20px;
+  position: relative;
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  width: 100%;
 }
 
 .friend-input {
-  padding: 8px;
-  width: 60%;
-  min-width: 200px;
+  width: 100%;
+  height: 60px;
+  padding: 10px 50px 10px 12px;
   box-sizing: border-box;
+  border: 1px solid var(--primary);
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+.friend-form input {
+  padding-left: 20px;
+}
+
+.friend-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: var(--primary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.friend-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.friend-btn:focus {
+  outline: 2px solid var(--primary);
 }
 
 .friend-request-card {
+  background-color: transparent;
   border: 1px solid var(--color-eee);
   padding: 10px;
   margin-bottom: 10px;
@@ -328,7 +362,7 @@ input[type="file"] {
 
 .friend-actions {
   display: flex;
-  gap: 10px;
+  gap: auto;
 }
 
 .friend-actions button {
@@ -361,6 +395,7 @@ input[type="file"] {
 
 .friend-requests-text {
   font-size: 1rem;
+  margin-right: 20px;
 }
 
 .friend-requests-icon {
@@ -380,6 +415,65 @@ input[type="file"] {
   border-radius: 50%;
   padding: 3px 8px;
   font-size: 0.7rem;
+}
+
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 9999;
+  overflow-y: hidden;
+}
+.modal.hidden { display: none; }
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  min-height: 20vh;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px; right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.modal-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+  margin-top: 25px;
+}
+
+.modal-tabs .tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  background: #ddd;
+  margin: 0 5px;
+  border-radius: 5px;
+  transition: background 0.2s;
+}
+
+.modal-tabs .tab.active {
+  background: #007bff;
+  color: white;
+}
+
+.requests-section {
+  display: none;
+}
+.requests-section.active {
+  display: block;
 }
 
 

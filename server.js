@@ -154,15 +154,29 @@ app.get('/', (req, res) => {
   res.sendFile(pathModule.join(__dirname, 'index.html'));
 });
 
+app.use((req, res, next) => {
+  logWarn(`404 - Not found: ${req.originalUrl}`);
+  res.status(404).sendFile(pathModule.join(__dirname, 'public', '404.html'));
+});
+
 logDebug("JWT_SECRET loaded: " + process.env.JWT_SECRET);
 logDebug("Connecting to MongoDB...");
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
-})
-  .then(() => {
+}).then(async () => {
     logSuccess("MongoDB connection successful");
+
+    const User = require('./src/models/User');
+
+    try {
+      await User.syncIndexes();
+      logSuccess("User indexes synced successfully");
+    } catch (syncErr) {
+      logError("Failed to sync User indexes: " + syncErr);
+    }
+
     const port = process.env.PORT || 3000;
     app.listen(port, () => {
       logSuccess(`Server started on port ${port}`);
@@ -171,11 +185,3 @@ mongoose.connect(process.env.MONGO_URI, {
     process.stdin.resume();
     process.stdin.pause();
   })
-  .catch((err) => {
-    logError("Failed to connect to MongoDB: " + err);
-  });
-
-app.use((req, res, next) => {
-  logWarn(`404 - Not found: ${req.originalUrl}`);
-  res.status(404).sendFile(pathModule.join(__dirname, 'public', '404.html'));
-});
