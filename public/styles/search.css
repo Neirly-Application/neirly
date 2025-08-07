@@ -86,7 +86,6 @@
   cursor: pointer;
   transition: background 0.2s ease, transform 0.1s ease;
   border-bottom: 1px solid rgba(44, 44, 44, 0.696);
-  border-radius: 10px;
 }
 
 .search-list li:hover {

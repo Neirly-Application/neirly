@@ -55,4 +55,47 @@ router.get('/search', authMiddleware, async (req, res) => {
   }
 });
 
+router.get('/search/last-searches', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate('lastSearches', 'name uniquenick profilePictureUrl');
+
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    res.json({ searches: user.lastSearches.slice(-10).reverse() });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.post('/search/add-search', authMiddleware, async (req, res) => {
+  const { targetUniquenick } = req.body;
+
+  if (!targetUniquenick) return res.status(400).json({ error: 'Missing targetUniquenick' });
+
+  try {
+    const currentUser = await User.findById(req.user._id);
+    const targetUser = await User.findOne({ uniquenick: targetUniquenick });
+
+    if (!targetUser) return res.status(404).json({ error: 'Target user not found' });
+
+    currentUser.lastSearches = currentUser.lastSearches.filter(
+      id => id.toString() !== targetUser._id.toString()
+    );
+
+    currentUser.lastSearches.push(targetUser._id);
+
+    if (currentUser.lastSearches.length > 20) {
+      currentUser.lastSearches = currentUser.lastSearches.slice(-20);
+    }
+
+    await currentUser.save();
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to save search' });
+  }
+});
+
 module.exports = router;
