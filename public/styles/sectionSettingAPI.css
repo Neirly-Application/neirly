@@ -4,12 +4,6 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   color: #2c3e50;
 }
-<<<<<<< HEAD
-.api-key-card:first-child {
-  margin-top: 1rem;
-}
-.api-key-card .label {
-=======
 
 /* Header */
 .api-header {
@@ -50,7 +44,6 @@
 .header-title h1 {
   margin: 0;
   font-size: 1.5rem;
->>>>>>> 8768086 (Refactor API key handling and improve middleware functionality)
   font-weight: 600;
   color: #2c3e50;
 }
