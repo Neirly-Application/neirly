@@ -1088,7 +1088,7 @@ form button:focus-visible {
 }
 
 .settings-menu a.danger {
-  color: #d9534f;
+  color: var(--danger-text-color);
 }
 
 .settings-menu a.premium {
@@ -1101,8 +1101,8 @@ form button:focus-visible {
 }
 
 .settings-menu a.danger:hover {
-  background: #d9534f;
-  color: #ffd2d0;
+  background: var(--danger-bg-color-hover);
+  color: var(--danger-text-color-hover);
 }
 
 .settings-menu a.premium:hover {
@@ -1133,7 +1133,7 @@ body.subsection-active {
 }
 
 .card {
-    background: white;
+    background: var(--accent);
     border: 1px solid #ddd;
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -1345,5 +1345,76 @@ body.subsection-active {
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .custom-tooltip {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .custom-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 50%;
+    left: 105%;
+    transform: translateY(-50%);
+    background-color: var(--primary);
+    color: var(--accent);
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    white-space: normal;
+    max-width: 400px;
+    min-width: 200px;
+    width: 100%;
+    height: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .custom-tooltip::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent transparent transparent var(--main-bg);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 1000;
+  }
+
+  .custom-tooltip.premium::after {
+    background-color: var(--premium-bg-color);
+    color: var(--premium-text-color-accent);
+  }
+
+  .custom-tooltip.premium::before {
+    border-color: transparent transparent transparent var(--premium-bg-color);
+  }
+
+  .custom-tooltip.danger::after {
+    background-color: var(--danger-bg-color-hover);
+    color: var(--danger-text-color-hover);
+  }
+
+  .custom-tooltip.danger::before {
+    border-color: transparent transparent transparent var(--danger-bg-color-hover);
+  }
+
+  .custom-tooltip:hover::after,
+  .custom-tooltip:hover::before {
+    opacity: 1;
+  }
+
+  .custom-tooltip:hover::after {
+    transform: translateY(-50%) translateX(2px);
   }
 }

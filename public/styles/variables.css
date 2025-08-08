@@ -64,6 +64,10 @@
 
   --friend-requests-bg: #ffffff;
 
+  --danger-text-color: #d9534f;
+  --danger-bg-color-hover: #d9534f;
+  --danger-text-color-hover: #ffe3e2;
+
   --chat-hover: rgba(162, 219, 245, 0.5);
 
   --error: #e74c3c;
