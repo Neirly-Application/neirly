@@ -78,7 +78,7 @@ export default async function loadSearchSection(content, user) {
               <span class="search-user-name">${ru.name}</span>
               <span class="search-user-nick">@${ru.uniquenick}</span>
             </div>
-            <button class="remove-search" title="Remove">&#10005;</button>
+            <button class="remove-search" title="Remove this search">&#10005;</button>
           </li>`).join('')}
       </ul>
     `;
