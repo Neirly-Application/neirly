@@ -39,7 +39,7 @@ router.get('/profile/check-nick', async (req, res) => {
   }
 });
 
-router.get('/profile', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const user = req.user;
 

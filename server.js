@@ -2,6 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
+/* ---------------------------------------------------------------------------
+ *  Logging utilities (color-coded output)
+ * ------------------------------------------------------------------------- */
 const red = '\x1b[31m';
 const brightRed = '\x1b[91m';
 const yellow = '\x1b[33m';
@@ -19,27 +22,14 @@ const logError = msg => console.error(`${brightRed}[ERROR]${reset} ${msg}`);
 const logInfo = msg => console.log(`${blue}[INFO]${reset} ${msg}`);
 const logSuccess = msg => console.log(`${green}[SUCCESS]${reset} ${msg}`);
 
+/* ---------------------------------------------------------------------------
+ *  Dependency verification & auto-install
+ * ------------------------------------------------------------------------- */
 const requiredPackages = [
-  "bcrypt",
-  "cookie-parser",
-  "cors",
-  "discord.js",
-  "dotenv",
-  "express",
-  "express-session",
-  "jsonwebtoken",
-  "leo-profanity",
-  "mongo",
-  "mongoose",
-  "multer",
-  "ngrok",
-  "node-fetch",
-  "nodemailer",
-  "passport",
-  "passport-discord",
-  "passport-google-oauth20",
-  "passport-local",
-  "ua-parser-js"
+  "bcrypt", "cookie-parser", "cors", "discord.js", "dotenv", "express",
+  "express-session", "jsonwebtoken", "leo-profanity", "mongo", "mongoose",
+  "multer", "ngrok", "node-fetch", "nodemailer", "passport", "passport-discord",
+  "passport-google-oauth20", "passport-local", "ua-parser-js"
 ];
 
 const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json')));
@@ -71,14 +61,20 @@ function checkAndInstall(packageName) {
   logSuccess(`Installed "${packageName}".`);
 }
 
-logDebug("Checking and installing required packages...");
+logDebug("Checking required packages...");
 for (const pkg of requiredPackages) {
   checkAndInstall(pkg);
 }
 
+/* ---------------------------------------------------------------------------
+ *  Environment variables
+ * ------------------------------------------------------------------------- */
 logDebug("Loading environment variables...");
 require('dotenv').config();
 
+/* ---------------------------------------------------------------------------
+ *  Core framework imports
+ * ------------------------------------------------------------------------- */
 logDebug("Importing core modules...");
 const express = require('express');
 const cors = require('cors');
@@ -89,11 +85,16 @@ const pathModule = require('path');
 
 const app = express();
 
-// PUBLIC API
-const profilePublicRouter = require('./src/routes/public/profilePublic.js');
-
-logDebug("Importing custom middleware and routers...");
+/* ---------------------------------------------------------------------------
+ *  Custom middleware and route imports
+ * ------------------------------------------------------------------------- */
 const { authMiddleware } = require('./src/authMiddleware/authMiddleware');
+
+// Developer API (API key)
+const profilePublicRouter = require('./src/routes/public/profilePublic.js');
+const apiRouter = require('./src/routes/api');
+
+// JWT-protected client APIs
 const profileRouter = require('./src/routes/profile');
 const notificationsRouter = require('./src/routes/notifications');
 const chatsRouter = require('./src/routes/chatsRouter');
@@ -109,56 +110,79 @@ const banUserRouter = require('./src/routes/banUser');
 const devicesRouter = require('./src/routes/devices');
 const deleteUserRouter = require('./src/routes/deleteUser');
 const nearMeRouter = require('./src/routes/nearMe');
-const apiRouter = require('./src/routes/api');
 const searchNickRouter = require('./src/routes/searchNick.js');
 
-
-
+/* ---------------------------------------------------------------------------
+ *  Additional service initialization
+ * ------------------------------------------------------------------------- */
 logDebug("Initializing passport configuration...");
 require('./src/config/passport');
 
 logDebug("Starting Discord bot...");
 require('./src/discordBot');
 
-logDebug("Applying express middleware...");
+/* ---------------------------------------------------------------------------
+ *  Global middleware
+ * ------------------------------------------------------------------------- */
+logDebug("Applying global Express middleware...");
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(pathModule.join(__dirname, 'public')));
 app.use(passport.initialize());
 
-// PUBLIC API
-app.use('/api/public', profilePublicRouter)
+/* ---------------------------------------------------------------------------
+ *  DEVELOPER API (versioned)
+ *  Public endpoints require API key
+ * ------------------------------------------------------------------------- */
+const v1 = express.Router();
+v1.use('/public', profilePublicRouter);
+v1.use('/developer', apiRouter);
+app.use('/api/v1', v1);
 
-logDebug("Registering routes...");
-app.use('/user_pfps', express.static(pathModule.join(__dirname, 'user_pfps')));
+/* ---------------------------------------------------------------------------
+ *  CLIENT API (no version in path)
+ *  Used by the web/mobile client after login
+ * ------------------------------------------------------------------------- */
 app.use('/api/auth', authenticateRouter);
 app.use('/api/auth', forceLogoutRouter);
 app.use('/api/auth', banUserRouter);
 app.use('/api/auth', adminRouter);
 app.use('/api/auth', completeProfileRouter);
-app.use('/api', notificationsRouter);
-app.use('/api', deleteUserRouter);
-app.use('/api', activityRouter);
-app.use('/api', profileRouter);
-app.use('/api', friendsRouter);
-app.use('/api', privacyRouter);
-app.use('/api', devicesRouter);
-app.use('/api', nearMeRouter);
-app.use('/api', chatsRouter);
-app.use('/api', getUser);
-app.use('/api', searchNickRouter);
-app.use ('/api/developer', apiRouter);
 
+// Protected client endpoints
+app.use('/api/', authMiddleware, notificationsRouter);
+app.use('/api/', authMiddleware, deleteUserRouter);
+app.use('/api/', authMiddleware, activityRouter);
+app.use('/api/profile', authMiddleware, profileRouter);
+app.use('/api/', authMiddleware, friendsRouter);
+app.use('/api/', authMiddleware, privacyRouter);
+app.use('/api/', authMiddleware, devicesRouter);
+app.use('/api/', authMiddleware, nearMeRouter);
+app.use('/api/', authMiddleware, chatsRouter);
+app.use('/api/', authMiddleware, getUser);
+app.use('/api/', authMiddleware, searchNickRouter);
+
+/* ---------------------------------------------------------------------------
+ *  Static file routes
+ * ------------------------------------------------------------------------- */
+app.use('/user_pfps', express.static(pathModule.join(__dirname, 'user_pfps')));
+
+/* ---------------------------------------------------------------------------
+ *  Root route & 404 handling
+ * ------------------------------------------------------------------------- */
 app.get('/', (req, res) => {
   res.sendFile(pathModule.join(__dirname, 'index.html'));
 });
 
-app.use((req, res, next) => {
+app.use((req, res) => {
   logWarn(`404 - Not found: ${req.originalUrl}`);
   res.status(404).sendFile(pathModule.join(__dirname, 'public', '404.html'));
 });
 
+/* ---------------------------------------------------------------------------
+ *  Database connection & server startup
+ * ------------------------------------------------------------------------- */
 logDebug("JWT_SECRET loaded: " + process.env.JWT_SECRET);
 logDebug("Connecting to MongoDB...");
 
@@ -169,7 +193,6 @@ mongoose.connect(process.env.MONGO_URI, {
     logSuccess("MongoDB connection successful");
 
     const User = require('./src/models/User');
-
     try {
       await User.syncIndexes();
       logSuccess("User indexes synced successfully");
@@ -184,4 +207,7 @@ mongoose.connect(process.env.MONGO_URI, {
 
     process.stdin.resume();
     process.stdin.pause();
-  })
+}).catch(err => {
+    logError("MongoDB connection error: " + err);
+    process.exit(1);
+});
