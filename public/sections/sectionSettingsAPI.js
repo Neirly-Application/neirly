@@ -22,16 +22,7 @@ export default async function loadSettingsApiKeysSection(content, user) {
   content.style.padding = '';
   content.style.margin = '';
   content.style = 'transition: background 0.3s ease-in-out;';
-  
-  // Load CSS if not already loaded
-  if (!document.getElementById('api-keys-styles')) {
-    const link = document.createElement('link');
-    link.id = 'api-keys-styles';
-    link.rel = 'stylesheet';
-    link.href = '/css/api-keys.css'; // Adjust path as needed
-    document.head.appendChild(link);
-  }
-  
+    
   content.innerHTML = `
     <div class="api-section">
       <div class="api-header">
@@ -233,7 +224,7 @@ response = requests.get('https://api.neirly.com/v1/profile', headers=headers)</c
     btnRev.disabled = true;
 
     try {
-      const res = await fetch('/api/developer/current-key', { credentials: 'include' });
+      const res = await fetch('/', { credentials: 'include' });
       if (res.status === 404) {
         container.innerHTML = `
           <div class="no-key-state">
@@ -404,7 +395,7 @@ response = requests.get('https://api.neirly.com/v1/profile', headers=headers)</c
       try {
         showModalLoading();
         
-        const res = await fetch('/api/developer/generate-key', {
+        const res = await fetch('/generate-key', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -442,7 +433,7 @@ response = requests.get('https://api.neirly.com/v1/profile', headers=headers)</c
       const originalHTML = btnRev.innerHTML;
       btnRev.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Revoking...</span>';
       
-      const res = await fetch('/api/developer/revoke-key', {
+      const res = await fetch('/revoke-key', {
         method: 'POST',
         credentials: 'include'
       });
