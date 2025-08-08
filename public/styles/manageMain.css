@@ -174,16 +174,12 @@ input[type="file"] {
 }
 
 .btn-delete-account {
-  background-color: var(--color-db4437);
-  color: var(--color-fff);
+  background-color: var(--delete-account-bg-color-hover);
+  color: var(--delete-account-text-color-hover);
   border: none;
   padding: 10px 20px;
   border-radius: 6px;
   cursor: pointer;
-}
-
-.btn-delete-account:active {
-  background-color: var(--color-c0392b);
 }
 
 .input-search-email {

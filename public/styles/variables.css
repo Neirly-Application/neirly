@@ -68,6 +68,12 @@
   --danger-bg-color-hover: #d9534f;
   --danger-text-color-hover: #ffe3e2;
 
+  --logout-bg-color-hover: #d9534f;
+  --logout-text-color-hover: #ffe3e2;
+
+  --delete-account-bg-color-hover: #e61811;
+  --delete-account-text-color-hover: #ffe3e2;
+
   --chat-hover: rgba(162, 219, 245, 0.5);
 
   --error: #e74c3c;
