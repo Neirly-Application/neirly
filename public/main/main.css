@@ -861,6 +861,28 @@ form button:focus-visible {
   transition: all 0.2s ease;
 }
 
+.friend-notification-badge {
+  display: none;
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  background: var(--notification-badge-bg);
+  color: var(--accent);
+  border-radius: 50px;
+  margin-top: 14px;
+  margin-right: 14px;
+  padding: 2px 2px;
+  font-size: 14px !important;
+  font-weight: 500;
+  pointer-events: none;
+  user-select: none;
+  min-width: 10px;
+  min-height: 10px;
+  text-align: center;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
 @keyframes light-shake {
   0%   { transform: translateX(0); }
   5%   { transform: translateX(-1px); }
@@ -872,6 +894,12 @@ form button:focus-visible {
 }
 
 .notification-badge.vibrate {
+  animation: light-shake 1s ease-in-out;
+  animation-delay: 0;
+  animation-iteration-count: infinite;
+}
+
+.friend-notification-badge.vibrate {
   animation: light-shake 1s ease-in-out;
   animation-delay: 0;
   animation-iteration-count: infinite;

@@ -73,6 +73,6 @@ function customConfirm(message) {
     overlay.appendChild(box);
     document.body.appendChild(overlay);
   });
-}
+};
 
 export { showToast, customConfirm };

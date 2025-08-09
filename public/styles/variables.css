@@ -57,12 +57,12 @@
   --home-post-card-gradient-line: linear-gradient(to right, #444, #777, #444);
   --post-like-color: #012bd5;
 
-  --notification-badge-bg: #ff2626;
+  --notification-badge-bg: #63c8ff;
   --notification-unread: linear-gradient(to right, #ff26261a, transparent);
-  --notification-side-color: #ff2626;
-  --notification-bottom-color: linear-gradient(to right, #ff2626, transparent, transparent);
+  --notification-side-color: #63c8ff;
+  --notification-bottom-color: linear-gradient(to right, #63c8ff, transparent, transparent);
 
-  --friend-requests-bg: #ffffff;
+  --friend-requests-bg: #63c8ff88;
   --friend-requests-cancel-btn: #ff3f3f;
   --friend-requests-reject-btn: #af0a0a;
   --friend-requests-accept-btn: #15c615;

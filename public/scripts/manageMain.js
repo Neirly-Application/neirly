@@ -95,6 +95,40 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
+    async function fetchFriendNotificationCount() {
+      try {
+        const res = await fetch('/api/friends', { credentials: 'include' });
+        if (!res.ok) {
+          if (typeof friendsList !== 'undefined') {
+            friendsList.innerHTML = '<p>Error while loading friends.</p>';
+          }
+          return;
+        }
+
+        const { confirmedFriends = [], pendingRequests = [], sentRequests = [] } = await res.json();
+
+        const reqText = document.querySelector('.friend-requests-text');
+        const reqBadge = document.querySelector('.friend-requests-badge');
+        const friendIconBadge = document.querySelector('.friend-notification-badge'); 
+
+        const count = pendingRequests.length;
+
+        if (friendIconBadge) {
+          if (count > 0) {
+            friendIconBadge.style.display = 'inline-block';
+            // friendIconBadge.textContent = count > 99 ? '99+' : count;
+            friendIconBadge.classList.add('vibrate');
+          } else {
+            friendIconBadge.style.display = 'none';
+            friendIconBadge.textContent = '';
+            friendIconBadge.classList.remove('vibrate');
+          }
+        }
+      } catch (err) {
+        console.error('Error while loading friend requests:', err);
+      }
+    }
+
     async function loadSection(section) {
       const thisToken = Symbol('load');
       currentLoadToken = thisToken;
@@ -188,6 +222,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     await fetchAndSetUser();
     await preloadNotifications();
     await fetchUnreadCount();
+    await fetchFriendNotificationCount(); 
+    setInterval(fetchFriendNotificationCount, 1000);
 
     const initialSection = window.location.hash.substring(1) || 'home';
     loadSection(initialSection);

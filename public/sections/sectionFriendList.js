@@ -5,21 +5,25 @@ export default async function loadFriendListSection(content, user) {
   stopBubblesAnimation();
   stopBGAnimation();
 
+  // Reset body styles
   document.body.style.background = '';
   document.body.style.animation = '';
   document.body.style.backgroundSize = '';
   document.body.style.transition = 'background 0.3s ease-in-out';
 
-  content.style.background = '';
-  content.style.transition = 'background 0.3s ease-in-out';
-  content.style.display = '';
-  content.style.flexDirection = '';
-  content.style.justifyContent = '';
-  content.style.alignItems = '';
-  content.style.height = '';
-  content.style.overflow = '';
-  content.style.padding = '';
-  content.style.margin = '';
+  // Reset content styles
+  Object.assign(content.style, {
+    background: '',
+    transition: 'background 0.3s ease-in-out',
+    display: '',
+    flexDirection: '',
+    justifyContent: '',
+    alignItems: '',
+    height: '',
+    overflow: '',
+    padding: '',
+    margin: ''
+  });
 
   content.innerHTML = `
     <h2><i class="fas fa-user-friends"></i> Friend List</h2>
@@ -40,26 +44,26 @@ export default async function loadFriendListSection(content, user) {
       ></i>
     </form>
 
-    <div class="friend-requests" id="open-friend-requests-view">
+    <div class="friend-requests" id="open-friend-requests-view" role="button" tabindex="0" aria-label="Open friend requests modal">
       <span class="friend-requests-text">You have no pending friend requests</span>
       <div class="friend-requests-icon-with-badge">
         <i class="fas fa-user-friends friend-requests-icon"></i>
-        <span class="friend-requests-badge">0</span>
+        <span class="friend-requests-badge" style="display:none;">0</span>
       </div>
     </div>
 
-    <div id="friendRequestsModal" class="friends-modal hidden">
+    <div id="friendRequestsModal" class="friends-modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <div class="friends-modal-content">
-        <span class="friends-modal-close-btn" id="closeFriendModal">&times;</span>
+        <span class="friends-modal-close-btn" id="closeFriendModal" role="button" tabindex="0" aria-label="Close friend requests modal">&times;</span>
         <div class="friends-modal-tabs">
-          <button id="incomingTab" class="tab active">Incoming</button>
-          <button id="outgoingTab" class="tab">Outgoing</button>
+          <button id="incomingTab" class="tab active" type="button">Incoming</button>
+          <button id="outgoingTab" class="tab" type="button">Outgoing</button>
         </div>
         <div class="friends-modal-body">
-          <div id="incomingRequests" class="friends-modal-requests-section active">
+          <div id="incomingRequests" class="friends-modal-requests-section active" tabindex="0">
             <p>Loading incoming requests...</p>
           </div>
-          <div id="outgoingRequests" class="friends-modal-requests-section">
+          <div id="outgoingRequests" class="friends-modal-requests-section" tabindex="0">
             <p>Loading outgoing requests...</p>
           </div>
         </div>
@@ -75,11 +79,47 @@ export default async function loadFriendListSection(content, user) {
   const friendNickInput = document.getElementById('friendNick');
   const friendIconBtn = document.querySelector('.friend-btn');
   const friendsList = document.getElementById('friendsList');
+  const friendRequestsModal = document.getElementById('friendRequestsModal');
+  const openFriendRequestsView = document.getElementById('open-friend-requests-view');
+  const closeFriendModalBtn = document.getElementById('closeFriendModal');
+  const incomingTab = document.getElementById('incomingTab');
+  const outgoingTab = document.getElementById('outgoingTab');
+  const incomingRequests = document.getElementById('incomingRequests');
+  const outgoingRequests = document.getElementById('outgoingRequests');
 
-  friendIconBtn.addEventListener('click', () => {
-    addFriendForm.requestSubmit();
-  });
+  // Helper function to update badge and text
+  function updateFriendNotificationBadge(count) {
+    const reqBadge = document.querySelector('.friend-requests-badge');
+    const reqText = document.querySelector('.friend-requests-text');
+    if (!reqBadge || !reqText) return;
 
+    if (count > 0) {
+      reqBadge.style.display = 'inline-block';
+      reqBadge.textContent = count;
+      reqBadge.classList.add('vibrate');
+      reqText.innerHTML = `You have <b>${count}</b> pending friend request${count > 1 ? 's' : ''}.`;
+    } else {
+      reqBadge.style.display = 'none';
+      reqBadge.textContent = '';
+      reqBadge.classList.remove('vibrate');
+      reqText.textContent = 'You have no pending friend requests.';
+    }
+  }
+
+  async function fetchAndUpdateFriendNotifications() {
+    try {
+      const res = await fetch('/api/friends', { credentials: 'include' });
+      if (!res.ok) return;
+      const data = await res.json();
+      const pendingCount = (data.pendingRequests || []).length;
+      updateFriendNotificationBadge(pendingCount);
+    } catch (err) {
+      console.error('Error fetching friend notifications:', err);
+    }
+  }
+
+  // Submit friend request on icon click or keypress (Enter or Space)
+  friendIconBtn.addEventListener('click', () => addFriendForm.requestSubmit());
   friendIconBtn.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -105,24 +145,25 @@ export default async function loadFriendListSection(content, user) {
       if (res.ok) {
         showToast('Request sent successfully.', 'success');
         friendNickInput.value = '';
-        loadFriends();
+        await loadFriends();
+        await fetchAndUpdateFriendNotifications();
       } else {
         showToast(data.message || 'Error while sending friend request.', 'error');
       }
     } catch (err) {
-      console.error('Errore rete:', err);
+      console.error('Network error:', err);
       showToast('Network error while sending friend request.', 'error');
     }
   });
 
-  async function respondToRequest(notificationId, accept) {
+  async function respondToRequest(fromUserId, accept) {
     try {
       const res = await fetch('/api/friends/respond', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
-          notificationId,
+          fromUserId,
           action: accept ? 'accept' : 'reject'
         })
       });
@@ -130,13 +171,14 @@ export default async function loadFriendListSection(content, user) {
       const data = await res.json();
 
       if (res.ok) {
-        showToast(data.message || 'Friend request sent.', 'success');
-        loadFriends();
+        showToast(data.message || (accept ? 'Friend request accepted.' : 'Friend request rejected.'), 'success');
+        await loadFriends();
+        await fetchAndUpdateFriendNotifications();
       } else {
-        showToast(data.message || 'Error while sending friend request.', 'error');
+        showToast(data.message || 'Error processing friend request.', 'error');
       }
     } catch (err) {
-      console.error('Error:', err, 'error');
+      console.error('Network error:', err);
       showToast('Network error.', 'error');
     }
   }
@@ -152,20 +194,10 @@ export default async function loadFriendListSection(content, user) {
       }
 
       const { confirmedFriends = [], pendingRequests = [], sentRequests = [] } = data;
-      const reqText = document.querySelector('.friend-requests-text');
-      const reqBadge = document.querySelector('.friend-requests-badge');
 
-      if (reqText && reqBadge) {
-        const count = pendingRequests.length;
+      updateFriendNotificationBadge(pendingRequests.length);
 
-        reqText.textContent =
-          count === 0
-            ? 'You have no pending friend requests'
-            : `You have ${count} pending friend request${count > 1 ? 's' : ''}`;
-
-        reqBadge.textContent = count;
-      }
-
+      // Render confirmed friends
       let html = '';
 
       if (confirmedFriends.length > 0) {
@@ -193,15 +225,13 @@ export default async function loadFriendListSection(content, user) {
           </div>
         `).join('');
       } else if (pendingRequests.length === 0) {
-        html += '<p>Start now by adding a friend via their nickname!.</p>';
+        html += '<p>Start now by adding a friend via their nickname!</p>';
       }
 
       friendsList.innerHTML = html;
 
-      const incomingContainer = document.getElementById('incomingRequests');
-      const outgoingContainer = document.getElementById('outgoingRequests');
-
-      incomingContainer.innerHTML = pendingRequests.length > 0
+      // Render incoming requests
+      incomingRequests.innerHTML = pendingRequests.length > 0
         ? pendingRequests.map(req => `
             <div class="friend-request-card">
               <div class="friend-request-card-info">
@@ -212,10 +242,10 @@ export default async function loadFriendListSection(content, user) {
                 </div>
               </div>
               <div class="friend-request-card-actions">
-                <button class="accept-btn" title="Accept ${req.name || 'User'}'s request" data-id="${req._id}" data-name="${req.name || 'User'}">
+                <button class="accept-btn" title="Accept ${req.name || 'User'}'s request" data-id="${req._id}" data-fromuserid="${req.fromUserId || req._id}" data-name="${req.name || 'User'}">
                   <i class="fas fa-check"></i> 
                 </button>
-                <button class="reject-btn" title="Reject ${req.name || 'User'}'s request" data-id="${req._id}" data-name="${req.name || 'User'}">
+                <button class="reject-btn" title="Reject ${req.name || 'User'}'s request" data-id="${req._id}" data-fromuserid="${req.fromUserId || req._id}" data-name="${req.name || 'User'}">
                   <i class="fas fa-times"></i>
                 </button>
               </div>
@@ -223,7 +253,8 @@ export default async function loadFriendListSection(content, user) {
           `).join('')
         : '<p>No incoming requests.</p>';
 
-      outgoingContainer.innerHTML = sentRequests.length > 0
+      // Render outgoing requests
+      outgoingRequests.innerHTML = sentRequests.length > 0
         ? sentRequests.map(req => `
             <div class="friend-request-card">
               <div class="friend-request-card-info">
@@ -234,7 +265,7 @@ export default async function loadFriendListSection(content, user) {
                 </div>
               </div>
               <div class="friend-request-card-actions">
-                <button class="cancel-request-btn" title="Cancel request" data-id="${req._id}" data-name="${req.name || 'User'}">
+                <button class="cancel-request-btn" title="Cancel request" data-id="${req._id}" data-userid="${req.toUserId || req._id}" data-name="${req.name || 'User'}">
                   <i class="fas fa-times"></i> 
                 </button>
               </div>
@@ -242,111 +273,113 @@ export default async function loadFriendListSection(content, user) {
           `).join('')
         : '<p>No outgoing requests.</p>';
 
+      // Add event listeners to buttons
       document.querySelectorAll('.accept-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
-          const id = btn.dataset.id;
-          await respondToRequest(id, true);
+          const fromUserId = btn.dataset.fromuserid;
+          await respondToRequest(fromUserId, true);
         });
       });
 
       document.querySelectorAll('.reject-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
-          const id = btn.dataset.id;
-          await respondToRequest(id, false);
-        });
-      });
-
-      document.querySelectorAll('.remove-btn').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          const friendId = btn.dataset.id;
-          const friendName = btn.dataset.name;
-          const confirmRemoval = await customConfirm(`Are you sure you want to remove ${friendName} from your friend list?`);
-          if (!confirmRemoval) return;
-
-          try {
-            const res = await fetch(`/api/friends/remove/${friendId}`, {
-              method: 'DELETE',
-              credentials: 'include',
-            });
-
-            const data = await res.json();
-
-            if (res.ok) {
-              showToast(data.message || 'Friend successfully removed.', 'success');
-              loadFriends();
-            } else {
-              showToast(data.message || 'Error while removing friend.', 'error');
-            }
-          } catch (err) {
-            console.error('Network error:', err);
-            showToast('Network error while removing friend.', 'error');
-          }
+          const fromUserId = btn.dataset.fromuserid;
+          await respondToRequest(fromUserId, false);
         });
       });
 
       document.querySelectorAll('.cancel-request-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
-          const notifId = btn.dataset.id;
-          const targetName = btn.dataset.name;
-          const confirmed = await customConfirm(`Are you sure you want to cancel the friend request sent to ${targetName}?`);
-          if (!confirmed) return;
-
-          try {
-            const res = await fetch(`/api/friends/cancel/${notifId}`, {
-              method: 'DELETE',
-              credentials: 'include'
-            });
-
-            const data = await res.json();
-
-            if (res.ok) {
-              showToast(data.message || 'Request cancelled.', 'success');
-              loadFriends();
-            } else {
-              showToast(data.message || 'Error while cancelling friend request.', 'error');
+          const userId = btn.dataset.userid;
+          if (await customConfirm('Cancel this friend request?')) {
+            try {
+              const res = await fetch(`/api/friends/cancel/${userId}`, {
+                method: 'DELETE',
+                credentials: 'include',
+              });
+              const data = await res.json();
+              if (res.ok) {
+                showToast(data.message || 'Friend request cancelled.', 'success');
+                await loadFriends();
+                await fetchAndUpdateFriendNotifications();
+              } else {
+                showToast(data.message || 'Error cancelling request.', 'error');
+              }
+            } catch (err) {
+              showToast('Network error.', 'error');
             }
-          } catch (err) {
-            console.error('Network error:', err);
-            showToast('Network error while cancelling the request.', 'error');
           }
         });
       });
 
+      document.querySelectorAll('#remove-friend').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const friendId = btn.dataset.id;
+          const friendName = btn.dataset.name;
+          if (await customConfirm(`Remove ${friendName} from friends?`)) {
+            try {
+              const res = await fetch(`/api/friends/remove/${friendId}`, {
+                method: 'DELETE',
+                credentials: 'include',
+              });
+              const data = await res.json();
+              if (res.ok) {
+                showToast(data.message || 'Friend removed.', 'success');
+                await loadFriends();
+                await fetchAndUpdateFriendNotifications();
+              } else {
+                showToast(data.message || 'Error removing friend.', 'error');
+              }
+            } catch (err) {
+              showToast('Network error.', 'error');
+            }
+          }
+        });
+      });
 
-    } catch (err) {
-      console.error('Errore fetch amici:', err);
-      friendsList.innerHTML = '<p>Error while loading friends.</p>';
+      // Message and settings buttons can be implemented as needed
+    } catch (error) {
+      console.error(error);
+      friendsList.innerHTML = '<p>Error loading friends.</p>';
     }
   }
 
-  loadFriends();
-
-  document.getElementById('open-friend-requests-view').addEventListener('click', () => {
-    document.getElementById('friendRequestsModal').classList.remove('hidden');
+  // Modal toggle
+  openFriendRequestsView.addEventListener('click', () => {
+    friendRequestsModal.classList.remove('hidden');
+    incomingRequests.focus();
   });
 
-  document.getElementById('closeFriendModal').addEventListener('click', () => {
-    document.getElementById('friendRequestsModal').classList.add('hidden');
+  closeFriendModalBtn.addEventListener('click', () => {
+    friendRequestsModal.classList.add('hidden');
+    openFriendRequestsView.focus();
   });
 
   friendRequestsModal.addEventListener('click', (event) => {
     if (event.target === friendRequestsModal) {
       friendRequestsModal.classList.add('hidden');
+      openFriendRequestsView.focus();
     }
   });
 
-  document.getElementById('incomingTab').addEventListener('click', () => {
-    document.getElementById('incomingRequests').classList.add('active');
-    document.getElementById('outgoingRequests').classList.remove('active');
-    document.getElementById('incomingTab').classList.add('active');
-    document.getElementById('outgoingTab').classList.remove('active');
+  // Tabs switch
+  incomingTab.addEventListener('click', () => {
+    incomingTab.classList.add('active');
+    outgoingTab.classList.remove('active');
+    incomingRequests.classList.add('active');
+    outgoingRequests.classList.remove('active');
+    incomingRequests.focus();
   });
 
-  document.getElementById('outgoingTab').addEventListener('click', () => {
-    document.getElementById('incomingRequests').classList.remove('active');
-    document.getElementById('outgoingRequests').classList.add('active');
-    document.getElementById('incomingTab').classList.remove('active');
-    document.getElementById('outgoingTab').classList.add('active');
+  outgoingTab.addEventListener('click', () => {
+    outgoingTab.classList.add('active');
+    incomingTab.classList.remove('active');
+    outgoingRequests.classList.add('active');
+    incomingRequests.classList.remove('active');
+    outgoingRequests.focus();
   });
 
+  // Load initial friends list and badge
+  await loadFriends();
+  await fetchAndUpdateFriendNotifications();
 }

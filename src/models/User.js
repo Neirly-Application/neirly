@@ -21,6 +21,8 @@ const userSchema = new mongoose.Schema({
   forceLogout: { type: Boolean, default: false },
   recentChats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  friendRequestsReceived: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  friendRequestsSent: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   profilePictureUrl: { type: String, default: '/media/user.png' },
   discordId: String,
   passwordHash: {
@@ -67,8 +69,6 @@ const userSchema = new mongoose.Schema({
     location: String,
     lastActive: Date
   }],
-  passwordHash: { type: String },
-  provider: { type: String, enum: ['local', 'google', 'discord'], default: 'local' },
   profileCompleted: { type: Boolean, default: false },
   roles: { type: [String], enum: ['user', 'supporter', 'alpha_tester', 'moderator', 'ceo' ], default: ['user']},
   acceptedTerms: { type: Boolean,

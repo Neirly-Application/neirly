@@ -175,9 +175,9 @@ router.post('/logout', async (req, res) => {
   res.json({ message: 'Logged out successfully!' });
 });
 
-const Message = require('../models/Message'); // o come si chiama il tuo model
+const Message = require('../models/Message');
 
-router.delete('/delete-account', async (req, res) => {
+router.delete('/delete-account', authMiddleware, async (req, res) => {
   try {
     const userId = req.user._id;
 

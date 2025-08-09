@@ -257,9 +257,10 @@ input[type="file"] {
   position: absolute;
   right: 12px;
   top: 50%;
+  bottom: 50%;
   transform: translateY(-50%);
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -270,14 +271,6 @@ input[type="file"] {
   cursor: pointer;
   border-radius: 50%;
   transition: background-color 0.3s ease;
-}
-
-.friend-btn:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-.friend-btn:focus {
-  outline: 2px solid var(--primary);
 }
 
 .friend-request-card {
@@ -412,7 +405,11 @@ input[type="file"] {
   height: 60px;
   border-radius: 20px;
   background-color: var(--friend-requests-bg);
-  border: 1px solid var(--primary);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-left: 1px solid var(--primary);
+  border-right: 1px solid var(--primary);
+  border-bottom: 1px solid var(--primary);
   margin-block: 20px;
   color: var(--primary);
   padding: 0 20px;
