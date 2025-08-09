@@ -17,8 +17,6 @@ export default async function loadSearchSection(content, user) {
   content.style.padding = '';
   content.style.margin = '';
 
-  document.title = 'Search';
-
   content.innerHTML = `
     <div class="search-bar">
       <div class="search-content">

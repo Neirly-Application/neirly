@@ -8,7 +8,6 @@ export default async function loadSettingsThemeSection(content, user) {
   document.body.style.animation = '';
   document.body.style.backgroundSize = '';
   document.body.style.transition = 'background 0.3s ease-in-out';
-  document.title = `Settings - Theme`;
 
   content.style.background = '';
   content.style.transition = 'background 0.3s ease-in-out';

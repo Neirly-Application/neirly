@@ -63,7 +63,7 @@ export default async function loadChatWindow(content, user, chatUserId, onBack) 
       </div>
     `;
 
-    document.title = `${escapeHTML(chatUser.name || 'User')}`;
+    document.title = `Neirly - ${escapeHTML(chatUser.name || 'User')}`;
 
     const chatMessages = content.querySelector('.chat-messages');
     chatMessages.scrollTop = chatMessages.scrollHeight;

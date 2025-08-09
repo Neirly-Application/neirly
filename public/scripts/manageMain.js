@@ -99,9 +99,41 @@ document.addEventListener('DOMContentLoaded', async () => {
       const thisToken = Symbol('load');
       currentLoadToken = thisToken;
 
+      const sectionTitles = {
+        ceo: "Neirly - CEO",
+        "friend-list": "Neirly - Friends",
+        home: "Neirly - Home",
+        map: "Neirly - Map",
+        "map-screen": "Neirly - Map Screen",
+        messages: "Neirly - Messages",
+        notifications: "Neirly - Notifications",
+        premium: "Neirly - Premium",
+        profile: "Neirly - Profile",
+        search: "Neirly - Search",
+        settings: "Neirly - Settings",
+        "settings-account": "Neirly - Account & Security",
+        "settings-activity": "Neirly - Activity",
+        "settings-chats": "Neirly - Chat Settings",
+        "settings-danger": "Neirly - Danger Zone",
+        "settings-devices": "Neirly - Devices",
+        "settings-info": "Neirly - Info",
+        "settings-developer": "Neirly - Developer",
+        "settings-backup": "Neirly - Backups",
+        "settings-language": "Neirly - Language",
+        "settings-notifications": "Neirly - Notifications Settings",
+        "settings-privacy": "Neirly - Privacy",
+        "settings-theme": "Neirly - Theme",
+      };
+
+      document.title = sectionTitles[section] || "Neirly";
+
       content.innerHTML = '<div class="loading">Loading...</div>';
 
-      const disablePull = ['premium', 'profile', 'map-screen', 'settings', 'settings-account', 'settings-chats', 'settings-danger', 'settings-info', 'settings-language', 'settings-notifications', 'settings-privacy', 'settings-theme'];
+      const disablePull = [
+        "premium", "profile", "map-screen", "settings", "settings-account", "settings-chats",
+        "settings-danger", "settings-info", "settings-language", "settings-notifications",
+        "settings-privacy", "settings-theme"
+      ];
       window.disablePullToRefresh = disablePull.includes(section);
 
       switch (section) {
