@@ -16,7 +16,7 @@ router.post('/friends/request', async (req, res) => {
 
   try {
     const [targetUser, requestingUser] = await Promise.all([
-      User.findOne({ uniquenick }).select('_id friends').lean(),
+      User.findOne({ uniquenick }).select('_id friends name uniquenick').lean(),
       User.findById(req.user._id).select('friends name email uniquenick').lean()
     ]);
 
@@ -36,7 +36,7 @@ router.post('/friends/request', async (req, res) => {
       targetUser.friends?.includes(req.user._id) ||
       requestingUser.friends?.includes(targetUser._id);
     if (alreadyFriends) {
-      return res.status(400).json({ message: "You're already friends." });
+      return res.status(400).json({ message: `You and ${targetUser.name || targetUser.uniquenick} are already friends.` });
     }
 
     const alreadyRequested = await Notification.exists({
@@ -46,7 +46,7 @@ router.post('/friends/request', async (req, res) => {
       read: false
     });
     if (alreadyRequested) {
-      return res.status(400).json({ message: "You already sent a friend request." });
+      return res.status(400).json({ message: `You already sent a friend request to ${targetUser.name || targetUser.uniquenick}.` });
     }
 
     const heAlreadyRequestedMe = await Notification.exists({
@@ -57,7 +57,7 @@ router.post('/friends/request', async (req, res) => {
     });
     if (heAlreadyRequestedMe) {
       return res.status(400).json({
-        message: "This user already sent you a friend request. You can accept it instead."
+        message: `${targetUser.name || targetUser.uniquenick} already sent you a friend request. You can accept it instead.`
       });
     }
 

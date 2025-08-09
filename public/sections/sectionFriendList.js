@@ -214,7 +214,7 @@ export default async function loadFriendListSection(content, user) {
               </div>
               <div class="friend-request-card-actions">
                 <button class="accept-btn" title="Accept ${req.name || 'User'}'s request" data-id="${req._id}" data-name="${req.name || 'User'}">
-                  <i class="fas fa-comment-alt"></i> 
+                  <i class="fas fa-check"></i> 
                 </button>
                 <button class="reject-btn" title="Reject ${req.name || 'User'}'s request" data-id="${req._id}" data-name="${req.name || 'User'}">
                   <i class="fas fa-times"></i>
