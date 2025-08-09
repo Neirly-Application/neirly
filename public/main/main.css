@@ -85,7 +85,7 @@ img {
   will-change: transform, box-shadow;
   overflow: hidden;
   flex-shrink: 0;
-  z-index: 2000;
+  z-index: 100000;
 }
 
 .sidebar.hide {
