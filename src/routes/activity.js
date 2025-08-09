@@ -3,7 +3,9 @@ const router = express.Router();
 const ActivityLog = require('../models/ActivityLogs');
 const { authMiddleware } = require('../authMiddleware/authMiddleware');
 
-router.get('/activity', authMiddleware, async (req, res) => {
+router.use(authMiddleware);
+
+router.get('/activity', async (req, res) => {
   try {
     console.log('User in activity:', req.user);
     const logs = await ActivityLog.find({ userId: req.user._id }).sort({ timestamp: -1 }).limit(100);

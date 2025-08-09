@@ -281,39 +281,75 @@ input[type="file"] {
 }
 
 .friend-request-card {
-  background-color: transparent;
-  border: 1px solid var(--color-eee);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--primary);
   padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 6px;
+}
+.friend-request-card:last-child {
+  border-bottom: none;
 }
 
-.friend-request-card button {
-  margin-right: 10px;
-  padding: 6px 12px;
-  cursor: pointer;
+.friend-request-card-info {
+  text-align: left;
+  display: flex;
+  gap: 10px;
+}
+
+.friend-request-card-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.friend-request-card-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--primary, #555);
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  max-width: 100%;
+}
+
+.friend-request-card-nick {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--main-bg, #888);
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  max-width: 100%;
+  margin-top: 2px;
+}
+
+.friend-request-card-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.friend-request-card-actions button {
+  background: none;
   border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 4px;
   border-radius: 4px;
-  transition: background-color 0.3s ease;
+  transition: color 0.2s ease;
 }
 
 .friend-request-card .accept-btn {
-  background-color: var(--color-2ecc71);
-  color: var(--color-fff);
+  justify-content: center;
+  color: var(--friend-requests-accept-btn);
 }
-
-.friend-request-card .accept-btn:active {
-  background-color: #27ae60;
-}
-
 .friend-request-card .reject-btn {
-  background-color: var(--color-e74c3c);
-  color: var(--color-fff);
-  margin-right: 0;
+  justify-content: center;
+  color: var(--friend-requests-reject-btn);
 }
-
-.friend-request-card .reject-btn:active {
-  background-color: #c0392b;
+.friend-request-card .cancel-request-btn {
+  justify-content: center;
+  color: var(--friend-requests-cancel-btn);
 }
 
 .friend-item {
@@ -377,7 +413,7 @@ input[type="file"] {
   border-radius: 20px;
   background-color: var(--friend-requests-bg);
   border: 1px solid var(--primary);
-  margin-block: 50px;
+  margin-block: 20px;
   color: var(--primary);
   padding: 0 20px;
   display: flex;
@@ -413,62 +449,92 @@ input[type="file"] {
   font-size: 0.7rem;
 }
 
-.modal {
+.friends-modal {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0; 
+  left: 0;
+  width: 100%; 
+  height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  display: flex; justify-content: center; align-items: center;
-  z-index: 9999;
-  overflow-y: hidden;
-}
-.modal.hidden { display: none; }
-
-.modal-content {
-  background: white;
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+  z-index: 1000;
   padding: 20px;
-  border-radius: 8px;
-  width: 90%;
+}
+
+.friends-modal.hidden { 
+  display: none; 
+}
+
+.friends-modal-content {
+  background: var(--accent);
+  padding: 20px;
+  border-radius: 12px;
+  width: 100%;
   max-width: 500px;
-  min-height: 20vh;
-  max-height: 90vh;
   overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  animation: modalFadeIn 0.2s ease-out;
   position: relative;
 }
 
-.close-btn {
+@keyframes modalFadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(-10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+
+.friends-modal-close-btn {
   position: absolute;
   top: 10px; right: 15px;
-  font-size: 24px;
+  font-size: 1.8rem;
   cursor: pointer;
 }
 
-.modal-tabs {
+.friends-modal-tabs {
   display: flex;
   justify-content: center;
-  margin-bottom: 15px;
-  margin-top: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--primary);
 }
 
-.modal-tabs .tab {
+.friends-modal-tabs .tab {
   padding: 10px 20px;
   cursor: pointer;
-  border: none;
-  background: #ddd;
+  color: var(--soft-dark-text);
+  border: 2px solid transparent;
+  background: transparent;
   margin: 0 5px;
-  border-radius: 5px;
-  transition: background 0.2s;
+  border-radius: 0;
+  transition: border 0.2s, color 0.2s;
 }
 
-.modal-tabs .tab.active {
-  background: #007bff;
-  color: white;
+.friends-modal-tabs .tab.active {
+  background: transparent;
+  font-weight: bold;
+  border-bottom: 2px solid var(--primary);
+  border-radius: 0;
+  color: var(--primary);
 }
 
-.requests-section {
+.friends-modal-body {
+  margin-top: 20px;
+}
+
+.friends-modal-requests-section {
+  background-color: transparent;
   display: none;
 }
-.requests-section.active {
+.friends-modal-requests-section.active {
+  background-color: transparent;
+  text-align: center;
   display: block;
 }
 

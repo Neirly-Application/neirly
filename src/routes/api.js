@@ -5,6 +5,8 @@ const bcrypt   = require('bcryptjs');
 const ApiKey   = require('../models/ApiKey');
 const { authMiddleware } = require('../authMiddleware/authMiddleware');
 
+router.use(authMiddleware);
+
 function generateApiKey() {
   const randomHex = crypto.randomBytes(24)      // 48 hex → 24 byte
                          .toString('hex')       // es. "a04d2745d66625f0…"
@@ -15,7 +17,7 @@ function generateApiKey() {
 }
 
 /* POST /api/developer/generate-key */
-router.post('/generate-key', authMiddleware, async (req,res)=>{
+router.post('/generate-key', async (req,res)=>{
   const { description='' } = req.body;
   if (description.trim().length < 10)
       return res.status(400).json({ message:'Description min 10 chars' });
@@ -38,7 +40,7 @@ router.post('/generate-key', authMiddleware, async (req,res)=>{
 });
 
 /* GET /api/developer/current-key */
-router.get('/current-key', authMiddleware, async (req,res)=>{
+router.get('/current-key', async (req,res)=>{
   const doc=await ApiKey.findOne({ owner:req.user._id, status:'active' });
   if(!doc) return res.status(404).json({ message:'No active API key' });
   res.json({
@@ -51,7 +53,7 @@ router.get('/current-key', authMiddleware, async (req,res)=>{
 });
 
 /* POST /api/developer/revoke-key */
-router.post('/revoke-key', authMiddleware, async (req,res)=>{
+router.post('/revoke-key', async (req,res)=>{
   const doc=await ApiKey.findOne({ owner:req.user._id, status:'active' });
   if(!doc) return res.status(400).json({ message:'No active key to revoke' });
   doc.status='revoked'; await doc.save();

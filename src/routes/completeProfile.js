@@ -4,7 +4,9 @@ const User = require('../models/User');
 const { authMiddleware } = require('../authMiddleware/authMiddleware');
 const router = express.Router();
 
-router.post('/complete-profile', authMiddleware, async (req, res) => {
+router.use(authMiddleware);
+
+router.post('/complete-profile', async (req, res) => {
   const { username, uniquenick, birthdate, password, wantsUpdates, acceptedTerms, profilePictureUrl } = req.body;
 
   const accepted = acceptedTerms === true || acceptedTerms === 'true';

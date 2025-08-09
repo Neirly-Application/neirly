@@ -3,7 +3,9 @@ const router = express.Router();
 const Notification = require('../models/Notification');
 const { authMiddleware } = require('../authMiddleware/authMiddleware');
 
-router.get('/notifications', authMiddleware, async (req, res) => {
+router.use(authMiddleware);
+
+router.get('/notifications', async (req, res) => {
   try {
     const notifications = await Notification.find({ userId: req.user._id }).sort({ date: -1 });
     res.json(notifications);
@@ -12,7 +14,7 @@ router.get('/notifications', authMiddleware, async (req, res) => {
   }
 });
 
-router.put('/notifications/:id/read', authMiddleware, async (req, res) => {
+router.put('/notifications/:id/read', async (req, res) => {
   try {
     const notification = await Notification.findOneAndUpdate(
       { _id: req.params.id, userId: req.user._id },
@@ -26,7 +28,7 @@ router.put('/notifications/:id/read', authMiddleware, async (req, res) => {
   }
 });
 
-router.get('/notifications/unread-count', authMiddleware, async (req, res) => {
+router.get('/notifications/unread-count', async (req, res) => {
   try {
     const count = await Notification.countDocuments({ userId: req.user._id, read: false });
     res.json({ unread: count });

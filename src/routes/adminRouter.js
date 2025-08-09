@@ -3,7 +3,9 @@ const router = express.Router();
 const { authMiddleware, requireRole } = require('../authMiddleware/authMiddleware');
 const User = require('../models/User');
 
-router.get('/users', authMiddleware, requireRole('ceo'), async (req, res) => {
+router.use(authMiddleware);
+
+router.get('/users', requireRole('ceo'), async (req, res) => {
   try {
     const users = await User.find({}, '-passwordHash');
     res.json(users);

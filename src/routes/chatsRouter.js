@@ -6,8 +6,10 @@ const { authMiddleware } = require('../authMiddleware/authMiddleware');
 const User = require('../models/User');
 const Message = require('../models/Message');
 
+router.use(authMiddleware);
+
 // GET friends and recent chats
-router.get('/chats/friends-and-chats', authMiddleware, async (req, res) => {
+router.get('/chats/friends-and-chats', async (req, res) => {
   try {
     const userId = req.user._id;
     const user = await User.findById(userId)
@@ -28,7 +30,7 @@ router.get('/chats/friends-and-chats', authMiddleware, async (req, res) => {
 });
 
 // GET messages with a specific user
-router.get('/chats/messages/:userId', authMiddleware, async (req, res) => {
+router.get('/chats/messages/:userId', async (req, res) => {
   const userId = req.user._id;
   const otherUserId = req.params.userId;
 
@@ -48,7 +50,7 @@ router.get('/chats/messages/:userId', authMiddleware, async (req, res) => {
 });
 
 // POST send a message
-router.post('/chats/messages', authMiddleware, async (req, res) => {
+router.post('/chats/messages', async (req, res) => {
   const senderId = req.user._id;
   const { to, content, type = 'text' } = req.body;
 

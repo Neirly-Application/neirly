@@ -1360,14 +1360,13 @@ body.subsection-active {
     top: 50%;
     left: 105%;
     transform: translateY(-50%);
-    background-color: var(--primary);
+    background-color: var(--main-bg);
     color: var(--accent);
     padding: 6px 10px;
     border-radius: 5px;
     font-size: 13px;
     white-space: normal;
     max-width: 400px;
-    min-width: 200px;
     width: 100%;
     height: auto;
     opacity: 0;

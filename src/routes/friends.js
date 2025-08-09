@@ -5,7 +5,9 @@ const User = require('../models/User');
 const Notification = require('../models/Notification');
 const mongoose = require('mongoose');
 
-router.post('/friends/request', authMiddleware, async (req, res) => {
+router.use(authMiddleware);
+
+router.post('/friends/request', async (req, res) => {
   const { uniquenick } = req.body;
 
   if (!uniquenick) {
@@ -81,7 +83,7 @@ router.post('/friends/request', authMiddleware, async (req, res) => {
   }
 });
 
-router.post('/friends/respond', authMiddleware, async (req, res) => {
+router.post('/friends/respond', async (req, res) => {
   const { notificationId, action } = req.body;
   if (!notificationId || !['accept', 'reject'].includes(action)) {
     return res.status(400).json({ message: 'Invalid parameters' });
@@ -123,7 +125,7 @@ router.post('/friends/respond', authMiddleware, async (req, res) => {
   }
 });
 
-router.delete('/friends/cancel/:notificationId', authMiddleware, async (req, res) => {
+router.delete('/friends/cancel/:notificationId', async (req, res) => {
   const { notificationId } = req.params;
 
   try {
@@ -145,7 +147,7 @@ router.delete('/friends/cancel/:notificationId', authMiddleware, async (req, res
   }
 });
 
-router.get('/friends', authMiddleware, async (req, res) => {
+router.get('/friends', async (req, res) => {
   try {
     const [user, receivedNotifs, sentNotifs] = await Promise.all([
       User.findById(req.user._id)
@@ -196,7 +198,7 @@ router.get('/friends', authMiddleware, async (req, res) => {
   }
 });
 
-router.delete('/friends/remove/:friendId', authMiddleware, async (req, res) => {
+router.delete('/friends/remove/:friendId', async (req, res) => {
   const { friendId } = req.params;
   if (!friendId || !mongoose.Types.ObjectId.isValid(friendId)) {
     return res.status(400).json({ message: 'Invalid friend ID.' });

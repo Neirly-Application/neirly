@@ -1,90 +1,92 @@
-  const express = require('express');
-  const UAParser = require('ua-parser-js');
-  const router = express.Router();
-  const { authMiddleware } = require('../authMiddleware/authMiddleware');
-  const getLocationFromIP = require('../utils/getLocationFromIP');
+const express = require('express');
+const UAParser = require('ua-parser-js');
+const router = express.Router();
+const { authMiddleware } = require('../authMiddleware/authMiddleware');
+const getLocationFromIP = require('../utils/getLocationFromIP');
 
-  // GET /api/devices
-  router.get('/devices', authMiddleware, (req, res) => {
-    return res.json(req.user.devices || []);
-  });
+router.use(authMiddleware);
 
-  // POST /api/devices
-  router.post('/devices', authMiddleware, async (req, res) => {
-    try {
-      const userAgent = req.headers['user-agent'] || 'Unknown';
-      const parser = new UAParser(userAgent);
-      const result = parser.getResult();
+// GET /api/devices
+router.get('/devices', (req, res) => {
+  return res.json(req.user.devices || []);
+});
 
-      const deviceName = `${result.os.name || 'Unknown OS'} · ${result.browser.name || 'Unknown Browser'}`;
-      const deviceType = result.device.type || 'desktop';
-      const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
-      const location = await getLocationFromIP(ip) || 'Unknown';
+// POST /api/devices
+router.post('/devices', async (req, res) => {
+  try {
+    const userAgent = req.headers['user-agent'] || 'Unknown';
+    const parser = new UAParser(userAgent);
+    const result = parser.getResult();
 
-      const newDevice = {
-        name: deviceName,
-        type: deviceType,
-        location,
-        lastActive: new Date()
-      };
+    const deviceName = `${result.os.name || 'Unknown OS'} · ${result.browser.name || 'Unknown Browser'}`;
+    const deviceType = result.device.type || 'desktop';
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
+    const location = await getLocationFromIP(ip) || 'Unknown';
 
-      req.user.devices = req.user.devices || [];
+    const newDevice = {
+      name: deviceName,
+      type: deviceType,
+      location,
+      lastActive: new Date()
+    };
 
-      const existingDevice = req.user.devices.find(
-        d => d.name === newDevice.name && d.location === newDevice.location
-      );
+    req.user.devices = req.user.devices || [];
 
-      if (existingDevice) {
-        existingDevice.lastActive = new Date();
-      } else {
-        req.user.devices.push(newDevice);
-      }
+    const existingDevice = req.user.devices.find(
+      d => d.name === newDevice.name && d.location === newDevice.location
+    );
 
-      await req.user.save();
-      res.json({ success: true });
-    } catch (err) {
-      console.error('Error saving device:', err.message);
-      res.status(500).json({ success: false, message: 'Failed to save device' });
-    }
-  });
-
-  // PATCH /api/devices/ping
-  router.patch('/devices/ping', authMiddleware, async (req, res) => {
-    try {
-      const userAgent = req.headers['user-agent'] || 'Unknown';
-      const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
-      const location = await getLocationFromIP(ip) || 'Unknown';
-
-      const device = (req.user.devices || []).find(
-        d => d.name === userAgent && d.location === location
-      );
-
-      if (device) {
-        device.lastActive = new Date();
-        await req.user.save();
-      }
-
-      res.json({ success: true });
-    } catch (err) {
-      console.error('Device ping error:', err.message);
-      res.status(500).json({ success: false });
-    }
-  });
-
-  // DELETE /api/devices/:index
-  router.delete('/devices/:index', authMiddleware, async (req, res) => {
-    const index = parseInt(req.params.index, 10);
-    if (
-      isNaN(index) ||
-      index < 0 ||
-      index >= (req.user.devices || []).length
-    ) {
-      return res.status(400).json({ message: 'Invalid device index' });
+    if (existingDevice) {
+      existingDevice.lastActive = new Date();
+    } else {
+      req.user.devices.push(newDevice);
     }
 
-    req.user.devices.splice(index, 1);
     await req.user.save();
     res.json({ success: true });
-  });
+  } catch (err) {
+    console.error('Error saving device:', err.message);
+    res.status(500).json({ success: false, message: 'Failed to save device' });
+  }
+});
 
-  module.exports = router;
+// PATCH /api/devices/ping
+router.patch('/devices/ping', async (req, res) => {
+  try {
+    const userAgent = req.headers['user-agent'] || 'Unknown';
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
+    const location = await getLocationFromIP(ip) || 'Unknown';
+
+    const device = (req.user.devices || []).find(
+      d => d.name === userAgent && d.location === location
+    );
+
+    if (device) {
+      device.lastActive = new Date();
+      await req.user.save();
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Device ping error:', err.message);
+    res.status(500).json({ success: false });
+  }
+});
+
+// DELETE /api/devices/:index
+router.delete('/devices/:index', async (req, res) => {
+  const index = parseInt(req.params.index, 10);
+  if (
+    isNaN(index) ||
+    index < 0 ||
+    index >= (req.user.devices || []).length
+  ) {
+    return res.status(400).json({ message: 'Invalid device index' });
+  }
+
+  req.user.devices.splice(index, 1);
+  await req.user.save();
+  res.json({ success: true });
+});
+
+module.exports = router;

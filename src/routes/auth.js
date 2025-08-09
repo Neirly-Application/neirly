@@ -35,7 +35,7 @@ router.post('/register', async (req, res) => {
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Strict',
+      sameSite: 'Lax',
       maxAge: 7 * 24 * 60 * 60 * 1000 
     });
 
@@ -43,19 +43,19 @@ router.post('/register', async (req, res) => {
         const userAgent = req.headers['user-agent'] || 'Unknown';
         const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
         const location = await getLocationFromIP(ip);
-        const existingDevice = req.user.devices.find(dev =>
+        const existingDevice = user.devices.find(dev =>
           dev.name === userAgent && dev.location === location
         );
         if (existingDevice) {
           existingDevice.lastActive = new Date();
         } else {
-          req.user.devices.push({
+          user.devices.push({
             name: userAgent,
             location,
             lastActive: new Date()
           });
         }
-        await req.user.save();
+        await user.save();
         await ActivityLog.create({
           userId: req.user._id,
           type: 'Account Creation',
@@ -103,7 +103,7 @@ router.post('/login', (req, res, next) => {
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Strict'
+      sameSite: 'Lax'
     });
     
     (async function handleDeviceSave() {
@@ -159,7 +159,7 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
-router.post('/logout', authMiddleware, async (req, res) => {
+router.post('/logout', async (req, res) => {
   res.clearCookie('token'); 
 
   if (req.user) {
@@ -177,7 +177,7 @@ router.post('/logout', authMiddleware, async (req, res) => {
 
 const Message = require('../models/Message'); // o come si chiama il tuo model
 
-router.delete('/delete-account', authMiddleware, async (req, res) => {
+router.delete('/delete-account', async (req, res) => {
   try {
     const userId = req.user._id;
 
@@ -208,7 +208,7 @@ router.delete('/delete-account', authMiddleware, async (req, res) => {
   }
 });
 
-router.get('/profile', authMiddleware, async (req, res) => {
+router.get('/profile', async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('-passwordHash');
     if (!user) return res.status(404).json({ message: 'User not found.' });
@@ -340,7 +340,7 @@ router.get('/discord/callback',
       res.cookie('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'Strict',
+        sameSite: 'Lax',
         maxAge: 7 * 24 * 60 * 60 * 1000 
       });
 
@@ -358,11 +358,11 @@ router.get('/discord/callback',
   }
 );
 
-router.get('/admin-only', authMiddleware, requireRole('ceo'), (req, res) => {
+router.get('/admin-only', requireRole('ceo'), (req, res) => {
   res.json({ message: `Welcome ${req.user.name}` });
 });
 
-router.put('/set-role', authMiddleware, requireRole('ceo'), async (req, res) => {
+router.put('/set-role', requireRole('ceo'), async (req, res) => {
   const { userId, newRole } = req.body;
 
   if (!['user', 'supporter', 'moderator', 'ceo'].includes(newRole)) {

@@ -3,6 +3,8 @@ const router = express.Router();
 const { authMiddleware } = require('../authMiddleware/authMiddleware');
 const User = require('../models/User');
 
+router.use(authMiddleware);
+
 router.get('/search/users', async (req, res) => {
   try {
     const { q } = req.query;
@@ -29,7 +31,7 @@ router.get('/search/users', async (req, res) => {
   }
 });
 
-router.get('/search', authMiddleware, async (req, res) => {
+router.get('/search', async (req, res) => {
   try {
     const { q } = req.query;
 
@@ -55,7 +57,7 @@ router.get('/search', authMiddleware, async (req, res) => {
   }
 });
 
-router.get('/search/last-searches', authMiddleware, async (req, res) => {
+router.get('/search/last-searches', async (req, res) => {
   try {
     const user = await User.findById(req.user._id).populate('lastSearches', 'name uniquenick profilePictureUrl');
 
@@ -68,7 +70,7 @@ router.get('/search/last-searches', authMiddleware, async (req, res) => {
   }
 });
 
-router.post('/search/remove-search', authMiddleware, async (req, res) => {
+router.post('/search/remove-search', async (req, res) => {
   const { userId } = req.body;
 
   if (!userId) return res.status(400).json({ error: 'Missing userId' });
@@ -85,7 +87,7 @@ router.post('/search/remove-search', authMiddleware, async (req, res) => {
   }
 });
 
-router.post('/search/add-search', authMiddleware, async (req, res) => {
+router.post('/search/add-search', async (req, res) => {
   const { targetUniquenick, query } = req.body;
 
   try {

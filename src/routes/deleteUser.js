@@ -5,6 +5,8 @@ const { authMiddleware } = require('../authMiddleware/authMiddleware');
 const Notification = require('../models/Notification'); 
 const Activity = require('../models/ActivityLogs');
 
+router.use(authMiddleware);
+
 function checkCEO(req, res, next) {
   if (!req.user || !req.user.roles.includes('ceo')) {
     return res.status(403).json({ message: 'Access denied.' });
@@ -12,7 +14,7 @@ function checkCEO(req, res, next) {
   next();
 }
 
-router.delete('/profile/:id', authMiddleware, checkCEO, async (req, res) => {
+router.delete('/profile/:id', checkCEO, async (req, res) => {
   try {
     const userId = req.params.id;
 

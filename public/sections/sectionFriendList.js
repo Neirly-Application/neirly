@@ -49,18 +49,18 @@ export default async function loadFriendListSection(content, user) {
       </div>
     </div>
 
-    <div id="friendRequestsModal" class="modal hidden">
-      <div class="modal-content">
-        <span class="close-btn" id="closeFriendModal">&times;</span>
-        <div class="modal-tabs">
-          <button id="incomingTab" class="tab active">Incoming Requests</button>
-          <button id="outgoingTab" class="tab">Outgoing Requests</button>
+    <div id="friendRequestsModal" class="friends-modal hidden">
+      <div class="friends-modal-content">
+        <span class="friends-modal-close-btn" id="closeFriendModal">&times;</span>
+        <div class="friends-modal-tabs">
+          <button id="incomingTab" class="tab active">Incoming</button>
+          <button id="outgoingTab" class="tab">Outgoing</button>
         </div>
-        <div class="modal-body">
-          <div id="incomingRequests" class="requests-section active">
+        <div class="friends-modal-body">
+          <div id="incomingRequests" class="friends-modal-requests-section active">
             <p>Loading incoming requests...</p>
           </div>
-          <div id="outgoingRequests" class="requests-section">
+          <div id="outgoingRequests" class="friends-modal-requests-section">
             <p>Loading outgoing requests...</p>
           </div>
         </div>
@@ -69,7 +69,7 @@ export default async function loadFriendListSection(content, user) {
 
     <h3>Friends</h3><br>
   
-    <div id="friendsList">No friends yet.</div>
+    <div id="friendsList">Start now by adding a friend via their nickname!</div>
   `;
 
   const addFriendForm = document.getElementById('addFriendForm');
@@ -194,7 +194,7 @@ export default async function loadFriendListSection(content, user) {
           </div>
         `).join('');
       } else if (pendingRequests.length === 0) {
-        html += '<p>No friend yet.</p>';
+        html += '<p>Start now by adding a friend via their nickname!.</p>';
       }
 
       friendsList.innerHTML = html;
@@ -205,10 +205,21 @@ export default async function loadFriendListSection(content, user) {
       incomingContainer.innerHTML = pendingRequests.length > 0
         ? pendingRequests.map(req => `
             <div class="friend-request-card">
-              <strong>${req.name || '-'}</strong><br>
-              <small>${req.uniquenick}</small><br>
-              <button class="accept-btn" data-id="${req._id}">Accept</button>
-              <button class="reject-btn" data-id="${req._id}">Reject</button>
+              <div class="friend-request-card-info">
+                <img src="${req.profilePictureUrl || '../media/user.png'}" alt="Avatar" class="avatar" />
+                <div class="friend-request-card-name">
+                  <strong>${req.name || 'User'}</strong><br>
+                  <small class="friend-request-card-nick">@${req.uniquenick || 'Undefined'}</small>
+                </div>
+              </div>
+              <div class="friend-request-card-actions">
+                <button class="accept-btn" title="Accept ${req.name || 'User'}'s request" data-id="${req._id}" data-name="${req.name || 'User'}">
+                  <i class="fas fa-comment-alt"></i> 
+                </button>
+                <button class="reject-btn" title="Reject ${req.name || 'User'}'s request" data-id="${req._id}" data-name="${req.name || 'User'}">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
             </div>
           `).join('')
         : '<p>No incoming requests.</p>';
@@ -216,9 +227,18 @@ export default async function loadFriendListSection(content, user) {
       outgoingContainer.innerHTML = sentRequests.length > 0
         ? sentRequests.map(req => `
             <div class="friend-request-card">
-              <strong>${req.name || '-'}</strong><br>
-              <small>${req.uniquenick}</small><br>
-              <button class="cancel-request-btn" data-id="${req._id}" data-name="${req.name || '-'}">Cancel Request</button>
+              <div class="friend-request-card-info">
+                <img src="${req.profilePictureUrl || '../media/user.png'}" alt="Avatar" class="avatar" />
+                <div class="friend-request-card-name">
+                  <strong>${req.name || 'User'}</strong><br>
+                  <small class="friend-request-card-nick">@${req.uniquenick || 'Undefined'}</small>
+                </div>
+              </div>
+              <div class="friend-request-card-actions">
+                <button class="cancel-request-btn" title="Cancel request" data-id="${req._id}" data-name="${req.name || 'User'}">
+                  <i class="fas fa-times"></i> 
+                </button>
+              </div>
             </div>
           `).join('')
         : '<p>No outgoing requests.</p>';
@@ -308,6 +328,12 @@ export default async function loadFriendListSection(content, user) {
 
   document.getElementById('closeFriendModal').addEventListener('click', () => {
     document.getElementById('friendRequestsModal').classList.add('hidden');
+  });
+
+  friendRequestsModal.addEventListener('click', (event) => {
+    if (event.target === friendRequestsModal) {
+      friendRequestsModal.classList.add('hidden');
+    }
   });
 
   document.getElementById('incomingTab').addEventListener('click', () => {

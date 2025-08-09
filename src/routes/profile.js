@@ -39,7 +39,7 @@ router.get('/profile/check-nick', async (req, res) => {
   }
 });
 
-router.get('/', async (req, res) => {
+router.get('/profile', async (req, res) => {
   try {
     const user = req.user;
 
@@ -73,7 +73,7 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
     const user = req.user;
     const updates = {};
     const updatedFields = [];
-
+    console.log(req.file);
     if (
       typeof req.body.nickname === 'string' &&
       req.body.nickname.trim() !== '' &&
@@ -160,6 +160,7 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
       about_me: user.about_me,
       uniquenickChangedAt: user.uniquenickChangedAt,
     });
+    console.log(req.file);
   } catch (error) {
     console.error('Update error:', error);
     res.status(500).json({ message: 'Internal error while updating the profile.' });

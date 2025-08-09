@@ -3,7 +3,9 @@ const router = express.Router();
 const { authMiddleware, requireRole } = require('../authMiddleware/authMiddleware');
 const User = require('../models/User');
 
-router.post('/force-logout', authMiddleware, requireRole('ceo'), async (req, res) => {
+router.use(authMiddleware);
+
+router.post('/force-logout', requireRole('ceo'), async (req, res) => {
   const { userId } = req.body;
   if (!userId) return res.status(400).json({ message: 'Missing user ID.' });
 

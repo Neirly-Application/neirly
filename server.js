@@ -151,17 +151,17 @@ app.use('/api/auth', adminRouter);
 app.use('/api/auth', completeProfileRouter);
 
 // Protected client endpoints
-app.use('/api/', authMiddleware, notificationsRouter);
-app.use('/api/', authMiddleware, deleteUserRouter);
-app.use('/api/', authMiddleware, activityRouter);
-app.use('/api/profile', authMiddleware, profileRouter);
-app.use('/api/', authMiddleware, friendsRouter);
-app.use('/api/', authMiddleware, privacyRouter);
-app.use('/api/', authMiddleware, devicesRouter);
-app.use('/api/', authMiddleware, nearMeRouter);
-app.use('/api/', authMiddleware, chatsRouter);
-app.use('/api/', authMiddleware, getUser);
-app.use('/api/', authMiddleware, searchNickRouter);
+app.use('/api', notificationsRouter);
+app.use('/api', deleteUserRouter);
+app.use('/api', activityRouter);
+app.use('/api', profileRouter);
+app.use('/api', friendsRouter);
+app.use('/api', privacyRouter);
+app.use('/api', devicesRouter);
+app.use('/api', nearMeRouter);
+app.use('/api', chatsRouter);
+app.use('/api', getUser);
+app.use('/api', searchNickRouter);
 
 /* ---------------------------------------------------------------------------
  *  Static file routes
