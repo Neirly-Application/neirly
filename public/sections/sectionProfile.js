@@ -65,7 +65,7 @@ export default async function loadProfileSection(content, user) {
     </div>
 
     <div class="form-group fas-input">
-      <i class="fas fa-user-tag icon-left" style="font-size: 1.3rem;"></i>
+      <i class="fas fa-user-tag icon-left" style="font-size: 1.2rem;"></i>
       <input type="text" id="nickname-input" value="${user.nickname || user.name || 'User'}" placeholder="Display name">
     </div>
 
