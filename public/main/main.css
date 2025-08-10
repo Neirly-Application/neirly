@@ -1087,7 +1087,7 @@ form button:focus-visible {
 
 @media (max-width: 768px) {
   .settings-menu {
-    justify-self: center;
+    justify-self: left;
   }
 }
 
@@ -1096,7 +1096,8 @@ form button:focus-visible {
 }
 
 .settings-menu li {
-  margin-bottom: 5px;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
 }
 
 .settings-menu li:last-child {
@@ -1105,8 +1106,8 @@ form button:focus-visible {
 
 .settings-menu a {
   display: flex;
-  max-width: 230px;
-  gap: 8px;
+  max-width: 300px;
+  gap: 10px;
   background: transparent;
   padding: 12px 16px;
   border-radius: 8px;
@@ -1125,7 +1126,7 @@ form button:focus-visible {
 }
 
 .settings-menu a:hover {
-  background: var(--main-bg);
+  background: var(--primary);
   color: var(--accent);
 }
 
@@ -1389,11 +1390,12 @@ body.subsection-active {
     top: 50%;
     left: 105%;
     transform: translateY(-50%);
-    background-color: var(--main-bg);
+    background-color: var(--primary);
     color: var(--accent);
     padding: 6px 10px;
     border-radius: 5px;
-    font-size: 13px;
+    font-size: 1rem;
+    font-weight: bold;
     white-space: normal;
     max-width: 400px;
     width: 100%;
@@ -1402,7 +1404,7 @@ body.subsection-active {
     pointer-events: none;
     transition: opacity 0.2s ease, transform 0.2s ease;
     z-index: 1000;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 10px rgba(24, 41, 79, 0.2);
   }
 
   .custom-tooltip::before {
@@ -1413,7 +1415,7 @@ body.subsection-active {
     transform: translateY(-50%);
     border-width: 6px;
     border-style: solid;
-    border-color: transparent transparent transparent var(--main-bg);
+    border-color: transparent transparent transparent var(--primary);
     opacity: 0;
     transition: opacity 0.2s ease;
     z-index: 1000;
