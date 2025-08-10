@@ -1,0 +1,126 @@
+@import url(../styles/variables.css);
+
+:root{
+	--bg:#0f1724;
+	--card:#0b1220;
+	--accent:#30cfd0;
+	--accent-2:#330867;
+	--muted: rgba(255,255,255,0.55);
+	--radius: 14px;
+	--gap: 30px;
+	font-family: Inter, ui-sans-serif, system-ui;
+}
+body{
+	margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--animated-bg-main);color:#fff;
+}
+.clock-wrap{
+	width: 90%;
+	height: 300px;
+	padding: 20px;
+	padding-block: 40px;
+	justify-content: center;
+	background: var(--primary);
+	border-radius: var(--radius);
+	display:flex;flex-direction:column;align-items:center;gap:20px;
+}
+header h1{
+	display:flex;
+	align-items:center;
+	gap:10px;
+	font-size: clamp(2rem, 10vw, 4rem);
+}
+header img{
+	height: clamp(30px, 10vw, 70px);
+	margin-top: clamp(0px, 10vw, 10px);
+	width:auto;
+}
+.clock{
+	display:flex;gap: var(--gap);
+	font-size: 70px;
+	font-weight: 700;
+	flex-wrap: nowrap;
+	margin-bottom: 20px;
+	justify-content: center;
+}
+.unit{display:flex;flex-direction:column;align-items:center;overflow:hidden;}
+.label{font-size:20px;color:var(--secondary);}
+.sep{color:var(--secondary);}
+#unit-days, #unit-hours, #unit-minutes, #unit-seconds {
+  display: flex;
+}
+#sep-days, #sep-hours, #sep-minutes {
+  display: block;
+}
+
+@media (max-width: 700px) {
+	.clock-wrap {
+		background: transparent;
+		border-radius: var(--radius);
+		color: var(--main-bg);
+	}
+
+	.clock-wrap .change {
+		color: var(--primary);
+	}
+
+	.clock-wrap .label, .clock-wrap .sep {
+		color: var(--main-bg);
+	}
+	
+	#unit-days, #unit-hours, #unit-minutes {
+	  	display: flex;
+	}
+
+	#unit-seconds {
+		display: none;
+	}
+
+	#sep-days, #sep-hours {
+		display: block;
+	}
+
+	#sep-minutes {
+		display: none;
+	} 
+}
+
+@media (max-width: 620px) {
+	#unit-days, #unit-hours {
+	  	display: flex;
+	}
+
+	#unit-minutes, #unit-seconds {
+		display: none;
+	}
+
+	#sep-day {
+		display: block;
+	}
+
+	#sep-hours, #sep-minutes {
+		display: none;
+	} 
+}
+
+@media (max-width: 400px) {
+	#unit-days {
+	  	display: flex;
+	}
+
+	#unit-hours, #unit-minutes, #unit-seconds {
+		display: none;
+	}
+
+	#sep-days, #sep-hours, #sep-minutes {
+		display: none;
+	} 
+}
+
+.change {
+	animation: slideDown 0.4s ease;
+}
+@keyframes slideDown {
+	0% { opacity: 0; transform: translateY(-100%); }
+	50% { opacity: 1; transform: translateY(0); }
+	100% { opacity: 1; transform: translateY(0); }
+}

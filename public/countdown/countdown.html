@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Countdown</title>
+
+    <link rel="icon" type="image/png" sizes="16x16" href="/media/neirly.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/media/neirly.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/media/neirly.png">
+    <link rel="icon" type="image/x-icon" href="/media/neirly.png">
+
+    <link rel="stylesheet" href="/countdown/countdown.css" />
+    <link rel="stylesheet" href="/countdown/offline.css" />
+</head>
+<body>
+
+<body>
+  <main class="clock-wrap">
+    <header>
+      <h1>
+        <img src="../media/neirly-logo.png" alt="Icona" />
+        <span>Neirly</span>
+      </h1>
+      <p style="text-align: center; font-weight: bold;">Launch in:</p>
+    </header>
+    <section class="clock">
+        <div class="unit" id="unit-days">
+            <div id="days">00</div>
+            <div class="label">Days</div>
+        </div>
+        <div class="sep" id="sep-days">:</div>
+        <div class="unit" id="unit-hours">
+            <div id="hours">00</div>
+            <div class="label">Hours</div>
+        </div>
+        <div class="sep" id="sep-hours">:</div>
+        <div class="unit" id="unit-minutes">
+            <div id="minutes">00</div>
+            <div class="label">Minutes</div>
+        </div>
+        <div class="sep" id="sep-minutes">:</div>
+        <div class="unit" id="unit-seconds">
+            <div id="seconds">00</div>
+            <div class="label">Seconds</div>
+        </div>
+    </section>
+  </main>
+
+<script src="/countdown/countdown.js"></script>
+</body>
+</html>
