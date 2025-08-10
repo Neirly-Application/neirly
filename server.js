@@ -172,6 +172,9 @@ app.use('/user_pfps', express.static(pathModule.join(__dirname, 'user_pfps')));
  *  Root route & 404 handling
  * ------------------------------------------------------------------------- */
 app.use(express.static(path.join(__dirname, 'public')));
+app.get('/bypass', (req, res) => {
+  res.sendFile(pathModule.join(__dirname, 'index.html'));
+});
 app.get('/', (req, res) => {
   res.sendFile(pathModule.join(__dirname, 'public', 'countdown', 'countdown.html'));
 });
