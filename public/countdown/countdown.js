@@ -12,7 +12,7 @@ function updateElement(id, newValue) {
 
 function updateCountdown(){
     const now = new Date();
-    const target = new Date(now.getFullYear(), 10, 1, 0, 0, 0);
+    const target = new Date(2026, 0, 1, 0, 0, 0);
     if(now > target){
     target.setFullYear(target.getFullYear() + 1);
     }
