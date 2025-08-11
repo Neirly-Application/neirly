@@ -35,9 +35,13 @@ audioToggleBtn.addEventListener('click', () => {
     bgMusic.pause();
   }
 
-  audioToggleBtn.innerHTML = audioEnabled
-    ? '<i class="fas fa-volume-up"></i>'
-    : '<i class="fas fa-volume-mute"></i>';
+    if (audioEnabled) {
+    audioToggleBtn.innerHTML = '<i class="fas fa-volume-up"></i> Volume ON';
+    audioToggleBtn.title = "Volume ON";
+    } else {
+    audioToggleBtn.innerHTML = '<i class="fas fa-volume-mute"></i> Volume OFF';
+    audioToggleBtn.title = "Volume OFF";
+    }
 });
 
 // ==== PLAY SOUND ====
@@ -209,3 +213,16 @@ function updateOnlineUsers() {
 
 updateOnlineUsers();
 setInterval(updateOnlineUsers, 2000);
+
+// ==== KEY EVENTS ====
+document.addEventListener('keydown', (event) => {
+  if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.isComposing) {
+    return;
+  }
+  if (event.key === 'm' || event.key === 'M') {
+    audioToggleBtn.click();
+  } else if (event.key === 't' || event.key === 'T') {
+    themeToggleBtn.checked = !themeToggleBtn.checked;
+    document.body.classList.toggle('light-theme', themeToggleBtn.checked);
+  }
+});
