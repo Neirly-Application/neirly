@@ -111,6 +111,10 @@ app.get('/launch-online-users', (req, res) => {
   res.json({ count: activeIPs.size });
 });
 
+app.get('/ping', (req, res) => {
+  res.json({ pong: true });
+});
+
 /* ---------------------------------------------------------------------------
  *  Custom middleware and route imports
  * ------------------------------------------------------------------------- */

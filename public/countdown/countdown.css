@@ -8,17 +8,25 @@
   --ccc: #ccc;
   --overlay-bg: #d8f1ff;
   --small: #90d6ff91;
+
+  --ping-good: #4caf50;
+  --ping-stable: #ff9800;
+  --ping-bad: #f44336;
 }
 body.light-theme {
   --primary: #2c4296;
   --secondary: #90d6ff;
   --animated-bg-main: #b5e4ff;
-  --main-bg: #14a9ff;
+  --main-bg: #0081cb;
   --text-color: #90d6ff;
   --progress: linear-gradient(90deg, #001f4d, #002966, #003d80, #0056b3, #007bff);
   --ccc: #ccc;
   --overlay-bg: #001c2b;
   --small: #2c8ac1b0;
+
+  --ping-good: #4caf50;
+  --ping-stable: #ff9800;
+  --ping-bad: #f44336;
 }
 
 body{

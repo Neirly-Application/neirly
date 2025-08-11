@@ -226,3 +226,36 @@ document.addEventListener('keydown', (event) => {
     document.body.classList.toggle('light-theme', themeToggleBtn.checked);
   }
 });
+
+// ==== USER LATENCY ====
+async function measurePing() {
+const pingEl = document.getElementById('ping');
+
+    try {
+    const start = performance.now();
+    await fetch('/ping', { cache: 'no-store' });
+    const end = performance.now();
+
+    const ping = Math.round(end - start);
+    pingEl.textContent = ping + "ms";
+
+    let colorVar;
+
+    if (ping < 100) {
+        colorVar = '--ping-good';
+    } else if (ping < 200) {
+        colorVar = '--ping-stable';
+    } else {
+        colorVar = '--ping-bad';
+    }
+
+    pingEl.style.color = getComputedStyle(document.documentElement).getPropertyValue(colorVar).trim();
+
+    } catch (err) {
+    pingEl.textContent = 'Err';
+    pingEl.style.color = '#f00';
+    }
+}
+
+setInterval(measurePing, 500);
+measurePing();
