@@ -7,7 +7,7 @@ tickAudio.volume = 0.45;
 const bgMusic = new Audio('../countdown/sfx/waiting.mp3');
 bgMusic.preload = 'auto';
 bgMusic.loop = true;
-bgMusic.volume = 0.15;
+bgMusic.volume = 0.25;
 
 let audioEnabled = false;
 let audioUnlocked = false;
@@ -161,15 +161,19 @@ updateCountdown();
 
 // ==== TEMA & GESTURE ====
 const themeToggleBtn = document.getElementById('theme-toggle');
+const dragPingItem = document.getElementById('draggable');
+
+let touchStartX = 0;
+let touchEndX = 0;
+let gestureEnabled = true;
 
 themeToggleBtn.addEventListener('change', () => {
   document.body.classList.toggle('light-theme', themeToggleBtn.checked);
 });
 
-let touchStartX = 0;
-let touchEndX = 0;
-
 function handleGesture() {
+  if (!gestureEnabled);
+
   const deltaX = touchEndX - touchStartX;
   const threshold = 50;
 
@@ -183,12 +187,19 @@ function handleGesture() {
 }
 
 document.addEventListener('touchstart', e => {
-  touchStartX = e.changedTouches[0].screenX;
+  if (dragPingItem.contains(e.target)) {
+    gestureEnabled = false;
+  } else {
+    gestureEnabled = true;
+    touchStartX = e.changedTouches[0].screenX;
+  }
 });
 
 document.addEventListener('touchend', e => {
-  touchEndX = e.changedTouches[0].screenX;
-  handleGesture();
+  if (gestureEnabled) {
+    touchEndX = e.changedTouches[0].screenX;
+    handleGesture();
+  }
 });
 
 window.addEventListener('load', () => {
@@ -259,3 +270,65 @@ const pingEl = document.getElementById('ping');
 
 setInterval(measurePing, 500);
 measurePing();
+
+// ==== DRAG PING ====
+const dragItem = document.getElementById("draggable");
+let active = false;
+let currentX = 0, currentY = 0;
+let initialX = 0, initialY = 0;
+let xOffset = 0, yOffset = 0;
+
+dragItem.addEventListener("mousedown", dragStart);
+document.addEventListener("mouseup", dragEnd);
+document.addEventListener("mousemove", drag);
+
+dragItem.addEventListener("touchstart", dragStart);
+document.addEventListener("touchend", dragEnd);
+document.addEventListener("touchmove", drag);
+
+function dragStart(e) {
+  dragItem.style.userSelect = "none";
+  dragItem.style.webkitUserSelect = "none";
+  dragItem.style.mozUserSelect = "none";
+  dragItem.style.msUserSelect = "none";
+
+  if (e.type === "touchstart") {
+    initialX = e.touches[0].clientX - xOffset;
+    initialY = e.touches[0].clientY - yOffset;
+  } else {
+    initialX = e.clientX - xOffset;
+    initialY = e.clientY - yOffset;
+  }
+  active = true;
+}
+
+function dragEnd() {
+  active = false;
+
+  dragItem.style.userSelect = "auto";
+  dragItem.style.webkitUserSelect = "auto";
+  dragItem.style.mozUserSelect = "auto";
+  dragItem.style.msUserSelect = "auto";
+
+  xOffset = currentX;
+  yOffset = currentY;
+}
+
+function drag(e) {
+  if (!active) return;
+  e.preventDefault();
+
+  if (e.type === "touchmove") {
+    currentX = e.touches[0].clientX - initialX;
+    currentY = e.touches[0].clientY - initialY;
+  } else {
+    currentX = e.clientX - initialX;
+    currentY = e.clientY - initialY;
+  }
+
+  setTranslate(currentX, currentY, dragItem);
+}
+
+function setTranslate(xPos, yPos, el) {
+  el.style.transform = `translate(${xPos}px, ${yPos}px)`;
+}
