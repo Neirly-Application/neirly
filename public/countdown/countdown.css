@@ -220,3 +220,21 @@ input:checked + .slider {
 input:checked + .slider::before {
   transform: translateX(24px);
 }
+
+@keyframes spin-pause {
+  0% {
+    transform: rotate(0deg);
+  }
+  60% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.hourglass-spin {
+  margin-right: 10px;
+  transform-origin: center center;
+  animation: spin-pause 1s linear infinite;
+}
