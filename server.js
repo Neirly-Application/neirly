@@ -85,6 +85,32 @@ const pathModule = require('path');
 
 const app = express();
 
+const activeIPs = new Map();
+const TIMEOUT = 5000;
+
+app.use('/launch', (req, res, next) => {
+  const ip = req.ip || req.connection.remoteAddress;
+
+  activeIPs.set(ip, Date.now());
+
+  const now = Date.now();
+  for (const [ip, lastSeen] of activeIPs.entries()) {
+    if (now - lastSeen > TIMEOUT) {
+      activeIPs.delete(ip);
+    }
+  }
+
+  next();
+});
+
+app.get('/launch', (req, res) => {
+  res.json({ success: true });
+});
+
+app.get('/launch-online-users', (req, res) => {
+  res.json({ count: activeIPs.size });
+});
+
 /* ---------------------------------------------------------------------------
  *  Custom middleware and route imports
  * ------------------------------------------------------------------------- */
@@ -172,11 +198,26 @@ app.use('/user_pfps', express.static(pathModule.join(__dirname, 'user_pfps')));
  *  Root route & 404 handling
  * ------------------------------------------------------------------------- */
 app.use(express.static(path.join(__dirname, 'public')));
+
+let rootFile = 'public/countdown/countdown.html';
+
 app.get('/bypass', (req, res) => {
   res.sendFile(pathModule.join(__dirname, 'index.html'));
 });
 app.get('/', (req, res) => {
-  res.sendFile(pathModule.join(__dirname, 'public', 'countdown', 'countdown.html'));
+  res.sendFile(pathModule.join(__dirname, rootFile));
+});
+
+app.post('/switch-root', (req, res) => {
+  const allowedOrigin = 'http://localhost:3000';
+  const origin = req.get('Origin') || req.get('Referer');
+
+  if (!origin || !origin.startsWith(allowedOrigin)) {
+    return res.json({ success: false });
+  } else {
+    rootFile = 'index.html';
+    res.json({ success: true });
+  }
 });
 
 app.use((req, res) => {

@@ -1,22 +1,26 @@
-function pad(n){return String(n).padStart(2,'0');}
+function pad(n) {
+    return String(n).padStart(2, '0');
+}
 
 function updateElement(id, newValue) {
     const el = document.getElementById(id);
-    if(el.textContent !== newValue){
-    el.textContent = newValue;
-    el.classList.remove('change');
-    void el.offsetWidth; 
-    el.classList.add('change');
+    if (el.textContent !== newValue) {
+        el.textContent = newValue;
+        el.classList.remove('change');
+        void el.offsetWidth;
+        el.classList.add('change');
     }
 }
 
-function updateCountdown(){
+function updateCountdown() {
     const now = new Date();
-    const target = new Date(2026, 0, 1, 0, 0, 0);
-    if(now > target){
-    target.setFullYear(target.getFullYear() + 1);
-    }
-    const diff = target - now;
+    const targetUTC = Date.UTC(2026, 0, 1, 23 - 1, 0, 0);
+
+    const startUTC = Date.UTC(2025, 0, 1, 23 - 1, 0, 0);
+    const totalDuration = targetUTC - startUTC;
+    const elapsed = now.getTime() - startUTC;
+
+    const diff = targetUTC - now.getTime();
 
     const totalSeconds = Math.floor(diff / 1000);
     const days = Math.floor(totalSeconds / (24 * 3600));
@@ -28,7 +32,112 @@ function updateCountdown(){
     updateElement('hours', pad(hours));
     updateElement('minutes', pad(minutes));
     updateElement('seconds', pad(seconds));
+
+    function toggleHidden(id, show) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (show) {
+            el.classList.remove('hidden');
+        } else {
+            el.classList.add('hidden');
+        }
+    }
+
+    const showDays = days !== 0;
+    toggleHidden('days', showDays);
+    toggleHidden('sep-days', showDays);
+    toggleHidden('label-days', showDays);
+
+    const showHours = showDays ? true : (hours !== 0);
+    toggleHidden('hours', showHours);
+    toggleHidden('sep-hours', showHours);
+    toggleHidden('label-hours', showHours);
+
+    const showMinutes = (showDays && showHours) ? true : (minutes !== 0);
+    toggleHidden('minutes', showMinutes);
+    toggleHidden('sep-minutes', showMinutes);
+    toggleHidden('label-minutes', showMinutes);
+
+    toggleHidden('seconds', true);
+    toggleHidden('label-seconds', true);
+
+    let progress = (elapsed / totalDuration) * 100;
+    if (progress > 100) progress = 100;
+    if (progress < 0) progress = 0;
+
+    const progressBar = document.getElementById('progress-bar');
+    if (progressBar) {
+        progressBar.style.width = progress + '%';
+    }
+
+    if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
+        fetch('/switch-root', { method: 'POST' })
+            .then(res => res.json())
+            .then(data => console.log(data.message))
+            .catch(err => console.error(err));
+
+        window.location.reload();
+    }
 }
 
-setInterval(updateCountdown,1000);
+setInterval(updateCountdown, 1000);
 updateCountdown();
+const themeToggleBtn = document.getElementById('theme-toggle');
+
+themeToggleBtn.addEventListener('change', () => {
+  document.body.classList.toggle('dark-theme', themeToggleBtn.checked);
+});
+
+let touchStartX = 0;
+let touchEndX = 0;
+
+function handleGesture() {
+  const deltaX = touchEndX - touchStartX;
+  const threshold = 50;
+
+  if (deltaX > threshold) {
+    document.body.classList.remove('dark-theme');
+    themeToggleBtn.checked = false;
+  } else if (deltaX < -threshold) {
+    document.body.classList.add('dark-theme');
+    themeToggleBtn.checked = true;
+  }
+
+  themeOverlay.style.transition = 'opacity 0.5s ease';
+  themeOverlay.style.opacity = '1';
+
+  setTimeout(() => {
+    themeOverlay.style.opacity = '0';
+  }, 500);
+}
+
+document.addEventListener('touchstart', e => {
+  touchStartX = e.changedTouches[0].screenX;
+});
+
+document.addEventListener('touchend', e => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleGesture();
+});
+
+window.addEventListener('load', () => {
+  const elements = document.body.children;
+  for (let i = 0; i < elements.length; i++) {
+    elements[i].style.animation = `popup 0.5s ease forwards`;
+    elements[i].style.animationDelay = `${i * 0.1}s`;
+    elements[i].style.transformOrigin = 'center center';
+  }
+});
+
+fetch('/launch');
+function updateOnlineUsers() {
+  fetch('/launch-online-users')
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('online-users').textContent = data.count;
+    })
+    .catch(console.error);
+}
+
+updateOnlineUsers();
+setInterval(updateOnlineUsers, 2000);

@@ -5,6 +5,7 @@
 @import url(./cards.css);
 @import url(./notifications.css);
 @import url(./footer.css);
+@import url(./offline.css);
 
 * {
   box-sizing: border-box;
