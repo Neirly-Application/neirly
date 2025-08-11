@@ -21,6 +21,7 @@ import loadSettingsLanguageSection from '../sections/sectionSettingsLanguage.js'
 import loadSettingsNotificationsSection from '../sections/sectionSettingsNotifications.js';
 import loadSettingsPrivacySection from '../sections/sectionSettingsPrivacy.js';
 import loadSettingsThemeSection from '../sections/sectionSettingsTheme.js';
+import loadDefaultSection from '../sections/sectionDefault.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -157,6 +158,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         "settings-notifications": "Neirly - Notifications Settings",
         "settings-privacy": "Neirly - Privacy",
         "settings-theme": "Neirly - Theme",
+        "default": "Neirly - Loading",
       };
 
       document.title = sectionTitles[section] || "Neirly";
@@ -195,9 +197,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         case 'settings-privacy': await loadSettingsPrivacySection(content, user); break;
         case 'settings-theme': await loadSettingsThemeSection(content, user); break;
         default:
-          if (currentLoadToken === thisToken) {
-            content.innerHTML = '<p style="font-weight: bold; justify-content: center; font-size: 2rem">Section not found</p>';
-          }
+          case 'default': await loadDefaultSection(content, user);
           return;
       }
 

@@ -45,7 +45,7 @@ export default async function loadFriendListSection(content, user) {
     </form>
 
     <div class="friend-requests" id="open-friend-requests-view" role="button" tabindex="0" aria-label="Open friend requests modal">
-      <span class="friend-requests-text">You have no pending friend requests</span>
+      <span class="friend-requests-text">You have no pending friend requests.</span>
       <div class="friend-requests-icon-with-badge">
         <i class="fas fa-user-friends friend-requests-icon"></i>
         <span class="friend-requests-badge" style="display:none;">0</span>

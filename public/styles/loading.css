@@ -1,0 +1,24 @@
+.load-screen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.load-spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid var(--secondary);
+  border-top-color: var(--animate-bg-main);
+  color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
