@@ -1,24 +1,21 @@
-@import url(../styles/main.css);
-
 :root {
   --primary: #3656d3;
   --secondary: #0093e8d7;
   --animated-bg-main: #001c2b;
   --main-bg: #90d6ff;
-  --text-color: #90d6ff;
+  --text-color: #2c4296;
   --progress: linear-gradient(90deg, #001f4d, #002966, #003d80, #0056b3, #007bff);
   --ccc: #ccc;
   --overlay-bg: #d8f1ff;
   --small: #90d6ff91;
 }
-
-body.dark-theme {
+body.light-theme {
   --primary: #2c4296;
   --secondary: #90d6ff;
-  --animated-bg-main: #d8f1ff;
-  --main-bg: #0093e8d7;
-  --text-color: #0093e8d7;
-  --progress: linear-gradient(90deg, #007bff, #0056b3, #003d80, #002966, #001f4d);
+  --animated-bg-main: #b5e4ff;
+  --main-bg: #14a9ff;
+  --text-color: #90d6ff;
+  --progress: linear-gradient(90deg, #001f4d, #002966, #003d80, #0056b3, #007bff);
   --ccc: #ccc;
   --overlay-bg: #001c2b;
   --small: #2c8ac1b0;
@@ -30,23 +27,34 @@ body{
 	align-items: center;
 	justify-content: center;
 	min-height: 100vh;
+  	font-family: 'Inter', sans-serif;
 	background: var(--animated-bg-main);
 	color: var(--text-color);
 	transition: background-color 0.3s ease, color 0.3s ease;
 }
 small {
-	color: var(--small);
+	display: none;
 }
-@keyframes popup {
+@media (max-width: 800px) {
+	small {
+		display: block;
+		color: var(--small);
+	}
+}@keyframes popup {
   0% {
     opacity: 0;
     transform: scale(0.8);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.05);
   }
   100% {
     opacity: 1;
     transform: scale(1);
   }
 }
+
 .clock-wrap{
 	width: 90%;
 	height: 300px;
@@ -173,6 +181,15 @@ header img{
   border-bottom-right-radius: 20px;
   transition: width 0.3s ease;
   transition: background 0.3s ease;
+}
+#progress-text {
+  position: fixed; 
+  top: 10px; 
+  left: 50%; 
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: var(--main-bg); 
+  z-index: 10000;
 }
 
 .theme-switch {

@@ -61,14 +61,6 @@ function updateCountdown() {
     toggleHidden('seconds', true);
     toggleHidden('label-seconds', true);
 
-    let progress = (elapsed / totalDuration) * 100;
-    if (progress > 100) progress = 100;
-    if (progress < 0) progress = 0;
-
-    const progressBar = document.getElementById('progress-bar');
-    if (progressBar) {
-        progressBar.style.width = progress + '%';
-    }
 
     if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
         fetch('/switch-root', { method: 'POST' })
@@ -80,12 +72,38 @@ function updateCountdown() {
     }
 }
 
+const startUTC = Date.UTC(2025, 5, 27, 23, 35, 23);
+const endUTC = Date.UTC(2026, 0, 1, 0, 0, 0);
+const maxDuration = endUTC - startUTC;
+
+function updateProgressBar() {
+  const nowUTC = Date.now();
+  const elapsed = nowUTC - startUTC;
+
+  let progress = (elapsed / maxDuration) * 100;
+  if (progress > 100) progress = 100;
+  if (progress < 0) progress = 0;
+
+  const progressBar = document.getElementById('progress-bar');
+  const progressText = document.getElementById('progress-text');
+
+  if (progressBar) {
+    progressBar.style.width = progress + '%';
+  }
+  if (progressText) {
+    progressText.textContent = progress.toFixed(2) + '%';
+  }
+}
+
+setInterval(updateProgressBar, 1000);
+updateProgressBar();
 setInterval(updateCountdown, 1000);
 updateCountdown();
+
 const themeToggleBtn = document.getElementById('theme-toggle');
 
 themeToggleBtn.addEventListener('change', () => {
-  document.body.classList.toggle('dark-theme', themeToggleBtn.checked);
+  document.body.classList.toggle('light-theme', themeToggleBtn.checked);
 });
 
 let touchStartX = 0;
@@ -96,10 +114,10 @@ function handleGesture() {
   const threshold = 50;
 
   if (deltaX > threshold) {
-    document.body.classList.remove('dark-theme');
+    document.body.classList.remove('light-theme');
     themeToggleBtn.checked = false;
   } else if (deltaX < -threshold) {
-    document.body.classList.add('dark-theme');
+    document.body.classList.add('light-theme');
     themeToggleBtn.checked = true;
   }
 
@@ -123,7 +141,7 @@ document.addEventListener('touchend', e => {
 window.addEventListener('load', () => {
   const elements = document.body.children;
   for (let i = 0; i < elements.length; i++) {
-    elements[i].style.animation = `popup 0.5s ease forwards`;
+    elements[i].style.animation = `popup 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards`;
     elements[i].style.animationDelay = `${i * 0.1}s`;
     elements[i].style.transformOrigin = 'center center';
   }
