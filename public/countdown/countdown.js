@@ -74,6 +74,7 @@ function pad(n) {
 
 function updateElement(id, newValue) {
   const el = document.getElementById(id);
+  if (!el) return;
   if (el.textContent !== newValue) {
     el.textContent = newValue;
     el.classList.remove('change');
@@ -132,18 +133,71 @@ function updateCountdown() {
   toggleHidden('seconds', true);
   toggleHidden('label-seconds', true);
 
-  if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
-    fetch('/switch-root', { method: 'POST' })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success === true) {
-          window.location.reload();
-        } else {
-          console.log(data.message);
+    if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
+    document.body.innerHTML = '';
+
+    const style = document.createElement('style');
+    style.textContent = `
+        body {
+        margin: 0;
+        background-color: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
         }
-      })
-      .catch(err => console.error(err));
-  }
+        button {
+        background: transparent;
+        border: none;
+        padding: 20px 40px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        border-radius: 8px;
+        font-family: sans-serif;
+        color: white;
+        }
+    `;
+    document.head.appendChild(style);
+
+    const button = document.createElement('button');
+    button.textContent = 'Proceed';
+    document.body.appendChild(button);
+
+    button.addEventListener('click', async () => {
+        try {
+        tickAudio.pause();
+        bgMusic.pause();
+
+        const audio1 = new Audio('../countdown/sfx/time_is_up/ladies_and_gentlemen.mp3');
+        const audio2 = new Audio('../countdown/sfx/time_is_up/welcome_to_neirly.mp3');
+
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        await audio1.play();
+        audio1.addEventListener('ended', async () => {
+            await audio2.play();
+
+            audio2.addEventListener('ended', async () => {
+
+            fetch('/switch-root', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                if (data.success === true) {
+                    delay(1000);
+                    window.location.reload();
+                } else {
+                    console.log(data.message);
+                }
+                })
+                .catch(err => console.error(err));
+            }, { once: true });
+        }, { once: true });
+
+        } catch (err) {
+        console.error('Error while playing audio:', err);
+        }
+    });
+    }
 }
 
 // ==== PROGRESS BAR ====
