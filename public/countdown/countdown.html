@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Countdown</title>
+  <title>Neirly - Launch Countdown (EXCLUSIVE!)</title>
 
     <link rel="icon" type="image/png" sizes="16x16" href="/media/neirly-logo.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/media/neirly-logo.png">
@@ -24,7 +24,7 @@
 
   <main class="clock-wrap">
     <header>
-      <h1>
+      <h1 title="Neirly - Launch Countdown (EXCLUSIVE!)">
         <img src="../media/neirly-logo.png" alt="Icona" />
         <span>Neirly</span>
       </h1>
@@ -32,32 +32,31 @@
     </header>
     <section class="clock" title="Launch Countdown">
         <div class="unit" id="unit-days" title="Days">
-            <div id="days">00</div>
+            <div id="days"><span id="days-tens">0</span><span id="days-ones">0</span></div>
             <div class="label" id="label-days">Days</div>
         </div>
-        <div class="sep" id="sep-days">:</div>
+        <div class="sep" id="sep-days" title="Separator">:</div>
         <div class="unit" id="unit-hours" title="Hours">
-            <div id="hours">00</div>
+            <div id="hours"><span id="hours-tens">0</span><span id="hours-ones">0</span></div>
             <div class="label" id="label-hours">Hours</div>
         </div>
-        <div class="sep" id="sep-hours">:</div>
+        <div class="sep" id="sep-hours" title="Separator">:</div>
         <div class="unit" id="unit-minutes" title="Minutes">
-            <div id="minutes">00</div>
+            <div id="minutes"><span id="min-tens">0</span><span id="min-ones">0</span></div>
             <div class="label" id="label-minutes">Minutes</div>
         </div>
-        <div class="sep" id="sep-minutes">:</div>
+        <div class="sep" id="sep-minutes" title="Separator">:</div>
         <div class="unit" id="unit-seconds" title="Seconds">
-            <div id="seconds">00</div>
+            <div id="seconds"><span id="sec-tens">0</span><span id="sec-ones">0</span></div>
             <div class="label">Seconds</div>
         </div>
     </section>
-    <p title="Users waiting for launch"><i class="fas fa-hourglass-half hourglass-spin"></i> Users waiting: <span id="online-users">0</span></p>
-    <small class="small-mobile">Swipe left or right to change theme.</small>
-    <small class="small-desktop">Press "M" to toggle audio and "T" to change theme.</small>
+    <small class="small-mobile" title="Touch devices Keybinds">Swipe &nbsp;<a title="Swipe left for light theme" onclick="simSwipeLeft()"><i class="fas fa-arrow-left"></i> left</a>&nbsp; and &nbsp;<a title="Swipe right for dark theme" onclick="simSwipeRight()">right <i class="fas fa-arrow-right"></i></a>&nbsp; to change theme.</small>
+    <small class="small-desktop" title="Desktop Keybinds">Press &nbsp;<a title="Keybind M: toggle audio" onclick='audioToggleBtn.click();'>" M "</a>&nbsp; to toggle audio and &nbsp;<a title="Keybind T: toggle theme" onclick='toggleThemeOnClick()'>" T "</a>&nbsp; to toggle theme.</small>
+    <p title="Connected users waiting for launch"><i class="fas fa-hourglass-half hourglass-spin"></i> Users waiting: <span id="online-users">0</span></p>
     <button id="audio-toggle" class="audio-btn" title="Volume ON/OFF"><i class="fas fa-volume-mute"></i> Volume OFF</button>
-  <div id="draggable" title="Your Latency (draggable)">Ping: <span id="ping">0</span></div>
+    <p title="Your Latency (draggable)">Ping: <span id="ping">0</span></p>
   </main>
-
 
   <label class="theme-switch" title="Toggle Theme">
     <input type="checkbox" id="theme-toggle">

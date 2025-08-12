@@ -218,9 +218,16 @@ app.post('/switch-root', (req, res) => {
 
   if (!origin || !origin.startsWith(allowedOrigin)) {
     return res.json({ success: false });
-  } else {
+  }
+
+  const now = new Date();
+  const targetDateStart = new Date('2026-01-01T00:00:00Z');
+
+  if (now >= targetDateStart) {
     rootFile = 'index.html';
-    res.json({ success: true });
+    return res.json({ success: true});
+  } else {
+    return res.json({ success: false, message: 'What are you trying to do? 👀'  });
   }
 });
 

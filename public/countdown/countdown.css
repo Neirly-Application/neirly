@@ -24,9 +24,9 @@ body.light-theme {
   --overlay-bg: #001c2b;
   --small: #2c8ac1b0;
 
-  --ping-good: #4caf50;
-  --ping-stable: #ff9800;
-  --ping-bad: #f44336;
+  --ping-good: #0c8810;
+  --ping-stable: #be7200;
+  --ping-bad: #a90f04;
 }
 
 body{
@@ -57,17 +57,32 @@ body{
 	font-weight: bold;
 	color: var(--small);
 }
+.small-desktop a {
+	text-decoration: none;
+	color: var(--main-bg);
+}
+.small-desktop a:hover {
+	cursor: pointer;
+}
 @media (max-width: 800px) {
 	.small-mobile {
 		display: block;
 		font-weight: bold;
 		color: var(--small);
 	}
+	.small-mobile a {
+		text-decoration: none;
+		color: var(--main-bg);
+	}
+	.small-mobile a:hover {
+		cursor: pointer;
+	}
 
 	.small-desktop {
 		display: none;
 	}
-}@keyframes popup {
+}
+@keyframes popup {
   0% {
     opacity: 0;
     transform: scale(0.8);
@@ -97,11 +112,12 @@ header h1{
 	display:flex;
 	align-items:center;
 	gap:10px;
-	font-size: clamp(2rem, 10vw, 4rem);
+	font-size: clamp(4rem, 10vw, 6rem);
+	animation: cinematicLogoIntro 3s ease-out forwards;
 }
 header img{
-	height: clamp(30px, 10vw, 70px);
-	margin-top: clamp(0px, 10vw, 10px);
+	height: clamp(70px, 10vw, 110px);
+	margin-top: 0;
 	width:auto;
 }
 .clock-wrap .label, .clock-wrap .sep {
@@ -109,15 +125,16 @@ header img{
 }
 .clock{
 	display:flex;gap: 30px;
-	font-size: 70px;
+	font-size: 100px;
 	font-weight: 700;
 	flex-wrap: nowrap;
 	margin-bottom: 20px;
 	justify-content: center;
+	animation: zoomInOut 4s ease-in-out infinite;
 }
 .unit{display:flex;flex-direction:column;align-items:center;overflow:hidden;}
-.label{font-size:20px;color:var(--secondary);}
-.sep{color:var(--secondary);}
+.label{font-size:20px;color:var(--secondary);text-shadow: none;}
+.sep{color:var(--secondary);text-shadow: none;}
 .hidden {
   display: none !important;
 }
@@ -180,7 +197,7 @@ header img{
 
 .change {
 	font-family: 'Bebas Neue', sans-serif;
-	font-weight: 400;
+	font-weight: 600;
 	color: var(--primary);
 	animation: slideDown 0.4s ease;
 }
@@ -289,31 +306,35 @@ input:checked + .slider::before {
   bottom: 10px;
   right: 10px;
   padding: 6px 12px;
-  margin-top: 20px;
   font-size: 14px;
   background: transparent;
   color: var(--main-bg);
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  z-index: 99999;
 }
 .audio-btn i {
 	margin-right: 10px;
 }
 
-#draggable {
-	position: fixed;
-	bottom: 10px;
-	left: 10px;
-	padding: 5px;
+@keyframes cinematicLogoIntro {
+  0% {
+    transform: scale(0.3) translateY(30px) rotate(-5deg);
+    opacity: 0;
+    filter: blur(15px);
+  }
+  100% {
+    transform: scale(1) translateY(0) rotate(0deg);
+    opacity: 1;
+    filter: blur(0);
+  }
 }
-#draggable:hover {
-  	cursor: grab;
-	touch-action: none;
-	border-radius: 10px;
-	border: 1px solid var(--main-bg);
-}
-#draggable:active {
-    cursor: grabbing;
+
+@keyframes zoomInOut {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }

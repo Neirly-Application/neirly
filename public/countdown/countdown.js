@@ -1,13 +1,13 @@
 // ==== AUDIO TICK ====
 const tickAudio = new Audio('../countdown/sfx/clock-it.mp3');
 tickAudio.preload = 'auto';
-tickAudio.volume = 0.45;
+tickAudio.volume = 0.35;
 
 // ==== AUDIO BACKGROUND ====
 const bgMusic = new Audio('../countdown/sfx/waiting.mp3');
 bgMusic.preload = 'auto';
 bgMusic.loop = true;
-bgMusic.volume = 0.25;
+bgMusic.volume = 0.15;
 
 let audioEnabled = false;
 let audioUnlocked = false;
@@ -17,32 +17,44 @@ const audioToggleBtn = document.getElementById('audio-toggle');
 audioToggleBtn.addEventListener('click', () => {
   if (!audioUnlocked) {
     audioUnlocked = true;
+
     tickAudio.play().then(() => {
       tickAudio.pause();
       tickAudio.currentTime = 0;
     }).catch(() => {});
+
     bgMusic.play().then(() => {
       bgMusic.pause();
       bgMusic.currentTime = 0;
-    }).catch(() => {});
-  }
 
-  audioEnabled = !audioEnabled;
+      audioEnabled = true;
+      bgMusic.play().catch(() => {});
+      updateAudioButton();
+    }).catch(() => {
+      updateAudioButton();
+    });
 
-  if (audioEnabled) {
-    bgMusic.play().catch(() => {});
   } else {
-    bgMusic.pause();
-  }
+    audioEnabled = !audioEnabled;
 
     if (audioEnabled) {
+      bgMusic.play().catch(() => {});
+    } else {
+      bgMusic.pause();
+    }
+    updateAudioButton();
+  }
+});
+
+function updateAudioButton() {
+  if (audioEnabled) {
     audioToggleBtn.innerHTML = '<i class="fas fa-volume-up"></i> Volume ON';
     audioToggleBtn.title = "Volume ON";
-    } else {
+  } else {
     audioToggleBtn.innerHTML = '<i class="fas fa-volume-mute"></i> Volume OFF';
     audioToggleBtn.title = "Volume OFF";
-    }
-});
+  }
+}
 
 // ==== PLAY SOUND ====
 function playTickSound() {
@@ -123,21 +135,25 @@ function updateCountdown() {
   if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
     fetch('/switch-root', { method: 'POST' })
       .then(res => res.json())
-      .then(data => console.log(data.message))
+      .then(data => {
+        if (data.success === true) {
+          window.location.reload();
+        } else {
+          console.log(data.message);
+        }
+      })
       .catch(err => console.error(err));
-
-    window.location.reload();
   }
 }
 
 // ==== PROGRESS BAR ====
-const startUTC = Date.UTC(2025, 5, 27, 23, 35, 23);
+const startmyUTC = Date.UTC(2025, 5, 27, 23, 35, 23);
 const endUTC = Date.UTC(2026, 0, 1, 0, 0, 0);
-const maxDuration = endUTC - startUTC;
+const maxDuration = endUTC - startmyUTC;
 
 function updateProgressBar() {
   const nowUTC = Date.now();
-  const elapsed = nowUTC - startUTC;
+  const elapsed = nowUTC - startmyUTC;
 
   let progress = (elapsed / maxDuration) * 100;
   if (progress > 100) progress = 100;
@@ -161,7 +177,6 @@ updateCountdown();
 
 // ==== TEMA & GESTURE ====
 const themeToggleBtn = document.getElementById('theme-toggle');
-const dragPingItem = document.getElementById('draggable');
 
 let touchStartX = 0;
 let touchEndX = 0;
@@ -170,6 +185,12 @@ let gestureEnabled = true;
 themeToggleBtn.addEventListener('change', () => {
   document.body.classList.toggle('light-theme', themeToggleBtn.checked);
 });
+
+function toggleThemeOnClick() {
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  themeToggleBtn.checked = !themeToggleBtn.checked;
+  document.body.classList.toggle('light-theme', themeToggleBtn.checked);
+}
 
 function handleGesture() {
   if (!gestureEnabled);
@@ -186,13 +207,22 @@ function handleGesture() {
   }
 }
 
+function simSwipeLeft() {
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  document.body.classList.remove('light-theme');
+  themeToggleBtn.checked = false;
+}
+
+function simSwipeRight() {
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  document.body.classList.add('light-theme');
+  themeToggleBtn.checked = true;
+}
+
+
 document.addEventListener('touchstart', e => {
-  if (dragPingItem.contains(e.target)) {
-    gestureEnabled = false;
-  } else {
     gestureEnabled = true;
     touchStartX = e.changedTouches[0].screenX;
-  }
 });
 
 document.addEventListener('touchend', e => {
@@ -270,65 +300,3 @@ const pingEl = document.getElementById('ping');
 
 setInterval(measurePing, 500);
 measurePing();
-
-// ==== DRAG PING ====
-const dragItem = document.getElementById("draggable");
-let active = false;
-let currentX = 0, currentY = 0;
-let initialX = 0, initialY = 0;
-let xOffset = 0, yOffset = 0;
-
-dragItem.addEventListener("mousedown", dragStart);
-document.addEventListener("mouseup", dragEnd);
-document.addEventListener("mousemove", drag);
-
-dragItem.addEventListener("touchstart", dragStart);
-document.addEventListener("touchend", dragEnd);
-document.addEventListener("touchmove", drag);
-
-function dragStart(e) {
-  dragItem.style.userSelect = "none";
-  dragItem.style.webkitUserSelect = "none";
-  dragItem.style.mozUserSelect = "none";
-  dragItem.style.msUserSelect = "none";
-
-  if (e.type === "touchstart") {
-    initialX = e.touches[0].clientX - xOffset;
-    initialY = e.touches[0].clientY - yOffset;
-  } else {
-    initialX = e.clientX - xOffset;
-    initialY = e.clientY - yOffset;
-  }
-  active = true;
-}
-
-function dragEnd() {
-  active = false;
-
-  dragItem.style.userSelect = "auto";
-  dragItem.style.webkitUserSelect = "auto";
-  dragItem.style.mozUserSelect = "auto";
-  dragItem.style.msUserSelect = "auto";
-
-  xOffset = currentX;
-  yOffset = currentY;
-}
-
-function drag(e) {
-  if (!active) return;
-  e.preventDefault();
-
-  if (e.type === "touchmove") {
-    currentX = e.touches[0].clientX - initialX;
-    currentY = e.touches[0].clientY - initialY;
-  } else {
-    currentX = e.clientX - initialX;
-    currentY = e.clientY - initialY;
-  }
-
-  setTranslate(currentX, currentY, dragItem);
-}
-
-function setTranslate(xPos, yPos, el) {
-  el.style.transform = `translate(${xPos}px, ${yPos}px)`;
-}
