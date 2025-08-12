@@ -28,6 +28,21 @@ body.light-theme {
   --ping-stable: #be7200;
   --ping-bad: #a90f04;
 }
+body.premium-theme {
+  --primary: #4d4700;
+  --secondary: #f2ff90;
+  --animated-bg-main: linear-gradient(180deg, #161000, #30260a, #685421, #b29b62, #685421, #30260a, #161000);
+  --main-bg: #eee300;
+  --text-color: #f4ff90;
+  --progress: linear-gradient(90deg, #161000, #30260a, #4d4700, #685421, #b29b62);
+  --ccc: #ccc;
+  --overlay-bg: #001c2b;
+  --small: #cac000b0;
+
+  --ping-good: #00fc08;
+  --ping-stable: #f69300;
+  --ping-bad: #f71000;
+}
 
 body{
 	overflow: hidden;
@@ -41,6 +56,7 @@ body{
   	font-family: 'Inter', sans-serif;
 	font-weight: bold;
 	background: var(--animated-bg-main);
+	backdrop-filter: blur(20px);
 	color: var(--main-bg);
 	transition: background-color 0.3s ease, color 0.3s ease;
 
@@ -54,6 +70,7 @@ body{
 }
 .small-desktop {
 	display: block;
+	text-align: center;
 	font-weight: bold;
 	color: var(--small);
 }
@@ -67,6 +84,7 @@ body{
 @media (max-width: 800px) {
 	.small-mobile {
 		display: block;
+		text-align: center;
 		font-weight: bold;
 		color: var(--small);
 	}
@@ -337,4 +355,19 @@ input:checked + .slider::before {
   50% {
     transform: scale(1.05);
   }
+}
+
+.hide {
+	display: none !important;
+}
+#hide-show {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 9999;
 }

@@ -15,8 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-
-<body>
+<div class="hide" id="hide-show">
     <div id="progress-container" title="Progress since start Development Date (Friday, ‎June ‎27, ‎2025) to Launch Date">
         <div id="progress-bar"></div>
     </div>
@@ -25,7 +24,7 @@
   <main class="clock-wrap">
     <header>
       <h1 title="Neirly - Launch Countdown (EXCLUSIVE!)">
-        <img src="../media/neirly-logo.png" alt="Icona" />
+        <img src="../media/neirly-logo.png" alt="Logo" id="change-logo"/>
         <span>Neirly</span>
       </h1>
       <p style="text-align: center; font-weight: bold;">Launch in:</p>
@@ -51,14 +50,14 @@
             <div class="label">Seconds</div>
         </div>
     </section>
-    <small class="small-mobile" title="Touch devices Keybinds">Swipe &nbsp;<a title="Swipe left for light theme" onclick="simSwipeLeft()"><i class="fas fa-arrow-left"></i> left</a>&nbsp; and &nbsp;<a title="Swipe right for dark theme" onclick="simSwipeRight()">right <i class="fas fa-arrow-right"></i></a>&nbsp; to change theme.</small>
-    <small class="small-desktop" title="Desktop Keybinds">Press &nbsp;<a title="Keybind M: toggle audio" onclick='audioToggleBtn.click();'>" M "</a>&nbsp; to toggle audio and &nbsp;<a title="Keybind T: toggle theme" onclick='toggleThemeOnClick()'>" T "</a>&nbsp; to toggle theme.</small>
+    <small class="small-mobile" id="small_text-mobile" title="Touch devices Keybinds">Swipe &nbsp;<a title="Swipe left for light theme" onclick="simSwipeLeft()"><i class="fas fa-arrow-left"></i> left</a>&nbsp; and &nbsp;<a title="Swipe right for dark theme" onclick="simSwipeRight()">right <i class="fas fa-arrow-right"></i></a>&nbsp; to change theme.</small>
+    <small class="small-desktop" id="small_text-desktop" title="Desktop Keybinds">Press &nbsp;<a title="Keybind M: toggle audio" onclick='audioToggleBtn.click();'>" M "</a>&nbsp; to toggle audio and &nbsp;<a title="Keybind T: toggle theme" onclick='toggleThemeOnClick()'>" T "</a>&nbsp; to toggle theme.</small>
     <p title="Connected users waiting for launch"><i class="fas fa-hourglass-half hourglass-spin"></i> Users waiting: <span id="online-users">0</span></p>
     <button id="audio-toggle" class="audio-btn" title="Volume ON/OFF"><i class="fas fa-volume-mute"></i> Volume OFF</button>
-    <p title="Your Latency (draggable)">Ping: <span id="ping">0</span></p>
+    <p title="Your Network ping">Ping: <span id="ping">0</span></p>
   </main>
 
-  <label class="theme-switch" title="Toggle Theme">
+  <label class="theme-switch" id="switch-theme" title="Toggle Theme">
     <input type="checkbox" id="theme-toggle">
     <span class="slider"></span>
   </label>
@@ -70,6 +69,7 @@
       <p>Check your connection and try again.</p>
     </div>
   </div>
+</div>
 
   <script src="/countdown/countdown.js"></script>
   <script src="/scripts/offline.js"></script>

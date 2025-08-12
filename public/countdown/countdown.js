@@ -1,13 +1,16 @@
+// ==== GLOBAL VARIABLES ====
+let proceedButton = null;
+
 // ==== AUDIO TICK ====
 const tickAudio = new Audio('../countdown/sfx/clock-it.mp3');
 tickAudio.preload = 'auto';
-tickAudio.volume = 0.35;
+tickAudio.volume = 0.50;
 
 // ==== AUDIO BACKGROUND ====
 const bgMusic = new Audio('../countdown/sfx/waiting.mp3');
 bgMusic.preload = 'auto';
 bgMusic.loop = true;
-bgMusic.volume = 0.15;
+bgMusic.volume = 0.30;
 
 let audioEnabled = false;
 let audioUnlocked = false;
@@ -84,7 +87,9 @@ function updateElement(id, newValue) {
   }
 }
 
-function updateCountdown() {
+  const delay = (ms) => new Promise(res => setTimeout(res, ms));
+
+async function updateCountdown() {
   const now = new Date();
   const targetUTC = Date.UTC(2026, 0, 1, 23 - 1, 0, 0);
 
@@ -134,70 +139,74 @@ function updateCountdown() {
   toggleHidden('label-seconds', true);
 
     if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
-    document.body.innerHTML = '';
+        await delay(1000);
+        if (!proceedButton) {
+        const hideShow = document.getElementById('hide-show');
+            if (hideShow) hideShow.classList.add('hide');
 
-    const style = document.createElement('style');
-    style.textContent = `
-        body {
-        margin: 0;
-        background-color: black;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        }
-        button {
-        background: transparent;
-        border: none;
-        padding: 20px 40px;
-        font-size: 1.5rem;
-        cursor: pointer;
-        border-radius: 8px;
-        font-family: sans-serif;
-        color: white;
-        }
-    `;
-    document.head.appendChild(style);
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = 0;
+            overlay.style.left = 0;
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'black';
+            overlay.style.display = 'flex';
+            overlay.style.alignItems = 'center';
+            overlay.style.justifyContent = 'center';
+            overlay.style.zIndex = 9999;
 
-    const button = document.createElement('button');
-    button.textContent = 'Proceed';
-    document.body.appendChild(button);
+            proceedButton = document.createElement('button');
+            proceedButton.id = 'proceed-btn';
+            proceedButton.textContent = 'Proceed';
+            proceedButton.style.background = 'transparent';
+            proceedButton.style.border = 'none';
+            proceedButton.style.padding = '100% 100%';
+            proceedButton.style.fontSize = '1.5rem';
+            proceedButton.style.borderRadius = '8px';
+            proceedButton.style.fontFamily = 'sans-serif';
+            proceedButton.style.color = 'white';
+            proceedButton.style.cursor = 'pointer';
 
-    button.addEventListener('click', async () => {
-        try {
-        tickAudio.pause();
-        bgMusic.pause();
+            overlay.appendChild(proceedButton);
+            document.body.appendChild(overlay);
 
-        const audio1 = new Audio('../countdown/sfx/time_is_up/ladies_and_gentlemen.mp3');
-        const audio2 = new Audio('../countdown/sfx/time_is_up/welcome_to_neirly.mp3');
+            proceedButton.addEventListener('click', async () => {
+                try {
+                proceedButton.remove();
+                await delay(500);
+                tickAudio.pause();
+                bgMusic.pause();
 
-        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+                const audio1 = new Audio('../countdown/sfx/time_is_up/ladies_and_gentlemen.mp3');
+                const audio2 = new Audio('../countdown/sfx/time_is_up/welcome_to_neirly.mp3');
 
-        await audio1.play();
-        audio1.addEventListener('ended', async () => {
-            await audio2.play();
+                await audio1.play();
+                audio1.addEventListener('ended', async () => {
+                    await audio2.play();
 
-            audio2.addEventListener('ended', async () => {
+                    audio2.addEventListener('ended', async () => {
+                    await delay(1000);
+                    fetch('/switch-root', { method: 'POST' })
+                        .then(res => res.json())
+                        .then(data => {
+                        if (data.success === true) {
+                            window.location.reload();
+                        } else {
+                            console.log(data.message);
+                        }
+                        })
+                        .catch(console.error);
+                    }, { once: true });
+                }, { once: true });
 
-            fetch('/switch-root', { method: 'POST' })
-                .then(res => res.json())
-                .then(data => {
-                if (data.success === true) {
-                    delay(1000);
-                    window.location.reload();
-                } else {
-                    console.log(data.message);
+                } catch (err) {
+                console.error('Error while playing audio:', err);
                 }
-                })
-                .catch(err => console.error(err));
             }, { once: true });
-        }, { once: true });
-
-        } catch (err) {
-        console.error('Error while playing audio:', err);
+            }
+            return;
         }
-    });
-    }
 }
 
 // ==== PROGRESS BAR ====
@@ -235,6 +244,9 @@ const themeToggleBtn = document.getElementById('theme-toggle');
 let touchStartX = 0;
 let touchEndX = 0;
 let gestureEnabled = true;
+let doubleTapTimeout = null;
+let doubleTapCount = 0;
+let lastTapTime = 0;
 
 themeToggleBtn.addEventListener('change', () => {
   document.body.classList.toggle('light-theme', themeToggleBtn.checked);
@@ -273,10 +285,50 @@ function simSwipeRight() {
   themeToggleBtn.checked = true;
 }
 
+function togglePremiumTheme() {
+  const isPremium = document.body.classList.contains('premium-theme');
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  const switchTheme = document.getElementById('switch-theme');
+  const smallTextMobile = document.getElementById('small_text-mobile');
+  const smallTextDesktop = document.getElementById('small_text-desktop');
+  const logo = document.getElementById('change-logo');
+
+  if (!isPremium) {
+    themeToggleBtn.checked = true;
+    document.body.classList.add('premium-theme');
+    switchTheme.classList.add('hide');
+    logo.src = '../media/premium-neirly-logo.png';
+    changeFavicon('../media/premium-neirly-logo.png');
+    smallTextMobile.innerHTML = 'You\'re in the premium theme! &nbsp;<a title="Keybind ALT+S: switch back to the main theme" onclick="disablePremiumTheme()">Double tap</a>&nbsp; to switch back.';
+    smallTextDesktop.innerHTML = 'You\'re in the premium theme! Press &nbsp;<a title="Keybind ALT+S: switch back to the main theme" onclick="disablePremiumTheme()">ALT+S</a>&nbsp; to switch back.';
+    enableAnimations()
+  } else {
+    disablePremiumTheme();
+  }
+}
 
 document.addEventListener('touchstart', e => {
-    gestureEnabled = true;
-    touchStartX = e.changedTouches[0].screenX;
+  const currentTime = new Date().getTime();
+  if (currentTime - lastTapTime < 300) {
+    doubleTapCount++;
+    if (doubleTapCount === 2) {
+      clearTimeout(doubleTapTimeout);
+      doubleTapCount = 0;
+      togglePremiumTheme();
+    }
+  } else {
+    doubleTapCount = 1;
+  }
+  lastTapTime = currentTime;
+
+  if (doubleTapCount === 1) {
+    doubleTapTimeout = setTimeout(() => {
+      doubleTapCount = 0;
+    }, 300);
+  }
+
+  gestureEnabled =  true;
+  touchStartX = e.changedTouches[0].screenX;
 });
 
 document.addEventListener('touchend', e => {
@@ -286,14 +338,20 @@ document.addEventListener('touchend', e => {
   }
 });
 
-window.addEventListener('load', () => {
+function enableAnimations() {
+  const hideShow = document.getElementById('hide-show');
   const elements = document.body.children;
+
+  hideShow.classList.remove('hide');
+
   for (let i = 0; i < elements.length; i++) {
     elements[i].style.animation = `popup 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards`;
     elements[i].style.animationDelay = `${i * 0.1}s`;
     elements[i].style.transformOrigin = 'center center';
   }
-});
+}
+
+window.addEventListener('load', enableAnimations);
 
 // ==== ONLINE USERS ====
 fetch('/launch');
@@ -310,17 +368,76 @@ updateOnlineUsers();
 setInterval(updateOnlineUsers, 2000);
 
 // ==== KEY EVENTS ====
+function changeFavicon(newFaviconUrl) {
+  let link = document.querySelector("link[rel*='icon']");
+  if (!link) {
+    link = document.createElement('link');
+    link.rel = 'icon';
+    document.head.appendChild(link);
+  }
+  link.href = newFaviconUrl;
+}
+
 document.addEventListener('keydown', (event) => {
   if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.isComposing) {
     return;
   }
-  if (event.key === 'm' || event.key === 'M') {
+
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  const switchTheme = document.getElementById('switch-theme');
+  const smallTextMobile = document.getElementById('small_text-mobile');
+  const smallTextDesktop = document.getElementById('small_text-desktop');
+  const logo = document.getElementById('change-logo');
+
+  if (event.key === 'm' || event.key === 'M' || event.key === ' ') {
     audioToggleBtn.click();
+
   } else if (event.key === 't' || event.key === 'T') {
     themeToggleBtn.checked = !themeToggleBtn.checked;
     document.body.classList.toggle('light-theme', themeToggleBtn.checked);
+
+  } else if (event.key === "ArrowRight") {
+    simSwipeRight();
+
+  } else if (event.key === "ArrowLeft") {
+    simSwipeLeft();
+
+  } else if (event.altKey && (event.key === "s" || event.key === "S")) {
+    event.preventDefault();
+
+    const isPremium = document.body.classList.contains('premium-theme');
+
+    if (!isPremium) {
+      themeToggleBtn.checked = true;
+      document.body.classList.add('premium-theme');
+      switchTheme.classList.add('hide');
+      logo.src = '../media/premium-neirly-logo.png';
+      changeFavicon('../media/premium-neirly-logo.png');
+      smallTextMobile.innerHTML = 'You\'re in the premium theme! &nbsp;<a title="Keybind ALT+S: switch back to the main theme" onclick="disablePremiumTheme()">Double tap</a>&nbsp; to switch back.';
+      smallTextDesktop.innerHTML = 'You\'re in the premium theme! Press &nbsp;<a title="Keybind ALT+S: switch back to the main theme" onclick="disablePremiumTheme()">ALT+S</a>&nbsp; to switch back.';
+      enableAnimations()
+    } else {
+      disablePremiumTheme();
+    }
   }
 });
+
+function disablePremiumTheme() {
+  const switchTheme = document.getElementById('switch-theme');
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  const smallTextMobile = document.getElementById('small_text-mobile');
+  const smallTextDesktop = document.getElementById('small_text-desktop');
+  const logo = document.getElementById('change-logo');
+
+  themeToggleBtn.checked = false;
+  document.body.classList.remove('premium-theme');
+  switchTheme.classList.remove('hide');
+  logo.src = '../media/neirly-logo.png';
+  changeFavicon('../media/neirly-logo.png');
+  smallTextMobile.innerHTML = 'Swipe &nbsp;<a title="Swipe left for light theme" onclick="simSwipeLeft()"><i class="fas fa-arrow-left"></i> left</a>&nbsp; and &nbsp;<a title="Swipe right for dark theme" onclick="simSwipeRight()">right <i class="fas fa-arrow-right"></i></a>&nbsp; to change theme.';
+  smallTextDesktop.innerHTML = 'Press &nbsp;<a title="Keybind M: toggle audio" onclick="audioToggleBtn.click();">M</a>&nbsp; to toggle audio and &nbsp;<a title="Keybind T: toggle theme" onclick="toggleThemeOnClick()">T</a>&nbsp; to toggle theme.';
+  enableAnimations()
+}
 
 // ==== USER LATENCY ====
 async function measurePing() {
