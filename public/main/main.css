@@ -240,7 +240,7 @@ img {
 
 .active {
   background-color: var(--secondary);
-  color: var(--accent);
+  color: var(--sidebar-active-element-text-color);
 }
 
 .content {

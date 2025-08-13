@@ -11,6 +11,7 @@ body.light {
   --neutral-grey: #dcdcdc;
   --general-shadow: rgba(26, 73, 104, 0.3);
   --main-bg: #0093e8d7;
+  --sidebar-active-element-text-color: #2c4296;
 
   --animated-bg-complete-profile: linear-gradient(180deg, #2c4296, #e6ecff, #2c4296);
   --animated-bg-main: #d8f1ff;
@@ -157,6 +158,7 @@ body.light {
   --neutral-grey: #e6e6e6;
   --general-shadow: rgba(0, 0, 0, 0.7);
   --main-bg: #163d89;
+  --sidebar-active-element-text-color: #fbfbfb;
 
   --animated-bg-complete-profile: linear-gradient(180deg, #2c4296, #0a1b3d, #2c4296);
   --animated-bg-main: #0e4283;

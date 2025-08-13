@@ -130,6 +130,25 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
+    async function init() {
+      const res = await fetch('/api/profile', { credentials: 'include' });
+      const user = await res.json();
+
+      applyTheme(user.theme || 'dark');
+      loadSection(currentSection, user);
+    }
+
+    function applyTheme(theme) {
+      if (theme === 'dark') {
+        document.body.classList.add('dark');
+        document.body.classList.remove('light');
+      } else {
+        document.body.classList.add('light');
+        document.body.classList.remove('dark');
+      }
+    }
+    init();
+
     async function loadSection(section) {
       const thisToken = Symbol('load');
       currentLoadToken = thisToken;
