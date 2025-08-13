@@ -161,7 +161,7 @@ body.light {
   --sidebar-active-element-text-color: #fbfbfb;
 
   --animated-bg-complete-profile: linear-gradient(180deg, #2c4296, #0a1b3d, #2c4296);
-  --animated-bg-main: #0e4283;
+  --animated-bg-main: #001c2b;
 
   --premium-bg-color: #ffd700;
   --premium-bg-color-hover: #fff7d4;
@@ -203,7 +203,7 @@ body.light {
   --chat-strong-message: #90d6ff;
   --chat-small-message: rgba(200, 200, 200, 0.8);
 
-  --home-post-card-bg: rgba(15, 20, 54, 0.7);
+  --home-post-card-bg: rgba(26, 38, 119, 0.7);
   --home-post-card-text-color: #f0f0f0;
   --home-post-card-text-color-small: #aaaaaa;
   --home-post-card-gradient-line: linear-gradient(to right, #888, #555, #888);
