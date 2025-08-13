@@ -547,30 +547,23 @@ input[type="file"] {
   text-align: center;
   display: block;
 }
-
-
 .remove-btn {
-  color: rgb(134, 0, 0);
+  color: var(--friends-remove-btn-bg);
 }
-
 .remove-btn:hover {
-  color: rgb(251, 17, 17);
+  color: var(--friends-remove-btn-bg-hover);
 }
-
 .message-btn {
-  color: var(--primary);
+  color: var(--friends-message-btn);
 }
-
 .message-btn:hover {
-  color: #007bff;
+  color: var(--friends-message-btn-hover);
 }
-
 .settings-btn {
-  color: var(--primary);
+  color: var(--friends-settings-btn);
 }
-
 .settings-btn:hover {
-  color: #007bff;
+  color: var(--friends-settings-btn-hover);
 }
 
 .activity-log-container {
@@ -672,17 +665,16 @@ input[type="file"] {
   cursor: pointer;
 }
 
-/* Media query per schermi piccoli */
 @media (max-width: 600px) {
   .filters {
     flex-direction: column;
-    align-items: stretch;  /* estendi in larghezza */
+    align-items: stretch;
   }
   
   .filters label,
   .filters button {
-    width: 100%;      /* full width */
-    max-width: 100%;  /* evita limitazioni */
+    width: 100%;
+    max-width: 100%;
   }
   
   .filters button {

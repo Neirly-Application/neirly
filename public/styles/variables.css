@@ -66,6 +66,12 @@
   --friend-requests-cancel-btn: #ff3f3f;
   --friend-requests-reject-btn: #af0a0a;
   --friend-requests-accept-btn: #15c615;
+  --friends-remove-btn-bg: rgb(134, 0, 0);
+  --friends-remove-btn-bg-hover: rgb(251, 17, 17);
+  --friends-message-btn: #2c4296;
+  --friends-message-btn-hover: #007bff;
+  --friends-settings-btn: #2c4296;
+  --friends-settings-btn-hover: #007bff;
 
   --danger-text-color: #d9534f;
   --danger-bg-color-hover: #d9534f;
