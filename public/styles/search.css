@@ -61,6 +61,10 @@
   justify-content: center;
 }
 
+.search-btn i {
+  color: var(--search-button-color);
+}
+
 .search-title {
   font-size: 1rem;
   font-weight: 600;
@@ -89,10 +93,10 @@
   margin-bottom: 0;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.1s ease;
-  border-bottom: 1px solid rgba(44, 44, 44, 0.696);
+  border-bottom: 1px solid var(--search-card-border-bottom-color);
 }
 
-.search-list li:hover {
+.search-list li:active {
   background: var(--secondary-hover, #eaeaea);
 }
 
@@ -116,7 +120,7 @@
 .search-user-name {
   font-size: 1rem;
   font-weight: bold;
-  color: var(--primary, #555);
+  color: var(--search-card-name-color, #555);
   white-space: normal;
   overflow: visible;
   text-overflow: unset;
@@ -126,7 +130,7 @@
 .search-user-nick {
   font-size: 0.9rem;
   font-weight: 400;
-  color: var(--main-bg, #888);
+  color: var(--search-card-nick-color, #888);
   white-space: normal;
   overflow: visible;
   text-overflow: unset;
@@ -154,6 +158,7 @@
   background: transparent;
   border: none;
   color: #f44336;
+  font-weight: 1000;
   font-size: 18px;
   margin-left: auto;
   cursor: pointer;

@@ -14,6 +14,11 @@ const userSchema = new mongoose.Schema({
   uniquenickChangedAt: { type: Date, default: null },
   birthdate: { type: Date },
   about_me: { type: String, default: "👋 Hello there! I'm a Neirly user!"},
+  theme: {
+    type: String,
+    enum: ['light', 'dark'],
+    default: 'dark'
+  },
   join_date: { type: Date, default: Date.now },
   wantsUpdates:  { type: Boolean, default: false },
   forceLogout: { type: Boolean, default: false },

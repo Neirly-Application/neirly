@@ -60,6 +60,7 @@ router.get('/profile', async (req, res) => {
       join_date: user.join_date || null,
       coins: typeof user.coins === 'number' ? user.coins : 0,
       hasPremium: !!user.hasPremium,
+      theme: user.theme || 'dark'
     });
   } catch (error) {
     console.error(error);

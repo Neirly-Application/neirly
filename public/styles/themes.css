@@ -38,6 +38,10 @@
   margin-bottom: 12px;
 }
 
+.emoji i {
+  color: #222;
+}
+
 .theme-card h3 {
   margin: 0 0 10px;
   font-size: 1.25rem;

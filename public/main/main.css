@@ -18,7 +18,7 @@ body {
   background-size: 100% 200%;
   background-repeat: no-repeat;
   /* animation: gradient 20s ease-in-out infinite; */
-  color: var(--dark-text);
+  color: var(--main-text-color);
   overflow: hidden;
   display: flex;
   flex-direction: row;
@@ -240,7 +240,7 @@ img {
 
 .active {
   background-color: var(--secondary);
-  color: var(--primary);
+  color: var(--accent);
 }
 
 .content {
@@ -248,7 +248,7 @@ img {
   flex-grow: 1;
   padding: 35px 50px;
   background: transparent;
-  color: var(--dark-text);
+  color: var(--main-text-color);
   transition: padding 0.3s ease, background-color 0.3s ease;
   height: 100vh;
   overflow-y: auto;
@@ -393,7 +393,7 @@ form button:focus-visible {
 }
 
 .profile-img-editor-content {
-  background: #fff;
+  background: var(--primary);
   border-radius: 12px;
   padding: 30px;
   max-width: 400px;
@@ -429,7 +429,7 @@ form button:focus-visible {
 
 .profile-img-editor-content .btn-submit {
   background-color: #5865F2;
-  color: white;
+  color: var(--accent);
   margin-right: 10px;
 }
 
@@ -526,7 +526,7 @@ form button:focus-visible {
 
 .profile-img-editor-content .btn-submit {
   background-color: #5865F2;
-  color: white;
+  color: var(--accent);
 }
 
 .profile-img-editor-content .btn-submit:hover {
@@ -590,16 +590,16 @@ form button:focus-visible {
   border-radius: 0;
   background: none;
   padding: 1px auto;
-  color: var(--secondary);
-  border-bottom: 5px solid var(--secondary);
+  color: var(--accent);
+  border-bottom: 5px solid var(--accent);
 }
 
 .bottom-navbar .nav-item:active {
   border-radius: 0;
   background: none;
   padding: auto;
-  color: var(--secondary);
-  border-bottom: 3px solid var(--secondary);
+  color: var(--accent);
+  border-bottom: 3px solid var(--accent);
 }
 
 .bottom-navbar .nav-item i {
@@ -1110,7 +1110,7 @@ form button:focus-visible {
   padding: 12px 16px;
   border-radius: 8px;
   text-decoration: none;
-  color: var(--dark-text);
+  color: var(--main-text-color);
   font-weight: 500;
   transition: background 0.2s;
 }
@@ -1325,7 +1325,7 @@ body.subsection-active {
 
 .back-arrow-link {
   font-size: 1.5rem;
-  color: var(--dark-text);
+  color: var(--main-text-color);
   text-decoration: none;
   width: 40px;
   height: 40px;

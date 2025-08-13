@@ -1,7 +1,9 @@
-:root {
+body.light {
+  --main-text-color: #2e2e2e;
+
   --primary: #2c4296;
   --secondary: #90d6ff;
-  --secondary-hover: #bce7ff;
+  --secondary-hover: #ade2ff;
   --accent: #ffffff;
   --light-bg: #f7f9fc;
   --dark-text: #2e2e2e;
@@ -39,6 +41,8 @@
   --premium-card-text-color: #fff6bc;
   --premium-card-bg-color: #201d00;
 
+  --profile-icons-color: #2c4296;
+
   --story-box-bg-color: #ffffff;
   --story-box-border-radius-color: #dddddd;
   --story-border-color: #0055cc;
@@ -72,6 +76,14 @@
   --friends-message-btn-hover: #007bff;
   --friends-settings-btn: #2c4296;
   --friends-settings-btn-hover: #007bff;
+  --friend-card-name-color: #2c4296;
+  --friend-card-nick-color: #0093e8;
+  --friend-card-border-bottom-color: #2c4296;
+  
+  --search-card-name-color: #2c4296;
+  --search-card-nick-color: #0093e8;
+  --search-card-border-bottom-color: #2c4296;
+  --search-button-color: #2c4296;
 
   --danger-text-color: #d9534f;
   --danger-bg-color-hover: #d9534f;
@@ -130,4 +142,150 @@
   --color-27ae60: #27ae60;
   --color-rgba-26-42-108-02: rgba(26, 42, 108, 0.2);
   --color-rgba-000-025: rgba(0, 0, 0, 0.25);
+}
+
+:root, body.dark {
+  --main-text-color: #ffffff;
+
+  --primary: #0b2a69;
+  --secondary: #3c5bd9;
+  --secondary-hover: #3c5bd9c5;
+  --accent: #ffffff;
+  --light-bg: #1c1c1c;
+  --dark-text: #363636;
+  --soft-dark-text: #dcdcdc;
+  --neutral-grey: #e6e6e6;
+  --general-shadow: rgba(0, 0, 0, 0.7);
+  --main-bg: #163d89;
+
+  --animated-bg-complete-profile: linear-gradient(180deg, #2c4296, #0a1b3d, #2c4296);
+  --animated-bg-main: #0e4283;
+
+  --premium-bg-color: #ffd700;
+  --premium-bg-color-hover: #fff7d4;
+  --premium-bg-color-accent: #c7a900;
+  --premium-text-color: #f7f3e3;
+  --premium-text-color-accent: #786127;
+  --premium-section-bg: linear-gradient(45deg, #161000, #30260a, #685421, #b29b62, #685421, #30260a, #161000);
+  --premium-text-shadow-1: #fff2cc;
+  --premium-text-shadow-2: #ffe066;
+  --premium-text-shadow-3: #ffcc00;
+  --premium-box-shadow-1: rgba(255, 204, 0, 0.3);
+  --premium-box-shadow-2: rgba(255, 238, 153, 0.4);
+  --premium-box-shadow-3: rgba(255, 255, 255, 0.1);
+
+  --premium-color-bg-card: #463f10;
+  --premium-color-border-card: #fbe226a0;
+  --premium-color-box-shadow: rgba(255, 254, 210, 0.8);
+  --premium-color-price: #fbe226;
+  --premium-color-text-li: #cccccc;
+  --premium-color-button-bg: #fbe226;
+  --premium-color-button-text: #555555;
+  --premium-color-highlighted-border: #fff5ac;
+  --premium-color-highlighted-bg: #9a8800;
+  --premium-card-color-before: #d6c346;
+  --premium-card-text-color: #fff6bc;
+  --premium-card-bg-color: #201d00;
+
+  --profile-icons-color: #ffffff;
+
+  --story-box-bg-color: #2a2a2a;
+  --story-box-border-radius-color: #555555;
+  --story-border-color: #90d6ff;
+  --story-bg-color: #90d6ff;
+  --story-image-bg-color: linear-gradient(180deg, #1f3fbf, #5c9cff, #a2d9ff, #dffbff);
+  --story-content-overlay: rgba(0, 0, 0, 0.7);
+
+  --chat-outgoing-message: #1a2a3d;
+  --chat-incoming-message: #333333;
+  --chat-strong-message: #90d6ff;
+  --chat-small-message: rgba(200, 200, 200, 0.8);
+
+  --home-post-card-bg: rgba(15, 20, 54, 0.7);
+  --home-post-card-text-color: #f0f0f0;
+  --home-post-card-text-color-small: #aaaaaa;
+  --home-post-card-gradient-line: linear-gradient(to right, #888, #555, #888);
+  --post-like-color: #90d6ff;
+
+  --notification-badge-bg: #3399ff;
+  --notification-unread: linear-gradient(to right, #ff26261a, transparent);
+  --notification-side-color: #3399ff;
+  --notification-bottom-color: linear-gradient(to right, #3399ff, transparent, transparent);
+
+  --friend-requests-bg: #68b3ffbb;
+  --friend-requests-cancel-btn: #ff5555;
+  --friend-requests-reject-btn: #cc0a0a;
+  --friend-requests-accept-btn: #33ff33;
+  --friends-remove-btn-bg: #ff1111;
+  --friends-remove-btn-bg-hover: #ff5858;
+  --friends-message-btn: #466bff;
+  --friends-message-btn-hover: #76b8ff;
+  --friends-settings-btn: #466bff;
+  --friends-settings-btn-hover: #76b8ff;
+  --friend-card-name-color: #ffffff;
+  --friend-card-nick-color: #cccccc;
+  --friend-card-border-bottom-color: #ffffff;
+
+  --search-card-name-color: #ffffff;
+  --search-card-nick-color: #cccccc;
+  --search-card-border-bottom-color: #ffffff;
+  --search-button-color: #ffffff;
+
+  --danger-text-color: #ff6b6b;
+  --danger-bg-color-hover: #cc1a1a;
+  --danger-text-color-hover: #ffe3e2;
+
+  --logout-bg-color-hover: #cc1a1a;
+  --logout-text-color-hover: #ffe3e2;
+
+  --delete-account-bg-color-hover: #b71c1c;
+  --delete-account-text-color-hover: #ffe3e2;
+
+  --chat-hover: rgba(0, 123, 255, 0.3);
+
+  --error: #e74c3c;
+  --success: #27ae60;
+
+  --logout: #e74c3c;
+  --login: #27ae60;
+
+  --first-bg-button: #1a2a6c;
+  --button-box-shadow: rgba(52, 152, 219, 0.6);
+  --hover-bg-button: #2c4296;
+  --button-outline: #90d6ff;
+
+  --inputs-border-color: #555555;
+
+  --color-151515: #f0f0f0;
+  --color-rgba-000-012: rgba(255, 255, 255, 0.12);
+  --color-rgba-000-01: rgba(255, 255, 255, 0.1);
+  --color-db4437: #db4537b4;
+  --color-5865f2: #5865f2;
+  --color-333: #ccc;
+  --color-rgba-102-217-239-03: rgba(102, 217, 239, 0.3);
+  --color-rgba-000-06: rgba(0, 0, 0, 0.6);
+  --color-fff: #000000;
+  --color-rgba-000-03: rgba(255, 255, 255, 0.3);
+
+  --color-28a745: #2ecc71;
+  --color-dc3545: #e1606d;
+  --color-007bff: #439eff;
+  
+  --color-e0e0e0: #444;
+  --color-bdeaff: #3399ff;
+  --color-888: #999;
+  --color-666: #777;
+  --color-444: #222;
+  --color-rgba-000-02: rgba(255, 255, 255, 0.2);
+  --color-0056b3: #0056b3;
+  --color-c0392b: #c0392b;
+  --color-2ecc71: #2ecc71;
+  --color-95a5a6: #95a5a6;
+  --color-e67e22: #e67e22;
+  --color-3498db: #3498db;
+  --color-2980b9: #2980b9;
+  --color-eee: #222;
+  --color-27ae60: #27ae60;
+  --color-rgba-26-42-108-02: rgba(26, 42, 108, 0.2);
+  --color-rgba-000-025: rgba(255, 255, 255, 0.25);
 }
