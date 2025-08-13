@@ -6,8 +6,8 @@
   gap: 10px;
   margin-top: 20px;
   padding: 10px 15px;
-  background-color: var(--story-box-bg-color);
-  border-bottom: 1px solid var(--story-box-border-radius-color);
+  background: var(--story-box-bg-color);
+  backdrop-filter: blur(10px);
   border-radius: 20px;
 }
 

@@ -1,4 +1,4 @@
-body.light {
+:root, body.light {
   --main-text-color: #2e2e2e;
 
   --primary: #2c4296;
@@ -145,7 +145,7 @@ body.light {
   --color-rgba-000-025: rgba(0, 0, 0, 0.25);
 }
 
-:root, body.dark {
+body.dark {
   --main-text-color: #ffffff;
 
   --primary: #0b2a69;
@@ -191,7 +191,7 @@ body.light {
 
   --profile-icons-color: #ffffff;
 
-  --story-box-bg-color: #2a2a2a;
+  --story-box-bg-color: #005eff4f;
   --story-box-border-radius-color: #555555;
   --story-border-color: #90d6ff;
   --story-bg-color: #90d6ff;

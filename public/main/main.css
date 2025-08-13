@@ -747,7 +747,7 @@ form button:focus-visible {
   }
 
   .menu-dropdown a.nav-item:active {
-    background: var(--light-bg);
+    background: var(--secondary-hover);
   }
 
   .menu-dropdown {
