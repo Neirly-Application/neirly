@@ -18,22 +18,19 @@ document.addEventListener('DOMContentLoaded', () => {
   
       const data = await res.json();
   
-      if (res.ok) {
-        showToast(data.message, 'info');
-  
+    if (res.ok) {
+      showToast(data.message, 'info');
+
+      setTimeout(() => {
         if (!data.user.profileCompleted) {
-          setTimeout(() => {
-            window.location.href = `/main/complete-profile.html?userId=${data.user.id}`;
-          }, 1000);
+          window.location.href = `/main/complete-profile.html?userId=${data.user.id}`;
         } else {
-          setTimeout(() => {
-            window.location.href = `/main/main.html?name=${encodeURIComponent(data.user.name || 'User')}`;
-          }, 1000);
+          window.location.href = data.redirectUrl || `/main/main.html?name=${encodeURIComponent(data.user.name || 'User')}`;
         }
-      } else {
-        showToast(data.message || 'Invalid credentials.', 'error');
-      }
-    } catch (err) {
+      }, 1000);
+    } else {
+      showToast(data.message || 'Invalid credentials.', 'error');
+    }} catch (err) {
       showToast('Network error.', 'error');
     }
   });

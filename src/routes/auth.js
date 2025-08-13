@@ -143,8 +143,12 @@ router.post('/login', (req, res, next) => {
       }
     })();
 
+    const redirectUrl = req.session?.returnTo || '/';
+    if (req.session) delete req.session.returnTo;
+
     res.json({
       message: 'Login successfully completed!',
+      redirectUrl,
       user: {
         id: user._id,
         email: user.email,
@@ -230,29 +234,40 @@ router.get('/profile', async (req, res) => {
   }
 });
 
-router.get('/google', passport.authenticate('google', {
-  scope: ['profile', 'email']
-}));
+router.get('/google', (req, res, next) => {
+  if (req.query.redirect) {
+    req.session.returnTo = req.query.redirect;
+  }
+  next();
+}, passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get('/google/callback',
   passport.authenticate('google', { session: false, failureRedirect: '/register.html' }),
   async (req, res) => {
     try {
       console.log('User from Google:', req.user);
-      const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+      const token = jwt.sign(
+        { id: req.user._id },
+        process.env.JWT_SECRET,
+        { expiresIn: '7d' }
+      );
 
       res.cookie('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'Lax'
       });
+
       try {
         const userAgent = req.headers['user-agent'] || 'Unknown';
         const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
         const location = await getLocationFromIP(ip);
+
         const existingDevice = req.user.devices.find(dev =>
           dev.name === userAgent && dev.location === location
         );
+
         if (existingDevice) {
           existingDevice.lastActive = new Date();
         } else {
@@ -262,26 +277,33 @@ router.get('/google/callback',
             lastActive: new Date()
           });
         }
+
         await req.user.save();
+
         await ActivityLog.create({
           userId: req.user._id,
           type: 'login',
           metadata: {
             provider: 'google',
             email: req.user.email,
-            ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip
+            ip
           }
         });
+
         console.log('✅ Device saved (Google)');
       } catch (err) {
         console.error('Device tracking error (Google):', err.message);
       }
 
-      if (!req.user.profileCompleted) {
-        return res.redirect(`/main/complete-profile.html?userId=${req.user._id}`);
-      }
+      const redirectUrl = req.session?.returnTo || (
+        !req.user.profileCompleted
+          ? `/main/complete-profile.html?userId=${req.user._id}`
+          : `/main/main.html?name=${encodeURIComponent(req.user.name || 'User')}`
+      );
 
-      return res.redirect(`/main/main.html?name=${encodeURIComponent(req.user.name || 'User')}`);
+      if (req.session) delete req.session.returnTo;
+
+      return res.redirect(redirectUrl);
     } catch (error) {
       console.error('Google token error:', error);
       return res.redirect('/register.html');
