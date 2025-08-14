@@ -88,11 +88,6 @@ export default async function loadProfileSection(content, user) {
     </div>
 
     <div class="form-group fas-input">
-      <i class="fas fa-envelope icon-left"></i>
-      <input type="email" value="${maskEmail(user.email)}" disabled style="font-family: 'Inter', sans-serif;">
-    </div>
-
-    <div class="form-group fas-input">
       <i class="fas fa-birthday-cake icon-left"></i>
       <input type="date" value="${user.birthdate ? user.birthdate.split('T')[0] : ''}" disabled>
     </div>

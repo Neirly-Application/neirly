@@ -1,0 +1,70 @@
+.settings-section {
+    padding-top: 20px;
+    background: transparent;
+    border-radius: 12px;
+    max-width: 100%;
+}
+
+.settings-section h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.settings-form .form-group {
+    max-width: 600px;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.settings-form label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: var(--main-text-color);
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.settings-form label i {
+    margin-right: 6px;
+    color: var(--main-text-color);
+}
+
+.settings-form input[type="text"],
+.settings-form input[type="email"],
+.settings-form input[type="password"] {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid var(--color-ccc);
+    border-radius: 6px;
+    font-size: 1rem;
+    background: var(--accent);
+}
+
+.settings-form input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+}
+
+.twofa a:first-child {
+    margin-block: 30px;
+}
+
+.twofa a {
+    display: block;
+    margin-block: 40px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.twofa i {
+    margin-right: 10px;
+}
