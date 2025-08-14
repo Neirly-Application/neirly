@@ -7,9 +7,9 @@ import { showToast } from './notification.js';
       const user = await res.json();
       if (user && user.id) {
         if (!user.profileCompleted) {
-          window.location.href = `/main/complete-profile.html?userId=${user.id}`;
+          window.location.href = `/main/complete-profile.html`;
         } else {
-          window.location.href = `/main/main.html?userId=${user.id}`;
+          window.location.href = `/main/main.html`;
         }
         return;
       }
@@ -49,9 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setTimeout(() => {
           if (!data.user.profileCompleted) {
-            window.location.href = `/main/complete-profile.html?userId=${data.user.id}`;
+            window.location.href = `/main/complete-profile.html`;
           } else {
-            window.location.href = data.redirectUrl || `/main/main.html?name=${encodeURIComponent(data.user.name || 'User')}`;
+            window.location.href = data.redirectUrl || `/main/main.html`;
           }
         }, 1000);
       } else {

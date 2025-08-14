@@ -50,7 +50,7 @@ try {
     const data = await res.json();
 
     if (res.ok) {
-      window.location.href = `/main/main.html?name=${encodeURIComponent(username)}`;
+      window.location.href = `/main/main.html`;
     } else {
       errorMsg.textContent = data.message || 'Error while saving.';
     }

@@ -49,12 +49,10 @@ export default function loadSettingsThemeSection(content, user) {
     cards.forEach(card => card.classList.toggle('condensed', toggle.checked));
   });
 
-  // 1️⃣ Applica subito il tema da memoria o localStorage
   let initialTheme = user?.theme || localStorage.getItem('theme') || 'dark';
   applyTheme(initialTheme);
   setSelectedButton(initialTheme);
 
-  // 2️⃣ Aggiorna in background con i dati reali del server
   fetch('/api/profile')
     .then(res => res.json())
     .then(userData => {
@@ -68,7 +66,6 @@ export default function loadSettingsThemeSection(content, user) {
     })
     .catch(err => console.warn('Theme fetch failed, using cached:', err));
 
-  // 3️⃣ Gestione click sui bottoni
   document.querySelectorAll('.select-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const selectedTheme = e.target.closest('.theme-card').dataset.theme;
@@ -99,7 +96,7 @@ function setSelectedButton(theme) {
       btn.textContent = 'Selected!';
       btn.disabled = true;
       btn.style.backgroundColor = '#395b96ff';
-      btn.style.color = '#fff';
+      btn.style.color = '#d7d7d7ff';
     } else {
       btn.textContent = 'Select';
       btn.disabled = false;

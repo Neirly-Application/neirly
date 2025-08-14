@@ -297,8 +297,8 @@ router.get('/google/callback',
 
       const redirectUrl = req.session?.returnTo || (
         !req.user.profileCompleted
-          ? `/main/complete-profile.html?userId=${req.user._id}`
-          : `/main/main.html?name=${encodeURIComponent(req.user.name || 'User')}`
+          ? `/main/complete-profile.html`
+          : `/main/main.html`
       );
 
       if (req.session) delete req.session.returnTo;
@@ -369,10 +369,10 @@ router.get('/discord/callback',
       sendLoginMessage(req.user.name || req.user.email, req.user.discordId);
 
       if (!req.user.profileCompleted) {
-        return res.redirect(`/main/complete-profile.html?userId=${req.user._id}&nickname=${encodeURIComponent(req.user.name)}`);
+        return res.redirect(`/main/complete-profile.html`);
       }
 
-      return res.redirect(`/main/main.html?name=${encodeURIComponent(req.user.name || 'User')}`);
+      return res.redirect(`/main/main.html`);
     } catch (error) {
       console.error('Discord token error:', error);
       return res.redirect('/login.html?error=token');
