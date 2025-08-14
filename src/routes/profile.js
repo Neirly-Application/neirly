@@ -50,6 +50,7 @@ router.get('/profile', async (req, res) => {
       birthdate: user.birthdate,
       nickname: user.nickname,
       uniquenick: user.uniquenick,
+      profileCompleted: user.profileCompleted,
       roles: user.roles,
       profilePictureUrl: user.profilePictureUrl || null,
       about_me: user.about_me || '',
