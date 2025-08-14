@@ -12,6 +12,8 @@
   --general-shadow: rgba(26, 73, 104, 0.3);
   --main-bg: #0093e8d7;
   --sidebar-active-element-text-color: #2c4296;
+  --sidebar-element-text-color-hover: #3957cce9; 
+  --sidebar-element-text-color-active: #2c4296; 
 
   --animated-bg-complete-profile: linear-gradient(180deg, #2c4296, #e6ecff, #2c4296);
   --animated-bg-main: #d8f1ff;
@@ -159,6 +161,8 @@ body.dark {
   --general-shadow: rgba(0, 0, 0, 0.7);
   --main-bg: #163d89;
   --sidebar-active-element-text-color: #fbfbfb;
+  --sidebar-element-text-color-hover: #ffffffe9; 
+  --sidebar-element-text-color-active: #fbfbfb; 
 
   --animated-bg-complete-profile: linear-gradient(180deg, #2c4296, #0a1b3d, #2c4296);
   --animated-bg-main: #001c2b;

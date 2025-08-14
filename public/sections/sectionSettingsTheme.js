@@ -1,11 +1,11 @@
 import { stopBGAnimation, stopBubblesAnimation } from '../scripts/premiumBg.js';
 
-export default async function loadSettingsThemeSection(content, user) {
+export default function loadSettingsThemeSection(content, user) {
   stopBubblesAnimation();
   stopBGAnimation();
 
-  document.body.style.transition = 'background 0.3s ease-in-out';
-  content.style.transition = 'background 0.3s ease-in-out';
+  document.body.style.transition = 'background 0.2s ease-in-out';
+  content.style.transition = 'background 0.2s ease-in-out';
 
   content.innerHTML = `
     <div class="case-header">
@@ -49,45 +49,62 @@ export default async function loadSettingsThemeSection(content, user) {
     cards.forEach(card => card.classList.toggle('condensed', toggle.checked));
   });
 
-  try {
-    const res = await fetch('/api/profile');
-    const userData = await res.json();
-    applyTheme(userData.theme || 'dark');
-    user.theme = userData.theme || 'dark';
-  } catch (err) {
-    console.error('Error fetching user theme:', err);
-    applyTheme('dark');
-  }
+  // 1️⃣ Applica subito il tema da memoria o localStorage
+  let initialTheme = user?.theme || localStorage.getItem('theme') || 'dark';
+  applyTheme(initialTheme);
+  setSelectedButton(initialTheme);
 
-  document.querySelectorAll('.select-btn').forEach(btn => {
-    btn.addEventListener('click', async (e) => {
-      const selectedTheme = e.target.closest('.theme-card').dataset.theme;
-      applyTheme(selectedTheme);
-
-      try {
-        const res = await fetch('/api/user/theme', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ theme: selectedTheme })
-        });
-
-        const data = await res.json();
-        if (data.success) {
-          user.theme = selectedTheme;
-        }
-      } catch (err) {
-        console.error('Error while saving theme:', err);
+  // 2️⃣ Aggiorna in background con i dati reali del server
+  fetch('/api/profile')
+    .then(res => res.json())
+    .then(userData => {
+      const currentTheme = userData.theme || 'dark';
+      if (currentTheme !== initialTheme) {
+        applyTheme(currentTheme);
+        setSelectedButton(currentTheme);
       }
+      user.theme = currentTheme;
+      localStorage.setItem('theme', currentTheme);
+    })
+    .catch(err => console.warn('Theme fetch failed, using cached:', err));
+
+  // 3️⃣ Gestione click sui bottoni
+  document.querySelectorAll('.select-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const selectedTheme = e.target.closest('.theme-card').dataset.theme;
+
+      applyTheme(selectedTheme);
+      setSelectedButton(selectedTheme);
+      user.theme = selectedTheme;
+      localStorage.setItem('theme', selectedTheme);
+
+      fetch('/api/user/theme', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ theme: selectedTheme })
+      }).catch(err => console.error('Error while saving theme:', err));
     });
   });
 }
 
 function applyTheme(theme) {
-  if (theme === 'dark') {
-    document.body.classList.add('dark');
-    document.body.classList.remove('light');
-  } else {
-    document.body.classList.add('light');
-    document.body.classList.remove('dark');
-  }
+  document.body.classList.toggle('dark', theme === 'dark');
+  document.body.classList.toggle('light', theme === 'light');
+}
+
+function setSelectedButton(theme) {
+  document.querySelectorAll('.select-btn').forEach(btn => {
+    const cardTheme = btn.closest('.theme-card').dataset.theme;
+    if (cardTheme === theme) {
+      btn.textContent = 'Selected!';
+      btn.disabled = true;
+      btn.style.backgroundColor = '#395b96ff';
+      btn.style.color = '#fff';
+    } else {
+      btn.textContent = 'Select';
+      btn.disabled = false;
+      btn.style.backgroundColor = '';
+      btn.style.color = '';
+    }
+  });
 }

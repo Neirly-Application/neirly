@@ -164,8 +164,8 @@ img {
 
 @media (hover: hover) and (pointer: fine) {
   .nav-item:hover {
-    background-color: var(--secondary-hover);
-    color: var(--primary);
+    background: var(--secondary-hover);
+    color: var(--sidebar-element-text-color-hover);
     outline-offset: 3px;
     outline: none;
   }
@@ -198,7 +198,7 @@ img {
 .nav-item:active,
 .nav-item:focus-visible {
   background-color: var(--secondary);
-  color: var(--primary);
+  color: var(--sidebar-element-text-color-active);
   outline-offset: 3px;
   outline: none;
 }

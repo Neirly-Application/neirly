@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.body.classList.add('light');
         document.body.classList.remove('dark');
       }
-    }
+    };
     init();
 
     async function loadSection(section) {
