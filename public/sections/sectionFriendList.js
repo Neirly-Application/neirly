@@ -27,13 +27,14 @@ export default async function loadFriendListSection(content, user) {
 
   content.innerHTML = `
     <h2><i class="fas fa-user-friends"></i> Friend List</h2>
-    <form id="addFriendForm" class="friend-form">
+    <form id="addFriendForm" class="friend-form" autocomplete="off">
       <input
         type="text"
         id="friendNick"
         placeholder="Add a friend via nickname"
         required
         class="friend-input"
+        autoocomplete="off"
       />
       <i
         class="fas fa-user-plus friend-btn"
@@ -118,10 +119,10 @@ export default async function loadFriendListSection(content, user) {
     }
   }
 
-  // Submit friend request on icon click or keypress (Enter or Space)
+  // Submit friend request on icon click or keypress (Enter)
   friendIconBtn.addEventListener('click', () => addFriendForm.requestSubmit());
   friendIconBtn.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
+    if (e.key === 'Enter') {
       e.preventDefault();
       addFriendForm.requestSubmit();
     }

@@ -955,6 +955,7 @@ form button:focus-visible {
 .device-card {
   display: flex;
   align-items: center;
+  color: var(--dark-text);
   gap: 12px;
   border: 1px solid #ddd;
   border-radius: 12px;

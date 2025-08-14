@@ -1,4 +1,4 @@
-body.light {
+:root, body.light {
   --main-text-color: #2e2e2e;
 
   --primary: #2c4296;
@@ -147,7 +147,7 @@ body.light {
   --color-rgba-000-025: rgba(0, 0, 0, 0.25);
 }
 
-:root, body.dark {
+body.dark {
   --main-text-color: #ffffff;
 
   --primary: #0b2a69;

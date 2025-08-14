@@ -1,4 +1,3 @@
-import loadCeoSection from '../sections/sectionCeo.js';
 import loadPremiumSection from '../sections/sectionPremium.js';
 import loadFriendListSection from '../sections/sectionFriendList.js';
 import loadHomeSection from '../sections/sectionHome.js';
@@ -192,7 +191,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       window.disablePullToRefresh = disablePull.includes(section);
 
       switch (section) {
-        case 'ceo': await loadCeoSection(content, user); break;
         case 'friend-list': await loadFriendListSection(content, user); break;
         case 'home': await loadHomeSection(content, user); break;
         case 'map': await loadMapSection(content, user); break;

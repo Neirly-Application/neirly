@@ -20,7 +20,11 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
   content.style.padding = '';
   content.style.margin = '';
 
-  content.innerHTML = '<p>Loading chats...</p>';
+  content.innerHTML = `
+  <h2>Messages</h2>
+  <div id="chats">
+    <p>Loading chats...</p>
+  </div>`;
 
   try {
     const res = await fetch('/api/chats/friends-and-chats', { credentials: 'include' });
@@ -28,8 +32,7 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
 
     const { friends = [], recentChats = [] } = await res.json();
 
-    content.innerHTML = `
-      <h2>Messages</h2>
+    chats.innerHTML = `
       <div class="recent-chats">
         ${recentChats.map(c => `
           <div class="chat-item chat-name" data-userid="${c._id}">
