@@ -11,7 +11,7 @@
 }
 
 .main-card {
-  background-color: var(--accent);
+  background-color: var(--primary);
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   padding: 2.5rem 2rem;
@@ -21,7 +21,7 @@
 
 .main-card h2 {
   margin-bottom: 0.6rem;
-  color: var(--primary);
+  color: var(--accent);
   font-size: 1.75rem;
   text-align: center;
 }
@@ -56,7 +56,7 @@ form {
 .swap-link {
   font-size: 0.9rem;
   text-align: center;
-  color: var(--dark-text);
+  color: var(--accent);
 }
 
 .swap-link a {
@@ -64,7 +64,8 @@ form {
   text-decoration: none;
   border-radius: 10px;
   background-color: var(--main-bg);
-  padding: 8px;
+  padding-block: 6px;
+  padding-inline: 10px;
   font-weight: 500;
 }
 
@@ -77,9 +78,10 @@ form {
   text-align: center;
 }
 
-#login-form p {
+#login-form p, #register-form p {
+  padding-top: 1rem;
   margin-bottom: 0.5rem;
-  color: var(--dark-text);
+  color: var(--accent);
   font-size: 1rem;
 }
 
@@ -95,13 +97,33 @@ form {
   align-items: center;
   justify-content: center;
   height: 50px;
-  border-radius: 20px;
+  border-radius: 10px;
   font-size: 1.25rem;
-  background: transparent;
+  background: var(--secondary);
   color: var(--primary);
-  transition: color 0.3s ease, transform 0.2s ease;
   text-decoration: none;
   transition: background 0.3s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.social-icons .social-email {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  border-radius: 10px;
+  font-size: 1.25rem;
+  background: var(--primary);
+  color: var(--accent);
+  border: 1px solid var(--main-bg);
+  text-decoration: none;
+  transition: background 0.3s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.social-icons .social-email:hover {
+  transform: translateY(-3px);
+  background: var(--primary);
+  border: 1px solid var(--secondary);
+  color: var(--secondary);
 }
 
 .social-icons .social:hover {
@@ -109,7 +131,6 @@ form {
   background: var(--secondary);
   border: 1px solid var(--primary);
   color: var(--primary);
-  font-weight: bold;
 }
 
 .social img.icon {
@@ -123,7 +144,6 @@ form {
 .social.google { color: var(--primary); }
 .social.discord { color: var(--primary); }
 .social.github { color: var(--primary); }
-.social.email { color: var(--primary); }
 .social.email i { margin-right: 10px; }
 
 .social.google:hover,
@@ -210,9 +230,7 @@ form {
   flex-direction: column;
   gap: 1rem;
   margin-top: 20px;
-  margin-bottom: 30px;
   padding-bottom: 20px;
-  border-bottom: 1px solid var(--primary);
   animation: fadeIn 0.4s ease-in-out;
 }
 
@@ -272,4 +290,27 @@ body {
   100% {
     background-position: 0% 0%;
   }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--accent-secondary);
+  margin-block: 20px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--accent-secondary);
+}
+
+.divider:not(:empty)::before {
+  margin-right: 0.75em;
+}
+
+.divider:not(:empty)::after {
+  margin-left: 0.75em;
 }

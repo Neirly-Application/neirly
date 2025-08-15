@@ -54,16 +54,23 @@
     box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
 }
 
-.twofa a:first-child {
-    margin-block: 30px;
+.twofa {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
 }
-
+.twofa a:first-child {
+    margin-top: 30px;
+}
 .twofa a {
-    display: block;
-    margin-block: 40px;
+    display: inline-block;
+    width: fit-content;
+    cursor: pointer;
+    margin-block: 20px;
     font-size: 16px;
     font-weight: bold;
 }
+
 
 .twofa i {
     margin-right: 10px;

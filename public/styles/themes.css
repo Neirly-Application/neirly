@@ -17,7 +17,7 @@
   flex: 1 1 260px;
   max-width: 300px;
   min-width: 220px;
-  background-color: #fdfdfd;
+  background-color: var(--story-box-bg-color);
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   padding: 24px 20px;
@@ -29,7 +29,7 @@
 .theme-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-  background-color: #f5faff;
+  background-color: var(--secondary-hover);
   cursor: pointer;
 }
 
@@ -39,18 +39,18 @@
 }
 
 .emoji i {
-  color: #222;
+  color: var(--main-text-color);
 }
 
 .theme-card h3 {
   margin: 0 0 10px;
   font-size: 1.25rem;
-  color: #222;
+  color: var(--main-text-color);
 }
 
 .theme-card .card-desc {
   font-size: 0.95rem;
-  color: #555;
+  color: var(--soft-dark-text);
   margin-bottom: 16px;
 }
 

@@ -5,6 +5,7 @@
   --secondary: #90d6ff;
   --secondary-hover: #ade2ff;
   --accent: #ffffff;
+  --accent-secondary: #c4c4c4;
   --light-bg: #f7f9fc;
   --dark-text: #2e2e2e;
   --soft-dark-text: #3a3a3a;
@@ -154,6 +155,7 @@ body.dark {
   --secondary: #3c5bd9;
   --secondary-hover: #3c5bd9c5;
   --accent: #ffffff;
+  --accent-secondary: #c4c4c4;
   --light-bg: #1c1c1c;
   --dark-text: #363636;
   --soft-dark-text: #dcdcdc;

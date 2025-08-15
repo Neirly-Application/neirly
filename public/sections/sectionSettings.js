@@ -39,9 +39,8 @@ export default async function loadSettingsSection(content, user) {
         <li><a href="#settings-notifications"><i class="fas fa-bell"></i> Notifications</a></li>
         <li><a href="#settings-theme"><i class="fas fa-palette"></i> App Theme</a></li>
         <li><a href="#settings-language"><i class="fas fa-globe"></i> Language</a></li>
-        <li><a href="#settings-info"><i class="fas fa-info-circle"></i> App Information</a></li>
         <li><a href="#settings-developer"><i class="fas fa-key"></i> API Keys</a></li>
-        <li><a href="#settings-danger" class="danger"><i class="fas fa-exclamation-triangle"></i> Dangerous Actions</a></li>
+        <li><a href="#settings-info"><i class="fas fa-info-circle"></i> App Information</a></li>
       </ul>
     </div>
   `;
@@ -59,9 +58,8 @@ export default async function loadSettingsSection(content, user) {
       '#settings-notifications': 'Enable or disable alerts for email, push, or in-app notifications.',
       '#settings-theme': 'Choose between light, dark, or custom themes to personalize the app appearance.',
       '#settings-language': 'Change the interface language for better accessibility or personal preference.',
-      '#settings-info': 'Access app version, legal information, and developer credits.',
       '#settings-developer': 'Generate, manage, or revoke your personal API keys for development purposes.',
-      '#settings-danger': 'Perform high-risk actions like deactivating or permanently deleting your account.'
+      '#settings-info': 'Access app version, legal information, and developer credits.'
     };
 
     const links = content.querySelectorAll('.settings-menu a');
