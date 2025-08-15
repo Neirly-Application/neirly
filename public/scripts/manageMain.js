@@ -11,7 +11,6 @@ import loadSettingsSection from '../sections/sectionSettings.js';
 import loadSettingsAccountSection from '../sections/sectionSettingsAccount.js';
 import loadSettingsActivitySection from '../sections/sectionSettingsActivity.js';
 import loadSettingsChatsSection from '../sections/sectionSettingsChats.js';
-import loadSettingsDangerSection from '../sections/sectionSettingsDanger.js';
 import loadSettingsDevicesSection from '../sections/sectionSettingsDevices.js';
 import loadSettingsInfoSection from '../sections/sectionSettingsInfo.js';
 import loadSettingsDeveloperSection from '../sections/sectionSettingsAPI.js';
@@ -167,7 +166,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         "settings-account": "Neirly - Account & Security",
         "settings-activity": "Neirly - Activity",
         "settings-chats": "Neirly - Chat Settings",
-        "settings-danger": "Neirly - Danger Zone",
         "settings-devices": "Neirly - Devices",
         "settings-info": "Neirly - Info",
         "settings-developer": "Neirly - Developer",
@@ -184,8 +182,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       content.innerHTML = '<div class="loading">Loading...</div>';
 
       const disablePull = [
-        "premium", "profile", "map-screen", "settings", "settings-account", "settings-chats",
-        "settings-danger", "settings-info", "settings-language", "settings-notifications",
+        "premium", "profile", "map-screen", "settings", "settings-account", "settings-chats", "settings-info", "settings-language", "settings-notifications",
         "settings-privacy", "settings-theme"
       ];
       window.disablePullToRefresh = disablePull.includes(section);
@@ -204,7 +201,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         case 'settings-account': await loadSettingsAccountSection(content, user); break;
         case 'settings-activity': await loadSettingsActivitySection(content, user); break;
         case 'settings-chats': await loadSettingsChatsSection(content, user); break;
-        case 'settings-danger': await loadSettingsDangerSection(content, user); break;
         case 'settings-devices': await loadSettingsDevicesSection(content, user); break;
         case 'settings-info': await loadSettingsInfoSection(content, user); break;
         case 'settings-developer': await loadSettingsDeveloperSection(content, user); break;
