@@ -73,50 +73,64 @@ form {
 }
 
 .social-login {
-  margin-top: 1.5rem;
+  margin-top: 0.5rem;
   text-align: center;
 }
 
-.social-login p {
+#login-form p {
   margin-bottom: 0.5rem;
   color: var(--dark-text);
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 
 .social-icons {
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  gap: 1rem;
+  gap: 10px;
 }
 
 .social-icons .social {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
   height: 50px;
-  border-radius: 50%;
+  border-radius: 20px;
   font-size: 1.25rem;
-  background-color: transparent;
+  background: transparent;
   color: var(--primary);
   transition: color 0.3s ease, transform 0.2s ease;
   text-decoration: none;
-  border: 2px solid transparent;
+  transition: background 0.3s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .social-icons .social:hover {
   transform: translateY(-3px);
-  color: var(--secondary);
+  background: var(--secondary);
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  font-weight: bold;
 }
 
-.social.google { color: #DB4437; }
-.social.discord { color: #5865F2; }
-.social.github { color: #333; }
+.social img.icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.social.google { color: var(--primary); }
+.social.discord { color: var(--primary); }
+.social.github { color: var(--primary); }
+.social.email { color: var(--primary); }
+.social.email i { margin-right: 10px; }
 
 .social.google:hover,
 .social.discord:hover,
-.social.github:hover {
-  color: var(--secondary);
+.social.github:hover,
+.social.email:hover {
+  color: var(--primary);
 }
 
 .password-wrapper {

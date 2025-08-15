@@ -12,14 +12,14 @@ export default async function loadChatWindow(content, user, chatUserId, onBack) 
 
   content.style.background = '';
   content.style.transition = 'background 0.3s ease-in-out';
-  content.style.display = 'flex';
-  content.style.flexDirection = 'column';
-  content.style.justifyContent = 'flex-start';
-  content.style.alignItems = 'stretch';
-  content.style.height = '100vh';
-  content.style.overflow = 'hidden';
-  content.style.padding = '0';
-  content.style.margin = '0';
+  content.style.display = '';
+  content.style.flexDirection = '';
+  content.style.justifyContent = '';
+  content.style.alignItems = '';
+  content.style.height = '';
+  content.style.overflow = '';
+  content.style.padding = '';
+  content.style.margin = '';
 
   content.innerHTML = '<p>Loading chat...</p>';
 
@@ -42,10 +42,10 @@ export default async function loadChatWindow(content, user, chatUserId, onBack) 
     content.innerHTML = `
       <div class="chat-box">
         <div class="chat-header">
-          <a href="#messages" onclick="location.hash = ''; location.hash = '#messages';" class="back-arrow-link">
+          <a href="#messages" class="back-arrow-link">
             <i class="fas fa-arrow-left"></i>
           </a>
-          <h2>Chat with ${escapeHTML(chatUser.name || 'User')}</h2>
+          <h2>${escapeHTML(chatUser.name || 'User')}</h2>
         </div>
         <div class="chat-messages" style="flex-grow: 1; overflow-y: auto; margin-bottom: 10px; max-height: 70vh;">
           ${messages.map(m => `
@@ -99,9 +99,27 @@ export default async function loadChatWindow(content, user, chatUserId, onBack) 
       }
     });
 
+    content.querySelector('.back-arrow-link').addEventListener('click', e => {
+      e.preventDefault();
+      if (typeof onBack === 'function') {
+        onBack();
+      }
+    });
+
   } catch (e) {
     content.innerHTML = `<p>Error loading chat: ${e.message}</p>`;
   }
-
-  
 }
+
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.message-btn');
+  if (!btn) return;
+
+  const friendId = btn.dataset.id;
+  const content = document.getElementById('content');
+  const currentUser = window.currentUser || {};
+
+  loadChatWindow(content, currentUser, friendId, () => {
+    location.hash = '#messages'; 
+  });
+});

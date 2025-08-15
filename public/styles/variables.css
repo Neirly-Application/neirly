@@ -202,8 +202,8 @@ body.dark {
   --story-image-bg-color: linear-gradient(180deg, #1f3fbf, #5c9cff, #a2d9ff, #dffbff);
   --story-content-overlay: rgba(0, 0, 0, 0.7);
 
-  --chat-outgoing-message: #1a2a3d;
-  --chat-incoming-message: #333333;
+  --chat-outgoing-message: #102a4ad8;
+  --chat-incoming-message: #004ca8d8;
   --chat-strong-message: #90d6ff;
   --chat-small-message: rgba(200, 200, 200, 0.8);
 

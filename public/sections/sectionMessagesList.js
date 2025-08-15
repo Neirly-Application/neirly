@@ -4,10 +4,14 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
   stopBubblesAnimation();
   stopBGAnimation();
 
+  content.classList.remove('chat-box');
+  content.classList.add('content');
+
   document.body.style.background = '';
   document.body.style.animation = '';
   document.body.style.backgroundSize = '';
   document.body.style.transition = 'background 0.3s ease-in-out';
+  document.body.style.padding = '';
 
   content.style.background = '';
   content.style.transition = 'background 0.3s ease-in-out';
@@ -21,7 +25,7 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
   content.style.margin = '';
 
   content.innerHTML = `
-  <h2>Messages</h2>
+  <h2><i class="fas fa-comment-alt"></i>  Messages</h2>
   <div id="chats">
     <p>Loading chats...</p>
   </div>`;

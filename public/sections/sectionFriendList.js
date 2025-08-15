@@ -5,13 +5,11 @@ export default async function loadFriendListSection(content, user) {
   stopBubblesAnimation();
   stopBGAnimation();
 
-  // Reset body styles
   document.body.style.background = '';
   document.body.style.animation = '';
   document.body.style.backgroundSize = '';
   document.body.style.transition = 'background 0.3s ease-in-out';
 
-  // Reset content styles
   Object.assign(content.style, {
     background: '',
     transition: 'background 0.3s ease-in-out',
@@ -119,7 +117,6 @@ export default async function loadFriendListSection(content, user) {
     }
   }
 
-  // Submit friend request on icon click or keypress (Enter)
   friendIconBtn.addEventListener('click', () => addFriendForm.requestSubmit());
   friendIconBtn.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
@@ -198,7 +195,6 @@ export default async function loadFriendListSection(content, user) {
 
       updateFriendNotificationBadge(pendingRequests.length);
 
-      // Render confirmed friends
       let html = '';
 
       if (confirmedFriends.length > 0) {
@@ -213,13 +209,16 @@ export default async function loadFriendListSection(content, user) {
               </div>
             </div>
             <div class="friend-actions">
-              <button class="message-btn" title="Message ${friend.name || 'User'}" data-id="${friend._id}" data-name="${friend.name || '-'}" id="message-friend">
+              <button class="message-btn" 
+                      title="Message ${friend.name || 'User'}" 
+                      data-id="${friend._id}" 
+                      data-name="${friend.name || '-'}">
                 <i class="fas fa-comment-alt"></i> 
               </button>
-              <button class="remove-btn" title="Remove ${friend.name || 'User'}" data-id="${friend._id}" data-name="${friend.name || '-'}" id="remove-friend">
+              <button class="remove-btn" title="Remove ${friend.name || 'User'}" data-id="${friend._id}" data-name="${friend.name || '-'}">
                 <i class="fas fa-user-minus"></i>
               </button>
-              <button class="settings-btn" title="Friend Settings" data-id="${friend._id}" data-name="${friend.name || '-'}" id="friend-settings">
+              <button class="settings-btn" title="Friend Settings" data-id="${friend._id}" data-name="${friend.name || '-'}">
                 <i class="fas fa-cog"></i>
               </button>
             </div>
