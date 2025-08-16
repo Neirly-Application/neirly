@@ -1,0 +1,35 @@
+.bg-anim {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.bg-anim .bubble {
+    position: absolute;
+    bottom: -12vh;
+    width: var(--size);
+    height: var(--size);
+    background:
+        radial-gradient(circle at 30% 30%, var(--bubble-glow), var(--bubble-color));
+    border-radius: 50%;
+    opacity: 0;
+    transform: translateY(0) scale(var(--scale,1));
+    animation:
+        rise var(--dur) linear forwards,
+        drift var(--dur) ease-in-out forwards;
+    filter: blur(var(--blur, 0));
+}
+
+@keyframes rise {
+    0%   { opacity: 0;   transform: translateY(0)        scale(var(--scale,1)); }
+    10%  { opacity: 1; }
+    100% { opacity: 0;   transform: translateY(-115vh)   scale(calc(var(--scale,1)*1.1)); }
+}
+
+@keyframes drift {
+    0%   { margin-left: 0; }
+    50%  { margin-left: var(--drift); }
+    100% { margin-left: 0; }
+}

@@ -802,10 +802,11 @@ form button:focus-visible {
   .menu-dropdown {
     position: absolute;
     top: 40px;
-    right: 0;
+    right: 30px;
     background: var(--accent);
     color: var(--dark-text);
     border-radius: 8px;
+    border-top-right-radius: 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     flex-direction: column;
     min-width: 160px;

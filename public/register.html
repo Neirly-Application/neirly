@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="./styles/main.css" />
     <link rel="stylesheet" type="text/css" href="./styles/register_login.css" />
     <link rel="stylesheet" type="text/css" href="./styles/notifications.css" />
+    <link rel="stylesheet" type="text/css" href="./styles/particlesAnimation.css" />
     <link rel="stylesheet" href="./styles/offline.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -22,7 +23,7 @@
         <div class="header">
             <div class="logo">
             </div>
-            <h1 class="sub-logo">Welcome back</h1>
+            <h1 class="sub-logo">Welcome</h1>
             <small class="sub-text">Create an account to start.</small>
         </div>
         <div class="main-card">
@@ -87,12 +88,65 @@
             form.classList.toggle('hidden');
         });
     </script>
+
     <script language="javascript">
         if (!passwordRegex.test(password)) {
         return res.status(400).json({
             message: 'Password must be at least 8 characters long, contain one uppercase letter and one number.'
         });
         }
+    </script>
+
+    <script>
+    document.querySelector('.logo').addEventListener('click', () => {
+        window.location.replace('/');
+    });
+
+    (function () {
+        let container = null;
+        let timer = null;
+
+        function spawnOne(limit) {
+            if (!container) return;
+            if (container.children.length > limit) container.firstChild?.remove();
+
+            const b = document.createElement('span');
+            b.className = 'bubble';
+
+            const size = (Math.random() * (10 - 2) + 2).toFixed(1) + 'vmin';
+            b.style.setProperty('--size', size);
+            b.style.setProperty('--dur', (6 + Math.random() * 8).toFixed(2) + 's');
+            b.style.setProperty('--scale', (0.8 + Math.random() * 1.2).toFixed(2));
+            b.style.setProperty('--drift',
+            (Math.random() < 0.5 ? '-' : '') + (Math.random() * 8 + 2).toFixed(1) + 'vw');
+            b.style.left = Math.random() * 100 + '%';
+            b.style.setProperty('--blur', (Math.random() * 2.5).toFixed(1) + 'px');
+
+            container.appendChild(b);
+            b.addEventListener('animationend', () => b.remove());
+        }
+
+        window.startBubblesAnimation = function ({
+            interval = 300,
+            limit = 80
+        } = {}) {
+            if (!container) {
+            container = document.createElement('div');
+            container.className = 'bg-anim';
+            document.body.appendChild(container);
+            }
+            if (!timer) {
+            spawnOne(limit);
+            timer = setInterval(() => spawnOne(limit), interval);
+            }
+        };
+
+        window.stopBubblesAnimation = function () {
+            if (timer) { clearInterval(timer); timer = null; }
+            if (container) container.querySelectorAll('.bubble').forEach(n => n.remove());
+        };
+        })();
+        startBubblesAnimation();
     </script>
 
 </body>

@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       content.innerHTML = '<div class="loading">Loading...</div>';
 
       const disablePull = [
-        "premium", "profile", "map-screen", "settings", "settings-account", "settings-chats", "settings-info", "settings-language", "settings-notifications",
+        "premium", "profile", "map-screen", "friend-list", "settings", "settings-account", "settings-chats", "settings-info", "settings-language", "settings-notifications",
         "settings-privacy", "settings-theme"
       ];
       window.disablePullToRefresh = disablePull.includes(section);

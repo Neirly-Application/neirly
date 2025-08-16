@@ -55,7 +55,7 @@ footer {
 
 .footer-links a,
 .footer-social a {
-  color: var(--secondary);
+  color: var(--accent);
   text-decoration: none;
   transition: color 0.3s ease;
   font-weight: 500;
@@ -66,7 +66,7 @@ footer {
 .footer-links a:focus,
 .footer-social a:hover,
 .footer-social a:focus {
-  color: var(--accent);
+  color: var(--secondary);
   outline-offset: 2px;
   outline: none;
   text-decoration: none;
@@ -74,7 +74,7 @@ footer {
 
 .footer-social i {
   font-size: 22px;
-  color: var(--secondary);
+  color: var(--accent);
   transition: color 0.3s ease;
   cursor: pointer;
   user-select: none;
@@ -82,7 +82,7 @@ footer {
 
 .footer-social i:hover,
 .footer-social i:focus {
-  color: var(--accent);
+  color: var(--secondary);
   outline-offset: 2px;
   outline: none;
 }

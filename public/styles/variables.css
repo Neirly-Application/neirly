@@ -1,4 +1,7 @@
 :root, body.light {
+  --bubble-color: rgba(100, 130, 255, 0.18);
+  --bubble-glow: rgba(100, 130, 255, 0.55);
+
   --main-text-color: #2e2e2e;
 
   --primary: #2c4296;
@@ -150,6 +153,9 @@
 }
 
 body.dark {
+  --bubble-color: rgba(100, 130, 255, 0.55);
+  --bubble-glow: rgba(100, 130, 255, 0.18);
+
   --main-text-color: #ffffff;
 
   --primary: #0b2a69;
