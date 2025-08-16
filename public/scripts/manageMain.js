@@ -22,19 +22,15 @@ import loadSettingsThemeSection from '../sections/sectionSettingsTheme.js';
 import loadDefaultSection from '../sections/sectionDefault.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    try {
-    const res = await fetch("/api/profile", {
-      method: "GET",
-      credentials: "include"
-    });
+  try {
+    const res = await fetch("/api/profile", { credentials: "include" });
     if (!res.ok) throw new Error("Error while fetching profile.");
     const user = await res.json();
 
+    // --- NAV PROFILE ---
     function getNavProfileHTML(isMobile) {
       if (isMobile) {
-        return `
-          <img src="${user.profilePictureUrl}" alt="Profile Picture" class="profile-icon">
-        `;
+        return `<img src="${user.profilePictureUrl}" alt="Profile Picture" class="profile-icon">`;
       } else {
         return `
           <img src="${user.profilePictureUrl}" alt="Profile Picture" class="profile-icon">
@@ -50,49 +46,31 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
     updateNavProfiles();
-
     window.addEventListener("resize", updateNavProfiles);
 
-  } catch (err) {
-    console.error("Nav profile update error:", err);
-  }
-  
-  try {
-    const content = document.querySelector('.content');
-    const adminSection = document.getElementById('admin-section');
-
-    let allNotifications = [];
-    let user = null;
-
-    window.disablePullToRefresh = false;
-    let currentLoadToken = null; 
-
-    async function fetchAndSetUser() {
-      try {
-        const res = await fetch('/api/profile', { credentials: 'include' });
-        if (!res.ok) {
-          window.location.href = '/login.html';
-          return;
-        }
-        user = await res.json();
-
-        if (user.roles?.includes('ceo')) {
-          adminSection && (adminSection.style.display = 'flex');
-        } else {
-          adminSection && (adminSection.style.display = 'none');
-        }
-      } catch (err) {
-        console.error('Failed to fetch user profile on load:', err);
-        window.location.href = '/login.html';
+    // --- APPLY THEME ---
+    function applyTheme(theme) {
+      if (theme === 'dark') {
+        document.body.classList.add('dark');
+        document.body.classList.remove('light');
+      } else {
+        document.body.classList.add('light');
+        document.body.classList.remove('dark');
       }
     }
+    applyTheme(user.theme || 'dark');
+
+    // --- NOTIFICATIONS & FRIENDS ---
+    const content = document.querySelector('.content');
+    let allNotifications = [];
+    window.disablePullToRefresh = false;
+    let currentLoadToken = null;
 
     function checkUnreadNotifications(unreadCount) {
       const badges = document.querySelectorAll('.notification-badge');
       badges.forEach(badge => {
         if (unreadCount > 0) {
           badge.style.display = 'inline-block';
-          // badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
           badge.classList.add('vibrate');
         } else {
           badge.style.display = 'none';
@@ -127,25 +105,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function fetchFriendNotificationCount() {
       try {
         const res = await fetch('/api/friends', { credentials: 'include' });
-        if (!res.ok) {
-          if (typeof friendsList !== 'undefined') {
-            friendsList.innerHTML = '<p>Error while loading friends.</p>';
-          }
-          return;
-        }
-
-        const { confirmedFriends = [], pendingRequests = [], sentRequests = [] } = await res.json();
-
-        const reqText = document.querySelector('.friend-requests-text');
-        const reqBadge = document.querySelector('.friend-requests-badge');
-        const friendIconBadge = document.querySelector('.friend-notification-badge'); 
+        if (!res.ok) return;
+        const { pendingRequests = [] } = await res.json();
+        const friendIconBadge = document.querySelector('.friend-notification-badge');
 
         const count = pendingRequests.length;
-
         if (friendIconBadge) {
           if (count > 0) {
             friendIconBadge.style.display = 'inline-block';
-            // friendIconBadge.textContent = count > 99 ? '99+' : count;
             friendIconBadge.classList.add('vibrate');
           } else {
             friendIconBadge.style.display = 'none';
@@ -158,25 +125,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    async function init() {
-      const res = await fetch('/api/profile', { credentials: 'include' });
-      const user = await res.json();
-
-      applyTheme(user.theme || 'dark');
-      loadSection(currentSection, user);
-    }
-
-    function applyTheme(theme) {
-      if (theme === 'dark') {
-        document.body.classList.add('dark');
-        document.body.classList.remove('light');
-      } else {
-        document.body.classList.add('light');
-        document.body.classList.remove('dark');
-      }
-    };
-    init();
-
+    // --- LOAD SECTION ---
     async function loadSection(section) {
       const thisToken = Symbol('load');
       currentLoadToken = thisToken;
@@ -208,7 +157,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       };
 
       document.title = sectionTitles[section] || "Neirly";
-
       content.innerHTML = '<div class="loading">Loading...</div>';
 
       const disablePull = [
@@ -239,22 +187,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         case 'settings-notifications': await loadSettingsNotificationsSection(content, user); break;
         case 'settings-privacy': await loadSettingsPrivacySection(content, user); break;
         case 'settings-theme': await loadSettingsThemeSection(content, user); break;
-        default:
-          case 'default': await loadDefaultSection(content, user);
-          return;
+        default: await loadDefaultSection(content, user); return;
       }
 
-      if (currentLoadToken !== thisToken) return; 
+      if (currentLoadToken !== thisToken) return;
     }
 
+    // --- LOGOUT ---
     document.querySelectorAll('.logout-btn').forEach(logoutBtn => {
       logoutBtn.addEventListener('click', async e => {
         e.preventDefault();
         try {
-          const res = await fetch('/api/auth/logout', {
-            method: 'POST',
-            credentials: 'include',
-          });
+          const res = await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
           res.ok ? window.location.href = '/login.html' : showToast('Logout failed.', 'error');
         } catch (err) {
           showToast('Network error while logging out.', 'error');
@@ -262,10 +206,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     });
 
-    await fetchAndSetUser();
+    // --- INITIALIZATION ---
     await preloadNotifications();
     await fetchUnreadCount();
-    await fetchFriendNotificationCount(); 
+    await fetchFriendNotificationCount();
     setInterval(fetchFriendNotificationCount, 1000);
 
     const initialSection = window.location.hash.substring(1) || 'home';
@@ -276,94 +220,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       loadSection(section);
     });
 
-    function setupPullToRefresh() {
-      const refreshThreshold = 70;
-      const refreshContainer = document.getElementById('pull-to-refresh');
-      const content = document.getElementById('content');
-
-      let startY = 0;
-      let isTouching = false;
-      let isRefreshing = false;
-      let activeRefreshToken = null;
-
-      window.addEventListener('hashchange', () => {
-        if (isRefreshing) {
-          isRefreshing = false;
-          activeRefreshToken = null;
-          refreshContainer.classList.remove('active');
-          refreshContainer.style.transform = `translateY(-60px)`;
-          content.style.transform = `translateY(0px)`;
-        }
-      });
-
-      document.addEventListener('touchstart', (e) => {
-        if (window.disablePullToRefresh) return;
-
-        if (content.scrollTop <= 0 && !isRefreshing) {
-          isTouching = true;
-          startY = e.touches[0].clientY;
-        }
-      });
-
-      document.addEventListener('touchmove', (e) => {
-        if (!isTouching || isRefreshing || window.disablePullToRefresh) return;
-
-        if (content.scrollTop > 0) {
-          isTouching = false;
-          return;
-        }
-
-        const moveY = e.touches[0].clientY;
-        const distance = moveY - startY;
-
-        if (distance > 0) {
-          e.preventDefault();
-          const translateY = Math.min(distance / 2, refreshThreshold + 30);
-          refreshContainer.style.transform = `translateY(${translateY}px)`;
-          content.style.transform = `translateY(${translateY}px)`;
-        }
-      }, { passive: false });
-
-      document.addEventListener('touchend', async () => {
-        if (!isTouching || isRefreshing) return;
-
-        const match = refreshContainer.style.transform.match(/translateY\(([\d.-]+)px\)/);
-        const currentTransform = match ? parseFloat(match[1]) : 0;
-
-        isTouching = false;
-
-        if (currentTransform >= refreshThreshold) {
-          isRefreshing = true;
-          const refreshToken = Symbol('refresh');
-          activeRefreshToken = refreshToken;
-
-          refreshContainer.classList.add('active');
-          refreshContainer.style.transform = `translateY(60px)`;
-          content.style.transform = `translateY(60px)`;
-
-          const currentSection = window.location.hash.replace('#', '') || 'home';
-          await loadSection(currentSection);
-
-          if (activeRefreshToken !== refreshToken) return;
-
-          refreshContainer.classList.remove('active');
-          refreshContainer.style.transform = `translateY(-60px)`;
-          content.style.transform = `translateY(0px)`;
-          isRefreshing = false;
-        } else {
-          refreshContainer.style.transform = `translateY(-60px)`;
-          content.style.transform = `translateY(0px)`;
-        }
-      });
-    }
-
-    setupPullToRefresh();
-
   } catch (err) {
     console.error(err);
     window.location.href = '/login.html';
   }
 });
+
 
 function detectDevTools() {
   const threshold = 160;
