@@ -24,7 +24,6 @@ import loadDefaultSection from '../sections/sectionDefault.js';
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     const content = document.querySelector('.content');
-    const welcomeMessage = document.getElementById('welcomeMessage');
     const adminSection = document.getElementById('admin-section');
 
     let allNotifications = [];
@@ -41,10 +40,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           return;
         }
         user = await res.json();
-
-        if (welcomeMessage && user.name) {
-          welcomeMessage.textContent = `Welcome ${user.name}!`;
-        }
 
         if (user.roles?.includes('ceo')) {
           adminSection && (adminSection.style.display = 'flex');

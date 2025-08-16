@@ -102,10 +102,19 @@ img {
 
 .nav-logo {
   height: 40px;
-  max-width: 100%;
   width: auto;
+  max-width: 100%;
   display: inline-block;
+  vertical-align: middle;
   user-select: none;
+}
+
+.nav-logo-text {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
 .nav-links {
@@ -141,7 +150,8 @@ img {
   border-radius: 10px;
 }
 
-.nav-item i {
+.nav-item i,
+.nav-item img.profile-icon {
   margin-right: 16px;
   min-width: 16px;
   max-width: 30px;
@@ -149,6 +159,22 @@ img {
   text-align: center;
   flex-shrink: 0;
   transition: color 0.3s ease;
+}
+
+.nav-item img.profile-icon {
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  object-fit: cover;
+  margin-left: 0;
+}
+
+.nav-item .nav-username {
+  font-size: 1rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .nav-item span {
@@ -614,6 +640,15 @@ form button:focus-visible {
   font-size: 1.4rem;
 }
 
+.bottom-navbar .nav-item img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--secondary);
+  font-size: 1.4rem;
+}
+
 @media (max-width: 768px) {
   .bottom-navbar {
     position: fixed;
@@ -700,6 +735,7 @@ form button:focus-visible {
 
   .topbar-title {
     font-size: 1.2rem;
+    font-weight: bold;
   }
 
   .topbar-menu {

@@ -43,6 +43,7 @@
 
   <div class="mobile-topbar">
     <div class="topbar-left">
+      <img src="../media/neirly-logo.png" alt="Neirly Logo" class="topbar-logo" oncontextmenu="return false;"/>
       <span class="topbar-title">Neirly</span>
     </div>
     <div class="topbar-menu">
@@ -85,7 +86,7 @@
   <nav class="sidebar" id="sidebar">
     <div class="nav-header">
       <img src="../media/neirly-logo.png" alt="Neirly Logo" class="nav-logo" oncontextmenu="return false;"/>
-          <div id="welcomeMessage"></div>
+          <div class="nav-logo-text">Neirly</div>
     </div>
     
     <div class="nav-links">
@@ -115,7 +116,7 @@
         <i class="fas fa-user-friends"></i>
         <span>Friends</span>
       </a>
-      <a href="#profile" class="nav-item" title="Profile" data-section="profile">
+      <a href="#profile" class="nav-item" id="nav-profile-loader" title="Profile" data-section="profile">
         <i class="fas fa-user"></i> 
         <span>Profile</span>
       </a>
@@ -154,7 +155,7 @@
       <a href="#messages" class="nav-item" data-section="messages">
         <i class="fas fa-comment-alt"></i>
       </a>
-      <a href="#profile" class="nav-item" data-section="profile">
+      <a href="#profile" id="nav-profile-loader" class="nav-item" data-section="profile">
         <i class="fas fa-user"></i>
       </a>
   </nav>
@@ -403,6 +404,45 @@
         event.preventDefault();
       }
     });
+  </script>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    try {
+      const res = await fetch("/api/profile", {
+        method: "GET",
+        credentials: "include"
+      });
+      if (!res.ok) throw new Error("Errore nel recupero profilo");
+      const user = await res.json();
+
+      function getNavProfileHTML(isMobile) {
+        if (isMobile) {
+          return `
+            <img src="${user.profilePictureUrl}" alt="Profile Picture" class="profile-icon">
+          `;
+        } else {
+          return `
+            <img src="${user.profilePictureUrl}" alt="Profile Picture" class="profile-icon">
+            <span class="nav-username">${user.name || user.email}</span>
+          `;
+        }
+      }
+
+      function updateNavProfiles() {
+        const isMobile = window.innerWidth <= 768;
+        document.querySelectorAll("#nav-profile-loader").forEach(el => {
+          el.innerHTML = getNavProfileHTML(isMobile);
+        });
+      }
+      updateNavProfiles();
+
+      window.addEventListener("resize", updateNavProfiles);
+
+    } catch (err) {
+      console.error("Nav profile update error:", err);
+    }
+  });
   </script>
   </body>
 </html>
