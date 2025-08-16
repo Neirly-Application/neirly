@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema({
     default: 'dark'
   },
   join_date: { type: Date, default: Date.now },
+  oauthPasswordChanged:  { type: Boolean, default: false },
   wantsUpdates:  { type: Boolean, default: false },
   forceLogout: { type: Boolean, default: false },
   banned: { type: Boolean, default: false },

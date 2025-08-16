@@ -49,6 +49,7 @@ router.get('/profile', async (req, res) => {
       name: user.name,
       birthdate: user.birthdate,
       nickname: user.nickname,
+      oauthPasswordChanged: user.oauthPasswordChanged,
       uniquenick: user.uniquenick,
       profileCompleted: user.profileCompleted,
       roles: user.roles,

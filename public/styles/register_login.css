@@ -20,6 +20,7 @@
 }
 
 .main-card h2 {
+  margin-top: 0;
   margin-bottom: 0.6rem;
   color: var(--accent);
   font-size: 1.75rem;

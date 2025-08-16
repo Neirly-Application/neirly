@@ -220,6 +220,78 @@ document.addEventListener('DOMContentLoaded', async () => {
       loadSection(section);
     });
 
+    // --- PULL TO REFRESH ---
+    function setupPullToRefresh() {
+      const refreshThreshold = 70;
+      const refreshContainer = document.getElementById('pull-to-refresh');
+      const content = document.getElementById('content');
+
+      let startY = 0;
+      let isTouching = false;
+      let isRefreshing = false;
+      let activeRefreshToken = null;
+
+      window.addEventListener('hashchange', () => {
+        if (isRefreshing) {
+          isRefreshing = false;
+          activeRefreshToken = null;
+          refreshContainer.classList.remove('active');
+          refreshContainer.style.transform = `translateY(-60px)`;
+          content.style.transform = `translateY(0px)`;
+        }
+      });
+
+      document.addEventListener('touchstart', (e) => {
+        if (window.disablePullToRefresh) return;
+        if (content.scrollTop <= 0 && !isRefreshing) {
+          isTouching = true;
+          startY = e.touches[0].clientY;
+        }
+      });
+
+      document.addEventListener('touchmove', (e) => {
+        if (!isTouching || isRefreshing || window.disablePullToRefresh) return;
+        if (content.scrollTop > 0) {
+          isTouching = false;
+          return;
+        }
+        const moveY = e.touches[0].clientY;
+        const distance = moveY - startY;
+        if (distance > 0) {
+          e.preventDefault();
+          const translateY = Math.min(distance / 2, refreshThreshold + 30);
+          refreshContainer.style.transform = `translateY(${translateY}px)`;
+          content.style.transform = `translateY(${translateY}px)`;
+        }
+      }, { passive: false });
+
+      document.addEventListener('touchend', async () => {
+        if (!isTouching || isRefreshing) return;
+        const match = refreshContainer.style.transform.match(/translateY\(([\d.-]+)px\)/);
+        const currentTransform = match ? parseFloat(match[1]) : 0;
+        isTouching = false;
+        if (currentTransform >= refreshThreshold) {
+          isRefreshing = true;
+          const refreshToken = Symbol('refresh');
+          activeRefreshToken = refreshToken;
+          refreshContainer.classList.add('active');
+          refreshContainer.style.transform = `translateY(60px)`;
+          content.style.transform = `translateY(60px)`;
+          const currentSection = window.location.hash.replace('#', '') || 'home';
+          await loadSection(currentSection);
+          if (activeRefreshToken !== refreshToken) return;
+          refreshContainer.classList.remove('active');
+          refreshContainer.style.transform = `translateY(-60px)`;
+          content.style.transform = `translateY(0px)`;
+          isRefreshing = false;
+        } else {
+          refreshContainer.style.transform = `translateY(-60px)`;
+          content.style.transform = `translateY(0px)`;
+        }
+      });
+    }
+    setupPullToRefresh();
+
   } catch (err) {
     console.error(err);
     window.location.href = '/login.html';

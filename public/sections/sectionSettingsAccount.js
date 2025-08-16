@@ -11,20 +11,16 @@ function loadSectionCSS(href) {
 }
 
 export default async function loadSettingsAccountSection(content, user) {
-    // Load section-specific CSS
     loadSectionCSS('/styles/UIsettings/account-security.css');
 
-    // Stop background animations
     stopBubblesAnimation();
     stopBGAnimation();
 
-    // Reset page styles
     document.body.style.background = '';
     document.body.style.animation = '';
     document.body.style.backgroundSize = '';
     document.body.style.transition = 'background 0.3s ease-in-out';
 
-    // Reset content container styles
     content.style.background = '';
     content.style.transition = 'background 0.3s ease-in-out';
     content.style.display = '';
@@ -36,7 +32,6 @@ export default async function loadSettingsAccountSection(content, user) {
     content.style.padding = '';
     content.style.margin = '';
 
-    // Render the HTML content
     content.innerHTML = `
       <div class="case-header">
         <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link">
@@ -78,19 +73,16 @@ export default async function loadSettingsAccountSection(content, user) {
     /** ------------------------
      * UNSAVED CHANGES HANDLING
      * ------------------------ */
-
     const form = document.getElementById('accountSecurityForm');
     const notification = document.getElementById('unsaved-notification');
     const cancelBtn = document.getElementById('cancel-changes-btn');
     const saveBtn = document.getElementById('save-changes-btn');
 
-    // Store initial field values to compare later
     const initialValues = {};
     form.querySelectorAll('input').forEach(input => {
         initialValues[input.name] = input.value;
     });
 
-    // Function to check if any changes have been made
     function checkChanges() {
         let changed = false;
         form.querySelectorAll('input').forEach(input => {
@@ -98,16 +90,13 @@ export default async function loadSettingsAccountSection(content, user) {
                 changed = true;
             }
         });
-        // Show/hide the notification based on change status
         notification.style.display = changed ? 'flex' : 'none';
     }
 
-    // Listen for changes in all inputs
     form.querySelectorAll('input').forEach(input => {
         input.addEventListener('input', checkChanges);
     });
 
-    // Cancel button → restore initial values and hide notification
     cancelBtn.addEventListener('click', () => {
         form.querySelectorAll('input').forEach(input => {
             input.value = initialValues[input.name];
@@ -115,14 +104,77 @@ export default async function loadSettingsAccountSection(content, user) {
         checkChanges();
     });
 
-    // Save button → simulate save and update initialValues
     saveBtn.addEventListener('click', () => {
-        // TODO: Implement actual save logic (e.g., send data to API)
         Object.keys(initialValues).forEach(name => {
             initialValues[name] = form.querySelector(`[name="${name}"]`).value;
         });
         checkChanges();
         showToast('Changes saved!', 'success');
+    });
+
+    /** ------------------------
+     *  CHANGE PASSWORD HANDLING
+     * ------------------------ */
+    const changePasswordBtn = document.getElementById('change-password-btn');
+    changePasswordBtn.addEventListener('click', () => {
+      console.log("user.oauthPasswordChanged:", user.oauthPasswordChanged);
+      const hideCurrentPassword = user.oauthPasswordChanged === true;
+
+      const modal = document.createElement('div');
+      modal.className = 'change-password-modal-overlay';
+      modal.innerHTML = `
+        <div class="change-password-modal">
+          <h3>Change Password</h3>
+          <form id="changePasswordForm">
+            ${hideCurrentPassword ? '' : `
+            <div class="form-group">
+              <input type="password" placeholder="Current Password" id="currentPassword" name="currentPassword" required>
+            </div>`}
+            
+            <div class="form-group">
+              <input type="password" placeholder="New Password" id="newPassword" name="newPassword" required>
+            </div>
+
+            <div class="form-group">
+              <input type="password" placeholder="Confirm New Password" id="confirmPassword" name="confirmPassword" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Save</button>
+            <button type="button" class="btn-cancel" id="cancelChangePwd">Cancel</button>
+          </form>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      document.getElementById('cancelChangePwd').onclick = () => modal.remove();
+
+      document.getElementById('changePasswordForm').onsubmit = async (e) => {
+        e.preventDefault();
+
+        const currentPassword = document.getElementById('currentPassword')?.value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        try {
+          const res = await fetch('/api/change-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ currentPassword, newPassword, confirmPassword })
+          });
+
+          const data = await res.json();
+          if (res.ok) {
+            showToast(data.message, 'success');
+            user.oauthPasswordChanged = true;
+            modal.remove();
+          } else {
+            showToast(data.message || "Can't change password.", 'error');
+          }
+        } catch (err) {
+          showToast('Error while changing password.', 'error');
+        }
+      };
     });
 
     /** ------------------------

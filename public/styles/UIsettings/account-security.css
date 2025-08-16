@@ -75,3 +75,26 @@
 .twofa i {
     margin-right: 10px;
 }
+
+.change-password-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.change-password-modal {
+  background: var(--animated-bg-main);
+  color: var(--main-text-color);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}

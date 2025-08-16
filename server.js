@@ -142,6 +142,7 @@ const deleteUserRouter = require('./src/routes/deleteUser');
 const nearMeRouter = require('./src/routes/nearMe');
 const searchNickRouter = require('./src/routes/searchNick.js');
 const themeRouter = require('./src/routes/themeRouter.js');
+const accountSecurity = require('./src/routes/accountSecurityRouter.js');
 
 /* ---------------------------------------------------------------------------
  *  Additional service initialization
@@ -194,6 +195,7 @@ app.use('/api', chatsRouter);
 app.use('/api', getUser);
 app.use('/api', searchNickRouter);
 app.use('/api', themeRouter);
+app.use('/api', accountSecurity);
 
 /* ---------------------------------------------------------------------------
  *  Static file routes

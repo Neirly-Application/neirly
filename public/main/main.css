@@ -166,7 +166,12 @@ img {
   width: 25px;
   height: 25px;
   object-fit: cover;
-  margin-left: 0;
+}
+
+@media (max-width: 768px) {
+  .nav-item img.profile-icon {
+    margin: 0;
+  }
 }
 
 .nav-item .nav-username {
