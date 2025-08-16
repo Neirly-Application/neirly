@@ -16,23 +16,16 @@
     <link rel="icon" type="image/x-icon" href="./media/neirly-logo.png">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-logo"><a href="/">
-            <img src="./media/neirly-logo.png">Neirly</a></div>
-        <button class="nav-toggle" aria-label="Open Menu" aria-expanded="false">
-        ☰
-        </button>
-        <ul class="nav-links">
-            <li>
-                <a href="#"><i class="fas fa-file-alt"></i> Policies</a>
-            </li>
-        </ul>
-    </nav>
     <div class="overlay"></div>
 
     <section class="main-section">
+        <div class="header">
+            <div class="logo">
+            </div>
+            <h1 class="sub-logo">Welcome back</h1>
+            <small class="sub-text">Please, login to your account.</small>
+        </div>
         <div class="main-card">
-            <h2><i class="fas fa-sign-in-alt"></i> Login</h2>
                 <form id="login-form">
                     <div class="social-login" autocomplete="off" novalidate>
                         <div class="social-icons">
@@ -58,10 +51,11 @@
 
                         <button type="submit" id="login-button" class="cta-button"><i class="fas fa-sign-in-alt"></i> Login</button>
                     </div>
-                    
-                    <p class="swap-link">Don't have an account? <a href="./register.html">Register</a></p>
+                    <small>By signing in, you agree to our <a href="/terms.html" target="_blank">Terms of Service</a> and <a href="/privacy.html" target="_blank">Privacy Policy</a>.</small>
                 </form>
         </div>
+        
+        <p class="swap-link">Don't have an account? <a href="./register.html">Register</a></p>
     </section>
 
     <div id="offlineOverlay" style="display:none;">

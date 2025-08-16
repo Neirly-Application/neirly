@@ -16,7 +16,8 @@
   --sidebar-element-text-color-hover: #3957cce9; 
   --sidebar-element-text-color-active: #2c4296; 
 
-  --animated-bg-complete-profile: linear-gradient(180deg, #2c4296, #e6ecff, #2c4296);
+  /* --animated-bg-complete-profile: linear-gradient(180deg, #2c4296, #e6ecff, #2c4296); */
+  --animated-bg-complete-profile: #001c2b;
   --animated-bg-main: #d8f1ff;
 
   --premium-bg-color: #ffd700;

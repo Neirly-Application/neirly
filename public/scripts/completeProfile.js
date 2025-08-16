@@ -5,16 +5,10 @@ document.getElementById('complete-profile-form').addEventListener('submit', asyn
   const username = document.getElementById('username').value;
   const uniquenick = document.getElementById('uniquenick').value.trim();
   const wantsUpdates = document.getElementById('wantsUpdates').checked;
-  const acceptedTerms = document.getElementById('acceptedTerms').checked;
   const userId = new URLSearchParams(window.location.search).get('userId');
   const errorMsg = document.getElementById('error-msg');
 
   errorMsg.textContent = ''; 
-
-  if (!acceptedTerms) {
-    errorMsg.textContent = 'You must accept the policies.';
-    return;
-  }
 
   if (!/^[a-z0-9._]+$/.test(uniquenick)) {
     errorMsg.textContent = 'Nickname can only contain lowercase letters, numbers, underscores, and dots.';
@@ -42,8 +36,7 @@ document.getElementById('complete-profile-form').addEventListener('submit', asyn
           password: ' ',
           username,
           uniquenick,
-          wantsUpdates,
-          acceptedTerms
+          wantsUpdates
         })
       });
 

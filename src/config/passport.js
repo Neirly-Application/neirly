@@ -86,11 +86,13 @@ passport.use(new GoogleStrategy({
     const newUser = await User.create({
       email,
       name: profile.displayName || 'User',
+      oauthPasswordChanged: false,
       uniquenick,
       discordId: null,
       passwordHash: '',
       provider: 'google',
       profileCompleted: false,
+      acceptedTerms: true,
       join_date: new Date(),
       roles: ['user'],
       banned: false,
@@ -119,8 +121,12 @@ passport.use(new DiscordStrategy({
   try {
     const email = profile.email;
     if (!email) {
-      return done(null, false, { message: 'Email non disponibile da Discord.' });
+      return done(null, false, { message: 'Email not available by Discord.' });
     }
+
+    const avatarUrl = profile.avatar
+      ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
+      : `https://cdn.discordapp.com/embed/avatars/${profile.discriminator % 5}.png`;
 
     let user = await User.findOne({ email });
 
@@ -128,10 +134,12 @@ passport.use(new DiscordStrategy({
       if (!user.discordId) {
         user.discordId = profile.id;
         if (!user.provider) user.provider = 'discord';
-        await user.save();
-      } else if (user.discordId !== profile.id) {
-        return done(null, false, { message: 'Discord ID mismatch con account esistente.' });
       }
+
+      if (!user.profilePictureUrl || user.profilePictureUrl !== avatarUrl) {
+        user.profilePictureUrl = avatarUrl;
+      }
+      await user.save();
       return done(null, user);
     }
 
@@ -141,16 +149,19 @@ passport.use(new DiscordStrategy({
     const newUser = await User.create({
       email,
       name: profile.username,
+      oauthPasswordChanged: false,
       uniquenick,
       discordId: profile.id,
       passwordHash: '',
       provider: 'discord',
-      profileCompleted: false,
+      profileCompleted: true,
+      acceptedTerms: true,
       join_date: new Date(),
       roles: ['user'],
       banned: false,
       forceLogout: false,
       about_me: "👋 Hello there! I'm a Neirly user!",
+      profilePictureUrl: avatarUrl
     });
 
     await Notification.create({

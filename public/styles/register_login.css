@@ -1,22 +1,69 @@
 @import url(./variables.css);
 
+body {
+  font-family: 'Inter', sans-serif;
+  min-width: 400px;
+  margin: auto;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: var(--animated-bg-complete-profile);
+  background-size: 400% 400%;
+  /* animation: gradient 10s ease infinite; */
+  transition: background 0.5s ease-in-out;
+  color: var(--soft-dark-text);
+}
+
 .main-section {
   margin-top: 20px;
   display: flex;
+  flex-direction: column;
+  gap: 30px;
   justify-content: center;
   align-items: center;
   background-color: transparent;
   padding: 4rem 2rem;
-  min-height: 100vh;
+  height: 100vh;
 }
 
 .main-card {
   background-color: var(--primary);
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  padding: 2.5rem 2rem;
-  max-width: 400px;
+  border: 2px solid var(--secondary);
+  padding: 2rem 1.5rem;
+  max-width: 420px;
   width: 100%;
+}
+
+.main-section .header {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+
+.header .logo {
+  width: 60px;
+  height: 60px;
+  background-image: url("../media/neirly-logo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 8px;
+}
+
+.header .sub-logo {
+  margin: 0;
+  font-size: 1.8rem;
+  color: var(--accent);
+}
+
+.header .sub-text {
+  margin-top: 10px;
+  color: var(--secondary);
 }
 
 .main-card h2 {
@@ -64,9 +111,11 @@ form {
   color: var(--accent);
   text-decoration: none;
   border-radius: 10px;
-  background-color: var(--main-bg);
+  border: 1px solid var(--secondary);
+  background-color: var(--primary);
   padding-block: 6px;
   padding-inline: 10px;
+  margin-left: 10px;
   font-weight: 500;
 }
 
@@ -74,16 +123,28 @@ form {
   cursor: pointer;
 }
 
-.social-login {
-  margin-top: 0.5rem;
-  text-align: center;
-}
-
-#login-form p, #register-form p {
-  padding-top: 1rem;
+.main-card p {
+  padding-top: 2rem;
   margin-bottom: 0.5rem;
   color: var(--accent);
   font-size: 1rem;
+}
+
+#login-form small, #register-form small {
+  text-align: center;
+  padding-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 12px;
+  color: var(--accent-secondary);
+}
+
+#login-form small a, #register-form small a {
+  color: var(--secondary);
+}
+
+.social-login {
+  margin-top: 0.5rem;
+  text-align: center;
 }
 
 .social-icons {
@@ -100,8 +161,9 @@ form {
   height: 50px;
   border-radius: 10px;
   font-size: 1.25rem;
-  background: var(--secondary);
-  color: var(--primary);
+  background: var(--primary);
+  color: var(--accent);
+  border: 2px solid var(--secondary);
   text-decoration: none;
   transition: background 0.3s ease, color 0.2s ease, transform 0.2s ease;
 }
@@ -113,9 +175,9 @@ form {
   height: 50px;
   border-radius: 10px;
   font-size: 1.25rem;
-  background: var(--primary);
-  color: var(--accent);
-  border: 1px solid var(--main-bg);
+  background: var(--secondary);
+  color: var(--primary);
+  border: 2px solid var(--main-bg);
   text-decoration: none;
   transition: background 0.3s ease, color 0.2s ease, transform 0.2s ease;
 }
@@ -123,14 +185,14 @@ form {
 .social-icons .social-email:hover {
   transform: translateY(-3px);
   background: var(--primary);
-  border: 1px solid var(--secondary);
+  border: 2px solid var(--secondary);
   color: var(--secondary);
 }
 
 .social-icons .social:hover {
   transform: translateY(-3px);
   background: var(--secondary);
-  border: 1px solid var(--primary);
+  border: 2px solid var(--main-bg);
   color: var(--primary);
 }
 
@@ -142,9 +204,9 @@ form {
   vertical-align: middle;
 }
 
-.social.google { color: var(--primary); }
-.social.discord { color: var(--primary); }
-.social.github { color: var(--primary); }
+.social.google { color: var(--accent); }
+.social.discord { color: var(--accent); }
+.social.github { color: var(--accent); }
 .social.email i { margin-right: 10px; }
 
 .social.google:hover,
@@ -269,19 +331,7 @@ form {
   to { opacity: 1; transform: translateY(0); }
 }
 
-body {
-  font-family: 'Inter', sans-serif;
-  min-width: 400px;
-  margin: auto;
-  box-sizing: border-box;
-  background: var(--animated-bg-complete-profile);
-  background-size: 400% 400%;
-  animation: gradient 10s ease infinite;
-  transition: background 0.5s ease-in-out;
-  color: var(--soft-dark-text);
-}
-
-@keyframes gradient {
+/* @keyframes gradient {
   0% {
     background-position: 0% 0%;
   }
@@ -291,7 +341,7 @@ body {
   100% {
     background-position: 0% 0%;
   }
-}
+} */
 
 .divider {
   display: flex;

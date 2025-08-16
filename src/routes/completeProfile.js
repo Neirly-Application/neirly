@@ -7,13 +7,12 @@ const router = express.Router();
 router.use(authMiddleware);
 
 router.post('/complete-profile', async (req, res) => {
-  const { username, uniquenick, birthdate, password, wantsUpdates, acceptedTerms, profilePictureUrl } = req.body;
+  const { username, uniquenick, birthdate, password, wantsUpdates, profilePictureUrl } = req.body;
 
-  const accepted = acceptedTerms === true || acceptedTerms === 'true';
   const userId = req.user._id;
 
-  if (!username || !uniquenick || !birthdate || !password || !accepted) {
-    return res.status(400).json({ message: 'All required fields must be filled and terms must be accepted.' });
+  if (!username || !uniquenick || !birthdate || !password ) {
+    return res.status(400).json({ message: 'All required fields must be filled.' });
   }
 
   try {
@@ -45,7 +44,6 @@ router.post('/complete-profile', async (req, res) => {
     user.birthdate = new Date(birthdate);
     user.passwordHash = hashedPassword;
     user.wantsUpdates = wantsUpdates === true;
-    user.acceptedTerms = true;
     user.profileCompleted = true;
 
     if (profilePictureUrl) {
