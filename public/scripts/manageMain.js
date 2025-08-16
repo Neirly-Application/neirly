@@ -22,6 +22,41 @@ import loadSettingsThemeSection from '../sections/sectionSettingsTheme.js';
 import loadDefaultSection from '../sections/sectionDefault.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
+    try {
+    const res = await fetch("/api/profile", {
+      method: "GET",
+      credentials: "include"
+    });
+    if (!res.ok) throw new Error("Error while fetching profile.");
+    const user = await res.json();
+
+    function getNavProfileHTML(isMobile) {
+      if (isMobile) {
+        return `
+          <img src="${user.profilePictureUrl}" alt="Profile Picture" class="profile-icon">
+        `;
+      } else {
+        return `
+          <img src="${user.profilePictureUrl}" alt="Profile Picture" class="profile-icon">
+          <span class="nav-username">${user.name || user.email}</span>
+        `;
+      }
+    }
+
+    function updateNavProfiles() {
+      const isMobile = window.innerWidth <= 768;
+      document.querySelectorAll("#nav-profile-loader").forEach(el => {
+        el.innerHTML = getNavProfileHTML(isMobile);
+      });
+    }
+    updateNavProfiles();
+
+    window.addEventListener("resize", updateNavProfiles);
+
+  } catch (err) {
+    console.error("Nav profile update error:", err);
+  }
+  
   try {
     const content = document.querySelector('.content');
     const adminSection = document.getElementById('admin-section');
