@@ -26,7 +26,7 @@
   text-align: center;
 }
 
-.theme-card:hover {
+.theme-card:active {
   transform: translateY(-6px);
   box-shadow: 0 6px 16px rgba(0,0,0,0.15);
   background-color: var(--secondary-hover);
@@ -56,7 +56,7 @@
 
 .select-btn {
   background-color: #0077ff;
-  color: white;
+  color: var(--accent);
   border: none;
   padding: 10px 16px;
   border-radius: 8px;
@@ -65,26 +65,33 @@
   transition: background-color 0.2s ease;
 }
 
+.select-btn i {
+  margin-right: 2px;
+}
+
 .select-btn:hover {
   background-color: #005fd1;
 }
 
 .badge {
   position: absolute;
-  width: 24px;
+  max-width: 100px;
   height: 24px;
-  top: 10px;
-  left: 10px;
-  background-color: #ff3b30;
-  color: white;
+  bottom: 5px;
+  left: 5px;
+  background: transparent;
+  color: var(--main-text-color);
   font-size: 0.75rem;
   padding: 4px 4px;
+  padding-left: 9px;
+  padding-right: 10px;
   border-radius: 8px;
   font-weight: bold;
 }
 
 .badge i {
-    align-self: center;
+    margin-right: 5px;
+    align-self: left;
 }
 
 .theme-card.condensed .emoji,

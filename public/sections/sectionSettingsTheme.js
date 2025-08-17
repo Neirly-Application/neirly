@@ -25,7 +25,7 @@ export default function loadSettingsThemeSection(content, user) {
 
     <div class="card-container">
       <div class="theme-card" data-theme="light">
-        <span class="badge"><i class="fas fa-sun"></i></span>
+        <span class="badge"><i class="fa-solid fa-circle-check"></i> Default</span>
         <div class="emoji"><i class="fas fa-sun"></i></div>
         <h3>Light Theme</h3>
         <p class="card-desc">A perfect theme for lovers of visually bright colors.</p>
@@ -33,7 +33,7 @@ export default function loadSettingsThemeSection(content, user) {
       </div>
 
       <div class="theme-card" data-theme="dark">
-        <span class="badge"><i class="fas fa-moon"></i></span>
+        <span class="badge"><i class="fa-solid fa-circle-check"></i> Default</span>
         <div class="emoji"><i class="fas fa-moon"></i></div>
         <h3>Dark Theme</h3>
         <p class="card-desc">Ideal for the night with less eye strain.</p>
@@ -93,7 +93,7 @@ function setSelectedButton(theme) {
   document.querySelectorAll('.select-btn').forEach(btn => {
     const cardTheme = btn.closest('.theme-card').dataset.theme;
     if (cardTheme === theme) {
-      btn.textContent = 'Selected!';
+      btn.innerHTML = '<i class="fas fa-lock"></i> Selected!';
       btn.disabled = true;
       btn.style.backgroundColor = '#395b96ff';
       btn.style.color = '#d7d7d7ff';

@@ -4,11 +4,11 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "minify": "terser public/js/script.js -o public/js/script.min.js -c -m"
+    "minify": "terser public/js/script.js -o public/js/script.min.js -c -m",
+    "build:css": "postcss public/styles/*.css --dir public/styles/dist --ext .min.css && postcss public/styles/UIsettings/account-security.css -o public/styles/dist/UIsettings/account-security.min.css && postcss public/main/main.css -o public/styles/dist/main/main.min.css"
   },
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "@discordjs/opus": "^0.10.0",
     "@discordjs/voice": "^0.18.0",
@@ -37,5 +37,22 @@
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
     "ua-parser-js": "^2.0.4"
-  }
+  },
+  "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^7.0.2",
+    "autoprefixer": "^10.4.21",
+    "cssnano": "^7.1.0",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Neirly-Application/neirly.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/Neirly-Application/neirly/issues"
+  },
+  "homepage": "https://github.com/Neirly-Application/neirly#readme",
+  "description": ""
 }

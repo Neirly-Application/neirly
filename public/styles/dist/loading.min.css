@@ -1,0 +1,1 @@
+.load-screen{align-items:center;display:flex;justify-content:center;left:50%;position:absolute;top:50%;transform:translate(-50%,-50%);z-index:9999}.load-spinner{animation:spin 1s linear infinite;border:6px solid var(--secondary);border-radius:50%;border-top-color:var(--animate-bg-main);color:var(--primary);height:60px;width:60px}@keyframes spin{to{transform:rotate(1turn)}}

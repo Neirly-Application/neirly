@@ -1,4 +1,4 @@
-@import url('./variables.css');
+@import url(./variables.css);
 
 *, *::before, *::after {
   box-sizing: border-box;

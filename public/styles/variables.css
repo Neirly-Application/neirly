@@ -17,11 +17,13 @@
   --main-bg: #0093e8d7;
   --sidebar-active-element-text-color: #2c4296;
   --sidebar-element-text-color-hover: #3957cce9; 
-  --sidebar-element-text-color-active: #2c4296; 
+  --sidebar-element-text-color-active: #2c4296;
 
   /* --animated-bg-complete-profile: linear-gradient(180deg, #2c4296, #e6ecff, #2c4296); */
   --animated-bg-complete-profile: #001c2b;
   --animated-bg-main: #d8f1ff;
+
+  --topbar-dropdown-bg-color: #3551bd;
 
   --premium-bg-color: #ffd700;
   --premium-bg-color-hover: #fff7d4;
@@ -175,6 +177,8 @@ body.dark {
 
   --animated-bg-complete-profile: linear-gradient(180deg, #2c4296, #0a1b3d, #2c4296);
   --animated-bg-main: #001c2b;
+  
+  --topbar-dropdown-bg-color: #032e84;
 
   --premium-bg-color: #ffd700;
   --premium-bg-color-hover: #fff7d4;
