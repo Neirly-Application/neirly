@@ -1,7 +1,7 @@
-@import url(../styles/variables.css);
-@import url(../styles/notifications.css);
-@import url(../styles/sectionSettingInfo.css);
-@import url(../styles/sectionSettingAPI.css);
+@import url(../styles/variables.min.css);
+@import url(../styles/notifications.min.css);
+@import url(../styles/sectionSettingInfo.min.css);
+@import url(../styles/sectionSettingAPI.min.css);
 
 *,
 *::before,
@@ -16,7 +16,7 @@ html {
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   min-height: 100vh;
   background: var(--animated-bg-main);
   background-size: 100% 200%;
@@ -146,9 +146,7 @@ img {
   display: flex;
   align-items: center;
   font-weight: 600;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease,
+  transition: background-color 0.3s ease, color 0.3s ease,
     border-color 0.3s ease;
   user-select: none;
   border-radius: 10px;
@@ -210,8 +208,7 @@ img {
     color: var(--premium-text-color-accent);
     outline-offset: 3px;
     outline: none;
-    box-shadow:
-      0 4px 12px var(--premium-box-shadow-1),
+    box-shadow: 0 4px 12px var(--premium-box-shadow-1),
       0 0 10px var(--premium-box-shadow-2),
       inset 0 0 5px var(--premium-box-shadow-3);
   }
@@ -262,13 +259,10 @@ img {
 .nav-item.premium.active {
   background-color: var(--premium-bg-color);
   color: var(--premium-text-color-accent);
-  text-shadow:
-    0 0 12px var(--premium-text-shadow-1),
-    0 0 14px var(--premium-text-shadow-2),
-    0 0 16px var(--premium-text-shadow-3),
+  text-shadow: 0 0 12px var(--premium-text-shadow-1),
+    0 0 14px var(--premium-text-shadow-2), 0 0 16px var(--premium-text-shadow-3),
     1px 1px 2px var(--color-rgba-000-02);
-  box-shadow:
-    0 4px 12px var(--premium-box-shadow-1),
+  box-shadow: 0 4px 12px var(--premium-box-shadow-1),
     0 0 10px var(--premium-box-shadow-2),
     inset 0 0 5px var(--premium-box-shadow-3);
 }
@@ -318,7 +312,7 @@ form textarea {
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   color: var(--dark-text);
   resize: vertical;
   box-sizing: border-box;
@@ -467,17 +461,17 @@ form button:focus-visible {
 }
 
 .profile-img-editor-content .btn-submit {
-  background-color: #5865F2;
+  background-color: #5865f2;
   color: var(--accent);
   margin-right: 10px;
 }
 
 .profile-img-editor-content .btn-submit:hover {
-  background-color: #4752C4;
+  background-color: #4752c4;
 }
 
 .profile-img-editor-content .btn-cancel {
-  background-color: #E3E5E8;
+  background-color: #e3e5e8;
   color: #333;
 }
 
@@ -517,7 +511,6 @@ form button:focus-visible {
   display: none !important;
 }
 
-
 #cropper-zoom {
   --webkit-appearance: none;
   width: 150px;
@@ -533,7 +526,7 @@ form button:focus-visible {
   appearance: none;
   width: 14px;
   height: 14px;
-  background: #5865F2;
+  background: #5865f2;
   border-radius: 50%;
   cursor: pointer;
   border: none;
@@ -542,18 +535,16 @@ form button:focus-visible {
 #cropper-zoom::-moz-range-thumb {
   width: 14px;
   height: 14px;
-  background: #5865F2;
+  background: #5865f2;
   border-radius: 50%;
   cursor: pointer;
   border: none;
 }
 
-
 .profile-img-editor-content i.fas {
-  color: #5865F2;
+  color: #5865f2;
   font-size: 16px;
 }
-
 
 .profile-img-editor-content button {
   padding: 10px 18px;
@@ -565,17 +556,17 @@ form button:focus-visible {
 }
 
 .profile-img-editor-content .btn-submit {
-  background-color: #5865F2;
+  background-color: #5865f2;
   color: var(--accent);
 }
 
 .profile-img-editor-content .btn-submit:hover {
-  background-color: #4752C4;
+  background-color: #4752c4;
   transform: scale(1.02);
 }
 
 .profile-img-editor-content .btn-cancel {
-  background-color: #E3E5E8;
+  background-color: #e3e5e8;
   color: #333;
 }
 
@@ -584,7 +575,7 @@ form button:focus-visible {
   transform: scale(1.02);
 }
 
-.profile-img-editor-content>div:first-of-type {
+.profile-img-editor-content > div:first-of-type {
   border-radius: 50%;
   overflow: hidden;
   width: 300px;
@@ -874,12 +865,9 @@ form button:focus-visible {
     color: var(--premium-color-highlighted-bg);
     font-size: 1rem;
     box-shadow: none;
-    text-shadow:
-      -1px -1px 0 var(--premium-bg-color),
-      1px -1px 0 var(--premium-bg-color),
-      -1px 1px 0 var(--premium-bg-color),
-      1px 1px 0 var(--premium-bg-color),
-      0 0 11px var(--premium-text-shadow-1),
+    text-shadow: -1px -1px 0 var(--premium-bg-color),
+      1px -1px 0 var(--premium-bg-color), -1px 1px 0 var(--premium-bg-color),
+      1px 1px 0 var(--premium-bg-color), 0 0 11px var(--premium-text-shadow-1),
       0 0 13px var(--premium-text-shadow-2),
       0 0 14px var(--premium-text-shadow-3),
       1px 1px 2px var(--color-rgba-000-02);
@@ -1002,7 +990,12 @@ form button:focus-visible {
 .fancy-line {
   display: block;
   height: 1px;
-  background: linear-gradient(to right, var(--secondary), var(--primary), var(--secondary));
+  background: linear-gradient(
+    to right,
+    var(--secondary),
+    var(--primary),
+    var(--secondary)
+  );
   border: none;
   border-radius: 100%;
   margin: 30px 0;
@@ -1508,7 +1501,8 @@ body.subsection-active {
   }
 
   .custom-tooltip.danger::before {
-    border-color: transparent transparent transparent var(--danger-bg-color-hover);
+    border-color: transparent transparent transparent
+      var(--danger-bg-color-hover);
   }
 
   .custom-tooltip:hover::after,

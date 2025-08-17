@@ -1,9 +1,9 @@
-@import url(./variables.css);
+@import url(./variables.min.css);
 
 /* ===== Recent Chats ===== */
 .recent-chats {
   width: 100%;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   color: #666;
   background: transparent;
 }
@@ -164,7 +164,7 @@
   font-size: 0.9rem;
   line-height: 1.4;
   word-break: break-word;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .message.outgoing {

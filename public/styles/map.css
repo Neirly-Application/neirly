@@ -1,4 +1,4 @@
-@import url(./variables.css);
+@import url(./variables.min.css);
 
 .map-container {
   height: 600px;
@@ -91,25 +91,25 @@
 
 #preview-map {
   cursor: pointer;
-  height: 100%; 
-  width: 100%; 
-  pointer-events: none; 
-  filter: grayscale(10%) brightness(1); 
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+  filter: grayscale(10%) brightness(1);
   border-radius: 10px;
 }
 
 .map-button {
-    padding: 12px 24px;
-    font-size: 16px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s;
-    z-index: 5;
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+  z-index: 5;
 }
 
 .map-button:hover {
-    background-color: #45a049;
+  background-color: #45a049;
 }

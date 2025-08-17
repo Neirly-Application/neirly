@@ -1,7 +1,7 @@
-@import url(./variables.css);
+@import url(./variables.min.css);
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   min-width: 400px;
   margin: auto;
   overflow: hidden;
@@ -132,7 +132,8 @@ form {
   font-size: 1rem;
 }
 
-#login-form small, #register-form small {
+#login-form small,
+#register-form small {
   text-align: center;
   padding-top: 1rem;
   margin-bottom: 0.5rem;
@@ -140,7 +141,8 @@ form {
   color: var(--accent-secondary);
 }
 
-#login-form small a, #register-form small a {
+#login-form small a,
+#register-form small a {
   color: var(--secondary);
 }
 
@@ -210,10 +212,18 @@ form {
   vertical-align: middle;
 }
 
-.social.google { color: var(--accent); }
-.social.discord { color: var(--accent); }
-.social.github { color: var(--accent); }
-.social.email i { margin-right: 10px; }
+.social.google {
+  color: var(--accent);
+}
+.social.discord {
+  color: var(--accent);
+}
+.social.github {
+  color: var(--accent);
+}
+.social.email i {
+  margin-right: 10px;
+}
 
 .social.google:hover,
 .social.discord:hover,
@@ -333,8 +343,14 @@ form {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* @keyframes gradient {
@@ -359,7 +375,7 @@ form {
 
 .divider::before,
 .divider::after {
-  content: '';
+  content: "";
   flex: 1;
   border-bottom: 1px solid var(--accent-secondary);
 }

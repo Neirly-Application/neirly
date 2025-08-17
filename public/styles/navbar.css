@@ -1,19 +1,25 @@
-@import url(./variables.css);
+@import url(./variables.min.css);
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 .navbar {
   position: fixed;
-  top: 0; 
+  top: 0;
   left: 0;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 20px 30px;
-  background: linear-gradient(to bottom right, var(--primary) 3%, var(--primary) 97%);
+  background: linear-gradient(
+    to bottom right,
+    var(--primary) 3%,
+    var(--primary) 97%
+  );
   color: var(--accent);
   z-index: 1100;
   transition: background-color 0.5s ease, box-shadow 0.3s ease;
@@ -21,13 +27,17 @@
 }
 
 .navbar::before {
-  content: '';
+  content: "";
   position: absolute;
-  top: 0; 
+  top: 0;
   left: 0;
   width: 40px;
   height: 40px;
-  background: radial-gradient(circle at top left, var(--secondary) 40px, transparent 5px);
+  background: radial-gradient(
+    circle at top left,
+    var(--secondary) 40px,
+    transparent 5px
+  );
   filter: blur(30px);
   pointer-events: none;
   border-bottom-right-radius: 12px;
@@ -42,7 +52,7 @@
 }
 
 .nav-logo a {
-  display: flex;    
+  display: flex;
   align-items: center;
   color: var(--accent);
   text-decoration: none;
@@ -96,7 +106,7 @@
 @media (max-width: 768px) {
   .nav-toggle {
     display: block;
-    z-index: 1200; 
+    z-index: 1200;
   }
 
   .nav-links {

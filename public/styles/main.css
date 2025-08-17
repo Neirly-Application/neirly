@@ -1,11 +1,11 @@
-@import url(./variables.css);
-@import url(./navbar.css);
-@import url(./section.css);
-@import url(./button.css);
-@import url(./cards.css);
-@import url(./notifications.css);
-@import url(./footer.css);
-@import url(./offline.css);
+@import url(./variables.min.css);
+@import url(./navbar.min.css);
+@import url(./section.min.css);
+@import url(./button.min.css);
+@import url(./cards.min.css);
+@import url(./notifications.min.css);
+@import url(./footer.min.css);
+@import url(./offline.min.css);
 
 * {
   box-sizing: border-box;
@@ -17,7 +17,7 @@
 body {
   background-color: var(--light-bg);
   color: var(--dark-text);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 i {
@@ -26,12 +26,17 @@ i {
 
 img {
   --webkit-user-drag: none;
-  pointer-events: none;   
+  pointer-events: none;
 }
 
 .fancy-line {
   height: 2px;
-  background: linear-gradient(to right, var(--secondary), var(--primary), var(--secondary));
+  background: linear-gradient(
+    to right,
+    var(--secondary),
+    var(--primary),
+    var(--secondary)
+  );
   border: none;
   border-radius: 100%;
   margin: 20px 0;
@@ -40,7 +45,12 @@ img {
 
 .fancy-line-2 {
   height: 2px;
-  background: linear-gradient(to right, var(--primary), var(--secondary), var(--primary));
+  background: linear-gradient(
+    to right,
+    var(--primary),
+    var(--secondary),
+    var(--primary)
+  );
   border: none;
   border-radius: 100%;
   margin: 5px 0;

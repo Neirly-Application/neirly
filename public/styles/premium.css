@@ -1,4 +1,4 @@
-@import url(./variables.css);
+@import url(./variables.min.css);
 
 body::-webkit-scrollbar {
   display: none;
@@ -144,7 +144,7 @@ button:focus-visible {
   pointer-events: none;
 }
 
-.premium-wrapper{
+.premium-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -173,7 +173,7 @@ button:focus-visible {
 }
 
 .premium-user-card:before {
-  content: '';
+  content: "";
   position: absolute;
   height: 100vh;
   width: 200px;
@@ -199,11 +199,9 @@ button:focus-visible {
     rgba(255, 255, 255, 0.5) 52%,
     transparent 56%
   );
-  filter:
-    drop-shadow(0 0 10px rgba(255, 255, 255, 0.7))
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.7))
     drop-shadow(0 0 25px rgba(255, 255, 255, 0.6))
-    drop-shadow(0 0 45px rgba(255, 255, 255, 0.5))
-    blur(25px);
+    drop-shadow(0 0 45px rgba(255, 255, 255, 0.5)) blur(25px);
   opacity: 0;
   pointer-events: none;
   mix-blend-mode: screen;
@@ -216,7 +214,7 @@ button:focus-visible {
 .premium-user-card-img {
   display: flex;
   justify-content: center;
-  align-items: center;   
+  align-items: center;
   z-index: 3;
 }
 
@@ -237,7 +235,7 @@ button:focus-visible {
   font-size: 24px;
   margin: 0;
   margin-bottom: 10px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .premium-user-card-info p {
@@ -265,7 +263,7 @@ button:focus-visible {
   .premium-user-card {
     flex-direction: row;
     align-items: flex-start;
-  }   
+  }
   .premium-user-card-img {
     margin-right: 20px;
     margin-bottom: 0;
@@ -276,8 +274,8 @@ button:focus-visible {
   }
 }
 
-@media (max-width: 767px){
-  .premium-wrapper{
+@media (max-width: 767px) {
+  .premium-wrapper {
     padding-top: 3%;
   }
   .premium-user-card:before {
@@ -306,10 +304,15 @@ button:focus-visible {
     border-radius: 50%;
   }
 }
- 
+
 .premium-fancy-line {
   height: 2px;
-  background: linear-gradient(to right, var(--premium-bg-color), var(--premium-text-color-accent), var(--premium-bg-color));
+  background: linear-gradient(
+    to right,
+    var(--premium-bg-color),
+    var(--premium-text-color-accent),
+    var(--premium-bg-color)
+  );
   border: none;
   border-radius: 100%;
   margin: 20px 0;
@@ -318,7 +321,12 @@ button:focus-visible {
 
 .premium-fancy-line-2 {
   height: 2px;
-  background: linear-gradient(to right, var(--premium-text-color-accent), var(--premium-bg-color), var(--premium-text-color-accent));
+  background: linear-gradient(
+    to right,
+    var(--premium-text-color-accent),
+    var(--premium-bg-color),
+    var(--premium-text-color-accent)
+  );
   border: none;
   border-radius: 100%;
   margin: 10px 0;

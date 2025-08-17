@@ -1,9 +1,12 @@
-@import url(../styles/variables.css);
-@import url(../styles/button.css);
-@import url(../styles/navbar.css);
-@import url(../styles/main.css);
+@import url(../styles/variables.min.css);
+@import url(../styles/button.min.css);
+@import url(../styles/navbar.min.css);
+@import url(../styles/main.min.css);
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   color: var(--primary);
   margin-top: 2rem;
   margin-bottom: 1rem;
@@ -43,8 +46,9 @@ p {
   word-wrap: break-word;
 }
 
-code, pre {
-  font-family: 'Inter', sans-serif;
+code,
+pre {
+  font-family: "Inter", sans-serif;
   border-radius: 5px;
   word-break: break-word;
   white-space: pre-wrap;
@@ -64,7 +68,7 @@ code {
 pre {
   padding: 1rem;
   overflow-x: auto;
-  box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
   margin: 1rem 0;
   border-radius: 8px;
   background-color: var(--primary);
@@ -88,7 +92,8 @@ a:focus {
   outline: none;
 }
 
-ul, ol {
+ul,
+ol {
   margin-left: 1.5rem;
   margin-bottom: 1rem;
   color: var(--dark-text);
@@ -123,7 +128,8 @@ thead {
   color: var(--accent);
 }
 
-th, td {
+th,
+td {
   border: 1px solid var(--neutral-grey);
   padding: 0.75rem 1rem;
   text-align: left;
@@ -154,7 +160,11 @@ tbody tr:nth-child(even) {
     font-size: 1.5rem;
   }
 
-  p, ul, ol, blockquote, table {
+  p,
+  ul,
+  ol,
+  blockquote,
+  table {
     max-width: 100%;
   }
 }
