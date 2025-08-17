@@ -20,7 +20,7 @@ export default async function loadMapSection(content, user) {
   content.style.padding = '';
   content.style.margin = '';
 
-  const avatar = user?.profilePictureUrl || '../media/user.png';
+  const avatar = user?.profilePictureUrl || '../media/user.webp';
   const username = user?.name || 'Username';
   const nickname = user?.uniquenick ? `@${user.uniquenick}` : '@uniquenick';
   const about = user?.about_me || '"About me"';
@@ -89,7 +89,7 @@ export default async function loadMapSection(content, user) {
         iconSize: [40, 40],
         iconAnchor: [20, 40],
         className: 'user-map-icon',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.webp',
         shadowSize: [41, 41],
         shadowAnchor: [12, 41],
       });

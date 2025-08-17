@@ -3,7 +3,7 @@
 /* ===== Recent Chats ===== */
 .recent-chats {
   width: 100%;
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-body);
   color: #666;
   background: transparent;
 }

@@ -9,7 +9,7 @@
 }
 
 body {
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-body);
   background-color: var(--dark-text, var(--color-151515));
   color: var(--accent);
   display: flex;

@@ -6,7 +6,7 @@ const NotificationSchema = new mongoose.Schema({
   message: { type: String, required: true },
   date: { type: Date, default: Date.now },
   read: { type: Boolean, default: false },
-  imageUrl: { type: String, default: '../media/notification.png' },
+  imageUrl: { type: String, default: '../media/notification.webp' },
   type: { type: String, default: 'generic' },
   meta: {
     from: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

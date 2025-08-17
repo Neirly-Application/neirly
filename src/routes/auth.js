@@ -53,7 +53,7 @@ router.post('/register', async (req, res) => {
         roles: user.roles,
         banned: user.banned,
         oauthPasswordChanged: true,
-        profilePictureUrl: '/media/user.png'
+        profilePictureUrl: '/media/user.webp'
       }
     });
   } catch (error) {
@@ -128,7 +128,7 @@ router.post('/login', async (req, res, next) => {
         roles: user.roles,
         banned: user.banned,
         oauthPasswordChanged: user.oauthPasswordChanged,
-        profilePictureUrl: '/media/user.png'
+        profilePictureUrl: '/media/user.webp'
       }
     });
   })(req, res, next);
@@ -194,7 +194,7 @@ router.get('/profile', authMiddleware, async (req, res) => {
       nickname: user.nickname,
       roles: user.roles,
       banned: false,
-      profilePictureUrl: '/media/user.png'
+      profilePictureUrl: '/media/user.webp'
     });
   } catch (error) {
     console.error('Profile fetch error:', error);

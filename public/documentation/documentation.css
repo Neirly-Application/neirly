@@ -48,7 +48,7 @@ p {
 
 code,
 pre {
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-body);
   border-radius: 5px;
   word-break: break-word;
   white-space: pre-wrap;

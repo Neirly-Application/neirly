@@ -1,7 +1,7 @@
 @import url(./variables.min.css);
 
 body {
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-body);
   min-width: 400px;
   margin: auto;
   overflow: hidden;
@@ -50,7 +50,7 @@ body {
   cursor: pointer;
   width: 60px;
   height: 60px;
-  background-image: url("../media/neirly-logo.png");
+  background-image: url("../media/neirly-logo.webp");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

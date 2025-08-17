@@ -70,8 +70,8 @@ export default async function loadSearchSection(content, user) {
     results.innerHTML = `
       <ul class="search-list">
         ${users.map(ru => `
-          <li class="user-result" data-id="${ru._id}" data-nick="${ru.uniquenick}" data-name="${ru.name}" data-img="${ru.profilePictureUrl || '../media/user.png'}">
-            <img src="${ru.profilePictureUrl || '../media/user.png'}" alt="${ru.name}" class="search-user-img"/>
+          <li class="user-result" data-id="${ru._id}" data-nick="${ru.uniquenick}" data-name="${ru.name}" data-img="${ru.profilePictureUrl || '../media/user.webp'}">
+            <img src="${ru.profilePictureUrl || '../media/user.webp'}" alt="${ru.name}" class="search-user-img"/>
             <div class="search-user-info">
               <span class="search-user-name">${ru.name}</span>
               <span class="search-user-nick">@${ru.uniquenick}</span>
@@ -92,8 +92,8 @@ export default async function loadSearchSection(content, user) {
       ${users.length ? `
         <ul class="search-list">
           ${users.map(u => `
-            <li class="user-result" data-nick="${u.uniquenick}" data-name="${u.name}" data-img="${u.profilePictureUrl || '../media/user.png'}">
-              <img src="${u.profilePictureUrl || '../media/user.png'}" alt="${u.name}" class="search-user-img"/>
+            <li class="user-result" data-nick="${u.uniquenick}" data-name="${u.name}" data-img="${u.profilePictureUrl || '../media/user.webp'}">
+              <img src="${u.profilePictureUrl || '../media/user.webp'}" alt="${u.name}" class="search-user-img"/>
               <div class="search-user-info">
                 <span class="search-user-name">${u.name}</span>
                 <span class="search-user-nick">@${u.uniquenick}</span>

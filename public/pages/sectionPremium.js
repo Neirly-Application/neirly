@@ -47,7 +47,7 @@ export default async function loadPremiumSection(content, user) {
         <div class="premium-user-card">
         <div class="light-effect"></div>
           <div class="premium-user-card-img">
-            <img src="${user.profilePictureUrl || '../media/user.png'}" alt="User Avatar" oncontextmenu="return false;">
+            <img src="${user.profilePictureUrl || '../media/user.webp'}" alt="User Avatar" oncontextmenu="return false;">
           </div>
           <div class="premium-user-card-info">
             <h2>${user.nickname || user.name || 'User'}</h2>

@@ -70,7 +70,7 @@
   font-weight: 600;
   margin: 16px 0 10px;
   color: var(--main-bg);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-heading);
 }
 
 .search-list {

@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
   friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   friendRequestsReceived: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   friendRequestsSent: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  profilePictureUrl: { type: String, default: '/media/user.png' },
+  profilePictureUrl: { type: String, default: '/media/user.webp' },
   discordId: String,
   passwordHash: {
     type: String,

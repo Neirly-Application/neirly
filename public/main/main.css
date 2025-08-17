@@ -16,7 +16,7 @@ html {
 }
 
 body {
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-body);
   min-height: 100vh;
   background: var(--animated-bg-main);
   background-size: 100% 200%;
@@ -312,7 +312,7 @@ form textarea {
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-body);
   color: var(--dark-text);
   resize: vertical;
   box-sizing: border-box;

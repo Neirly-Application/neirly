@@ -29,7 +29,7 @@ function customConfirm(message) {
     header.className = 'confirm-header';
 
     const img = document.createElement('img');
-    img.src = '../media/handstop.png';
+    img.src = '../media/handstop.webp';
     img.alt = 'Alert Icon';
     img.className = 'confirm-icon';
 

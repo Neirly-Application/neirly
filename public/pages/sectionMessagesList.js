@@ -43,7 +43,7 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
       <div class="recent-chats">
         ${recentChats.map(c => `
           <div class="chat-item chat-name" data-userid="${c._id}">
-            <img src="${c.profilePictureUrl || '../media/user.png'}" alt="Avatar" class="avatar"/>
+            <img src="${c.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar"/>
             <span>${c.name || c.uniquenick || 'Unknown'}</span>
           </div>
         `).join('')}

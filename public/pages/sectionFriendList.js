@@ -202,7 +202,7 @@ export default async function loadFriendListSection(content, user) {
         html += confirmedFriends.map(friend => `
           <div class="friend-item">
             <div class="friend-info">
-              <img src="${friend.profilePictureUrl || '../media/user.png'}" alt="Avatar" class="avatar" />
+              <img src="${friend.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar" />
               <div class="friend-name">
                 <strong>${friend.name || '-'}</strong><br>
                 <small class="friend-nick">@${friend.uniquenick || ''}</small>
@@ -235,7 +235,7 @@ export default async function loadFriendListSection(content, user) {
         ? pendingRequests.map(req => `
             <div class="friend-request-card">
               <div class="friend-request-card-info">
-                <img src="${req.profilePictureUrl || '../media/user.png'}" alt="Avatar" class="avatar" />
+                <img src="${req.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar" />
                 <div class="friend-request-card-name">
                   <strong>${req.name || 'User'}</strong><br>
                   <small class="friend-request-card-nick">@${req.uniquenick || 'Undefined'}</small>
@@ -258,7 +258,7 @@ export default async function loadFriendListSection(content, user) {
         ? sentRequests.map(req => `
             <div class="friend-request-card">
               <div class="friend-request-card-info">
-                <img src="${req.profilePictureUrl || '../media/user.png'}" alt="Avatar" class="avatar" />
+                <img src="${req.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar" />
                 <div class="friend-request-card-name">
                   <strong>${req.name || 'User'}</strong><br>
                   <small class="friend-request-card-nick">@${req.uniquenick || 'Undefined'}</small>

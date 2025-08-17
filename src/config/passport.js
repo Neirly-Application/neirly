@@ -54,7 +54,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, passwor
     await Notification.create({
       userId: newUser._id,
       message: `Welcome ${newUser.name || newUser.email}! This is just a simple welcome notification. Don't take care of what there's in here thanks :3`,
-      imageUrl: '../media/notification.png'
+      imageUrl: '../media/notification.webp'
     });
 
     return done(null, newUser);
@@ -103,7 +103,7 @@ passport.use(new GoogleStrategy({
     await Notification.create({
       userId: newUser._id,
       message: `Welcome ${newUser.name || newUser.email}! This is just a simple welcome notification. Don't take care of what there's in here thanks :3`,
-      imageUrl: '../media/notification.png'
+      imageUrl: '../media/notification.webp'
     });
 
     done(null, newUser);
@@ -125,8 +125,8 @@ passport.use(new DiscordStrategy({
     }
 
     const avatarUrl = profile.avatar
-      ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
-      : `https://cdn.discordapp.com/embed/avatars/${profile.discriminator % 5}.png`;
+      ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.webp`
+      : `https://cdn.discordapp.com/embed/avatars/${profile.discriminator % 5}.webp`;
 
     let user = await User.findOne({ email });
 
@@ -167,7 +167,7 @@ passport.use(new DiscordStrategy({
     await Notification.create({
       userId: newUser._id,
       message: `Welcome ${newUser.name || newUser.email}! This is just a simple welcome notification. Don't take care of what there's in here thanks :3`,
-      imageUrl: '../media/notification.png'
+      imageUrl: '../media/notification.webp'
     });
 
     return done(null, newUser);

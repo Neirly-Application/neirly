@@ -297,8 +297,8 @@ function togglePremiumTheme() {
     themeToggleBtn.checked = true;
     document.body.classList.add('premium-theme');
     switchTheme.classList.add('hide');
-    logo.src = '../media/premium-neirly-logo.png';
-    changeFavicon('../media/premium-neirly-logo.png');
+    logo.src = '../media/premium-neirly-logo.ico';
+    changeFavicon('../media/premium-neirly-logo.ico');
     smallTextMobile.innerHTML = 'You\'re in the premium theme! &nbsp;<a title="Keybind ALT+S: switch back to the main theme" onclick="disablePremiumTheme()">Double tap</a>&nbsp; to switch back.';
     smallTextDesktop.innerHTML = 'You\'re in the premium theme! Press &nbsp;<a title="Keybind ALT+S: switch back to the main theme" onclick="disablePremiumTheme()">ALT+S</a>&nbsp; to switch back.';
     enableAnimations()
@@ -411,8 +411,8 @@ document.addEventListener('keydown', (event) => {
       themeToggleBtn.checked = true;
       document.body.classList.add('premium-theme');
       switchTheme.classList.add('hide');
-      logo.src = '../media/premium-neirly-logo.png';
-      changeFavicon('../media/premium-neirly-logo.png');
+      logo.src = '../media/premium-neirly-logo.webp';
+      changeFavicon('../media/premium-neirly-logo.webp');
       smallTextMobile.innerHTML = 'You\'re in the premium theme! &nbsp;<a title="Keybind ALT+S: switch back to the main theme" onclick="disablePremiumTheme()">Double tap</a>&nbsp; to switch back.';
       smallTextDesktop.innerHTML = 'You\'re in the premium theme! Press &nbsp;<a title="Keybind ALT+S: switch back to the main theme" onclick="disablePremiumTheme()">ALT+S</a>&nbsp; to switch back.';
       enableAnimations()
@@ -432,8 +432,8 @@ function disablePremiumTheme() {
   themeToggleBtn.checked = false;
   document.body.classList.remove('premium-theme');
   switchTheme.classList.remove('hide');
-  logo.src = '../media/neirly-logo.png';
-  changeFavicon('../media/neirly-logo.png');
+  logo.src = '../media/neirly-logo.webp';
+  changeFavicon('../media/neirly-logo.webp');
   smallTextMobile.innerHTML = 'Swipe &nbsp;<a title="Swipe left for light theme" onclick="simSwipeLeft()"><i class="fas fa-arrow-left"></i> left</a>&nbsp; and &nbsp;<a title="Swipe right for dark theme" onclick="simSwipeRight()">right <i class="fas fa-arrow-right"></i></a>&nbsp; to change theme.';
   smallTextDesktop.innerHTML = 'Press &nbsp;<a title="Keybind M: toggle audio" onclick="audioToggleBtn.click();">M</a>&nbsp; to toggle audio and &nbsp;<a title="Keybind T: toggle theme" onclick="toggleThemeOnClick()">T</a>&nbsp; to toggle theme.';
   enableAnimations()

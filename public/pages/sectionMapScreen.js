@@ -60,7 +60,7 @@ export default async function loadMapScreenSection(content, user) {
       iconAnchor: [20, 40],
       popupAnchor: [0, -50],
       className: 'user-map-icon',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.webp',
       shadowSize: [41, 41],
       shadowAnchor: [12, 41],
     });
@@ -77,7 +77,7 @@ export default async function loadMapScreenSection(content, user) {
       zoomControl: false
     });
 
-    const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.webp', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
@@ -134,7 +134,7 @@ export default async function loadMapScreenSection(content, user) {
       const user = await fetchUserProfile();
       const profileImgUrl = user?.profilePictureUrl?.trim()
         ? user.profilePictureUrl
-        : '../media/user.png';
+        : '../media/user.webp';
       const nickname = user?.nickname || "You're here!";
 
       setTimeout(() => {

@@ -52,7 +52,7 @@ export default async function loadProfileSection(content, user) {
     <div class="form-group">
       <div class="profile-pic-wrapper">
         <img id="profile-pic"
-            src="${user.profilePictureUrl || '../media/user.png'}"
+            src="${user.profilePictureUrl || '../media/user.webp'}"
             alt="Profile Picture"
             class="profile-img"
             oncontextmenu="return false;" />
@@ -262,7 +262,7 @@ export default async function loadProfileSection(content, user) {
     document.getElementById('aboutme-input').value = originalState.about;
     updateAboutCounter();
     croppedBlob = null;
-    profilePicImg.src = user.profilePictureUrl || '../media/user.png';
+    profilePicImg.src = user.profilePictureUrl || '../media/user.webp';
     detectChanges();
   };
 

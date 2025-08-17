@@ -27,8 +27,8 @@ export default async function loadHomeSection(content, user) {
 
     <div class="stories-container">
       <div style="text-align: center;">
-        <div class="story" data-image="../media/neirly-logo.png">
-          <img src="${user.profilePictureUrl || '../media/user.png'}" alt="Your Story" />
+        <div class="story" data-image="../media/neirly-logo.webp">
+          <img src="${user.profilePictureUrl || '../media/user.webp'}" alt="Your Story" />
         </div>
         <div class="story-label">Your Story</div>
       </div>
