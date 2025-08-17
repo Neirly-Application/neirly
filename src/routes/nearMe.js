@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authMiddleware } = require('../authMiddleware/authMiddleware');
+const { authMiddleware } = require('../auth/authMiddleware');
 const User = require('../models/User');
 
 router.get('/near-me', authMiddleware, async (req, res) => {

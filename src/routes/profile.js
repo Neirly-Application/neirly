@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { authMiddleware } = require('../authMiddleware/authMiddleware');
+const { authMiddleware } = require('../auth/authMiddleware');
 const User = require('../models/User');
 
 const upload = multer({
@@ -76,7 +76,6 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
     const user = req.user;
     const updates = {};
     const updatedFields = [];
-    console.log(req.file);
     if (
       typeof req.body.nickname === 'string' &&
       req.body.nickname.trim() !== '' &&
@@ -163,7 +162,6 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
       about_me: user.about_me,
       uniquenickChangedAt: user.uniquenickChangedAt,
     });
-    console.log(req.file);
   } catch (error) {
     console.error('Update error:', error);
     res.status(500).json({ message: 'Internal error while updating the profile.' });

@@ -1,7 +1,7 @@
 const express = require('express');
 const UAParser = require('ua-parser-js');
 const router = express.Router();
-const { authMiddleware } = require('../authMiddleware/authMiddleware');
+const { authMiddleware } = require('../auth/authMiddleware');
 const getLocationFromIP = require('../utils/getLocationFromIP');
 
 router.use(authMiddleware);

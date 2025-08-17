@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ActivityLog = require('../models/ActivityLogs');
-const { authMiddleware } = require('../authMiddleware/authMiddleware');
+const { authMiddleware } = require('../auth/authMiddleware');
 
 router.use(authMiddleware);
 

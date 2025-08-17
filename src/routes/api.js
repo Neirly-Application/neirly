@@ -3,7 +3,7 @@ const router   = express.Router();
 const crypto   = require('crypto');
 const bcrypt   = require('bcryptjs');
 const ApiKey   = require('../models/ApiKey');
-const { authMiddleware } = require('../authMiddleware/authMiddleware');
+const { authMiddleware } = require('../auth/authMiddleware');
 
 router.use(authMiddleware);
 

@@ -7,7 +7,7 @@ const getLocationFromIP = require('../utils/getLocationFromIP');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
 const ActivityLog = require('../models/ActivityLogs');
-const { authMiddleware } = require('../authMiddleware/authMiddleware');
+const { authMiddleware } = require('../auth/authMiddleware');
 const { sendLoginMessage } = require('../discordBot');
 const Message = require('../models/Message');
 

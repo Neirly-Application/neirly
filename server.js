@@ -118,7 +118,7 @@ app.get('/ping', (req, res) => {
 /* ---------------------------------------------------------------------------
  *  Custom middleware and route imports
  * ------------------------------------------------------------------------- */
-const { authMiddleware } = require('./src/authMiddleware/authMiddleware');
+const { authMiddleware } = require('./src/auth/authMiddleware.js');
 
 // Developer API (API key)
 const profilePublicRouter = require('./src/routes/public/profilePublic.js');
