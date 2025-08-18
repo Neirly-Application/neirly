@@ -76,7 +76,7 @@ export default async function loadNotificationsSection(content, user) {
     notificationList.innerHTML = allNotifications.length
       ? allNotifications.map(n => `
             <div class="notification-item ${n.read ? '' : 'unread'}" data-id="${n._id}">
-              <img src="${n.imageUrl}" alt="notifica" class="notification-img" oncontextmenu="return false;">
+              <img src="${n.imageUrl}" alt="notification" class="notification-img" oncontextmenu="return false;">
               <div class="notification-text">
                 <strong>${n.title || 'System'}</strong>
                 <small>${n.message.length > 60 ? n.message.slice(0, 60) + '...' : n.message}</small>

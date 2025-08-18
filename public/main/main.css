@@ -1,7 +1,7 @@
-@import url(../styles/variables.min.css);
-@import url(../styles/notifications.min.css);
-@import url(../styles/sectionSettingInfo.min.css);
-@import url(../styles/sectionSettingAPI.min.css);
+@import url(../variables.min.css);
+@import url(../notifications.min.css);
+@import url(../sectionSettingInfo.min.css);
+@import url(../sectionSettingAPI.min.css);
 
 *,
 *::before,
