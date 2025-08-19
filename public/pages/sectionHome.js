@@ -49,6 +49,20 @@ export default async function loadHomeSection(content, user) {
           <li><a class="like" id="like"><i class="far fa-heart"></i></a></li>
         </div>
       </div>
+
+      <div class="home-post-card">
+        <div class="home-post-card-content">
+          <h2>Test.</h2>
+          <p>Community posts.</p>
+        </div>
+        <small>Here you can find some community posts you might like!</small>
+        <div class="post-fancy-line"></div>
+
+        <div class="post-actions">
+          <li><a class="like" id="like"><i class="far fa-heart"></i></a></li>
+        </div>
+      </div>
+
       <div class="home-post-card">
         <div class="home-post-card-content">
           <h2>Test.</h2>
@@ -62,6 +76,15 @@ export default async function loadHomeSection(content, user) {
         </div>
       </div>
     </div>
+
+      <div class="container-actions">
+        <a class="cta-button-actions" title="Create a new post"><i class="fas fa-pen-to-square"></i></a>
+        <div class="divider"></div>
+        <a class="cta-button-actions" title="Posted"><i class="fa-solid fa-image"></i></a>
+        <a class="cta-button-actions" title="Liked"><i class="fa-solid fa-heart"></i></a>
+        <a class="cta-button-actions" title="Saved"><i class="fa-solid fa-star"></i></a>
+      </div>
+
   `;
 
   document.querySelectorAll('.story').forEach(story => {

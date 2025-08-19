@@ -63,16 +63,18 @@
   --story-image-bg-color: linear-gradient(180deg, #dffbff, #a2d9ff, #5c9cff, #1f3fbf);
   --story-content-overlay: rgba(0, 0, 0, 0.5);
 
-  --chat-outgoing-message: #d1ecf1;
-  --chat-incoming-message: #f1f1f1;
-  --chat-strong-message: #0277bd;
-  --chat-small-message: rgba(118, 118, 118, 0.88);
-
   --home-post-card-bg: rgba(26, 42, 108, 0.1);
   --home-post-card-text-color: #333;
   --home-post-card-text-color-small: #727272;
   --home-post-card-gradient-line: linear-gradient(to right, #444, #777, #444);
   --post-like-color: #012bd5;
+  --home-post-viewer: #1634add0;
+  --home-post-viewer-divider: #5c9dff9d;
+
+  --chat-outgoing-message: #d1ecf1;
+  --chat-incoming-message: #f1f1f1;
+  --chat-strong-message: #0277bd;
+  --chat-small-message: rgba(118, 118, 118, 0.88);
 
   --notification-badge-bg: #63c8ff;
   --notification-unread: linear-gradient(to right, #ff26261a, transparent);
@@ -160,7 +162,7 @@
 body.dark {
   --font-heading: 'Poppins', sans-serif;
   --font-body: 'Inter', sans-serif;
-  
+
   --bubble-color: rgba(100, 130, 255, 0.55);
   --bubble-glow: rgba(100, 130, 255, 0.18);
 
@@ -221,16 +223,18 @@ body.dark {
   --story-image-bg-color: linear-gradient(180deg, #1f3fbf, #5c9cff, #a2d9ff, #dffbff);
   --story-content-overlay: rgba(0, 0, 0, 0.7);
 
-  --chat-outgoing-message: #102a4ad8;
-  --chat-incoming-message: #004ca8d8;
-  --chat-strong-message: #90d6ff;
-  --chat-small-message: rgba(200, 200, 200, 0.8);
-
   --home-post-card-bg: rgba(26, 38, 119, 0.7);
   --home-post-card-text-color: #f0f0f0;
   --home-post-card-text-color-small: #aaaaaa;
   --home-post-card-gradient-line: linear-gradient(to right, #888, #555, #888);
   --post-like-color: #90d6ff;
+  --home-post-viewer: #1634add0;
+  --home-post-viewer-divider: #5c9dff9d;
+
+  --chat-outgoing-message: #102a4ad8;
+  --chat-incoming-message: #004ca8d8;
+  --chat-strong-message: #90d6ff;
+  --chat-small-message: rgba(200, 200, 200, 0.8);
 
   --notification-badge-bg: #3399ff;
   --notification-unread: linear-gradient(to right, #ff26261a, transparent);
