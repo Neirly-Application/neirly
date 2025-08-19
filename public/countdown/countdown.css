@@ -1,4 +1,5 @@
 :root {
+  --font-body: 'Inter', sans-serif;
   --primary: #3656d3;
   --secondary: #0093e8d7;
   --animated-bg-main: #001c2b;
@@ -14,6 +15,7 @@
   --ping-bad: #f44336;
 }
 body.light-theme {
+  --font-body: 'Inter', sans-serif;
   --primary: #2c4296;
   --secondary: #90d6ff;
   --animated-bg-main: #b5e4ff;
@@ -29,6 +31,7 @@ body.light-theme {
   --ping-bad: #a90f04;
 }
 body.premium-theme {
+  --font-body: 'Inter', sans-serif;
   --primary: #4d4700;
   --secondary: #f2ff90;
   --animated-bg-main: linear-gradient(180deg, #161000, #30260a, #685421, #b29b62, #685421, #30260a, #161000);

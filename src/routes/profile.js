@@ -3,6 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const sharp = require('sharp');
 const { authMiddleware } = require('../auth/authMiddleware');
 const User = require('../models/User');
 
@@ -48,7 +49,6 @@ router.get('/profile', async (req, res) => {
       email: user.email,
       name: user.name,
       birthdate: user.birthdate,
-      nickname: user.nickname,
       oauthPasswordChanged: user.oauthPasswordChanged,
       uniquenick: user.uniquenick,
       profileCompleted: user.profileCompleted,
@@ -70,21 +70,23 @@ router.get('/profile', async (req, res) => {
   }
 });
 
-
 router.put('/profile', upload.single('profilePicture'), async (req, res) => {
   try {
     const user = req.user;
     const updates = {};
     const updatedFields = [];
+
+    // --- NICKNAME ---
     if (
-      typeof req.body.nickname === 'string' &&
-      req.body.nickname.trim() !== '' &&
-      req.body.nickname !== user.nickname
+      typeof req.body.name === 'string' &&
+      req.body.name.trim() !== '' &&
+      req.body.name !== user.name
     ) {
-      updates.nickname = req.body.nickname.trim();
-      updatedFields.push('nickname');
+      updates.name = req.body.name.trim();
+      updatedFields.push('name');
     }
 
+    // --- UNIQUENICK ---
     if (
       typeof req.body.uniquenick === 'string' &&
       req.body.uniquenick.trim() !== '' &&
@@ -103,8 +105,7 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
 
       if (!isValidUniquenick) {
         return res.status(400).json({
-          message:
-            'Nickname can only contain lowercase letters, numbers, underscores, and dots.',
+          message: 'Nickname can only contain lowercase letters, numbers, underscores, and dots.',
         });
       }
 
@@ -122,6 +123,7 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
       updatedFields.push('uniquenick');
     }
 
+    // --- ABOUT ME ---
     if (
       typeof req.body.about_me === 'string' &&
       req.body.about_me.trim() !== '' &&
@@ -131,6 +133,7 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
       updatedFields.push('about_me');
     }
 
+    // --- PROFILE PICTURE ---
     if (req.file) {
       if (user.profilePictureUrl) {
         const oldPath = path.join(__dirname, '../../', user.profilePictureUrl);
@@ -141,7 +144,22 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
         }
       }
 
-      updates.profilePictureUrl = `/user_pfps/${req.file.filename}`;
+      const outputDir = path.join(__dirname, '../../user_pfps');
+      if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
+
+      const newFilename = `${Date.now()}-${user._id}.webp`;
+      const outputPath = path.join(outputDir, newFilename);
+
+      await sharp(req.file.path)
+        .resize(512, 512, { fit: 'cover' })
+        .webp({ quality: 80 })
+        .toFile(outputPath);
+
+      fs.unlink(req.file.path, (err) => {
+        if (err) console.warn('Error removing temp upload:', err.message);
+      });
+
+      updates.profilePictureUrl = `/user_pfps/${newFilename}`;
       updatedFields.push('profilePicture');
     }
 
@@ -157,7 +175,7 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
       message: 'Profile successfully updated!',
       updatedFields,
       profilePictureUrl: user.profilePictureUrl,
-      nickname: user.nickname,
+      name: user.name,
       uniquenick: user.uniquenick,
       about_me: user.about_me,
       uniquenickChangedAt: user.uniquenickChangedAt,

@@ -66,7 +66,7 @@ export default async function loadProfileSection(content, user) {
 
     <div class="form-group fas-input">
       <i class="fas fa-user-tag icon-left" style="font-size: 1.2rem;"></i>
-      <input type="text" id="nickname-input" value="${user.nickname || user.name || 'User'}" placeholder="Display name">
+      <input type="text" id="name-input" value="${user.name || 'User'}" placeholder="Display name">
     </div>
 
     <div class="form-group fas-input">
@@ -119,7 +119,6 @@ export default async function loadProfileSection(content, user) {
         </div>
       </div>
     </div>
-
   `;
 
   const profilePicInput = document.getElementById('profilePicInput');
@@ -136,10 +135,24 @@ export default async function loadProfileSection(content, user) {
   const counter = document.getElementById('about-counter');
   const maxLen = user.bioLimit || 250;
 
+  const norm = str => str.replace(/\s+/g, ' ').trim();
+
+  const fieldState = () => ({
+    name: norm(document.getElementById('name-input').value),
+    uniquenick: norm(document.getElementById('uniquenick-input').value),
+    about: norm(document.getElementById('aboutme-input').value)
+  });
+
+  const originalState = {
+    name: norm(user.name || ''),
+    uniquenick: norm(user.uniquenick || ''),
+    about: norm(user.about_me || '')
+  };
+
   const detectChanges = () => {
     const s = fieldState();
     const diff = (
-      s.nickname !== originalState.nickname ||
+      s.name !== originalState.name ||
       s.uniquenick !== originalState.uniquenick ||
       s.about !== originalState.about ||
       !!croppedBlob
@@ -154,7 +167,7 @@ export default async function loadProfileSection(content, user) {
 
     if (remaining <= 150) {
       counter.style.visibility = 'visible';
-      counter.textContent = remaining >= 0 ? `${remaining}` : `${remaining}`;
+      counter.textContent = `${remaining}`;
       counter.style.color = remaining >= 0 ? '#888' : 'red';
     } else {
       counter.style.visibility = 'hidden';
@@ -175,61 +188,44 @@ export default async function loadProfileSection(content, user) {
     banner.style.display = show ? 'flex' : 'none';
   };
 
-  const norm = str => str.replace(/\s+/g, ' ').trim();
-
-  const fieldState = () => ({
-    nickname: norm(document.getElementById('nickname-input').value),
-    uniquenick: norm(document.getElementById('uniquenick-input').value),
-    about: norm(document.getElementById('aboutme-input').value)
-  });
-
-  const originalState = {
-    nickname: norm(user.nickname || user.name || ''),
-    uniquenick: norm(user.uniquenick || ''),
-    about: norm(user.about_me || '')
-  };
-
   form.addEventListener('input', detectChanges);
 
   document.querySelector('.profile-pic-wrapper').onclick = () => profilePicInput.click();
 
   profilePicInput.onchange = () => {
-  const file = profilePicInput.files[0];
-  if (!file) return;
+    const file = profilePicInput.files[0];
+    if (!file) return;
 
-  cropperImage.onload = () => {
-    const imgWidth = cropperImage.naturalWidth;
-    const imgHeight = cropperImage.naturalHeight;
-    const containerSize = 300;
-    const minZoom = Math.max(containerSize / imgWidth, containerSize / imgHeight);
+    cropperImage.onload = () => {
+      const imgWidth = cropperImage.naturalWidth;
+      const imgHeight = cropperImage.naturalHeight;
+      const containerSize = 300;
+      const minZoom = Math.max(containerSize / imgWidth, containerSize / imgHeight);
 
-    if (cropper) cropper.destroy();
-    cropper = new Cropper(cropperImage, {
-      aspectRatio: 1,
-      viewMode: 1,
-      background: false,
-      guides: false,
-      zoomOnWheel: false,
-      minZoom: minZoom,
-      ready() {
-        cropper.zoomTo(minZoom);
-        cropperZoom.min = minZoom.toFixed(2);
-        cropperZoom.max = '2';
-        cropperZoom.step = '0.01';
-        cropperZoom.value = minZoom.toFixed(2);
-      }
-    });
+      if (cropper) cropper.destroy();
+      cropper = new Cropper(cropperImage, {
+        aspectRatio: 1,
+        viewMode: 1,
+        background: false,
+        guides: false,
+        zoomOnWheel: false,
+        minZoom: minZoom,
+        ready() {
+          cropper.zoomTo(minZoom);
+          cropperZoom.min = minZoom.toFixed(2);
+          cropperZoom.max = '2';
+          cropperZoom.step = '0.01';
+          cropperZoom.value = minZoom.toFixed(2);
+        }
+      });
+    };
+
+    cropperImage.src = URL.createObjectURL(file);
+    cropperModal.style.display = 'flex';
   };
 
-  cropperImage.src = URL.createObjectURL(file);
-  cropperModal.style.display = 'flex';
-};
-
-
   cropperZoom.oninput = () => {
-    if (cropper) {
-      cropper.zoomTo(parseFloat(cropperZoom.value));
-    }
+    if (cropper) cropper.zoomTo(parseFloat(cropperZoom.value));
   };
 
   document.getElementById('crop-reset').onclick = () => {
@@ -257,7 +253,7 @@ export default async function loadProfileSection(content, user) {
   };
 
   cancelBtn.onclick = () => {
-    document.getElementById('nickname-input').value = originalState.nickname;
+    document.getElementById('name-input').value = originalState.name;
     document.getElementById('uniquenick-input').value = originalState.uniquenick;
     document.getElementById('aboutme-input').value = originalState.about;
     updateAboutCounter();
@@ -282,17 +278,15 @@ export default async function loadProfileSection(content, user) {
 
     if (!detectChanges()) return;
 
-    const { nickname, uniquenick, about } = fieldState();
+    const { name, uniquenick, about } = fieldState();
     const data = new FormData();
 
-    if (nickname !== originalState.nickname) data.append('nickname', nickname);
+    if (name !== originalState.name) data.append('name', name);
     if (about !== originalState.about) data.append('about_me', about);
-
     if (canEditUniquenick && uniquenick !== originalState.uniquenick) {
       data.append('uniquenick', uniquenick);
     }
-
-    if (croppedBlob) data.append('profilePicture', croppedBlob, 'profile.jpg');
+    if (croppedBlob) data.append('profilePicture', croppedBlob, 'profile.webp');
 
     try {
       const res = await fetch('/api/profile', { method: 'PUT', credentials: 'include', body: data });
@@ -301,8 +295,9 @@ export default async function loadProfileSection(content, user) {
       const json = await res.json();
       if (!json.success) throw new Error(json.error || 'Unknown error');
 
-      Object.assign(originalState, { nickname, uniquenick, about });
+      Object.assign(originalState, { name, uniquenick, about });
       croppedBlob = null;
+      user.name = name;
       user.uniquenick = uniquenick;
 
       showToast('Profile updated successfully!', 'success');
@@ -314,5 +309,4 @@ export default async function loadProfileSection(content, user) {
   };
 
   detectChanges();
-  
 };

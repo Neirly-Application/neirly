@@ -25,6 +25,7 @@ async function generateUniqueNick(base) {
   return uniquenick;
 }
 
+// ================= LOCAL STRATEGY =================
 passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
   try {
     let user = await User.findOne({ email });
@@ -53,7 +54,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, passwor
 
     await Notification.create({
       userId: newUser._id,
-      message: `Welcome ${newUser.name || newUser.email}! This is just a simple welcome notification. Don't take care of what there's in here thanks :3`,
+      message: `Welcome ${newUser.name || newUser.email}!`,
       imageUrl: '../media/notification.webp'
     });
 
@@ -63,20 +64,25 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, passwor
   }
 }));
 
+// ================= GOOGLE STRATEGY =================
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL: '/api/auth/google/callback',
 }, async (accessToken, refreshToken, profile, done) => {
   try {
-    const email = profile.emails && profile.emails[0] && profile.emails[0].value;
+    const email = profile.emails?.[0]?.value;
     let user = await User.findOne({ email });
 
     if (user) {
+      if (!user.googleId) user.googleId = profile.id;
       if (!user.name || user.name.trim() === '') {
-        user.name = profile.displayName || 'User';
-        await user.save();
+        user.name = profile.displayName || user.name;
       }
+      if (!user.provider) user.provider = 'google';
+
+      // non tocco avatar, uniquenick o altri campi se già presenti
+      await user.save();
       return done(null, user);
     }
 
@@ -88,6 +94,7 @@ passport.use(new GoogleStrategy({
       name: profile.displayName || 'User',
       oauthPasswordChanged: false,
       uniquenick,
+      googleId: profile.id,
       discordId: null,
       passwordHash: '',
       provider: 'google',
@@ -102,7 +109,7 @@ passport.use(new GoogleStrategy({
 
     await Notification.create({
       userId: newUser._id,
-      message: `Welcome ${newUser.name || newUser.email}! This is just a simple welcome notification. Don't take care of what there's in here thanks :3`,
+      message: `Welcome ${newUser.name || newUser.email}!`,
       imageUrl: '../media/notification.webp'
     });
 
@@ -112,6 +119,7 @@ passport.use(new GoogleStrategy({
   }
 }));
 
+// ================= DISCORD STRATEGY =================
 passport.use(new DiscordStrategy({
   clientID: process.env.DISCORD_CLIENT_ID,
   clientSecret: process.env.DISCORD_CLIENT_SECRET,
@@ -131,14 +139,14 @@ passport.use(new DiscordStrategy({
     let user = await User.findOne({ email });
 
     if (user) {
-      if (!user.discordId) {
-        user.discordId = profile.id;
-        if (!user.provider) user.provider = 'discord';
-      }
+      if (!user.discordId) user.discordId = profile.id;
+      if (!user.provider) user.provider = 'discord';
 
-      if (!user.profilePictureUrl || user.profilePictureUrl !== avatarUrl) {
+      // aggiorno avatar solo se non c'è già
+      if (!user.profilePictureUrl) {
         user.profilePictureUrl = avatarUrl;
       }
+
       await user.save();
       return done(null, user);
     }
@@ -151,6 +159,7 @@ passport.use(new DiscordStrategy({
       name: profile.username,
       oauthPasswordChanged: false,
       uniquenick,
+      googleId: null,
       discordId: profile.id,
       passwordHash: '',
       provider: 'discord',
@@ -166,7 +175,7 @@ passport.use(new DiscordStrategy({
 
     await Notification.create({
       userId: newUser._id,
-      message: `Welcome ${newUser.name || newUser.email}! This is just a simple welcome notification. Don't take care of what there's in here thanks :3`,
+      message: `Welcome ${newUser.name || newUser.email}!`,
       imageUrl: '../media/notification.webp'
     });
 
