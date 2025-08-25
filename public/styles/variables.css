@@ -223,7 +223,7 @@ body.dark {
   --story-image-bg-color: linear-gradient(180deg, #1f3fbf, #5c9cff, #a2d9ff, #dffbff);
   --story-content-overlay: rgba(0, 0, 0, 0.7);
 
-  --home-post-card-bg: rgba(26, 38, 119, 0.7);
+  --home-post-card-bg: rgba(33, 32, 117, 0.28);
   --home-post-card-text-color: #f0f0f0;
   --home-post-card-text-color-small: #aaaaaa;
   --home-post-card-gradient-line: linear-gradient(to right, #888, #555, #888);

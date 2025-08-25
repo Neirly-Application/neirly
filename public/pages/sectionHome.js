@@ -39,50 +39,33 @@ export default async function loadHomeSection(content, user) {
     <div class="home-posts" id="loadPosts">
       <div class="home-post-card">
         <div class="home-post-card-content">
-          <h2>Test.</h2>
-          <p>Community posts.</p>
+          <h2>Post Title. 🍕</h2>
+          <p>Post Description. 🍔</p>
+          <img src="../media/map-introducer.webp" alt="Post Image">
         </div>
-        <small>Here you can find some community posts you might like!</small>
+        <small>All the hashtags and mentions here!</small>
         <div class="post-fancy-line"></div>
 
         <div class="post-actions">
-          <li><a class="like" id="like"><i class="far fa-heart"></i></a></li>
+          <div class="post-actions-left">
+            <li><a class="like" id="like"><i class="far fa-heart"></i></a></li>
+            <li><a class="comment" id="comment"><i class="far fa-comment"></i></a></li>
+            <li><a class="save" id="favorite"><i class="far fa-star"></i></a></li>
+          </div>
+          <div class="post-actions-right">
+            <li><a class="save" id="save"><i class="far fa-bookmark"></i></a></li>
+            <li><a class="share" id="share"><i class="far fa-share-square"></i></a></li>
+          </div>
         </div>
       </div>
-
-      <div class="home-post-card">
-        <div class="home-post-card-content">
-          <h2>Test.</h2>
-          <p>Community posts.</p>
-        </div>
-        <small>Here you can find some community posts you might like!</small>
-        <div class="post-fancy-line"></div>
-
-        <div class="post-actions">
-          <li><a class="like" id="like"><i class="far fa-heart"></i></a></li>
-        </div>
-      </div>
-
-      <div class="home-post-card">
-        <div class="home-post-card-content">
-          <h2>Test.</h2>
-          <p>Community posts.</p>
-        </div>
-        <small>Here you can find some community posts you might like!</small>
-        <div class="post-fancy-line"></div>
-
-        <div class="post-actions">
-          <li><a class="like" id="like"><i class="far fa-heart"></i></a></li>
-        </div>
-      </div>
-    </div>
 
       <div class="container-actions">
         <a class="cta-button-actions" title="Create a new post"><i class="fas fa-pen-to-square"></i></a>
         <div class="divider"></div>
         <a class="cta-button-actions" title="Posted"><i class="fa-solid fa-image"></i></a>
         <a class="cta-button-actions" title="Liked"><i class="fa-solid fa-heart"></i></a>
-        <a class="cta-button-actions" title="Saved"><i class="fa-solid fa-star"></i></a>
+        <a class="cta-button-actions" title="Saved"><i class="fa-solid fa-bookmark"></i></a>
+        <a class="cta-button-actions" title="Favorites"><i class="fa-solid fa-star"></i></a>
       </div>
 
   `;

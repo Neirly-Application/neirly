@@ -51,6 +51,27 @@ img {
   pointer-events: auto;
 }
 
+.custom-emoji {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  display: inline-block;
+  margin: 0 0.05em;
+  pointer-events: none;
+}
+
+h1 .custom-emoji,
+h2 .custom-emoji,
+h3 .custom-emoji {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+button .custom-emoji,
+a .custom-emoji {
+  vertical-align: middle;
+}
+
 .mobile-toggle {
   display: none;
   position: fixed;
@@ -117,8 +138,15 @@ img {
   display: inline-block;
   vertical-align: middle;
   margin-left: 8px;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: bold;
+}
+
+.nav-logo-svg {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 8px;
+  height: 36px;
 }
 
 .nav-links {
@@ -726,16 +754,27 @@ form button:focus-visible {
   .topbar-left img {
     width: 30px;
     height: 30px;
+    object-fit: cover;
   }
 
   .topbar-logo {
     height: 28px;
     width: auto;
+    display: block;
   }
 
   .topbar-title {
     font-size: 1.2rem;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+  }
+
+  .topbar-title .main-web-app-logo {
+    align-items: center;
+    text-align: center;
+    height: 32px;
+    width: auto;
   }
 
   .topbar-menu {
@@ -1266,7 +1305,7 @@ body.subsection-active {
   padding: 30px;
 }
 
-.profile-card img {
+.profile-card img:not(.custom-emoji) {
   width: 100px;
   height: 100px;
   border: 1px solid var(--secondary);

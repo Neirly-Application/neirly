@@ -141,6 +141,11 @@ header img{
 	margin-top: 0;
 	width:auto;
 }
+
+header .logo-svg {
+  height: clamp(70px, 10vw, 110px);
+  width: auto;
+}
 .clock-wrap .label, .clock-wrap .sep {
 	color: var(--main-bg);
 }

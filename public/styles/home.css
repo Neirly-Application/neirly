@@ -113,7 +113,8 @@
 .home-post-card {
   margin-block: 30px;
   padding: 20px;
-  max-width: 600px;
+  min-width: 200px;
+  max-width: 400px;
   height: auto;
   background-color: var(--home-post-card-bg);
   border-radius: 20px;
@@ -131,6 +132,14 @@
 .home-post-card-content p {
   text-align: left;
   color: var(--home-post-card-text-color);
+}
+
+.home-post-card-content img:not(.custom-emoji) {
+  display: block;
+  margin: 20px auto 0 auto;
+  max-width: 100%;
+  height: auto;
+  border-radius: 20px;
 }
 
 .home-post-card small {
@@ -160,22 +169,42 @@
 }
 
 .post-actions {
-  justify-content: center;
-  align-items: center;
   display: flex;
+  justify-content: space-around;
+  align-items: center;
   gap: 16px;
   list-style: none;
   padding: 0;
   margin: 10px 0;
-  font-size: 24px;
+  font-size: 22px;
 }
-
-.post-actions li {
+.post-actions-left {
+  display: flex;
+  gap: 10px;
+}
+.post-actions-right {
+  display: flex;
+  gap: 10px;
+}
+.post-actions-left li, .post-actions-right li {
   cursor: pointer;
   transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .like {
+  color: var(--post-like-color);
+}
+.comment {
+  color: var(--post-like-color);
+}
+.save {
+  color: var(--post-like-color);
+}
+.favorite {
+  color: var(--post-like-color);
+}
+.share {
+  margin-left: 20px;
   color: var(--post-like-color);
 }
 
@@ -205,6 +234,7 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: 50px;
+  z-index: 999;
 }
 
 .cta-button-actions {
