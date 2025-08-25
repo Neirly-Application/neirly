@@ -34,8 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       } else {
         return `
           <img src="${user.profilePictureUrl}" alt="Profile Picture" class="profile-icon">
-          <span class="nav-username">${user.name || user.email}</span>
-        `;
+          <span class="nav-username">${user.name || user.email}</span>`;
       }
     }
 

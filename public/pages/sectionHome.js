@@ -36,6 +36,15 @@ export default async function loadHomeSection(content, user) {
     
     <div class="fancy-line"></div>
 
+    <div class="container-actions">
+      <a class="cta-button-actions" title="Create a new post"><i class="fas fa-pen-to-square"></i></a>
+      <div class="divider"></div>
+      <a class="cta-button-actions" title="Posted"><i class="fa-solid fa-image"></i></a>
+      <a class="cta-button-actions" title="Liked"><i class="fa-solid fa-heart"></i></a>
+      <a class="cta-button-actions" title="Saved"><i class="fa-solid fa-bookmark"></i></a>
+      <a class="cta-button-actions" title="Favorites"><i class="fa-solid fa-star"></i></a>
+    </div>
+
     <div class="home-posts" id="loadPosts">
       <div class="home-post-card">
         <div class="home-post-card-content">
@@ -58,15 +67,7 @@ export default async function loadHomeSection(content, user) {
           </div>
         </div>
       </div>
-
-      <div class="container-actions">
-        <a class="cta-button-actions" title="Create a new post"><i class="fas fa-pen-to-square"></i></a>
-        <div class="divider"></div>
-        <a class="cta-button-actions" title="Posted"><i class="fa-solid fa-image"></i></a>
-        <a class="cta-button-actions" title="Liked"><i class="fa-solid fa-heart"></i></a>
-        <a class="cta-button-actions" title="Saved"><i class="fa-solid fa-bookmark"></i></a>
-        <a class="cta-button-actions" title="Favorites"><i class="fa-solid fa-star"></i></a>
-      </div>
+    </div>
 
   `;
 
