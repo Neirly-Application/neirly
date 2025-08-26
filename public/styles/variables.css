@@ -1,11 +1,19 @@
-:root, body.light {
-  --font-heading: 'Poppins', sans-serif;
-  --font-body: 'Inter', sans-serif;
+:root,
+body.light {
+  --font-heading: "Poppins", sans-serif;
+  --font-body: "Inter", sans-serif;
 
   --bubble-color: rgba(100, 130, 255, 0.18);
   --bubble-glow: rgba(100, 130, 255, 0.55);
 
   --main-text-color: #2e2e2e;
+
+  --fancy-line-gradient: linear-gradient(
+    to right,
+    #90d6ff,
+    #2c4296,
+    #90d6ff
+  );
 
   --primary: #2c4296;
   --secondary: #90d6ff;
@@ -19,7 +27,7 @@
   --general-shadow: rgba(26, 73, 104, 0.3);
   --main-bg: #0093e8d7;
   --sidebar-active-element-text-color: #2c4296;
-  --sidebar-element-text-color-hover: #3957cce9; 
+  --sidebar-element-text-color-hover: #3957cce9;
   --sidebar-element-text-color-active: #2c4296;
 
   /* --animated-bg-complete-profile: linear-gradient(180deg, #2c4296, #e6ecff, #2c4296); */
@@ -33,7 +41,16 @@
   --premium-bg-color-accent: #c7a900;
   --premium-text-color: #f7f3e3;
   --premium-text-color-accent: #786127;
-  --premium-section-bg: linear-gradient(45deg, #161000, #30260a, #685421, #b29b62, #685421, #30260a, #161000);
+  --premium-section-bg: linear-gradient(
+    45deg,
+    #161000,
+    #30260a,
+    #685421,
+    #b29b62,
+    #685421,
+    #30260a,
+    #161000
+  );
   --premium-text-shadow-1: #fff2cc;
   --premium-text-shadow-2: #ffe066;
   --premium-text-shadow-3: #ffcc00;
@@ -56,19 +73,25 @@
 
   --profile-icons-color: #2c4296;
 
-  --story-box-bg-color: #ffffff;
-  --story-box-border-radius-color: #dddddd;
-  --story-border-color: #0055cc;
-  --story-bg-color: #0055cc;
-  --story-image-bg-color: linear-gradient(180deg, #dffbff, #a2d9ff, #5c9cff, #1f3fbf);
-  --story-content-overlay: rgba(0, 0, 0, 0.5);
+  --friend-box-box-bg-color: #ffffff;
+  --friend-box-box-border-radius-color: #dddddd;
+  --friend-box-border-color: #0055cc;
+  --friend-box-bg-color: #0055cc;
+  --friend-box-image-bg-color: linear-gradient(
+    180deg,
+    #dffbff,
+    #a2d9ff,
+    #5c9cff,
+    #1f3fbf
+  );
+  --friend-box-content-overlay: rgba(0, 0, 0, 0.5);
 
-  --home-post-card-bg: rgba(26, 42, 108, 0.1);
+  --home-post-card-bg: rgba(12, 41, 156, 0.16);
   --home-post-card-text-color: #333;
   --home-post-card-text-color-small: #727272;
   --home-post-card-gradient-line: linear-gradient(to right, #444, #777, #444);
-  --post-like-color: #012bd5;
-  --home-post-viewer: #1634add0;
+  --post-action-color: #2e2e2ee5;
+  --home-post-viewer: #1634ada9;
   --home-post-viewer-divider: #5c9dff9d;
 
   --chat-outgoing-message: #d1ecf1;
@@ -79,7 +102,12 @@
   --notification-badge-bg: #63c8ff;
   --notification-unread: linear-gradient(to right, #ff26261a, transparent);
   --notification-side-color: #63c8ff;
-  --notification-bottom-color: linear-gradient(to right, #63c8ff, transparent, transparent);
+  --notification-bottom-color: linear-gradient(
+    to right,
+    #63c8ff,
+    transparent,
+    transparent
+  );
 
   --friend-requests-bg: #63c8ff88;
   --friend-requests-cancel-btn: #ff3f3f;
@@ -94,7 +122,7 @@
   --friend-card-name-color: #2c4296;
   --friend-card-nick-color: #0093e8;
   --friend-card-border-bottom-color: #2c4296;
-  
+
   --search-card-name-color: #2c4296;
   --search-card-nick-color: #0093e8;
   --search-card-border-bottom-color: #2c4296;
@@ -139,7 +167,7 @@
   --color-28a745: #4bb063;
   --color-dc3545: #e1606d;
   --color-007bff: #439eff;
-  
+
   --color-e0e0e0: #e0e0e0;
   --color-bdeaff: #bdeaff;
   --color-888: #888888;
@@ -160,13 +188,20 @@
 }
 
 body.dark {
-  --font-heading: 'Poppins', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-heading: "Poppins", sans-serif;
+  --font-body: "Inter", sans-serif;
 
   --bubble-color: rgba(100, 130, 255, 0.55);
   --bubble-glow: rgba(100, 130, 255, 0.18);
 
   --main-text-color: #ffffff;
+
+  --fancy-line-gradient: linear-gradient(
+    to right,
+    #0b2a69,
+    #3c5bd9,
+    #0b2a69
+  );
 
   --primary: #0b2a69;
   --secondary: #3c5bd9;
@@ -180,12 +215,17 @@ body.dark {
   --general-shadow: rgba(0, 0, 0, 0.7);
   --main-bg: #163d89;
   --sidebar-active-element-text-color: #fbfbfb;
-  --sidebar-element-text-color-hover: #ffffffe9; 
-  --sidebar-element-text-color-active: #fbfbfb; 
+  --sidebar-element-text-color-hover: #ffffffe9;
+  --sidebar-element-text-color-active: #fbfbfb;
 
-  --animated-bg-complete-profile: linear-gradient(180deg, #2c4296, #0a1b3d, #2c4296);
+  --animated-bg-complete-profile: linear-gradient(
+    180deg,
+    #2c4296,
+    #0a1b3d,
+    #2c4296
+  );
   --animated-bg-main: #001c2b;
-  
+
   --topbar-dropdown-bg-color: #032e84;
 
   --premium-bg-color: #ffd700;
@@ -193,7 +233,16 @@ body.dark {
   --premium-bg-color-accent: #c7a900;
   --premium-text-color: #f7f3e3;
   --premium-text-color-accent: #786127;
-  --premium-section-bg: linear-gradient(45deg, #161000, #30260a, #685421, #b29b62, #685421, #30260a, #161000);
+  --premium-section-bg: linear-gradient(
+    45deg,
+    #161000,
+    #30260a,
+    #685421,
+    #b29b62,
+    #685421,
+    #30260a,
+    #161000
+  );
   --premium-text-shadow-1: #fff2cc;
   --premium-text-shadow-2: #ffe066;
   --premium-text-shadow-3: #ffcc00;
@@ -216,18 +265,24 @@ body.dark {
 
   --profile-icons-color: #ffffff;
 
-  --story-box-bg-color: #005eff4f;
-  --story-box-border-radius-color: #555555;
-  --story-border-color: #90d6ff;
-  --story-bg-color: #90d6ff;
-  --story-image-bg-color: linear-gradient(180deg, #1f3fbf, #5c9cff, #a2d9ff, #dffbff);
-  --story-content-overlay: rgba(0, 0, 0, 0.7);
+  --friend-box-box-bg-color: #005eff4f;
+  --friend-box-box-border-radius-color: #555555;
+  --friend-box-border-color: #90d6ff;
+  --friend-box-bg-color: #90d6ff;
+  --friend-box-image-bg-color: linear-gradient(
+    180deg,
+    #1f3fbf,
+    #5c9cff,
+    #a2d9ff,
+    #dffbff
+  );
+  --friend-box-content-overlay: rgba(0, 0, 0, 0.7);
 
   --home-post-card-bg: rgba(33, 32, 117, 0.28);
   --home-post-card-text-color: #f0f0f0;
   --home-post-card-text-color-small: #aaaaaa;
   --home-post-card-gradient-line: linear-gradient(to right, #888, #555, #888);
-  --post-like-color: #90d6ff;
+  --post-action-color: #90d6ffe5;
   --home-post-viewer: #1634add0;
   --home-post-viewer-divider: #5c9dff9d;
 
@@ -239,7 +294,12 @@ body.dark {
   --notification-badge-bg: #3399ff;
   --notification-unread: linear-gradient(to right, #ff26261a, transparent);
   --notification-side-color: #3399ff;
-  --notification-bottom-color: linear-gradient(to right, #3399ff, transparent, transparent);
+  --notification-bottom-color: linear-gradient(
+    to right,
+    #3399ff,
+    transparent,
+    transparent
+  );
 
   --friend-requests-bg: #68b3ffbb;
   --friend-requests-cancel-btn: #ff5555;
@@ -299,7 +359,7 @@ body.dark {
   --color-28a745: #2ecc71;
   --color-dc3545: #e1606d;
   --color-007bff: #439eff;
-  
+
   --color-e0e0e0: #444;
   --color-bdeaff: #3399ff;
   --color-888: #999;

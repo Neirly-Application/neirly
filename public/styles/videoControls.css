@@ -1,0 +1,65 @@
+.custom-video-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto 1rem auto;
+  background: transparent;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.custom-video-wrapper video {
+  width: 100%;
+  display: block;
+  background: transparent;
+  border-radius: 12px 12px 0 0;
+  outline: none;
+}
+
+.video-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: transparent;
+  border-radius: 0 0 12px 12px;
+  user-select: none;
+}
+
+.video-controls button {
+  background: transparent;
+  color: var(--main-text-color);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 6px;
+  font-size: 1rem;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.video-controls .seek-bar {
+  flex: 1;
+  accent-color: var(--main-text-color);
+  height: 4px;
+  border-radius: 4px;
+  background: var(--primary);
+  margin: 0 8px;
+}
+
+.video-controls .volume-bar {
+  width: 80px;
+  accent-color: var(--main-text-color);
+  height: 4px;
+  border-radius: 4px;
+  background: var(--primary);
+}
+
+@media (max-width: 600px) {
+  .custom-video-wrapper {
+    max-width: 100%;
+  }
+  .video-controls .volume-bar {
+    width: 50px;
+  }
+}

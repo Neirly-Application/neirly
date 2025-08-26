@@ -2,6 +2,7 @@
 @import url(../notifications.min.css);
 @import url(../sectionSettingInfo.min.css);
 @import url(../sectionSettingAPI.min.css);
+@import url(../videoControls.min.css);
 
 *,
 *::before,
@@ -1032,12 +1033,7 @@ form button:focus-visible {
 .fancy-line {
   display: block;
   height: 1px;
-  background: linear-gradient(
-    to right,
-    var(--secondary),
-    var(--primary),
-    var(--secondary)
-  );
+  background: var(--fancy-line-gradient);
   border: none;
   border-radius: 100%;
   margin: 30px 0;
@@ -1301,7 +1297,7 @@ body.subsection-active {
 .profile-card {
   display: flex;
   align-items: center;
-  background: var(--story-box-bg-color);
+  background: var(--friend-box-box-bg-color);
   border: 1px solid var(--secondary);
   gap: 15px;
   flex-wrap: wrap;

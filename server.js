@@ -143,6 +143,7 @@ const nearMeRouter = require('./src/routes/nearMe');
 const searchNickRouter = require('./src/routes/searchNick.js');
 const themeRouter = require('./src/routes/themeRouter.js');
 const accountSecurity = require('./src/routes/accountSecurityRouter.js');
+const postRouter = require('./src/routes/postRouter.js');
 
 /* ---------------------------------------------------------------------------
  *  Additional service initialization
@@ -196,11 +197,13 @@ app.use('/api', getUser);
 app.use('/api', searchNickRouter);
 app.use('/api', themeRouter);
 app.use('/api', accountSecurity);
+app.use('/api/posts', postRouter);
 
 /* ---------------------------------------------------------------------------
  *  Static file routes
  * ------------------------------------------------------------------------- */
 app.use('/user_pfps', express.static(pathModule.join(__dirname, 'user_pfps')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 /* ---------------------------------------------------------------------------
  *  Root route & 404 handling

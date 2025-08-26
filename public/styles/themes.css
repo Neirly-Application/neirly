@@ -17,9 +17,9 @@
   flex: 1 1 260px;
   max-width: 300px;
   min-width: 220px;
-  background-color: var(--story-box-bg-color);
+  background-color: var(--friend-box-box-bg-color);
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   padding: 24px 20px;
   box-sizing: border-box;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -28,7 +28,7 @@
 
 .theme-card:active {
   transform: translateY(-6px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
   background-color: var(--secondary-hover);
   cursor: pointer;
 }
@@ -90,8 +90,8 @@
 }
 
 .badge i {
-    margin-right: 5px;
-    align-self: left;
+  margin-right: 5px;
+  align-self: left;
 }
 
 .theme-card.condensed .emoji,
