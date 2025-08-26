@@ -23,28 +23,43 @@ router.post('/', upload.single('media'), async (req, res) => {
     let media = null;
 
     if (req.file) {
-      const ext = path.extname(req.file.originalname).toLowerCase();
-      const isImage = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp'].includes(ext);
+    const ext = path.extname(req.file.originalname).toLowerCase();
 
-      if (isImage) {
+    const imageExtensions = ['.png', '.jpg', '.jpeg', '.webp', '.bmp'];
+    const gifExtensions = ['.gif'];
+    const videoExtensions = ['.mp4', '.mov', '.webm', '.mkv'];
+
+    if (imageExtensions.includes(ext)) {
         const webpFilename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.webp`;
         const webpPath = path.join('uploads/post', webpFilename);
 
         await sharp(req.file.path)
-          .webp({ quality: 80 })
-          .toFile(webpPath);
+        .webp({ quality: 80 })
+        .toFile(webpPath);
 
-        fs.unlinkSync(req.file.path); // delete original file
+        fs.unlinkSync(req.file.path);
+
         media = {
-          url: `/uploads/post/${webpFilename}`,
-          type: 'image'
+        url: `/uploads/post/${webpFilename}`,
+        type: 'image'
         };
-      } else {
+
+    } else if (gifExtensions.includes(ext)) {
         media = {
-          url: `/uploads/post/${req.file.filename}`,
-          type: 'video'
+        url: `/uploads/post/${req.file.filename}`,
+        type: 'gif'
         };
-      }
+
+    } else if (videoExtensions.includes(ext)) {
+        media = {
+        url: `/uploads/post/${req.file.filename}`,
+        type: 'video'
+        };
+
+    } else {
+        fs.unlinkSync(req.file.path);
+        return res.status(400).json({ error: 'Unsupported media type.' });
+    }
     }
 
     const post = new Post({
@@ -78,11 +93,9 @@ router.delete('/:id', async (req, res) => {
     if (post.media && post.media.url) {
     const filename = path.basename(post.media.url);
     const filePath = path.join(__dirname, '..', '..', 'uploads', 'post', filename);
-    console.log("Trying to delete:", filePath);
 
     if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
-        console.log("File deleted successfully");
     } else {
         console.warn("File not found on disk:", filePath);
     }

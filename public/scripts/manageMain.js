@@ -20,7 +20,82 @@ import loadSettingsPrivacySection from '../pages/sectionSettingsPrivacy.js';
 import loadSettingsThemeSection from '../pages/sectionSettingsTheme.js';
 import loadDefaultSection from '../pages/sectionDefault.js';
 
+
 document.addEventListener('DOMContentLoaded', async () => {
+  loadEmoji().catch(err => console.error('[emoji]', err));
+
+  async function loadEmoji() {
+    const res = await fetch('/media/emoji/emoji.json');
+    if (!res.ok) throw new Error('emoji.json not found: ' + res.status);
+    const data = await res.json();
+
+    const toChar = unified =>
+      String.fromCodePoint(...unified.split('-').map(u => parseInt(u, 16)));
+
+    const map = new Map();
+    for (const e of data) {
+      if (!e.image) continue;
+      const img = `/media/emoji/img/apple/64/${e.image}`;
+      if (e.unified)       map.set(toChar(e.unified), img);
+      if (e.non_qualified) map.set(toChar(e.non_qualified), img);
+    }
+
+    window.emojiMap = map;
+
+    const keys = Array.from(map.keys()).sort((a, b) => b.length - a.length);
+    if (!keys.length) return;
+
+    const escapeRegex = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(keys.map(escapeRegex).join('|'), 'g');
+
+    window.replaceInNode = function replaceInNode(node) {
+      if (!node) return;
+
+      if (node.nodeName === 'INPUT' || node.nodeName === 'TEXTAREA') {
+        node.value = node.value.replace(re, m => {
+          return Array.from(map.keys()).includes(m) ? m : m;
+        });
+        return;
+      }
+
+      if (node.nodeType === Node.TEXT_NODE) {
+        const html = node.nodeValue.replace(re, m =>
+          `<img src="${map.get(m)}" alt="${m}" class="custom-emoji">`
+        );
+        if (html !== node.nodeValue) {
+          const span = document.createElement('span');
+          span.innerHTML = html;
+          node.replaceWith(...span.childNodes);
+        }
+        return;
+      }
+
+      node.childNodes.forEach(child => replaceInNode(child));
+    };
+
+    const content = document.getElementById('content');
+    if (content) {
+      replaceInNode(content);
+      const observerContent = new MutationObserver(mutations => {
+        for (const mutation of mutations) {
+          mutation.addedNodes.forEach(node => replaceInNode(node));
+        }
+      });
+      observerContent.observe(content, { childList: true, subtree: true });
+    }
+
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+      replaceInNode(navbar);
+      const observerNav = new MutationObserver(mutations => {
+        for (const mutation of mutations) {
+          mutation.addedNodes.forEach(node => replaceInNode(node));
+        }
+      });
+      observerNav.observe(navbar, { childList: true, subtree: true });
+    }
+  }
+
   try {
     const res = await fetch("/api/profile", { credentials: "include" });
     if (!res.ok) throw new Error("Error while fetching profile.");
@@ -41,10 +116,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       const isMobile = window.innerWidth <= 768;
       document.querySelectorAll("#nav-profile-loader").forEach(el => {
         el.innerHTML = getNavProfileHTML(isMobile);
+
+        const usernameSpan = el.querySelector('.nav-username');
+        if (usernameSpan && window.emojiMap) {
+          window.replaceInNode(usernameSpan);
+        }
       });
     }
+
     updateNavProfiles();
     window.addEventListener("resize", updateNavProfiles);
+
 
     // --- APPLY THEME ---
     function applyTheme(theme) {
@@ -294,60 +376,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.location.href = '/login.html';
   }
 });
-
-document.addEventListener('DOMContentLoaded', () => {
-  loadEmoji().catch(err => console.error('[emoji]', err));
-});
-
-async function loadEmoji() {
-  const res = await fetch('../media/emoji/emoji.json');
-  if (!res.ok) throw new Error('emoji.json non trovato: ' + res.status);
-  const data = await res.json();
-
-  const toChar = unified =>
-    String.fromCodePoint(...unified.split('-').map(u => parseInt(u, 16)));
-
-  const map = new Map();
-  for (const e of data) {
-    if (!e.image) continue;
-    const img = `../media/emoji/img/apple/64/${e.image}`;
-    if (e.unified)       map.set(toChar(e.unified), img);
-    if (e.non_qualified) map.set(toChar(e.non_qualified), img);
-  }
-
-  const keys = Array.from(map.keys()).sort((a, b) => b.length - a.length);
-  if (!keys.length) return;
-
-  const escapeRegex = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const re = new RegExp(keys.map(escapeRegex).join('|'), 'g');
-
-  function replaceInNode(node) {
-    if (!node || ['INPUT','TEXTAREA'].includes(node.nodeName)) return;
-
-    node.childNodes.forEach(child => {
-      if (child.nodeType === Node.TEXT_NODE) {
-        const html = child.nodeValue.replace(re, m =>
-          `<img src="${map.get(m)}" alt="${m}" class="custom-emoji">`
-        );
-        if (html !== child.nodeValue) {
-          const span = document.createElement('span');
-          span.innerHTML = html;
-          child.replaceWith(...span.childNodes);
-        }
-      } else {
-        replaceInNode(child);
-      }
-    });
-  }
-
-  const content = document.getElementById('content');
-  if (!content) return;
-
-  replaceInNode(content);
-
-  const observer = new MutationObserver(() => replaceInNode(content));
-  observer.observe(content, { childList: true, subtree: true });
-}
 
 
 function detectDevTools() {

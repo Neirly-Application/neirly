@@ -230,7 +230,6 @@ export default async function loadFriendListSection(content, user) {
 
       friendsList.innerHTML = html;
 
-      // Render incoming requests
       incomingRequests.innerHTML = pendingRequests.length > 0
         ? pendingRequests.map(req => `
             <div class="friend-request-card">
@@ -253,7 +252,6 @@ export default async function loadFriendListSection(content, user) {
           `).join('')
         : '<p>No incoming requests.</p>';
 
-      // Render outgoing requests
       outgoingRequests.innerHTML = sentRequests.length > 0
         ? sentRequests.map(req => `
             <div class="friend-request-card">
@@ -273,7 +271,6 @@ export default async function loadFriendListSection(content, user) {
           `).join('')
         : '<p>No outgoing requests.</p>';
 
-      // Add event listeners to buttons
       document.querySelectorAll('.accept-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
           const fromUserId = btn.dataset.fromuserid;
@@ -337,14 +334,12 @@ export default async function loadFriendListSection(content, user) {
         });
       });
 
-      // Message and settings buttons can be implemented as needed
     } catch (error) {
       console.error(error);
       friendsList.innerHTML = '<p>Error loading friends.</p>';
     }
   }
 
-  // Modal toggle
   openFriendRequestsView.addEventListener('click', () => {
     friendRequestsModal.classList.remove('hidden');
     incomingRequests.focus();
@@ -362,7 +357,6 @@ export default async function loadFriendListSection(content, user) {
     }
   });
 
-  // Tabs switch
   incomingTab.addEventListener('click', () => {
     incomingTab.classList.add('active');
     outgoingTab.classList.remove('active');
@@ -379,7 +373,6 @@ export default async function loadFriendListSection(content, user) {
     outgoingRequests.focus();
   });
 
-  // Load initial friends list and badge
   await loadFriends();
   await fetchAndUpdateFriendNotifications();
 }

@@ -14,7 +14,6 @@ router.post('/friends/request', async (req, res) => {
   }
 
   try {
-    // Senza lean() per poter usare metodi Mongoose se serve
     const [targetUser, requestingUser] = await Promise.all([
       User.findOne({ uniquenick }).select('_id friends friendRequestsReceived friendRequestsSent name uniquenick'),
       User.findById(req.user._id).select('_id friends friendRequestsReceived friendRequestsSent name uniquenick')
@@ -35,7 +34,6 @@ router.post('/friends/request', async (req, res) => {
     const userIdStr = req.user._id.toString();
     const targetIdStr = targetUser._id.toString();
 
-    // Controllo amici già esistenti
     const alreadyFriends =
       targetUser.friends.some(fid => fid.toString() === userIdStr) ||
       requestingUser.friends.some(fid => fid.toString() === targetIdStr);
@@ -44,19 +42,16 @@ router.post('/friends/request', async (req, res) => {
       return res.status(400).json({ message: `You and ${targetUser.name || targetUser.uniquenick} are already friends.` });
     }
 
-    // Richiesta già inviata?
     const requestSent = requestingUser.friendRequestsSent.some(fid => fid.toString() === targetIdStr);
     if (requestSent) {
       return res.status(400).json({ message: `You already sent a friend request to ${targetUser.name || targetUser.uniquenick}.` });
     }
 
-    // Lui ha già richiesto te?
     const requestReceived = requestingUser.friendRequestsReceived.some(fid => fid.toString() === targetIdStr);
     if (requestReceived) {
       return res.status(400).json({ message: `${targetUser.name || targetUser.uniquenick} already sent you a friend request. You can accept it.` });
     }
 
-    // Aggiungi richiesta
     await Promise.all([
       User.updateOne({ _id: req.user._id }, { $addToSet: { friendRequestsSent: targetUser._id } }),
       User.updateOne({ _id: targetUser._id }, { $addToSet: { friendRequestsReceived: req.user._id } }),
@@ -79,7 +74,6 @@ router.post('/friends/respond', async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('friendRequestsReceived').lean();
 
-    // Controllo con confronto stringhe
     const hasRequest = user.friendRequestsReceived.some(id => id.toString() === fromUserId);
     if (!hasRequest) {
       return res.status(404).json({ message: 'Friend request not found.' });
@@ -98,7 +92,6 @@ router.post('/friends/respond', async (req, res) => {
       ]);
       return res.json({ message: 'Friend request accepted.' });
     } else {
-      // reject
       await Promise.all([
         User.updateOne({ _id: req.user._id }, { $pull: { friendRequestsReceived: fromUserId } }),
         User.updateOne({ _id: fromUserId }, { $pull: { friendRequestsSent: req.user._id } }),

@@ -63,7 +63,7 @@ export default async function loadHomeSection(content, user) {
 
   const overlay = document.createElement('div');
   overlay.classList.add('create-post-overlay');
-  overlay.style.display = 'none';
+  overlay.classList.add('hidden');
 
   const postForm = document.createElement('div');
   postForm.classList.add('create-post-form');
@@ -79,7 +79,7 @@ export default async function loadHomeSection(content, user) {
       <span id="fileName" class="file-name">No file chosen</span>
       <button id="submitPost">Post</button>
     </form>
-  `;  
+  `;
 
   overlay.appendChild(postForm);
   document.body.appendChild(overlay);
@@ -237,7 +237,7 @@ submitButton.addEventListener('click', async (e) => {
     };
     addPostToDOM(newPost);
 
-    overlay.style.display = 'none';
+    overlay.classList.add('hidden');
     postForm.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
     fileInput.value = '';
     fileName.textContent = 'No file chosen';
@@ -249,8 +249,25 @@ submitButton.addEventListener('click', async (e) => {
 });
 
 
-  createPostButton.addEventListener('click', () => {
-    overlay.style.display = 'flex';
+createPostButton.addEventListener('click', () => {
+    overlay.classList.remove('hidden');
+    postForm.querySelector('#postTitle').focus();
+  });
+
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) {
+      overlay.classList.add('hidden');
+    }
+  });
+
+  function closeCreatePostOverlay() {
+    overlay.classList.add('hidden');
+  }
+
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      closeCreatePostOverlay();
+    });
   });
 
   function addPostToDOM(post) {
@@ -492,10 +509,6 @@ submitButton.addEventListener('click', async (e) => {
     fileName.textContent = fileInput.files.length > 0
       ? fileInput.files[0].name
       : 'No file chosen';
-  });
-
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) overlay.style.display = 'none';
   });
 
   likedButton.addEventListener('click', (e) => {
