@@ -8,7 +8,7 @@ const { authMiddleware } = require('../auth/authMiddleware');
 const User = require('../models/User');
 
 const upload = multer({
-  dest: path.join(__dirname, '../../user_pfps/'),
+  dest: path.join(__dirname, '../../uploads/user/'),
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
   fileFilter: (req, file, cb) => {
     if (!file.mimetype.startsWith('image/')) {
@@ -136,7 +136,7 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
     // --- PROFILE PICTURE ---
     if (req.file) {
       if (user.profilePictureUrl) {
-        const oldPath = path.join(__dirname, '../../', user.profilePictureUrl);
+        const oldPath = path.join(__dirname, '../../', user.profilePictureUrl.replace(/^\//, ''));
         if (fs.existsSync(oldPath)) {
           fs.unlink(oldPath, (err) => {
             if (err) console.warn('Error removing old profile picture:', err.message);
@@ -144,7 +144,7 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
         }
       }
 
-      const outputDir = path.join(__dirname, '../../user_pfps');
+      const outputDir = path.resolve(__dirname, '../../uploads/user');
       if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
 
       const newFilename = `${Date.now()}-${user._id}.webp`;
@@ -159,7 +159,7 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
         if (err) console.warn('Error removing temp upload:', err.message);
       });
 
-      updates.profilePictureUrl = `/user_pfps/${newFilename}`;
+      updates.profilePictureUrl = `/uploads/user/${newFilename}`;
       updatedFields.push('profilePicture');
     }
 

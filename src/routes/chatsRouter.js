@@ -90,7 +90,7 @@ router.get('/users/:id/profile-picture', async (req, res) => {
     if (!user) return res.status(404).send('User not found');
 
     const defaultPath = path.join(__dirname, '../../public/media/user.webp');
-    const baseDir = path.join(__dirname, '../user_pfps');
+    const baseDir = path.join(__dirname, '../uploads/user');
 
     if (!user.profilePictureUrl) {
       return res.status(200).sendFile(defaultPath);

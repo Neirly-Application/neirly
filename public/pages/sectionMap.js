@@ -26,7 +26,7 @@ export default async function loadMapSection(content, user) {
   const about = user?.about_me || '"About me"';
 
   content.innerHTML = `
-    <h2><i class="fas fa-map"></i> Map</h2>
+    <h2><i class="fas fa-broadcast-tower"></i> Near you</h2>
     <div class="card map-card" style="position: relative; overflow: hidden;">
       <div id="preview-map">
       </div>

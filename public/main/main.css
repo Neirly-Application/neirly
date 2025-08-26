@@ -183,7 +183,8 @@ a .custom-emoji {
 }
 
 .nav-item i,
-.nav-item img.profile-icon {
+.nav-item img.profile-icon,
+.nav-item img.navbar-icon {
   margin-right: 10px;
   min-width: 16px;
   max-width: 30px;

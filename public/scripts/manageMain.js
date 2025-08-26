@@ -2,7 +2,6 @@ import loadPremiumSection from '../pages/sectionPremium.js';
 import loadFriendListSection from '../pages/sectionFriendList.js';
 import loadHomeSection from '../pages/sectionHome.js';
 import loadMapSection from '../pages/sectionMap.js';
-import loadMapScreenSection from '../pages/sectionMapScreen.js';
 import loadMessagesSection from '../pages/sectionMessages.js';
 import loadNotificationsSection from '../pages/sectionNotifications.js';
 import loadProfileSection from '../pages/sectionProfile.js';
@@ -168,7 +167,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         case 'friend-list': await loadFriendListSection(content, user); break;
         case 'home': await loadHomeSection(content, user); break;
         case 'map': await loadMapSection(content, user); break;
-        case 'map-screen': await loadMapScreenSection(content, user); break;
         case 'messages': await loadMessagesSection(content, user); break;
         case 'notifications': await loadNotificationsSection(content, user); break;
         case 'premium': await loadPremiumSection(content, user); break;

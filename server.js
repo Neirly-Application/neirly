@@ -202,8 +202,8 @@ app.use('/api/posts', postRouter);
 /* ---------------------------------------------------------------------------
  *  Static file routes
  * ------------------------------------------------------------------------- */
-app.use('/user_pfps', express.static(pathModule.join(__dirname, 'user_pfps')));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads/user', express.static(path.join(__dirname, 'uploads', 'user')));
+app.use('/uploads/post', express.static(path.join(__dirname, 'uploads', 'post')));
 
 /* ---------------------------------------------------------------------------
  *  Root route & 404 handling

@@ -4,11 +4,14 @@ const fs = require('fs');
 const path = require('path');
 const sharp = require('sharp');
 const { authMiddleware } = require('../auth/authMiddleware');
-const { upload } = require('../auth/multerConfig'); 
+const { upload } = require('../auth/multerConfig');
 const Post = require('../models/Posts');
 
 router.use(authMiddleware);
 
+// ========================
+// Create a new post
+// ========================
 router.post('/', upload.single('media'), async (req, res) => {
   try {
     const { title, content, tags } = req.body;
@@ -25,23 +28,23 @@ router.post('/', upload.single('media'), async (req, res) => {
 
       if (isImage) {
         const webpFilename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.webp`;
-        const webpPath = path.join('uploads', webpFilename);
+        const webpPath = path.join('uploads/post', webpFilename);
 
         await sharp(req.file.path)
           .webp({ quality: 80 })
           .toFile(webpPath);
 
-        fs.unlinkSync(req.file.path); 
+        fs.unlinkSync(req.file.path); // delete original file
         media = {
-            url: `/uploads/${webpFilename}`,
-            type: 'image'
-            };
-        } else {
-            media = {
-            url: `/uploads/${req.file.filename}`,
-            type: 'video'
-            };
-        }
+          url: `/uploads/post/${webpFilename}`,
+          type: 'image'
+        };
+      } else {
+        media = {
+          url: `/uploads/post/${req.file.filename}`,
+          type: 'video'
+        };
+      }
     }
 
     const post = new Post({
@@ -60,7 +63,9 @@ router.post('/', upload.single('media'), async (req, res) => {
   }
 });
 
-// Eliminazione post
+// ========================
+// Delete a post
+// ========================
 router.delete('/:id', async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -68,6 +73,19 @@ router.delete('/:id', async (req, res) => {
 
     if (post.author.toString() !== req.user._id.toString()) {
       return res.status(403).json({ error: 'Not authorized to delete this post.' });
+    }
+
+    if (post.media && post.media.url) {
+    const filename = path.basename(post.media.url);
+    const filePath = path.join(__dirname, '..', '..', 'uploads', 'post', filename);
+    console.log("Trying to delete:", filePath);
+
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        console.log("File deleted successfully");
+    } else {
+        console.warn("File not found on disk:", filePath);
+    }
     }
 
     await post.deleteOne();
@@ -78,26 +96,46 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// Lista post
+// ========================
+// Get posts (with pagination)
+// ========================
 router.get('/', async (req, res) => {
   try {
+    const userId = req.user._id.toString();
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
     const posts = await Post.find()
-      .populate('author', 'username profilePictureUrl')
+      .populate('author', 'name profilePictureUrl')
       .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit + 1)
       .lean();
+
+    const hasMore = posts.length > limit;
+    if (hasMore) posts.pop();
 
     posts.forEach(post => {
       if (typeof post.media === 'undefined') post.media = null;
+      const likes = post.likes || [];
+      post.likedByUser = likes.map(String).includes(userId);
     });
 
-    res.json(posts);
+    res.json({
+      posts,
+      hasMore
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error while fetching posts.' });
   }
 });
 
-// Like / unlike post
+// ========================
+// Like / Unlike a post
+// ========================
 router.post('/:id/like', async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -120,7 +158,9 @@ router.post('/:id/like', async (req, res) => {
   }
 });
 
-// Commento post
+// ========================
+// Add a comment
+// ========================
 router.post('/:id/comment', async (req, res) => {
   try {
     const { text } = req.body;
@@ -140,11 +180,13 @@ router.post('/:id/comment', async (req, res) => {
     res.status(201).json(comment);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error while commenting.' });
+    res.status(500).json({ error: 'Server error while adding comment.' });
   }
 });
 
-// Eliminazione commento
+// ========================
+// Delete a comment
+// ========================
 router.delete('/:postId/comment/:commentId', async (req, res) => {
   try {
     const post = await Post.findById(req.params.postId);

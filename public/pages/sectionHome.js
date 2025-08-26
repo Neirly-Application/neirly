@@ -2,6 +2,10 @@ import { showToast, customConfirm } from '../scripts/notification.js';
 import { stopBGAnimation, stopBubblesAnimation } from '../scripts/premiumBg.js';
 
 export default async function loadHomeSection(content, user) {
+  let currentPage = 1;
+  let loading = false;
+  let hasMore = true;
+
   stopBubblesAnimation();
   stopBGAnimation();
 
@@ -48,13 +52,15 @@ export default async function loadHomeSection(content, user) {
     
     <div class="fancy-line"></div>
 
-    <div class="home-posts" id="loadPosts"></div>
+    <div class="home-posts" id="loadPosts">
+      Posts are loading...
+    </div>
   `;
 
   const createPostButton = content.querySelector('.cta-button-actions[title="Create a new post"]');
+  const likedButton = content.querySelector('.cta-button-actions[title="Liked"]');
   const postsContainer = content.querySelector('#loadPosts');
 
-  // Overlay e form
   const overlay = document.createElement('div');
   overlay.classList.add('create-post-overlay');
   overlay.style.display = 'none';
@@ -73,21 +79,187 @@ export default async function loadHomeSection(content, user) {
       <span id="fileName" class="file-name">No file chosen</span>
       <button id="submitPost">Post</button>
     </form>
-  `;
+  `;  
 
   overlay.appendChild(postForm);
   document.body.appendChild(overlay);
+
+// =====================
+//    FORM ELEMENTS
+// =====================
+const fileInput = postForm.querySelector('#postMedia');
+const fileName = postForm.querySelector('#fileName');
+const submitButton = postForm.querySelector('#submitPost');
+
+const editButton = document.createElement('button');
+editButton.textContent = 'Edit Image';
+editButton.style.display = 'none';
+editButton.type = 'button';
+
+submitButton.parentNode.insertBefore(editButton, submitButton);
+
+fileInput.addEventListener('change', () => {
+  if (fileInput.files.length > 0) {
+    fileName.textContent = fileInput.files[0].name;
+    editButton.style.display = 'block';
+  } else {
+    fileName.textContent = 'No file chosen';
+    editButton.style.display = 'none';
+  }
+});
+
+editButton.addEventListener('click', () => {
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  openImageEditor(file, (editedBlob) => {
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(new File([editedBlob], file.name, { type: file.type }));
+    fileInput.files = dataTransfer.files;
+    showToast('Image edited! Ready to post.', 'info');
+  });
+});
+
+// =====================
+//    IMAGES EDITOR
+// =====================
+function openImageEditor(file, callback) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = document.createElement('img');
+    img.src = e.target.result;
+    img.style.maxWidth = '80vw';
+    img.style.maxHeight = '80vh';
+    img.style.border = '1px solid #ccc';
+    img.style.marginBottom = '10px';
+
+    const editorOverlay = document.createElement('div');
+    editorOverlay.style.cssText = `
+      position: fixed; top:0; left:0; width:100vw; height:100vh;
+      background: rgba(0,0,0,0.85); display:flex; justify-content:center; align-items:center;
+      z-index: 9999; flex-direction: column; gap: 10px;
+    `;
+    
+    // DEFAULT CHECKS
+    const rotateBtn = document.createElement('button');
+    rotateBtn.textContent = 'Rotate 90°';
+    const saveBtn = document.createElement('button');
+    saveBtn.textContent = 'Save';
+    const cancelBtn = document.createElement('button');
+    cancelBtn.textContent = 'Cancel';
+
+    editorOverlay.appendChild(img);
+    editorOverlay.appendChild(rotateBtn);
+    editorOverlay.appendChild(saveBtn);
+    editorOverlay.appendChild(cancelBtn);
+    document.body.appendChild(editorOverlay);
+
+    // ROTATION
+    let rotation = 0;
+    rotateBtn.onclick = () => {
+      rotation += 90;
+      img.style.transform = `rotate(${rotation}deg)`;
+    };
+
+    // SAVE
+    saveBtn.onclick = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      // If rotation is 90 or 270, swap width/height
+      const angle = rotation % 360;
+      if (angle === 90 || angle === 270) {
+        canvas.width = img.naturalHeight;
+        canvas.height = img.naturalWidth;
+      } else {
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+      }
+
+      ctx.translate(canvas.width/2, canvas.height/2);
+      ctx.rotate(rotation * Math.PI / 180);
+      ctx.drawImage(img, -img.naturalWidth/2, -img.naturalHeight/2);
+
+      canvas.toBlob((blob) => {
+        callback(blob);
+        document.body.removeChild(editorOverlay);
+      }, file.type);
+    };
+
+    cancelBtn.onclick = () => {
+      document.body.removeChild(editorOverlay);
+    };
+  };
+  reader.readAsDataURL(file);
+}
+
+// =====================
+//      POST SUBMIT
+// =====================
+submitButton.addEventListener('click', async (e) => {
+  e.preventDefault();
+
+  const title = postForm.querySelector('#postTitle').value.trim();
+  const contentText = postForm.querySelector('#postContent').value.trim();
+  const file = fileInput.files[0];
+
+  if (!title || !contentText) return showToast('Title and content are required!', 'error');
+
+  if (file && submitButton.textContent === 'Next') {
+    openImageEditor(file, (editedBlob) => {
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(new File([editedBlob], file.name, { type: file.type }));
+      fileInput.files = dataTransfer.files;
+      submitButton.textContent = 'Post';
+      showToast('Image edited! Now click Post to publish.', 'info');
+    });
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('title', title);
+  formData.append('content', contentText);
+  if (file) formData.append('media', file);
+
+  try {
+    const res = await fetch('/api/posts', {
+      method: 'POST',
+      body: formData,
+      credentials: 'include'
+    });
+    if (!res.ok) throw new Error('Failed to create post');
+
+    const newPost = await res.json();
+    newPost.author = {
+      _id: user.id,
+      name: user.name,
+      profilePictureUrl: user.profilePictureUrl
+    };
+    addPostToDOM(newPost);
+
+    overlay.style.display = 'none';
+    postForm.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+    fileInput.value = '';
+    fileName.textContent = 'No file chosen';
+    submitButton.textContent = 'Post';
+    showToast('Post created!', 'success');
+  } catch (err) {
+    showToast(err.message, 'error');
+  }
+});
+
 
   createPostButton.addEventListener('click', () => {
     overlay.style.display = 'flex';
   });
 
-  // Helper: aggiunge post al DOM
   function addPostToDOM(post) {
-  console.log('post.media:', post.media);
     const newPost = document.createElement('div');
     newPost.classList.add('home-post-card');
     newPost.dataset.id = post._id;
+    const author = post.author;
+    const authorName = author?.name || "User";
+    const authorPic = author?.profilePictureUrl || "../media/user.webp";
 
     let mediaHTML = '';
     let mediaPath = post.media?.url;
@@ -115,7 +287,15 @@ export default async function loadHomeSection(content, user) {
 
     newPost.innerHTML = `
       <div class="home-post-card-content">
-        <h2>${post.title}</h2>
+      <div class="post-menu">
+        <button class="post-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+        <div class="post-menu-dropdown" style="display:none"></div>
+      </div>
+      <div class="post-author">
+        <img class="post-author-pic" src="${authorPic}" alt="${authorName}" />
+        <span class="post-author-name">${authorName}</span>
+      </div>
+      <h2>${post.title}</h2>
         <p>${post.content.replace(/\n/g, "<br>")}</p>
         ${mediaHTML}
       </div>
@@ -133,6 +313,40 @@ export default async function loadHomeSection(content, user) {
         </div>
       </div>
     `;
+
+    const menuBtn = newPost.querySelector('.post-menu-btn');
+    const menuDropdown = newPost.querySelector('.post-menu-dropdown');
+
+    menuBtn.onclick = (e) => {
+      e.stopPropagation();
+      menuDropdown.style.display = menuDropdown.style.display === 'block' ? 'none' : 'block';
+    };
+
+    document.addEventListener('click', () => {
+      menuDropdown.style.display = 'none';
+    });
+
+    if (author._id === user.id) {
+      menuDropdown.innerHTML = `<button class="delete-post">Delete post</button>`;
+      menuDropdown.querySelector('.delete-post').onclick = async () => {
+        if (confirm('Are you sure you want to delete this post?')) {
+          try {
+            const res = await fetch(`/api/posts/${post._id}`, { method: 'DELETE', credentials: 'include' });
+            if (!res.ok) throw new Error('Error deleting post');
+            showToast('Post deleted!', 'success');
+            newPost.remove();
+          } catch (err) {
+            showToast(err.message, 'error');
+          }
+        }
+      };
+    } else {
+      menuDropdown.innerHTML = `<button class="report-post">Report</button>`;
+      menuDropdown.querySelector('.report-post').onclick = () => {
+        showToast('Post reported! (funzionalità da implementare)', 'info');
+        menuDropdown.style.display = 'none';
+      };
+    }
 
     if (post.media?.type === 'video') {
       const video = newPost.querySelector('video');
@@ -169,7 +383,6 @@ export default async function loadHomeSection(content, user) {
       };
     }
 
-    // Like
     const likeBtn = newPost.querySelector('.like');
     likeBtn.addEventListener('click', async (e) => {
       e.preventDefault();
@@ -180,6 +393,7 @@ export default async function loadHomeSection(content, user) {
         });
         if (!res.ok) throw new Error('Failed to like post');
         const data = await res.json();
+        console.log(data);
         const icon = likeBtn.querySelector('i');
         icon.classList.toggle('fas', data.liked);
         icon.classList.toggle('far', !data.liked);
@@ -189,7 +403,6 @@ export default async function loadHomeSection(content, user) {
       }
     });
 
-    // Share
     const shareBtn = newPost.querySelector('.share');
     shareBtn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -202,7 +415,6 @@ export default async function loadHomeSection(content, user) {
       showToast('Post content copied to clipboard!', 'success');
     });
 
-    // Comment
     const commentBtn = newPost.querySelector('.comment');
     commentBtn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -223,17 +435,46 @@ export default async function loadHomeSection(content, user) {
       });
     });
 
-    postsContainer.prepend(newPost);
+    postsContainer.appendChild(newPost);
   }
 
-  // Load posts dal backend
   async function loadPosts() {
+    if (loading || !hasMore) return;
+    loading = true;
+
     try {
-      const res = await fetch('/api/posts', { credentials: 'include' });
+      const res = await fetch(`/api/posts?page=${currentPage}&limit=5`, { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to load posts');
-      const posts = await res.json();
-      postsContainer.innerHTML = '';
+      const data = await res.json();
+      const posts = Array.isArray(data) ? data : data.posts || [];
+
+      if (currentPage === 1) postsContainer.innerHTML = '';
+
       posts.forEach(addPostToDOM);
+
+      hasMore = posts.length === 5;
+      currentPage++;
+    } catch (err) {
+      showToast(err.message, 'error');
+    } finally {
+      loading = false;
+    }
+  }
+
+  async function loadLikedPosts() {
+    try {
+      const res = await fetch('/api/posts?page=1&limit=50', { credentials: 'include' });
+      if (!res.ok) throw new Error('Failed to load posts');
+      const data = await res.json();
+      const posts = Array.isArray(data) ? data : data.posts || [];
+
+      const likedPosts = posts.filter(post => post.likedByUser);
+      postsContainer.innerHTML = '';
+      if (likedPosts.length === 0) {
+        postsContainer.innerHTML = '<div style="text-align:center;opacity:0.7;">You didn\'t like any post yet.</div>';
+        return;
+      }
+      likedPosts.forEach(addPostToDOM);
     } catch (err) {
       showToast(err.message, 'error');
     }
@@ -241,42 +482,11 @@ export default async function loadHomeSection(content, user) {
 
   loadPosts();
 
-  // Submit post
-  postForm.querySelector('#submitPost').addEventListener('click', async (e) => {
-    e.preventDefault();
-
-    const title = postForm.querySelector('#postTitle').value.trim();
-    const contentText = postForm.querySelector('#postContent').value.trim();
-    const fileInput = postForm.querySelector('#postMedia');
-    const file = fileInput.files[0];
-
-    if (!title || !contentText) return showToast('Title and content are required!', 'error');
-
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('content', contentText);
-    if (file) formData.append('media', file);
-
-    try {
-      const res = await fetch('/api/posts', {
-        method: 'POST',
-        body: formData,
-        credentials: 'include'
-      });
-      if (!res.ok) throw new Error('Failed to create post');
-      const newPost = await res.json();
-      addPostToDOM(newPost);
-      overlay.style.display = 'none';
-      postForm.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
-      fileInput.value = '';
-      document.getElementById('fileName').textContent = 'No file chosen';
-    } catch (err) {
-      showToast(err.message, 'error');
+  window.addEventListener('scroll', () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
+      loadPosts();
     }
   });
-
-  const fileInput = postForm.querySelector('#postMedia');
-  const fileName = postForm.querySelector('#fileName');
 
   fileInput.addEventListener('change', () => {
     fileName.textContent = fileInput.files.length > 0
@@ -286,5 +496,10 @@ export default async function loadHomeSection(content, user) {
 
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) overlay.style.display = 'none';
+  });
+
+  likedButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    loadLikedPosts();
   });
 }
