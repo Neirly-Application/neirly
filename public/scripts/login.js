@@ -9,7 +9,7 @@ import { showToast } from './notification.js';
         if (!user.profileCompleted) {
           window.location.href = `/main/complete-profile.html`;
         } else {
-          window.location.href = `/main/main.html`;
+          window.location.href = `/main/app.html`;
         }
         return;
       }
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!data.user.profileCompleted) {
             window.location.href = `/main/complete-profile.html`;
           } else {
-            window.location.href = data.redirectUrl || `/main/main.html`;
+            window.location.href = data.redirectUrl || `/main/app.html`;
           }
         }, 1000);
       } else {

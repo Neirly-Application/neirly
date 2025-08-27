@@ -8,12 +8,7 @@ body.light {
 
   --main-text-color: #2e2e2e;
 
-  --fancy-line-gradient: linear-gradient(
-    to right,
-    #90d6ff,
-    #2c4296,
-    #90d6ff
-  );
+  --fancy-line-gradient: linear-gradient(to right, #90d6ff, #2c4296, #90d6ff);
 
   --primary: #2c4296;
   --secondary: #90d6ff;
@@ -57,7 +52,6 @@ body.light {
   --premium-box-shadow-1: rgba(255, 204, 0, 0.3);
   --premium-box-shadow-2: rgba(255, 238, 153, 0.4);
   --premium-box-shadow-3: rgba(255, 255, 255, 0.1);
-
   --premium-color-bg-card: #463f10;
   --premium-color-border-card: #fbe226a0;
   --premium-color-box-shadow: rgba(255, 254, 210, 0.8);
@@ -71,10 +65,13 @@ body.light {
   --premium-card-text-color: #fff6bc;
   --premium-card-bg-color: #201d00;
 
+  --theme-card-bg-color: #a2d9ff;
+  --theme-card-bg-color-hover: #90d6ff;
+
   --profile-icons-color: #2c4296;
 
-  --friend-box-box-bg-color: #ffffff;
-  --friend-box-box-border-radius-color: #dddddd;
+  --friend-box-box-bg-color: rgba(12, 41, 156, 0.16);
+  --friend-box-border-radius-color: #1634ada9;
   --friend-box-border-color: #0055cc;
   --friend-box-bg-color: #0055cc;
   --friend-box-image-bg-color: linear-gradient(
@@ -196,12 +193,7 @@ body.dark {
 
   --main-text-color: #ffffff;
 
-  --fancy-line-gradient: linear-gradient(
-    to right,
-    #0b2a69,
-    #3c5bd9,
-    #0b2a69
-  );
+  --fancy-line-gradient: linear-gradient(to right, #0b2a69, #3c5bd9, #0b2a69);
 
   --primary: #0b2a69;
   --secondary: #3c5bd9;
@@ -249,7 +241,6 @@ body.dark {
   --premium-box-shadow-1: rgba(255, 204, 0, 0.3);
   --premium-box-shadow-2: rgba(255, 238, 153, 0.4);
   --premium-box-shadow-3: rgba(255, 255, 255, 0.1);
-
   --premium-color-bg-card: #463f10;
   --premium-color-border-card: #fbe226a0;
   --premium-color-box-shadow: rgba(255, 254, 210, 0.8);
@@ -263,10 +254,13 @@ body.dark {
   --premium-card-text-color: #fff6bc;
   --premium-card-bg-color: #201d00;
 
+  --theme-card-bg-color: #0f288aff;
+  --theme-card-bg-color-hover: #1635b4ff;
+
   --profile-icons-color: #ffffff;
 
-  --friend-box-box-bg-color: #005eff4f;
-  --friend-box-box-border-radius-color: #555555;
+  --friend-box-box-bg-color: rgba(33, 32, 117, 0.28);
+  --friend-box-border-radius-color: #1634add0;
   --friend-box-border-color: #90d6ff;
   --friend-box-bg-color: #90d6ff;
   --friend-box-image-bg-color: linear-gradient(

@@ -26,16 +26,14 @@ export default async function loadHomeSection(content, user) {
   content.style.margin = '';
 
   content.innerHTML = `
-    <div class="case-header">
-        <h2><i class="fas fa-home"></i> Home Page</h2>
-    </div>
+    <h2><i class="fas fa-home"></i> Home Page</h2>
 
     <div class="friend-box-container">
       <div style="text-align: center;">
         <div class="story" data-image="../media/neirly-logo.webp">
-          <img src="${user.profilePictureUrl || '../media/user.webp'}" alt="Your Story" />
+          <img src="${user.profilePictureUrl || '../media/user.webp'}" alt="You" />
         </div>
-        <div class="story-label">Your Story</div>
+        <div class="story-label">You</div>
       </div>
     </div>
 
@@ -134,7 +132,7 @@ function openImageEditor(file, callback) {
     img.style.marginBottom = '10px';
 
     const editorOverlay = document.createElement('div');
-    editorOverlay.style.cssText = `
+    editorOverlay.style.min.cssText = `
       position: fixed; top:0; left:0; width:100vw; height:100vh;
       background: rgba(0,0,0,0.85); display:flex; justify-content:center; align-items:center;
       z-index: 9999; flex-direction: column; gap: 10px;

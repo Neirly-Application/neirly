@@ -9,7 +9,7 @@ export default function loadSettingsThemeSection(content, user) {
 
   content.innerHTML = `
     <div class="case-header">
-      <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link">
+      <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#home'" class="back-arrow-link">
         <i class="fas fa-arrow-left"></i>
       </a>
       <h2><i class="fas fa-palette"></i> App Theme</h2>
@@ -36,7 +36,7 @@ export default function loadSettingsThemeSection(content, user) {
         <span class="badge"><i class="fa-solid fa-circle-check"></i> Default</span>
         <div class="emoji"><i class="fas fa-moon"></i></div>
         <h3>Dark Theme</h3>
-        <p class="card-desc">Ideal for the night with less eye strain.</p>
+        <p class="card-desc">Designed for nocturnals, perfect for less eye strain.</p>
         <button class="select-btn">Select</button>
       </div>
     </div>

@@ -1,7 +1,7 @@
-@import url(../styles/variables.min.css);
-@import url(../styles/button.min.css);
-@import url(../styles/navbar.min.css);
-@import url(../styles/main.min.css);
+@import url(../styles/dist/variables.min.css);
+@import url(../styles/dist/button.min.css);
+@import url(../styles/dist/navbar.min.css);
+@import url(../styles/dist/main.min.css);
 
 h1,
 h2,

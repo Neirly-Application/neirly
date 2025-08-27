@@ -155,29 +155,39 @@ router.delete('/delete-account', authMiddleware, async (req, res) => {
   try {
     const userId = req.user._id;
 
-    await Notification.deleteMany({ userId });
-    await ActivityLog.deleteMany({ userId });
-    await Message.deleteMany({
-      $or: [{ sender: userId }, { recipient: userId }]
-    });
+    await Promise.all([
+      Notification.deleteMany({ userId }),
+      ActivityLog.deleteMany({ userId }),
+      Message.deleteMany({ $or: [{ sender: userId }, { recipient: userId }] }),
+    ]);
+
+    await Promise.all([
+      User.updateMany({}, { $pull: { friends: userId } }),
+      User.updateMany({}, { $pull: { friendRequestsReceived: userId } }),
+      User.updateMany({}, { $pull: { friendRequestsSent: userId } }),
+      User.updateMany({}, { $pull: { recentChats: userId } }),
+      User.updateMany({}, { $pull: { lastSearches: userId } }),
+    ]);
 
     await User.findByIdAndDelete(userId);
 
     res.clearCookie('token');
+
     await ActivityLog.create({
       userId,
-      type: 'logout & deleting account',
+      type: 'account_deletion',
       metadata: {
         ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip
       }
     });
 
-    res.json({ message: 'Account and all related data successfully deleted.' });
+    res.json({ message: 'All account datas have been successfully deleted!' });
   } catch (error) {
     console.error('Account deletion error:', error);
     res.status(500).json({ message: 'Error while deleting account.' });
   }
 });
+
 
 // ================= PROFILE =================
 router.get('/profile', authMiddleware, async (req, res) => {
@@ -233,7 +243,7 @@ router.get('/google/callback',
       });
 
       const redirectUrl = req.session?.returnTo || (
-        !req.user.profileCompleted ? `/main/complete-profile.html` : `/main/main.html`
+        !req.user.profileCompleted ? `/main/complete-profile.html` : `/main/app.html`
       );
       if (req.session) delete req.session.returnTo;
 
@@ -275,7 +285,7 @@ router.get('/discord/callback',
       sendLoginMessage(req.user.name || req.user.email, req.user.discordId);
 
       if (!req.user.profileCompleted) return res.redirect(`/main/complete-profile.html`);
-      return res.redirect(`/main/main.html`);
+      return res.redirect(`/main/app.html`);
     } catch (error) {
       console.error('Discord token error:', error);
       return res.redirect('/login.html?error=token');

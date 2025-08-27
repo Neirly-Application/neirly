@@ -22,7 +22,7 @@ export default async function loadSettingsSection(content, user) {
 
   content.innerHTML = `
     <div class="case-header">
-      <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link">
+      <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#home'" class="back-arrow-link">
         <i class="fas fa-arrow-left"></i>
       </a>
       <h2><i class="fas fa-cog"></i> Settings</h2>

@@ -1,8 +1,14 @@
 import { stopBGAnimation, stopBubblesAnimation } from '../scripts/premiumBg.js';
 
+let controller; // variabile globale al modulo per tenere l’AbortController
+
 export default async function loadMessagesList(content, user, onChatUserClick) {
   stopBubblesAnimation();
   stopBGAnimation();
+
+  // Annulla eventuale fetch precedente
+  if (controller) controller.abort();
+  controller = new AbortController();
 
   content.classList.remove('chat-box');
   content.classList.add('content');
@@ -32,23 +38,48 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
   `;
 
   try {
-    const res = await fetch('/api/chats/friends-and-chats', { credentials: 'include' });
+    const res = await fetch('/api/chats/friends-and-chats', { 
+      credentials: 'include',
+      signal: controller.signal 
+    });
+
     if (!res.ok) throw new Error('Failed to load friends and chats');
 
     const { friends = [], recentChats = [] } = await res.json();
 
     const chatsContainer = content.querySelector('#chats');
+    if (!chatsContainer) return; // sei già andato via, stop
 
-    chatsContainer.innerHTML = `
-      <div class="recent-chats">
-        ${recentChats.map(c => `
-          <div class="chat-item chat-name" data-userid="${c._id}">
-            <img src="${c.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar"/>
-            <span>${c.name || c.uniquenick || 'Unknown'}</span>
-          </div>
-        `).join('')}
-      </div>
-    `;
+    if (recentChats.length > 0) {
+      chatsContainer.innerHTML = `
+        <div class="recent-chats">
+          ${recentChats.map(c => `
+            <div class="chat-item chat-name" data-userid="${c._id}">
+              <img src="${c.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar"/>
+              <span>${c.name || c.uniquenick || 'Unknown'}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    } else if (friends.length > 0) {
+      chatsContainer.innerHTML = `
+        <p class="info-text">Chat now with your friends!</p>
+        <button id="select-friend-btn" class="cta-btn">Select a friend</button>
+      `;
+      const btn = chatsContainer.querySelector('#select-friend-btn');
+      if (btn) btn.addEventListener('click', () => {
+        window.location.hash = '#friends';
+      });
+    } else {
+      chatsContainer.innerHTML = `
+        <p class="info-text">Start now by adding a friend!</p>
+        <button id="add-friend-btn" class="cta-btn">Add a friend</button>
+      `;
+      const btn = chatsContainer.querySelector('#add-friend-btn');
+      if (btn) btn.addEventListener('click', () => {
+        window.location.hash = '#friend-list';
+      });
+    }
 
     content.querySelectorAll('.chat-item, .friend-item').forEach(el => {
       el.addEventListener('click', () => {
@@ -57,7 +88,13 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
       });
     });
   } catch (error) {
+    if (error.name === 'AbortError') {
+      // fetch annullata, non serve loggare
+      return;
+    }
     console.error(error);
-    content.innerHTML = `<p>Error loading chats: ${error.message}</p>`;
+    if (content.querySelector('#chats')) {
+      content.innerHTML = `<p>Error loading chats: ${error.message}</p>`;
+    }
   }
 }

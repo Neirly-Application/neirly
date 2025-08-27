@@ -61,13 +61,23 @@ img {
   font-family: var(--font-body);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   font-weight: 600;
   letter-spacing: -0.5px;
 }
 
-p, span, li, a, input, button {
+p,
+span,
+li,
+a,
+input,
+button {
   font-family: var(--font-body);
   font-weight: 400;
   line-height: 1.7;

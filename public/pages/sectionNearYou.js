@@ -1,6 +1,6 @@
 import { stopBGAnimation, stopBubblesAnimation } from '../scripts/premiumBg.js';
 
-export default async function loadMapSection(content, user) {
+export default async function loadNearYouSection(content, user) {
   stopBubblesAnimation();
   stopBGAnimation();
 
@@ -27,23 +27,13 @@ export default async function loadMapSection(content, user) {
 
   content.innerHTML = `
     <h2><i class="fas fa-broadcast-tower"></i> Near you</h2>
-    <div class="card map-card" style="position: relative; overflow: hidden;">
-      <div id="preview-map">
-      </div>
-    </div>
-
-    <a href="#map-screen" class="btn map-button">
-      <i class="fas fa-location-arrow"></i> Go to Map
-    </a>
-
-    <div class="fancy-line"></div>
 
     <div class="card profile-card">
       <img src="${avatar}" alt="User Profile" oncontextmenu="return false;">
       <div class="profile-info">
-        <h3>${username}</h3>
-        <p>${nickname}</p>
-        <p>${about}</p>
+        <h3 class="info-name">${username}</h3>
+        <p class="info-nick">${nickname}</p>
+        <p class="info-about">${about}</p>
         <span class="status">Online</span>
       </div>
       <div class="profile-actions">
@@ -60,6 +50,8 @@ export default async function loadMapSection(content, user) {
       </a>
       </div>
     </div>
+    
+    <div class="fancy-line"></div>
   `;
 
   if (navigator.geolocation) {

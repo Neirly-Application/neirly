@@ -159,6 +159,7 @@ a .custom-emoji {
   flex-direction: column;
   gap: 6px;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 
 .nav-links::-webkit-scrollbar {
@@ -194,7 +195,9 @@ a .custom-emoji {
   transition: color 0.3s ease;
 }
 
-.nav-item img.profile-icon {
+.nav-item img.profile-icon,
+.nav-item img.navbar-icon {
+  border: 1px solid var(--secondary);
   border-radius: 50%;
   width: 24px;
   height: 24px;
@@ -202,7 +205,8 @@ a .custom-emoji {
 }
 
 @media (max-width: 768px) {
-  .nav-item img.profile-icon {
+  .nav-item img.profile-icon,
+  .nav-item img.navbar-icon {
     margin: 0;
     padding: 0;
     width: 25px;
@@ -324,6 +328,7 @@ a .custom-emoji {
 
 .content h2 {
   font-size: 20px;
+  margin-top: 10px;
   margin-bottom: 20px;
 }
 
@@ -1267,7 +1272,6 @@ body.subsection-active {
   background: var(--accent);
   border: 1px solid #ddd;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 
@@ -1299,7 +1303,7 @@ body.subsection-active {
   display: flex;
   align-items: center;
   background: var(--friend-box-box-bg-color);
-  border: 1px solid var(--secondary);
+  border: 1px solid var(--friend-box-border-radius-color);
   gap: 15px;
   flex-wrap: wrap;
   padding: 30px;
@@ -1308,12 +1312,14 @@ body.subsection-active {
 .profile-card img:not(.custom-emoji) {
   width: 100px;
   height: 100px;
-  border: 1px solid var(--secondary);
+  border: 1px solid var(--friend-box-border-radius-color);
   border-radius: 50%;
   object-fit: cover;
 }
 
 .profile-info {
+  display: flex;
+  flex-direction: column;
   flex: 1;
 }
 
@@ -1328,7 +1334,12 @@ body.subsection-active {
   color: var(--main-text-color);
 }
 
+.profile-info p.info-about {
+  margin-block: 10px;
+}
+
 .status {
+  max-width: 60px;
   margin-top: 8px;
   display: inline-block;
   padding: 4px 10px;

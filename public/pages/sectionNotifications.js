@@ -21,9 +21,8 @@ export default async function loadNotificationsSection(content, user) {
   content.style.margin = '';
 
   content.innerHTML = `
-    <div class="case-header">
       <h2><i class="fas fa-bell"></i> Notifications</h2>
-    </div>
+      
       <div id="notificationList">Loading notifications...
       </div>
     `;

@@ -11,7 +11,7 @@ function loadSectionCSS(href) {
 }
 
 export default async function loadSettingsAccountSection(content, user) {
-    loadSectionCSS('/styles/UIsettings/account-security.css');
+    loadSectionCSS('/styles/dist/UIsettings/account-security.min.css');
 
     stopBubblesAnimation();
     stopBGAnimation();
@@ -34,7 +34,7 @@ export default async function loadSettingsAccountSection(content, user) {
 
     content.innerHTML = `
       <div class="case-header">
-        <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link">
+        <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#home'" class="back-arrow-link">
           <i class="fas fa-arrow-left"></i>
         </a>
         <h2><i class="fas fa-user-shield"></i> Account & Security</h2>

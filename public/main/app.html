@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Neirly - Home</title>
+  
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    integrity="sha512-..."
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/dist/main/main.min.css" />
+  <link rel="stylesheet" href="../styles/dist/offline.min.css" />
+  <link rel="stylesheet" href="../styles/dist/manageMain.min.css" />
+  <link rel="stylesheet" href="../styles/dist/map.min.css" />
+  <link rel="stylesheet" href="../styles/dist/themes.min.css" />
+  <link rel="stylesheet" href="../styles/dist/chats.min.css" />
+  <link rel="stylesheet" href="../styles/dist/premium.min.css" />
+  <link rel="stylesheet" href="../styles/dist/home.min.css" />
+  <link rel="stylesheet" href="../styles/dist/search.min.css" />
+  <link rel="stylesheet" href="../styles/dist/loading.min.css" />
+  <link rel="stylesheet" href="../styles/dist/notifications.min.css" />
+  <link rel="stylesheet" href="../styles/dist/sectionSettingAPI.min.css" />
+  <link rel="stylesheet" href="../styles/dist/sectionSettingInfo.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/leaflet.min.css" />
+
+  <script src="https://unpkg.com/leaflet/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+  <link rel="icon" type="image/x-icon" sizes="16x16" href="../media/favicon/favicon_16x16.ico">
+  <link rel="icon" type="image/x-icon" sizes="32x32" href="../media/favicon/favicon_32x32.ico">
+  <link rel="icon" type="image/x-icon" sizes="512x512" href="../media/favicon/favicon_512x512.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="../media/favicon/favicon_16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../media/favicon/favicon_32x32.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="../media/favicon/favicon_512x512.png">
+
+</head>
+
+<body>
+  <button class="mobile-toggle" aria-label="Toggle Menu">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <div class="mobile-topbar">
+    <div class="topbar-left">
+      <span class="topbar-title">
+        <img class="main-web-app-logo" src="../media/icons/NeirlyLogo.svg" alt="Neirly Logo">
+      </span>
+    </div>
+    <div class="topbar-menu">
+      <a href="#premium" class="nav-item premium" title="Premium" data-section="premium">
+        <i class="fas fa-crown"></i>
+      </a>
+      <a href="#notifications" class="nav-item" title="Notifications" data-section="notifications">
+        <i class="fas fa-bell">
+          <span class="notification-badge"></span>
+        </i>
+      </a>
+      <a href="#friend-list" class="nav-item" title="Friends" data-section="friend-list">
+        <i class="fas fa-user-friends">
+          <span class="friend-notification-badge"></span>
+        </i>
+      </a>
+      <button class="menu-button" title="Options">
+        <i class="fas fa-ellipsis-v"></i>
+      </button>
+      <div class="menu-dropdown">        
+        <a href="#ceo" class="nav-item" data-section="ceo" id="admin-section" style="display:none;">
+          <i class="fas fa-user-shield"></i> Actions
+        </a>
+        <a href="#profile" data-section="profile" class="nav-item">
+          <i class="fas fa-user"></i> Profile
+        </a>
+        <a href="#settings-devices" data-section="settings-devices" class="nav-item">
+          <i class="fas fa-laptop"></i> Devices
+        </a>
+        <a href="#settings" data-section="settings" class="nav-item">
+          <i class="fas fa-cog"></i> Settings 
+        </a>
+        <a href="#logout" class="nav-item logout-btn" id="logout-btn">
+          <i class="fas fa-sign-out-alt"></i>  Logout
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <nav class="sidebar" id="sidebar">
+    <div class="nav-header">
+      <img class="nav-logo-svg" src="../media/icons/NeirlyLogo.svg" alt="Neirly Logo">
+    </div>
+    
+    <div class="nav-links">
+      <a href="#home" class="nav-item active" title="Home Page" data-section="home">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+      <a href="#near-you" class="nav-item" title="Near You" data-section="near-you">
+        <i class="fas fa-broadcast-tower"></i>
+        <span>Near You</span>
+        </a>
+      </a>
+      <a href="#messages" class="nav-item" title="Private Messages" data-section="messages">
+        <i class="fas fa-comment-alt"></i> 
+        <span>Messagges</span>
+      </a>
+      <a href="#search" class="nav-item" title="Search" data-section="search">
+        <i class="fas fa-search"></i>
+        <span>Search</span>
+      </a>
+      <a href="#notifications" class="nav-item" title="Notifications" data-section="notifications">
+        <i class="fas fa-bell"></i>
+        <span>Notifications</span>
+        <span class="notification-badge"></span>
+      </a>
+      <a href="#friend-list" class="nav-item" title="Friend List" data-section="friend-list">
+        <i class="fas fa-user-friends"></i>
+        <span>Friends</span>
+      </a>
+      <a href="#settings" class="nav-item settings" title="Settings" data-section="settings">
+        <i class="fas fa-cog"></i> 
+        <span>Settings</span>
+      </a>
+    </div>
+
+    <div class="nav-footer">
+      <a href="#profile" class="nav-item" id="nav-profile-loader" title="Profile" data-section="profile">
+        <i class="fas fa-user"></i> 
+        <span>Profile</span>
+      </a>
+      <a href="#premium" class="nav-item premium" title="Premium" data-section="premium">
+        <i class="fas fa-crown"></i>
+        <span>Premium</span>
+      </a>
+      <a href="#logout" class="nav-item logout-btn" title="Logout" id="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> 
+        <span>Logout</span>
+      </a>
+    </div>
+  </nav>
+
+  <nav class="bottom-navbar">
+      <a href="#home" class="nav-item" data-section="home">
+        <i class="fas fa-home"></i>
+      </a>
+      <a href="#near-you" class="nav-item" data-section="near-you">
+        <i class="fas fa-broadcast-tower"></i>
+      </a>
+      <a href="#search" class="nav-item" data-section="search">
+        <i class="fas fa-search"></i>
+      </a>
+      <a href="#messages" class="nav-item" data-section="messages">
+        <i class="fas fa-comment-alt"></i>
+      </a>
+      <a href="#profile" id="nav-profile-loader" class="nav-item" data-section="profile">
+        <i class="fas fa-user"></i>
+      </a>
+  </nav>
+
+  <div id="pull-to-refresh">
+    <div class="spinner"></div>
+  </div>
+
+  <main class="content" id="content"></main>
+
+  <div id="offlineOverlay" style="display:none;">
+    <div class="offline-content">
+      <img src="../media/offline.webp" alt="Offline" oncontextmenu="return false;"/>
+      <h1>No internet connection.</h1>
+      <p>Check your connection and try again.</p>
+    </div>
+  </div>
+
+  <div id="custom-confirm-overlay" class="confirm-overlay" style="display:none;">
+    <div class="confirm-box">
+      <div class="confirm-header">
+        <img src="../media/handstop.webp" alt="Alert Icon" class="confirm-icon" aria-hidden="true" oncontextmenu="return false;">
+        <h2 id="confirm-title">Oop... wait a second...</h2>
+      </div>
+      <p id="confirm-message">Are you sure?</p>
+      <div class="confirm-buttons">
+        <button id="confirm-yes" class="btn-confirm yes">Confirm</button>
+        <button id="confirm-no" class="btn-confirm no">Dismiss</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="custom-toast-container" class="toast-container"></div>
+
+  <script src="https://unpkg.com/leaflet/leaflet.js"></script>
+  <script type="module" src="../scripts/manageMain.js"></script>
+  <script src="../scripts/offline.js"></script>
+  <script type="module" src="../scripts/notification.js"></script>
+  <script src="../scripts/script.js"></script>
+
+  <script>
+  //    function updateBottomNavbar() {
+  //      const navbar = document.querySelector('.bottom-navbar');
+
+  //      if (!navbar) return;
+
+  //      let extraItem = navbar.querySelector('.nav-item.extra');
+
+  //      if (window.innerWidth >= 440) {
+  //        if (!extraItem) {
+  //          const newItem = document.createElement('a');
+  //          newItem.href = '#friend-list';
+  //          newItem.classList.add('nav-item', 'extra');
+  //          newItem.dataset.section = 'friend-list';
+  //          newItem.innerHTML = '<i class="fas fa-user-friends"></i>';
+  //          navbar.appendChild(newItem);
+  //        }
+  //      } else {
+  //        if (extraItem) extraItem.remove();
+  //      }
+  //    }
+
+  //    window.addEventListener('DOMContentLoaded', updateBottomNavbar);
+  //    window.addEventListener('resize', updateBottomNavbar);
+  </script>
+
+  <script>
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    document.addEventListener('keydown', function (event) {
+      if (
+        event.key === 'F12' ||
+        (event.ctrlKey && event.shiftKey && ['I', 'C', 'J'].includes(event.key)) ||
+        (event.ctrlKey && ['U', 'S'].includes(event.key))
+      ) {
+        event.preventDefault();
+      }
+    });
+  </script>
+  </body>
+</html>

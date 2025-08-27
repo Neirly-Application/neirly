@@ -26,7 +26,7 @@ const logSuccess = msg => console.log(`${green}[SUCCESS]${reset} ${msg}`);
  *  Dependency verification & auto-install
  * ------------------------------------------------------------------------- */
 const requiredPackages = [
-  "bcrypt", "cookie-parser", "cors", "discord.js", "dotenv", "express",
+  "bcrypt", "cookie-parser", "cors", "node-cron", "discord.js", "dotenv", "express",
   "express-session", "jsonwebtoken", "leo-profanity", "mongo", "mongoose",
   "multer", "ngrok", "node-fetch", "nodemailer", "passport", "passport-discord",
   "passport-google-oauth20", "passport-local", "ua-parser-js"
@@ -153,6 +153,9 @@ require('./src/config/passport');
 
 logDebug("Starting Discord bot...");
 require('./src/discordBot');
+
+logDebug("Starting cleanup of Incomplete accounts...")
+require('./src/jobs/cron.js');
 
 /* ---------------------------------------------------------------------------
  *  Global middleware

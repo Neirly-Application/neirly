@@ -23,7 +23,7 @@ export default async function loadSettingsDevicesSection(content, user) {
 
   content.innerHTML = `
       <div class="case-header">
-        <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#map'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
+        <a onclick="window.history.length > 1 ? history.back() : window.location.href = '/main.html#home'" class="back-arrow-link"><i class="fas fa-arrow-left"></i></a>
         <h2><i class="fas fa-laptop"></i> Connected Devices</h2>
       </div>
         <p>Here are the devices currently connected to your account.</p>

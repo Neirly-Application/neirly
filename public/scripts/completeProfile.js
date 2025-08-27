@@ -43,7 +43,7 @@ document.getElementById('complete-profile-form').addEventListener('submit', asyn
       const data = await res.json();
 
       if (res.ok) {
-        window.location.href = `/main/main.html`;
+        window.location.href = `/main/app.html`;
       } else {
         errorMsg.textContent = data.message || 'Error while saving.';
       }

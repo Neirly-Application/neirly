@@ -1,7 +1,7 @@
 import loadPremiumSection from '../pages/sectionPremium.js';
 import loadFriendListSection from '../pages/sectionFriendList.js';
 import loadHomeSection from '../pages/sectionHome.js';
-import loadMapSection from '../pages/sectionMap.js';
+import loadNearYouSection from '../pages/sectionNearYou.js';
 import loadMessagesSection from '../pages/sectionMessages.js';
 import loadNotificationsSection from '../pages/sectionNotifications.js';
 import loadProfileSection from '../pages/sectionProfile.js';
@@ -214,8 +214,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         ceo: "Neirly - CEO",
         "friend-list": "Neirly - Friends",
         home: "Neirly - Home",
-        map: "Neirly - Map",
-        "map-screen": "Neirly - Map Screen",
+        "near-you": "Neirly - Near You",
         messages: "Neirly - Messages",
         notifications: "Neirly - Notifications",
         premium: "Neirly - Premium",
@@ -240,7 +239,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       content.innerHTML = '<div class="loading">Loading...</div>';
 
       const disablePull = [
-        "premium", "profile", "map-screen", "friend-list", "settings", "settings-account", "settings-chats", "settings-info", "settings-language", "settings-notifications",
+        "premium", "profile", "friend-list", "settings", "settings-account", "settings-chats", "settings-info", "settings-language", "settings-notifications",
         "settings-privacy", "settings-theme"
       ];
       window.disablePullToRefresh = disablePull.includes(section);
@@ -248,7 +247,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       switch (section) {
         case 'friend-list': await loadFriendListSection(content, user); break;
         case 'home': await loadHomeSection(content, user); break;
-        case 'map': await loadMapSection(content, user); break;
+        case 'near-you': await loadNearYouSection(content, user); break;
         case 'messages': await loadMessagesSection(content, user); break;
         case 'notifications': await loadNotificationsSection(content, user); break;
         case 'premium': await loadPremiumSection(content, user); break;
@@ -322,6 +321,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       document.addEventListener('touchstart', (e) => {
         if (window.disablePullToRefresh) return;
+
+        if (!content.contains(e.target)) return;
+
         if (content.scrollTop <= 0 && !isRefreshing) {
           isTouching = true;
           startY = e.touches[0].clientY;
@@ -330,12 +332,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       document.addEventListener('touchmove', (e) => {
         if (!isTouching || isRefreshing || window.disablePullToRefresh) return;
+
+        if (!content.contains(e.target)) return;
+
         if (content.scrollTop > 0) {
           isTouching = false;
           return;
         }
+
         const moveY = e.touches[0].clientY;
         const distance = moveY - startY;
+
         if (distance > 0) {
           e.preventDefault();
           const translateY = Math.min(distance / 2, refreshThreshold + 30);
@@ -374,7 +381,173 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (err) {
     console.error(err);
     window.location.href = '/login.html';
+  }   
+  
+  const sections = ['home', 'near-you', 'search', 'messages', 'profile'];
+  let touchStartX = 0;
+  let touchEndX = 0;
+  let touchStartY = 0;
+  let touchEndY = 0;
+  let swipeActive = false;
+  let resizeTimeout;
+
+
+  function updateActiveNavItem(section) {
+    document.querySelectorAll('.nav-item').forEach(el => {
+      el.classList.remove('active');
+    });
+    document.querySelectorAll(`.nav-item[data-section="${section}"]`).forEach(el => {
+      el.classList.add('active');
+    });
   }
+
+  function isMobile() {
+    return window.innerWidth <= 768;
+  }
+
+  function getCurrentSectionIndex() {
+    const hash = window.location.hash.replace('#', '');
+    const index = sections.indexOf(hash);
+    return index !== -1 ? index : -1;
+  }
+
+  function handleSwipeNavigation(deltaX) {
+    const currentIndex = getCurrentSectionIndex();
+    if (currentIndex === -1) return;
+
+    const direction = deltaX < 0 ? 1 : -1;
+    const nextIndex = currentIndex + direction;
+
+    if (nextIndex >= 0 && nextIndex < sections.length) {
+      window.location.hash = `#${sections[nextIndex]}`;
+    }
+  }
+
+  function onTouchStart(e) {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }
+
+  function onTouchEnd(e) {
+    touchEndX = e.changedTouches[0].screenX;
+    touchEndY = e.changedTouches[0].screenY;
+
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+
+    if (Math.abs(deltaX) > 70 && Math.abs(deltaY) < 40) {
+      handleSwipeNavigation(deltaX);
+    }
+  }
+
+  function enableSwipe() {
+    if (!swipeActive) {
+      document.addEventListener('touchstart', onTouchStart);
+      document.addEventListener('touchend', onTouchEnd);
+      swipeActive = true;
+    }
+  }
+
+  function disableSwipe() {
+    if (swipeActive) {
+      document.removeEventListener('touchstart', onTouchStart);
+      document.removeEventListener('touchend', onTouchEnd);
+      swipeActive = false;
+    }
+  }
+
+  function checkScreenSize() {
+    if (isMobile()) {
+      enableSwipe();
+    } else {
+      disableSwipe();
+    }
+  }
+
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(checkScreenSize, 150);
+  });
+
+  if (!location.hash) {
+    location.hash = '#home';
+  }
+
+  updateActiveNavItem(location.hash.replace('#', ''));
+  checkScreenSize();
+
+  window.addEventListener('hashchange', () => {
+    const section = location.hash.replace('#', '') || 'home';
+    updateActiveNavItem(section);
+  });
+
+  document.querySelectorAll('.bottom-navbar .nav-item').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const targetHash = link.getAttribute('href');
+      if (targetHash) {
+        location.hash = targetHash;
+      }
+    });
+  });
+
+  document.addEventListener('click', function (e) {
+    const btn = document.querySelector('.menu-button');
+    const dropdown = document.querySelector('.menu-dropdown');
+
+    if (!btn || !dropdown) return;
+
+    const isClickOnButton = btn.contains(e.target);
+    const isClickInsideDropdown = dropdown.contains(e.target);
+
+    if (isClickOnButton) {
+      if (dropdown.classList.contains('show')) {
+        dropdown.classList.remove('show');
+        dropdown.classList.add('hide');
+        setTimeout(() => {
+          if (!dropdown.classList.contains('show')) {
+            dropdown.style.display = 'none';
+          }
+        }, 250);
+      } else {
+        dropdown.style.display = 'flex';
+        requestAnimationFrame(() => {
+          dropdown.classList.remove('hide');
+          dropdown.classList.add('show');
+        });
+      }
+    } else if (!isClickInsideDropdown) {
+      if (dropdown.classList.contains('show')) {
+        dropdown.classList.remove('show');
+        dropdown.classList.add('hide');
+        setTimeout(() => {
+          if (!dropdown.classList.contains('show')) {
+            dropdown.style.display = 'none';
+          }
+        }, 250);
+      }
+    }
+  });
+
+  document.querySelectorAll('.menu-dropdown .nav-item').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetHash = link.getAttribute('href');
+      if (targetHash) {
+        location.hash = targetHash;
+      }
+
+      const dropdown = document.querySelector('.menu-dropdown');
+      if (dropdown.classList.contains('show')) {
+        dropdown.classList.remove('show');
+        dropdown.classList.add('hide');
+        setTimeout(() => {
+          if (!dropdown.classList.contains('show')) {
+            dropdown.style.display = 'none';
+          }
+        }, 250);
+      }
+    });
+  });
 });
 
 
