@@ -100,7 +100,7 @@ a .custom-emoji {
 }
 
 .sidebar {
-  width: 230px;
+  width: 220px;
   height: 100vh;
   background-color: var(--primary);
   color: var(--accent);

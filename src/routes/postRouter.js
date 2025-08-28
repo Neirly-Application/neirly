@@ -110,18 +110,21 @@ router.delete('/:id', async (req, res) => {
 });
 
 // ========================
-// Get posts (with pagination)
+//       Get posts
 // ========================
 router.get('/', async (req, res) => {
   try {
     const userId = req.user._id.toString();
-
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
+    const skip = (page-1)*limit;
 
-    const posts = await Post.find()
-      .populate('author', 'name profilePictureUrl')
+    const User = require('../models/User');
+    const user = await User.findById(userId).select('friends').lean();
+    const friendIds = user?.friends?.map(f => f.toString()) || [];
+
+    const posts = await Post.find({ author: { $in: friendIds } })
+      .populate('author', 'name uniquenick profilePictureUrl')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit + 1)
@@ -132,17 +135,42 @@ router.get('/', async (req, res) => {
 
     posts.forEach(post => {
       if (typeof post.media === 'undefined') post.media = null;
-      const likes = post.likes || [];
-      post.likedByUser = likes.map(String).includes(userId);
+      post.likedByUser = (post.likes || []).map(String).includes(userId);
     });
 
-    res.json({
-      posts,
-      hasMore
-    });
+    res.json({ posts, hasMore });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error while fetching posts.' });
+  }
+});
+
+router.get('/me', async (req, res) => {
+  try {
+    const userId = req.user._id.toString();
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page-1)*limit;
+
+    const posts = await Post.find({ author: userId })
+      .populate('author', 'name uniquenick profilePictureUrl')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit + 1)
+      .lean();
+
+    const hasMore = posts.length > limit;
+    if (hasMore) posts.pop();
+
+    posts.forEach(post => {
+      if (typeof post.media === 'undefined') post.media = null;
+      post.likedByUser = (post.likes || []).map(String).includes(userId);
+    });
+
+    res.json({ posts, hasMore });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error while fetching user posts.' });
   }
 });
 

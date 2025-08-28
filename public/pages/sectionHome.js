@@ -41,23 +41,31 @@ export default async function loadHomeSection(content, user) {
       <div class="container-actions">
         <a class="cta-button-actions" title="Create a new post"><i class="fas fa-pen-to-square"></i></a>
         <div class="divider"></div>
-        <a class="cta-button-actions" title="Posted"><i class="fa-solid fa-image"></i></a>
-        <a class="cta-button-actions" title="Liked"><i class="fa-solid fa-heart"></i></a>
-        <a class="cta-button-actions" title="Saved"><i class="fa-solid fa-bookmark"></i></a>
-        <a class="cta-button-actions" title="Favorites"><i class="fa-solid fa-star"></i></a>
+        <a id="feed" class="cta-button-actions" title="Feed"><i class="fas fa-home"></i></a>
+        <a id="posted" class="cta-button-actions" title="Posted"><i class="fa-solid fa-image"></i></a>
+        <a id="liked" class="cta-button-actions" title="Liked"><i class="fa-solid fa-heart"></i></a>
+        <a id="saved" class="cta-button-actions" title="Saved"><i class="fa-solid fa-bookmark"></i></a>
+        <a id="favorites" class="cta-button-actions" title="Favorites"><i class="fa-solid fa-star"></i></a>
       </div>
     </div>
     
     <div class="fancy-line"></div>
 
     <div class="home-posts" id="loadPosts">
-      Posts are loading...
+      <p style="text-align:center;opacity:0.7;">Posts are loading...</p>
     </div>
   `;
 
+  // =====================
+  //    FORM ELEMENTS
+  // =====================
   const createPostButton = content.querySelector('.cta-button-actions[title="Create a new post"]');
-  const likedButton = content.querySelector('.cta-button-actions[title="Liked"]');
-  const postsContainer = content.querySelector('#loadPosts');
+  const homeButton       = content.querySelector('#feed');
+  const likedButton      = content.querySelector('#liked');
+  const postedButton     = content.querySelector('#posted');
+  const savedButton      = content.querySelector('#saved');
+  const favoritesButton  = content.querySelector('#favorites');
+  const postsContainer   = content.querySelector('#loadPosts');
 
   const overlay = document.createElement('div');
   overlay.classList.add('create-post-overlay');
@@ -71,183 +79,71 @@ export default async function loadHomeSection(content, user) {
       <input type="text" id="postTitle" placeholder="Give me a Title 💖" />
       <textarea id="postContent" placeholder="What's on your mind?..."></textarea>
       <input type="file" id="postMedia" accept="image/*,video/*,.gif" hidden />
-      <label for="postMedia" class="upload-btn">
+      <label class="upload-btn" for="postMedia">
         <i class="fas fa-upload"></i> Choose Media
       </label>
       <span id="fileName" class="file-name">No file chosen</span>
       <button id="submitPost">Post</button>
     </form>
   `;
+  
+  const fileInput = postForm.querySelector('#postMedia');
+  const fileName = postForm.querySelector('#fileName');
+  const submitButton = postForm.querySelector('#submitPost');
+
+  fileInput.addEventListener('change', () => {
+    fileName.textContent = fileInput.files[0]?.name || 'No file chosen';
+  });
 
   overlay.appendChild(postForm);
   document.body.appendChild(overlay);
 
 // =====================
-//    FORM ELEMENTS
-// =====================
-const fileInput = postForm.querySelector('#postMedia');
-const fileName = postForm.querySelector('#fileName');
-const submitButton = postForm.querySelector('#submitPost');
-
-const editButton = document.createElement('button');
-editButton.textContent = 'Edit Image';
-editButton.style.display = 'none';
-editButton.type = 'button';
-
-submitButton.parentNode.insertBefore(editButton, submitButton);
-
-fileInput.addEventListener('change', () => {
-  if (fileInput.files.length > 0) {
-    fileName.textContent = fileInput.files[0].name;
-    editButton.style.display = 'block';
-  } else {
-    fileName.textContent = 'No file chosen';
-    editButton.style.display = 'none';
-  }
-});
-
-editButton.addEventListener('click', () => {
-  const file = fileInput.files[0];
-  if (!file) return;
-
-  openImageEditor(file, (editedBlob) => {
-    const dataTransfer = new DataTransfer();
-    dataTransfer.items.add(new File([editedBlob], file.name, { type: file.type }));
-    fileInput.files = dataTransfer.files;
-    showToast('Image edited! Ready to post.', 'info');
-  });
-});
-
-// =====================
-//    IMAGES EDITOR
-// =====================
-function openImageEditor(file, callback) {
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const img = document.createElement('img');
-    img.src = e.target.result;
-    img.style.maxWidth = '80vw';
-    img.style.maxHeight = '80vh';
-    img.style.border = '1px solid #ccc';
-    img.style.marginBottom = '10px';
-
-    const editorOverlay = document.createElement('div');
-    editorOverlay.style.min.cssText = `
-      position: fixed; top:0; left:0; width:100vw; height:100vh;
-      background: rgba(0,0,0,0.85); display:flex; justify-content:center; align-items:center;
-      z-index: 9999; flex-direction: column; gap: 10px;
-    `;
-    
-    // DEFAULT CHECKS
-    const rotateBtn = document.createElement('button');
-    rotateBtn.textContent = 'Rotate 90°';
-    const saveBtn = document.createElement('button');
-    saveBtn.textContent = 'Save';
-    const cancelBtn = document.createElement('button');
-    cancelBtn.textContent = 'Cancel';
-
-    editorOverlay.appendChild(img);
-    editorOverlay.appendChild(rotateBtn);
-    editorOverlay.appendChild(saveBtn);
-    editorOverlay.appendChild(cancelBtn);
-    document.body.appendChild(editorOverlay);
-
-    // ROTATION
-    let rotation = 0;
-    rotateBtn.onclick = () => {
-      rotation += 90;
-      img.style.transform = `rotate(${rotation}deg)`;
-    };
-
-    // SAVE
-    saveBtn.onclick = () => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-
-      // If rotation is 90 or 270, swap width/height
-      const angle = rotation % 360;
-      if (angle === 90 || angle === 270) {
-        canvas.width = img.naturalHeight;
-        canvas.height = img.naturalWidth;
-      } else {
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-      }
-
-      ctx.translate(canvas.width/2, canvas.height/2);
-      ctx.rotate(rotation * Math.PI / 180);
-      ctx.drawImage(img, -img.naturalWidth/2, -img.naturalHeight/2);
-
-      canvas.toBlob((blob) => {
-        callback(blob);
-        document.body.removeChild(editorOverlay);
-      }, file.type);
-    };
-
-    cancelBtn.onclick = () => {
-      document.body.removeChild(editorOverlay);
-    };
-  };
-  reader.readAsDataURL(file);
-}
-
-// =====================
 //      POST SUBMIT
 // =====================
-submitButton.addEventListener('click', async (e) => {
-  e.preventDefault();
+  submitButton.addEventListener('click', async (e) => {
+    e.preventDefault();
 
-  const title = postForm.querySelector('#postTitle').value.trim();
-  const contentText = postForm.querySelector('#postContent').value.trim();
-  const file = fileInput.files[0];
+    const title = postForm.querySelector('#postTitle').value.trim();
+    const contentText = postForm.querySelector('#postContent').value.trim();
+    const file = fileInput.files[0];
 
-  if (!title || !contentText) return showToast('Title and content are required!', 'error');
+    if (!title || !contentText) return showToast('Title and content are required!', 'error');
 
-  if (file && submitButton.textContent === 'Next') {
-    openImageEditor(file, (editedBlob) => {
-      const dataTransfer = new DataTransfer();
-      dataTransfer.items.add(new File([editedBlob], file.name, { type: file.type }));
-      fileInput.files = dataTransfer.files;
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', contentText);
+    if (file) formData.append('media', file);
+
+    try {
+      const res = await fetch('/api/posts', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      });
+      if (!res.ok) throw new Error('Failed to create post');
+
+      const newPost = await res.json();
+      newPost.author = {
+        _id: user.id,
+        name: user.name,
+        uniquenick: user.uniquenick,
+        profilePictureUrl: user.profilePictureUrl
+      };
+      addPostToDOM(newPost, { newPost: true });
+
+      overlay.classList.add('hidden');
+      postForm.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+      fileInput.value = '';
+      fileName.textContent = 'No file chosen';
       submitButton.textContent = 'Post';
-      showToast('Image edited! Now click Post to publish.', 'info');
-    });
-    return;
-  }
+      showToast('Post created!', 'success');
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  });
 
-  const formData = new FormData();
-  formData.append('title', title);
-  formData.append('content', contentText);
-  if (file) formData.append('media', file);
-
-  try {
-    const res = await fetch('/api/posts', {
-      method: 'POST',
-      body: formData,
-      credentials: 'include'
-    });
-    if (!res.ok) throw new Error('Failed to create post');
-
-    const newPost = await res.json();
-    newPost.author = {
-      _id: user.id,
-      name: user.name,
-      profilePictureUrl: user.profilePictureUrl
-    };
-    addPostToDOM(newPost);
-
-    overlay.classList.add('hidden');
-    postForm.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
-    fileInput.value = '';
-    fileName.textContent = 'No file chosen';
-    submitButton.textContent = 'Post';
-    showToast('Post created!', 'success');
-  } catch (err) {
-    showToast(err.message, 'error');
-  }
-});
-
-
-createPostButton.addEventListener('click', () => {
+  createPostButton.addEventListener('click', () => {
     overlay.classList.remove('hidden');
     postForm.querySelector('#postTitle').focus();
   });
@@ -268,12 +164,13 @@ createPostButton.addEventListener('click', () => {
     });
   });
 
-  function addPostToDOM(post) {
+  function addPostToDOM(post, { newPost: isNew = false } = {}) {
     const newPost = document.createElement('div');
     newPost.classList.add('home-post-card');
     newPost.dataset.id = post._id;
     const author = post.author;
     const authorName = author?.name || "User";
+    const authorNick = author?.uniquenick || "user";
     const authorPic = author?.profilePictureUrl || "../media/user.webp";
 
     let mediaHTML = '';
@@ -287,11 +184,8 @@ createPostButton.addEventListener('click', () => {
         mediaHTML = `
           <div class="custom-video-wrapper">
             <video id="${videoId}" src="${mediaPath}" preload="metadata"></video>
-            <div class="video-controls">
-              <button class="play-pause"><i class="fas fa-play"></i></button>
-              <input type="range" class="seek-bar" value="0" min="0" max="100">
-              <button class="mute"><i class="fas fa-volume-mute"></i></button>
-              <input type="range" class="volume-bar" min="0" max="1" step="0.01" value="1">
+            <div class="seek-bar">
+              <div class="seek-bar-progress"></div>
             </div>
           </div>
         `;
@@ -302,15 +196,15 @@ createPostButton.addEventListener('click', () => {
 
     newPost.innerHTML = `
       <div class="home-post-card-content">
-      <div class="post-menu">
-        <button class="post-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
-        <div class="post-menu-dropdown" style="display:none"></div>
-      </div>
-      <div class="post-author">
-        <img class="post-author-pic" src="${authorPic}" alt="${authorName}" />
-        <span class="post-author-name">${authorName}</span>
-      </div>
-      <h2>${post.title}</h2>
+        <div class="post-menu">
+          <button class="post-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+          <div class="post-menu-dropdown" style="display:none"></div>
+        </div>
+        <div class="post-author">
+          <a href="#${authorNick}"><img class="post-author-pic" src="${authorPic}" alt="${authorName}" />
+          <span class="post-author-name">${authorName}</span></a>
+        </div>
+        <h2>${post.title}</h2>
         <p>${post.content.replace(/\n/g, "<br>")}</p>
         ${mediaHTML}
       </div>
@@ -336,13 +230,10 @@ createPostButton.addEventListener('click', () => {
       e.stopPropagation();
       menuDropdown.style.display = menuDropdown.style.display === 'block' ? 'none' : 'block';
     };
-
-    document.addEventListener('click', () => {
-      menuDropdown.style.display = 'none';
-    });
+    document.addEventListener('click', () => { menuDropdown.style.display = 'none'; });
 
     if (author._id === user.id) {
-      menuDropdown.innerHTML = `<button class="delete-post">Delete post</button>`;
+      menuDropdown.innerHTML = `<button class="delete-post"><i class="fas fa-trash"></i> Delete</button>`;
       menuDropdown.querySelector('.delete-post').onclick = async () => {
         if (confirm('Are you sure you want to delete this post?')) {
           try {
@@ -356,7 +247,7 @@ createPostButton.addEventListener('click', () => {
         }
       };
     } else {
-      menuDropdown.innerHTML = `<button class="report-post">Report</button>`;
+      menuDropdown.innerHTML = `<button class="report-post"><i class="fas fa-flag"></i> Report</button>`;
       menuDropdown.querySelector('.report-post').onclick = () => {
         showToast('Post reported! (funzionalità da implementare)', 'info');
         menuDropdown.style.display = 'none';
@@ -365,57 +256,30 @@ createPostButton.addEventListener('click', () => {
 
     if (post.media?.type === 'video') {
       const video = newPost.querySelector('video');
-      const playPause = newPost.querySelector('.play-pause');
-      const seekBar = newPost.querySelector('.seek-bar');
-      const mute = newPost.querySelector('.mute');
-      const volumeBar = newPost.querySelector('.volume-bar');
+      const progress = newPost.querySelector('.seek-bar-progress');
 
-      playPause.onclick = () => {
-        if (video.paused) {
-          video.play();
-          playPause.innerHTML = '<i class="fas fa-pause"></i>';
-        } else {
-          video.pause();
-          playPause.innerHTML = '<i class="fas fa-play"></i>';
-        }
-      };
+      function updateProgress() {
+        const percent = (video.currentTime / video.duration) * 100 || 0;
+        progress.style.width = percent + '%';
+        requestAnimationFrame(updateProgress);
+      }
 
-      video.ontimeupdate = () => {
-        seekBar.value = (video.currentTime / video.duration) * 100 || 0;
-      };
-
-      seekBar.oninput = () => {
-        video.currentTime = (seekBar.value / 100) * video.duration;
-      };
-
-      mute.onclick = () => {
-        video.muted = !video.muted;
-        mute.innerHTML = video.muted ? '<i class="fas fa-volume-up"></i>' : '<i class="fas fa-volume-mute"></i>';
-      };
-
-      volumeBar.oninput = () => {
-        video.volume = volumeBar.value;
-      };
+      video.addEventListener('play', () => { requestAnimationFrame(updateProgress); });
+      video.addEventListener('click', () => { if (video.paused) video.play(); else video.pause(); });
     }
 
     const likeBtn = newPost.querySelector('.like');
     likeBtn.addEventListener('click', async (e) => {
       e.preventDefault();
       try {
-        const res = await fetch(`/api/posts/${post._id}/like`, {
-          method: 'POST',
-          credentials: 'include'
-        });
+        const res = await fetch(`/api/posts/${post._id}/like`, { method: 'POST', credentials: 'include' });
         if (!res.ok) throw new Error('Failed to like post');
         const data = await res.json();
-        console.log(data);
         const icon = likeBtn.querySelector('i');
         icon.classList.toggle('fas', data.liked);
         icon.classList.toggle('far', !data.liked);
         showToast(data.liked ? 'You liked this post!' : 'Like removed.', 'info');
-      } catch (err) {
-        showToast(err.message, 'error');
-      }
+      } catch (err) { showToast(err.message, 'error'); }
     });
 
     const shareBtn = newPost.querySelector('.share');
@@ -444,13 +308,15 @@ createPostButton.addEventListener('click', () => {
           });
           if (!res.ok) throw new Error('Failed to add comment');
           showToast('Comment added!', 'success');
-        } catch (err) {
-          showToast(err.message, 'error');
-        }
+        } catch (err) { showToast(err.message, 'error'); }
       });
     });
 
-    postsContainer.appendChild(newPost);
+    if (isNew) {
+      postsContainer.prepend(newPost);
+    } else {
+      postsContainer.appendChild(newPost);
+    }
   }
 
   async function loadPosts() {
@@ -460,10 +326,14 @@ createPostButton.addEventListener('click', () => {
     try {
       const res = await fetch(`/api/posts?page=${currentPage}&limit=5`, { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to load posts');
+
       const data = await res.json();
       const posts = Array.isArray(data) ? data : data.posts || [];
 
       if (currentPage === 1) postsContainer.innerHTML = '';
+      if (posts.length === 0 && currentPage === 1) {
+        postsContainer.innerHTML = '<div style="text-align:center;opacity:0.7;">No posts from friends.</div>';
+      }
 
       posts.forEach(addPostToDOM);
 
@@ -473,6 +343,25 @@ createPostButton.addEventListener('click', () => {
       showToast(err.message, 'error');
     } finally {
       loading = false;
+    }
+  }
+
+  async function loadFeed() {
+    try {
+      const res = await fetch('/api/posts?page=1&limit=50', { credentials: 'include' });
+      if (!res.ok) throw new Error('Failed to load posts');
+      const data = await res.json();
+      const posts = Array.isArray(data) ? data : data.posts || [];
+
+      postsContainer.innerHTML = '';
+      if (posts.length === 0) {
+        postsContainer.innerHTML = '<div style="text-align:center;opacity:0.7;">No posts from friends.</div>';
+        return;
+      }
+
+      posts.forEach(addPostToDOM);
+    } catch (err) {
+      showToast(err.message, 'error');
     }
   }
 
@@ -495,6 +384,25 @@ createPostButton.addEventListener('click', () => {
     }
   }
 
+  async function loadUserPosts() {
+    try {
+      const res = await fetch('/api/posts/me?page=1&limit=50', { credentials: 'include' });
+      if (!res.ok) throw new Error('Failed to load posts');
+      const data = await res.json();
+      const posts = data.posts || [];
+      postsContainer.innerHTML = '';
+
+      if (posts.length === 0) {
+        postsContainer.innerHTML = '<div style="text-align:center;opacity:0.7;">You haven\'t posted anything yet.</div>';
+        return;
+      }
+
+      posts.forEach(addPostToDOM);
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  }
+
   loadPosts();
 
   window.addEventListener('scroll', () => {
@@ -503,14 +411,19 @@ createPostButton.addEventListener('click', () => {
     }
   });
 
-  fileInput.addEventListener('change', () => {
-    fileName.textContent = fileInput.files.length > 0
-      ? fileInput.files[0].name
-      : 'No file chosen';
+  homeButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    loadFeed();
   });
 
   likedButton.addEventListener('click', (e) => {
     e.preventDefault();
     loadLikedPosts();
   });
+
+  postedButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    loadUserPosts();
+  });
+
 }

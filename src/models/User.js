@@ -3,6 +3,12 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
+  phone: {
+    type: String,
+    sparse: true,
+    unique: true,
+    match: [/^\+?[0-9]{7,15}$/, "Invalid phone number"]
+  },
   name: { type: String },
   uniquenick: {
     type: String,
@@ -80,7 +86,8 @@ const userSchema = new mongoose.Schema({
   acceptedTerms: { type: Boolean,
                     required: function () {
                         return this.profileCompleted;
-                    }
+                    },
+                    default: true,
                   },
   homeSettings: {
     address: {

@@ -2,6 +2,8 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const DiscordStrategy = require('passport-discord').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
+
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
@@ -184,5 +186,68 @@ passport.use(new DiscordStrategy({
     return done(err);
   }
 }));
+
+// ================= FACEBOOK STRATEGY =================
+/*passport.use(new FacebookStrategy({
+  clientID: process.env.FACEBOOK_CLIENT_ID,
+  clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+  callbackURL: '/api/auth/facebook/callback',
+  profileFields: ['id', 'emails', 'displayName', 'photos'] // Importante per avere email e nome
+}, async (accessToken, refreshToken, profile, done) => {
+  try {
+    const email = profile.emails?.[0]?.value;
+
+    if (!email) {
+      return done(null, false, { message: 'Email not available by Facebook.' });
+    }
+
+    let user = await User.findOne({ email });
+
+    if (user) {
+      if (!user.facebookId) user.facebookId = profile.id;
+      if (!user.provider) user.provider = 'facebook';
+
+      if (!user.profilePictureUrl && profile.photos?.[0]?.value) {
+        user.profilePictureUrl = profile.photos[0].value;
+      }
+
+      await user.save();
+      return done(null, user);
+    }
+
+    const baseNick = profile.displayName || 'user';
+    const uniquenick = await generateUniqueNick(baseNick);
+
+    const newUser = await User.create({
+      email,
+      name: profile.displayName || 'User',
+      oauthPasswordChanged: false,
+      uniquenick,
+      googleId: null,
+      discordId: null,
+      facebookId: profile.id,
+      passwordHash: '',
+      provider: 'facebook',
+      profileCompleted: true,
+      acceptedTerms: true,
+      join_date: new Date(),
+      roles: ['user'],
+      banned: false,
+      forceLogout: false,
+      about_me: "👋 Hello there! I'm a Neirly user!",
+      profilePictureUrl: profile.photos?.[0]?.value || '/media/user.webp'
+    });
+
+    await Notification.create({
+      userId: newUser._id,
+      message: `Welcome ${newUser.name || newUser.email}!`,
+      imageUrl: '../media/notification.webp'
+    });
+
+    return done(null, newUser);
+  } catch (err) {
+    return done(err);
+  }
+}));*/
 
 module.exports = passport;

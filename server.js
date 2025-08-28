@@ -16,7 +16,6 @@ const DEBUG = true;
 const DEBUG_VERBOSE = false;
 
 const logDebug = msg => DEBUG && console.log(`${red}[DEBUG]${reset} ${msg}`);
-const logVerbose = msg => DEBUG_VERBOSE && console.log(`${red}[DEBUG]${reset} ${msg}`);
 const logWarn = msg => console.warn(`${yellow}[WARN]${reset} ${msg}`);
 const logError = msg => console.error(`${brightRed}[ERROR]${reset} ${msg}`);
 const logInfo = msg => console.log(`${blue}[INFO]${reset} ${msg}`);
@@ -29,7 +28,7 @@ const requiredPackages = [
   "bcrypt", "cookie-parser", "cors", "node-cron", "discord.js", "dotenv", "express",
   "express-session", "jsonwebtoken", "leo-profanity", "mongo", "mongoose",
   "multer", "ngrok", "node-fetch", "nodemailer", "passport", "passport-discord",
-  "passport-google-oauth20", "passport-local", "ua-parser-js"
+  "passport-google-oauth20", "passport-facebook", "passport-local", "ua-parser-js"
 ];
 
 const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json')));

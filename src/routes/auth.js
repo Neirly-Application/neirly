@@ -293,4 +293,40 @@ router.get('/discord/callback',
   }
 );
 
+// ================= FACEBOOK OAUTH =================
+//router.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+
+/*router.get('/facebook/callback',
+  passport.authenticate('facebook', { session: false, failureRedirect: '/login.html?error=facebook' }),
+  async (req, res) => {
+    try {
+      if (!req.user.passwordHash) {
+        req.user.passwordHash = await bcrypt.hash(OAUTH_SECRET, 10);
+        req.user.oauthPasswordChanged = false;
+        await req.user.save();
+      }
+
+      const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000
+      });
+
+      await ActivityLog.create({
+        userId: req.user._id,
+        type: 'login',
+        metadata: { provider: 'facebook', email: req.user.email }
+      });
+
+      if (!req.user.profileCompleted) return res.redirect(`/main/complete-profile.html`);
+      return res.redirect(`/main/app.html`);
+    } catch (error) {
+      console.error('Facebook token error:', error);
+      return res.redirect('/login.html?error=token');
+    }
+  }
+);*/
+
 module.exports = router;

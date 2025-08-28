@@ -45,17 +45,20 @@ export default async function loadSettingsAccountSection(content, user) {
 
           <div class="form-group">
             <label for="email"><i class="fas fa-envelope"></i> Email address</label>
-            <input type="email" id="email" name="email" value="${user?.email || ''}">
+            <input type="email" id="email" name="email" value="${user?.email || ''}" disabled>
           </div>
-
+          <button>Change Email</button>
+          
           <div class="form-group">
             <label for="username"><i class="fas fa-birthday-cake"></i> Birthday</label>
             <input type="date" id="birthday" name="birthday" value="${user.birthdate ? user.birthdate.split('T')[0] : ''}">
           </div>
 
           <div class="form-group twofa">
+              <a id="account-privacy"><i class="fas fa-user-secret"></i> Account privacy</a>
               <a id="change-password-btn"><i class="fas fa-lock"></i> Change Password</a>
               <a id="twofa-btn"><i class="fas fa-mobile-alt"></i> Two-factor Authentication (2FA)</a>
+              <a id="change-password-btn"><i class="fas fa-sms"></i> Setup SMS verification</a>
               <a id="passkey-btn"><i class="fas fa-key"></i> Setup a Passkey</a>
               <a id="delete-account-btn" style="color: var(--danger-bg-color-hover);"><i class="fas fa-trash"></i> Delete my Account</a>
           </div>

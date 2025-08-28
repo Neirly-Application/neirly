@@ -64,7 +64,7 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
     } else if (friends.length > 0) {
       chatsContainer.innerHTML = `
         <p class="info-text">Chat now with your friends!</p>
-        <button id="select-friend-btn" class="cta-btn">Select a friend</button>
+        <button id="select-friend-btn" class="cta-button">Select a friend</button>
       `;
       const btn = chatsContainer.querySelector('#select-friend-btn');
       if (btn) btn.addEventListener('click', () => {
@@ -73,7 +73,7 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
     } else {
       chatsContainer.innerHTML = `
         <p class="info-text">Start now by adding a friend!</p>
-        <button id="add-friend-btn" class="cta-btn">Add a friend</button>
+        <button id="add-friend-btn" class="cta-button">Add a friend</button>
       `;
       const btn = chatsContainer.querySelector('#add-friend-btn');
       if (btn) btn.addEventListener('click', () => {
