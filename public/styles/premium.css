@@ -81,7 +81,7 @@ img {
   color: var(--premium-color-text-li);
 }
 
-button {
+.pricing-card button {
   background: var(--premium-color-button-bg);
   color: var(--premium-color-button-text);
   border: none;
@@ -92,7 +92,7 @@ button {
   cursor: pointer;
 }
 
-button:focus-visible {
+.pricing-card button:focus-visible {
   outline: 2px solid var(--premium-color-button-bg);
   outline-offset: 3px;
 }

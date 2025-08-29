@@ -18,6 +18,7 @@ import loadSettingsLanguageSection from '../pages/sectionSettingsLanguage.js';
 import loadSettingsNotificationsSection from '../pages/sectionSettingsNotifications.js';
 import loadSettingsPrivacySection from '../pages/sectionSettingsPrivacy.js';
 import loadSettingsThemeSection from '../pages/sectionSettingsTheme.js';
+import loadUserProfile from '../pages/sectionUserProfile.js';
 import loadDefaultSection from '../pages/sectionDefault.js';
 
 
@@ -442,16 +443,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function enableSwipe() {
     if (!swipeActive) {
-      document.addEventListener('touchstart', onTouchStart);
-      document.addEventListener('touchend', onTouchEnd);
+      const navbar = document.querySelector('.bottom-navbar');
+      if (!navbar) return;
+
+      navbar.addEventListener('touchstart', onTouchStart);
+      navbar.addEventListener('touchend', onTouchEnd);
       swipeActive = true;
     }
   }
 
   function disableSwipe() {
     if (swipeActive) {
-      document.removeEventListener('touchstart', onTouchStart);
-      document.removeEventListener('touchend', onTouchEnd);
+      const navbar = document.querySelector('.bottom-navbar');
+      if (!navbar) return;
+
+      navbar.removeEventListener('touchstart', onTouchStart);
+      navbar.removeEventListener('touchend', onTouchEnd);
       swipeActive = false;
     }
   }

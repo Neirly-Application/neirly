@@ -165,7 +165,7 @@ form {
   height: 50px;
   border-radius: 10px;
   font-size: 1.25rem;
-  font-weight: 500;
+  font-weight: bold;
   background: var(--primary);
   color: var(--accent);
   border: 2px solid var(--secondary);
@@ -180,7 +180,7 @@ form {
   height: 50px;
   border-radius: 10px;
   font-size: 1.25rem;
-  font-weight: 500;
+  font-weight: bold;
   background: var(--secondary);
   color: var(--primary);
   border: 2px solid var(--main-bg);
@@ -190,7 +190,6 @@ form {
 
 .social-icons .social-email:hover {
   transform: translateY(-3px);
-  font-weight: 500;
   background: var(--primary);
   border: 2px solid var(--secondary);
   color: var(--secondary);
@@ -198,7 +197,6 @@ form {
 
 .social-icons .social:hover {
   transform: translateY(-3px);
-  font-weight: 500;
   background: var(--secondary);
   border: 2px solid var(--main-bg);
   color: var(--primary);
@@ -335,11 +333,19 @@ form {
 }
 
 #register-button {
+  color: var(--accent);
   margin-top: 5px;
+}
+#register-button:hover {
+  color: var(--primary);
 }
 
 #login-button {
+  color: var(--accent);
   margin-top: 5px;
+}
+#login-button:hover {
+  color: var(--primary);
 }
 
 @keyframes fadeIn {

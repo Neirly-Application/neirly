@@ -33,19 +33,19 @@
                 <form id="login-form">
                     <div class="social-login" autocomplete="off" novalidate>
                         <div class="social-icons">
-                                <a href="/api/auth/google" class="social google" title="Login with Google">
+                                <a href="/api/auth/google" class="social google social-rem" title="Login with Google">
                                     <img src="./media/icons/google.svg" alt="Google" class="icon"> Google
                                 </a>
-                                <a href="/api/auth/facebook" class="social facebook" title="Login with Facebook">
+                                <a href="/api/auth/facebook" class="social facebook social-rem" title="Login with Facebook">
                                     <img src="./media/icons/facebook.svg" alt="Facebook" class="icon"> Facebook
                                 </a>
-                                <a href="/api/auth/twitter" class="social twitter" title="Login with Twitter">
-                                    <img src="./media/icons/twitter.svg" alt="Twitter" class="icon"> Twitter
+                                <a href="/api/auth/twitter" class="social twitter social-rem" title="Login with Twitter (X)">
+                                    <img src="./media/icons/twitter.svg" alt="Twitter" class="icon"> Twitter (X)
                                 </a>
-                                <a href="/api/auth/discord" class="social discord" title="Login with Discord">
+                                <a href="/api/auth/discord" class="social discord social-rem" title="Login with Discord">
                                     <img src="./media/icons/discord.svg" alt="Discord" class="icon"> Discord
                                 </a>
-                            <div class="divider">
+                            <div class="divider social-rem">
                                 <span>or</span>
                             </div>
                             <a href="#" class="social-email" title="Login with Email" id="email-toggle">
@@ -83,20 +83,27 @@
     <script type="module" src="./scripts/login.js"></script>
 
     <script>
-        const emailToggle = document.getElementById('email-toggle');
-        const emailForm = document.getElementById('email-login-form');
+        document.getElementById('email-toggle').addEventListener('click', (e) => {
+            e.preventDefault();
 
-        emailToggle.addEventListener('click', (e) => {
-        e.preventDefault();
-        emailForm.classList.toggle('hidden');
+            const form = document.getElementById('email-login-form');
+            const socials = document.querySelectorAll('.social-rem');
+            const emailToggle = document.getElementById('email-toggle');
+
+            const isActive = !form.classList.contains('hidden');
+
+            form.classList.toggle('hidden');
+
+            socials.forEach(el => {
+                if (!isActive) {
+                    el.classList.add('hidden');
+                    emailToggle.innerHTML = '<i class="fas fa-arrow-left"></i> More Options';
+                } else {
+                    el.classList.remove('hidden');
+                    emailToggle.innerHTML = '<i class="fas fa-envelope"></i> Email';
+                }
+            });
         });
-    </script>
-
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('error') === 'discord-email-in-use') {
-            alert("Questa email è già stata registrata tramite un altro provider. Accedi con Google o Email.");
-        }
     </script>
 
     <script>

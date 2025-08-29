@@ -86,7 +86,6 @@ export default async function loadFriendListSection(content, user) {
   const incomingRequests = document.getElementById('incomingRequests');
   const outgoingRequests = document.getElementById('outgoingRequests');
 
-  // Helper function to update badge and text
   function updateFriendNotificationBadge(count) {
     const reqBadge = document.querySelector('.friend-requests-badge');
     const reqText = document.querySelector('.friend-requests-text');

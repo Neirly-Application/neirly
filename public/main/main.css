@@ -3,6 +3,7 @@
 @import url(../sectionSettingInfo.min.css);
 @import url(../sectionSettingAPI.min.css);
 @import url(../videoControls.min.css);
+@import url(../button.min.css);
 
 *,
 *::before,
@@ -319,7 +320,14 @@ a .custom-emoji {
   transition: padding 0.3s ease, background-color 0.3s ease;
   height: 100vh;
   overflow-y: auto;
+  overflow-x: none;
   -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.content::-webkit-scrollbar {
+  display: none;
 }
 
 .content i {
@@ -394,7 +402,6 @@ form button {
 form button:hover,
 form button:focus-visible {
   background-color: var(--secondary);
-  color: var(--primary);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18);
   outline-offset: 3px;
   outline: 2px solid var(--accent);
@@ -784,6 +791,7 @@ form button:focus-visible {
     align-items: center;
     text-align: center;
     height: 32px;
+    margin-top: 6px;
     width: auto;
   }
 
@@ -810,7 +818,7 @@ form button:focus-visible {
   }
 
   .menu-button {
-    margin-inline: 0 0 0 16px;
+    margin-inline: 16px;
     background: none;
     border: none;
     color: var(--accent);

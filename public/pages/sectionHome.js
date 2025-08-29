@@ -77,7 +77,7 @@ export default async function loadHomeSection(content, user) {
     <h3>Create a new post</h3>
     <form id="createPostForm" class="createPostForm">
       <input type="text" id="postTitle" placeholder="Give me a Title 💖" />
-      <textarea id="postContent" placeholder="What's on your mind?..."></textarea>
+      <textarea id="postContent" maxlength="300" placeholder="What's on your mind?..."></textarea>
       <input type="file" id="postMedia" accept="image/*,video/*,.gif" hidden />
       <label class="upload-btn" for="postMedia">
         <i class="fas fa-upload"></i> Choose Media
@@ -201,11 +201,11 @@ export default async function loadHomeSection(content, user) {
           <div class="post-menu-dropdown" style="display:none"></div>
         </div>
         <div class="post-author">
-          <a href="#${authorNick}"><img class="post-author-pic" src="${authorPic}" alt="${authorName}" />
+          <a href="#@${authorNick}"><img class="post-author-pic" src="${authorPic}" alt="${authorName}" />
           <span class="post-author-name">${authorName}</span></a>
         </div>
         <h2>${post.title}</h2>
-        <p>${post.content.replace(/\n/g, "<br>")}</p>
+        <div class="desc"><p>${post.content.replace(/\n/g, "<br>")}</p></div>
         ${mediaHTML}
       </div>
       <small>${new Date(post.createdAt).toLocaleString()}</small>
@@ -318,26 +318,56 @@ export default async function loadHomeSection(content, user) {
       postsContainer.appendChild(newPost);
     }
   }
+  
+  async function getFriends() {
+    try {
+      const res = await fetch('/api/chats/friends-and-chats', { credentials: 'include' });
+      if (!res.ok) throw new Error('Failed to load friends');
+      const data = await res.json();
+      return data.friends || [];
+    } catch (err) {
+      showToast(err.message, 'error');
+      return [];
+    }
+  }
+  const friends = await getFriends();
+
+  function showAddFriendMessage() {
+    postsContainer.innerHTML = `
+      <p class="info-text" style="text-align:center;opacity:0.7;margin-bottom: 20px;">Start now by adding a friend!</p>
+      <button id="add-friend-btn" class="cta-button"><i class="fas fa-user-plus"></i> Add a friend</button>
+    `;
+    const btn = postsContainer.querySelector('#add-friend-btn');
+    if (btn) btn.addEventListener('click', () => { window.location.hash = '#friend-list'; });
+  }
 
   async function loadPosts() {
     if (loading || !hasMore) return;
     loading = true;
 
     try {
-      const res = await fetch(`/api/posts?page=${currentPage}&limit=5`, { credentials: 'include' });
+      const res = await fetch(`/api/posts?page=${currentPage}&limit=10`, { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to load posts');
 
       const data = await res.json();
       const posts = Array.isArray(data) ? data : data.posts || [];
 
       if (currentPage === 1) postsContainer.innerHTML = '';
-      if (posts.length === 0 && currentPage === 1) {
-        postsContainer.innerHTML = '<div style="text-align:center;opacity:0.7;">No posts from friends.</div>';
+      if (!friends || friends.length === 0) {
+        showAddFriendMessage();
+      }
+
+      if (posts.length === 0) {
+        if (currentPage === 1) {
+          postsContainer.innerHTML = '<div style="text-align:center;opacity:0.7;">No posts from friends.</div>';
+        }
+        hasMore = false;
+        return;
       }
 
       posts.forEach(addPostToDOM);
 
-      hasMore = posts.length === 5;
+      hasMore = posts.length === 10;
       currentPage++;
     } catch (err) {
       showToast(err.message, 'error');
@@ -345,25 +375,22 @@ export default async function loadHomeSection(content, user) {
       loading = false;
     }
   }
+  const sentinel = document.createElement('div');
+  sentinel.id = "scroll-sentinel";
+  postsContainer.after(sentinel);
 
-  async function loadFeed() {
-    try {
-      const res = await fetch('/api/posts?page=1&limit=50', { credentials: 'include' });
-      if (!res.ok) throw new Error('Failed to load posts');
-      const data = await res.json();
-      const posts = Array.isArray(data) ? data : data.posts || [];
-
-      postsContainer.innerHTML = '';
-      if (posts.length === 0) {
-        postsContainer.innerHTML = '<div style="text-align:center;opacity:0.7;">No posts from friends.</div>';
-        return;
-      }
-
-      posts.forEach(addPostToDOM);
-    } catch (err) {
-      showToast(err.message, 'error');
+  const observer = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      loadPosts();
     }
-  }
+  }, {
+    root: null,
+    rootMargin: "600px",
+    threshold: 0
+  });
+
+  observer.observe(sentinel);
+
 
   async function loadLikedPosts() {
     try {
@@ -405,15 +432,11 @@ export default async function loadHomeSection(content, user) {
 
   loadPosts();
 
-  window.addEventListener('scroll', () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
-      loadPosts();
-    }
-  });
-
   homeButton.addEventListener('click', (e) => {
     e.preventDefault();
-    loadFeed();
+    currentPage = 1;
+    hasMore = true;
+    loadPosts();
   });
 
   likedButton.addEventListener('click', (e) => {

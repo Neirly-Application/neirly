@@ -63,7 +63,7 @@ export default async function loadSearchSection(content, user) {
 
   const renderUsers = (users = []) => {
     if (!users.length) {
-      results.innerHTML = `<p>Search now for a user you are interested to know!.</p>`;
+      results.innerHTML = `<p>Search now for a user you are interested to know!</p>`;
       return;
     }
 

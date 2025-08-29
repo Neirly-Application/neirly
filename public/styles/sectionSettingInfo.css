@@ -42,7 +42,7 @@
 }
 
 code {
-  background-color: var(--primary);
+  background-color: var(--main-bg);
   color: var(--accent);
   padding: 2px 6px;
   border-radius: 4px;
@@ -81,7 +81,6 @@ code {
   }
 
   .info-section h3 {
-    color: var(--primary);
     font-size: 1.3rem;
   }
 }

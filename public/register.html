@@ -33,19 +33,19 @@
                 <form id="register-form" autocomplete="off" novalidate>
                     <div class="social-login">
                         <div class="social-icons">
-                                <a href="/api/auth/google" class="social google" title="Register with Google">
+                                <a href="/api/auth/google" class="social google social-rem" title="Register with Google">
                                     <img src="./media/icons/google.svg" alt="Google" class="icon"> Google
                                 </a>
-                                <a href="/api/auth/facebook" class="social facebook" title="Register with Facebook">
+                                <a href="/api/auth/facebook" class="social facebook social-rem" title="Register with Facebook">
                                     <img src="./media/icons/facebook.svg" alt="Facebook" class="icon"> Facebook
                                 </a>
-                                <a href="/api/auth/twitter" class="social twitter" title="Register with Twitter">
-                                    <img src="./media/icons/twitter.svg" alt="Twitter" class="icon"> Twitter
+                                <a href="/api/auth/twitter" class="social twitter social-rem" title="Register with Twitter (X)">
+                                    <img src="./media/icons/twitter.svg" alt="Twitter" class="icon"> Twitter (X)
                                 </a>
-                                <a href="/api/auth/discord" class="social discord" title="Register with Discord">
+                                <a href="/api/auth/discord" class="social discord social-rem" title="Register with Discord">
                                     <img src="./media/icons/discord.svg" alt="Discord" class="icon"> Discord
                                 </a>
-                            <div class="divider">
+                            <div class="divider social-rem">
                                 <span>or</span>
                             </div>
                             <a href="#" class="social-email" title="Register with Email" id="email-toggle">
@@ -93,17 +93,25 @@
     <script>
         document.getElementById('email-toggle').addEventListener('click', (e) => {
             e.preventDefault();
-            const form = document.getElementById('email-register-form');
-            form.classList.toggle('hidden');
-        });
-    </script>
 
-    <script language="javascript">
-        if (!passwordRegex.test(password)) {
-        return res.status(400).json({
-            message: 'Password must be at least 8 characters long, contain one uppercase letter and one number.'
+            const form = document.getElementById('email-register-form');
+            const socials = document.querySelectorAll('.social-rem');
+            const emailToggle = document.getElementById('email-toggle');
+
+            const isActive = !form.classList.contains('hidden');
+
+            form.classList.toggle('hidden');
+
+            socials.forEach(el => {
+                if (!isActive) {
+                    el.classList.add('hidden');
+                    emailToggle.innerHTML = '<i class="fas fa-arrow-left"></i> More Options';
+                } else {
+                    el.classList.remove('hidden');
+                    emailToggle.innerHTML = '<i class="fas fa-envelope"></i> Email';
+                }
+            });
         });
-        }
     </script>
 
     <script>

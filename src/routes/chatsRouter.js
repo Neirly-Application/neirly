@@ -8,7 +8,6 @@ const Message = require('../models/Message');
 
 router.use(authMiddleware);
 
-// GET friends and recent chats
 router.get('/chats/friends-and-chats', async (req, res) => {
   try {
     const userId = req.user._id;
@@ -29,7 +28,6 @@ router.get('/chats/friends-and-chats', async (req, res) => {
   }
 });
 
-// GET messages with a specific user
 router.get('/chats/messages/:userId', async (req, res) => {
   const userId = req.user._id;
   const otherUserId = req.params.userId;
@@ -49,7 +47,6 @@ router.get('/chats/messages/:userId', async (req, res) => {
   }
 });
 
-// POST send a message
 router.post('/chats/messages', async (req, res) => {
   const senderId = req.user._id;
   const { to, content, type = 'text' } = req.body;
@@ -72,7 +69,6 @@ router.post('/chats/messages', async (req, res) => {
       timestamp: new Date()
     });
 
-    // Aggiorna recentChats per entrambi gli utenti
     await User.updateOne({ _id: senderId }, { $addToSet: { recentChats: to } });
     await User.updateOne({ _id: to }, { $addToSet: { recentChats: senderId } });
 
@@ -83,7 +79,6 @@ router.post('/chats/messages', async (req, res) => {
   }
 });
 
-// GET user profile picture
 router.get('/users/:id/profile-picture', async (req, res) => {
   try {
     const user = await User.findById(req.params.id).lean();

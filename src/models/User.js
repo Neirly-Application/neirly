@@ -97,10 +97,6 @@ const userSchema = new mongoose.Schema({
       street: { type: String },
       zipCode: { type: String },
       },
-      pets: {
-        hasPets: { type: Boolean, default: false },
-        petTypes: [{ type: String }]
-      },
     },
   coins: { type: Number, default: 100 },
   hasPremium: { type: Boolean, default: false },

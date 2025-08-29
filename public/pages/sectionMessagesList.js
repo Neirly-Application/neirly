@@ -38,6 +38,24 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
   `;
 
   try {
+    function showAddFriendMessage() {
+      chatsContainer.innerHTML = `
+        <p class="info-text" style="text-align:left;opacity:0.7;margin-bottom: 20px;">Start now by adding a friend!</p>
+        <button id="add-friend-btn" class="cta-button"><i class="fas fa-user-plus"></i> Add a friend</button>
+      `;
+      const btn = chatsContainer.querySelector('#add-friend-btn');
+      if (btn) btn.addEventListener('click', () => { window.location.hash = '#friend-list'; });
+    }
+
+    function showSelectFriendMessage() {
+      chatsContainer.innerHTML = `
+        <p class="info-text" style="text-align:left;opacity:0.7;margin-bottom: 20px;">Chat now with your friends!</p>
+        <button id="add-friend-btn" class="cta-button"><i class="fas fa-user-plus"></i> Select a friend</button>
+      `;
+      const btn = chatsContainer.querySelector('#add-friend-btn');
+      if (btn) btn.addEventListener('click', () => { window.location.hash = '#friend-list'; });
+    }
+
     const res = await fetch('/api/chats/friends-and-chats', { 
       credentials: 'include',
       signal: controller.signal 
@@ -48,7 +66,7 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
     const { friends = [], recentChats = [] } = await res.json();
 
     const chatsContainer = content.querySelector('#chats');
-    if (!chatsContainer) return; // sei già andato via, stop
+    if (!chatsContainer) return; 
 
     if (recentChats.length > 0) {
       chatsContainer.innerHTML = `
@@ -62,23 +80,9 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
         </div>
       `;
     } else if (friends.length > 0) {
-      chatsContainer.innerHTML = `
-        <p class="info-text">Chat now with your friends!</p>
-        <button id="select-friend-btn" class="cta-button">Select a friend</button>
-      `;
-      const btn = chatsContainer.querySelector('#select-friend-btn');
-      if (btn) btn.addEventListener('click', () => {
-        window.location.hash = '#friends';
-      });
+      showSelectFriendMessage();
     } else {
-      chatsContainer.innerHTML = `
-        <p class="info-text">Start now by adding a friend!</p>
-        <button id="add-friend-btn" class="cta-button">Add a friend</button>
-      `;
-      const btn = chatsContainer.querySelector('#add-friend-btn');
-      if (btn) btn.addEventListener('click', () => {
-        window.location.hash = '#friend-list';
-      });
+      showAddFriendMessage();
     }
 
     content.querySelectorAll('.chat-item, .friend-item').forEach(el => {
@@ -89,7 +93,6 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
     });
   } catch (error) {
     if (error.name === 'AbortError') {
-      // fetch annullata, non serve loggare
       return;
     }
     console.error(error);
