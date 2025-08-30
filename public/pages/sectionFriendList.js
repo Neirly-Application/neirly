@@ -24,7 +24,7 @@ export default async function loadFriendListSection(content, user) {
   });
 
   content.innerHTML = `
-    <h2><i class="fas fa-user-friends"></i> Friend List</h2>
+    <h2><i class="fas fa-people-group"></i> Friend List</h2>
     <form id="addFriendForm" class="friend-form" autocomplete="off">
       <input
         type="text"

@@ -136,6 +136,7 @@ router.get('/', async (req, res) => {
     posts.forEach(post => {
       if (typeof post.media === 'undefined') post.media = null;
       post.likedByUser = (post.likes || []).map(String).includes(userId);
+      post.favoritedByUser = (post.favorites || []).map(String).includes(userId);
     });
 
     res.json({ posts, hasMore });
@@ -165,6 +166,7 @@ router.get('/me', async (req, res) => {
     posts.forEach(post => {
       if (typeof post.media === 'undefined') post.media = null;
       post.likedByUser = (post.likes || []).map(String).includes(userId);
+      post.favoritedByUser = (post.favorites || []).map(String).includes(userId);
     });
 
     res.json({ posts, hasMore });
@@ -196,6 +198,31 @@ router.post('/:id/like', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error while liking post.' });
+  }
+});
+
+// ========================
+// Favorite / Unfavorite a post
+// ========================
+router.post('/:id/favorite', async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ error: 'Post not found.' });
+
+    const userId = req.user._id.toString();
+    const alreadyFavorited = post.favorites?.includes(userId);
+
+    if (alreadyFavorited) {
+      post.favorites = post.favorites.filter(u => u.toString() !== userId);
+    } else {
+      post.favorites.push(userId);
+    }
+
+    await post.save();
+    res.json({ favorites: post.favorites.length, favorited: !alreadyFavorited });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error while adding post to favorites.' });
   }
 });
 

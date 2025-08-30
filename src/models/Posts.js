@@ -5,7 +5,7 @@ const PostSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    maxlength: 80
+    maxlength: 50
   },
   content: {
     type: String,
@@ -14,11 +14,19 @@ const PostSchema = new mongoose.Schema({
     maxlength: 250
   },
   likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   comments: [{
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     text: { type: String, required: true },
     createdAt: { type: Date, default: Date.now }
   }],
+  reactions: { 
+    faceSmile: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], default: [] },
+    faceGrinHearts: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], default: [] },
+    faceGrinStars: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], default: [] },
+    faceCool: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], default: [] },
+    faceSadTear: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], default: [] }
+  },
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

@@ -39,13 +39,12 @@ export default async function loadHomeSection(content, user) {
 
     <div class="home-container-actions">
       <div class="container-actions">
-        <a class="cta-button-actions" title="Create a new post"><i class="fas fa-pen-to-square"></i></a>
+        <a id="create-post" class="cta-button-actions" title="Create a new post"><i class="fas fa-pen-to-square"></i></a>
         <div class="divider"></div>
-        <a id="feed" class="cta-button-actions" title="Feed"><i class="fas fa-home"></i></a>
-        <a id="posted" class="cta-button-actions" title="Posted"><i class="fa-solid fa-image"></i></a>
-        <a id="liked" class="cta-button-actions" title="Liked"><i class="fa-solid fa-heart"></i></a>
-        <a id="saved" class="cta-button-actions" title="Saved"><i class="fa-solid fa-bookmark"></i></a>
-        <a id="favorites" class="cta-button-actions" title="Favorites"><i class="fa-solid fa-star"></i></a>
+        <a id="feed" class="cta-button-actions" title="From Friends"><i class="fas fa-people-group"></i></a>
+        <a id="posted" class="cta-button-actions" title="Your Posts"><i class="fa-solid fa-bookmark"></i></a>
+        <a id="liked" class="cta-button-actions" title="Liked Posts"><i class="fa-solid fa-heart"></i></a>
+        <a id="favorites" class="cta-button-actions" title="Favorites Posts"><i class="fa-solid fa-star"></i></a>
       </div>
     </div>
     
@@ -59,12 +58,11 @@ export default async function loadHomeSection(content, user) {
   // =====================
   //    FORM ELEMENTS
   // =====================
-  const createPostButton = content.querySelector('.cta-button-actions[title="Create a new post"]');
+  const createPostButton = content.querySelector('#create-post');
   const homeButton       = content.querySelector('#feed');
   const likedButton      = content.querySelector('#liked');
   const postedButton     = content.querySelector('#posted');
-  const savedButton      = content.querySelector('#saved');
-  const favoritesButton  = content.querySelector('#favorites');
+  const favoriteButton   = content.querySelector('#favorites');
   const postsContainer   = content.querySelector('#loadPosts');
 
   const overlay = document.createElement('div');
@@ -76,8 +74,11 @@ export default async function loadHomeSection(content, user) {
   postForm.innerHTML = `
     <h3>Create a new post</h3>
     <form id="createPostForm" class="createPostForm">
-      <input type="text" id="postTitle" placeholder="Give me a Title 💖" />
-      <textarea id="postContent" maxlength="300" placeholder="What's on your mind?..."></textarea>
+      <input type="text" maxlength="50" id="postTitle" placeholder="Give me a Title 💖" />
+      <textarea id="postContent" maxlength="250" placeholder="What's on your mind?..."></textarea>
+      <div class="char-counter">
+        <span id="charCount">0</span> / 300
+      </div>
       <input type="file" id="postMedia" accept="image/*,video/*,.gif" hidden />
       <label class="upload-btn" for="postMedia">
         <i class="fas fa-upload"></i> Choose Media
@@ -90,6 +91,9 @@ export default async function loadHomeSection(content, user) {
   const fileInput = postForm.querySelector('#postMedia');
   const fileName = postForm.querySelector('#fileName');
   const submitButton = postForm.querySelector('#submitPost');
+  const textarea = postForm.querySelector('#postContent');
+  const charCount = postForm.querySelector('#charCount');
+  const maxChars = Number(textarea.getAttribute('maxlength'));
 
   fileInput.addEventListener('change', () => {
     fileName.textContent = fileInput.files[0]?.name || 'No file chosen';
@@ -97,6 +101,19 @@ export default async function loadHomeSection(content, user) {
 
   overlay.appendChild(postForm);
   document.body.appendChild(overlay);
+
+  textarea.addEventListener('input', () => {
+    const length = textarea.value.length;
+    charCount.textContent = length;
+
+    if (length >= maxChars) {
+      charCount.style.color = 'red';
+    } else if (length > maxChars * 0.9) {
+      charCount.style.color = 'orange';
+    } else {
+      charCount.style.color = '#4e6ef2';
+    }
+  });
 
 // =====================
 //      POST SUBMIT
@@ -194,6 +211,35 @@ export default async function loadHomeSection(content, user) {
       }
     }
 
+    /* const reactions = [
+      "face-smile",       
+      "face-grin-hearts", 
+      "face-grin-stars",  
+      "face-grin",
+      "face-angry",    
+      "face-grin-squint-tears",    
+      "face-kiss-wink-heart",
+      "face-kiss",
+      "face-meh",
+      "face-surprise",
+      "face-dizzy",
+      "face-grin-tears",
+      "face-sad-cry"
+    ]; */
+
+    const reactions = [ "🙂", "😍", "🤩", "🤨", "😠", "🤣", "😂", "😘", "🥱", "😯", "😢", "🙄", "😎" ];
+    function emojiToCode(emoji) {
+      return [...emoji]
+        .map(c => c.codePointAt(0).toString(16).toUpperCase())
+        .join('-');
+    }
+
+    function getRandomEmojiSrc() {
+      const emoji = reactions[Math.floor(Math.random() * reactions.length)];
+      return `/media/emoji/img/apple/64//${emojiToCode(emoji)}.png`;
+    }
+    const randomEmoji = getRandomEmojiSrc();
+
     newPost.innerHTML = `
       <div class="home-post-card-content">
         <div class="post-menu">
@@ -208,17 +254,18 @@ export default async function loadHomeSection(content, user) {
         <div class="desc"><p>${post.content.replace(/\n/g, "<br>")}</p></div>
         ${mediaHTML}
       </div>
-      <small>${new Date(post.createdAt).toLocaleString()}</small>
+      <small>${new Date(post.createdAt).toLocaleDateString('en-EN', { day: 'numeric', month: 'long', year: 'numeric' })}</small>
       <div class="post-fancy-line"></div>
       <div class="post-actions">
         <div class="post-actions-left">
-          <li><a class="like" href="#" title="Like"><i class="${post.likedByUser ? 'fas' : 'far'} fa-heart"></i></a></li>
-          <li><a class="comment" href="#" title="Comment"><i class="far fa-comment"></i></a></li>
-          <li><a class="save" href="#" title="Favorite"><i class="far fa-star"></i></a></li>
+          <li><a class="like" href="#" title="Like ${authorName}'s Post"><i class="${post.likedByUser ? 'fas' : 'far'} fa-heart"></i></a></li>
+          <li><a class="comment" href="#" title="Comment ${authorName}'s Post"><i class="far fa-comment"></i></a></li>
+          <!-- <li><a class="reaction" href="#" title="Add a Reaction"><i class="far fa-${reactions[Math.floor(Math.random() * reactions.length)]}"></i></a></li> -->
+          <li><a href="#" title="React ${authorName}'s Post"><img src="${randomEmoji}" class="custom-emoji"></a></li>
         </div>
         <div class="post-actions-right">
-          <li><a class="save" href="#" title="Save"><i class="far fa-bookmark"></i></a></li>
-          <li><a class="share" href="#" title="Share"><i class="far fa-paper-plane"></i></a></li>
+          <li><a class="favorite" href="#" title="Add ${authorName}'s Post to Favorites"><i class="${post.favoritedByUser ? 'fas' : 'far'} fa-star"></i></a></li>
+          <li><a class="share" href="#" title="Share ${authorName}'s Post"><i class="far fa-paper-plane"></i></a></li>
         </div>
       </div>
     `;
@@ -235,7 +282,7 @@ export default async function loadHomeSection(content, user) {
     if (author._id === user.id) {
       menuDropdown.innerHTML = `<button class="delete-post"><i class="fas fa-trash"></i> Delete</button>`;
       menuDropdown.querySelector('.delete-post').onclick = async () => {
-        if (confirm('Are you sure you want to delete this post?')) {
+        if (await customConfirm('Are you sure you want to delete this post?')) {
           try {
             const res = await fetch(`/api/posts/${post._id}`, { method: 'DELETE', credentials: 'include' });
             if (!res.ok) throw new Error('Error deleting post');
@@ -269,6 +316,10 @@ export default async function loadHomeSection(content, user) {
     }
 
     const likeBtn = newPost.querySelector('.like');
+    const favoriteBtn = newPost.querySelector('.favorite');
+    const shareBtn = newPost.querySelector('.share');
+    const commentBtn = newPost.querySelector('.comment');
+
     likeBtn.addEventListener('click', async (e) => {
       e.preventDefault();
       try {
@@ -282,7 +333,24 @@ export default async function loadHomeSection(content, user) {
       } catch (err) { showToast(err.message, 'error'); }
     });
 
-    const shareBtn = newPost.querySelector('.share');
+    favoriteBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      try {
+        const res = await fetch(`/api/posts/${post._id}/favorite`, {
+          method: 'POST',
+          credentials: 'include'
+        });
+        if (!res.ok) throw new Error('Failed to update favorite');
+        const data = await res.json();
+        const icon = favoriteBtn.querySelector('i');
+        icon.classList.toggle('fas', data.favorited);
+        icon.classList.toggle('far', !data.favorited);
+        showToast(data.favorited ? 'Added to favorites!' : 'Removed from favorites.', 'info');
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    });
+
     shareBtn.addEventListener('click', (e) => {
       e.preventDefault();
       const temp = document.createElement('textarea');
@@ -294,7 +362,6 @@ export default async function loadHomeSection(content, user) {
       showToast('Post content copied to clipboard!', 'success');
     });
 
-    const commentBtn = newPost.querySelector('.comment');
     commentBtn.addEventListener('click', (e) => {
       e.preventDefault();
       customConfirm('Write your comment:', '', async (commentText) => {
@@ -330,6 +397,7 @@ export default async function loadHomeSection(content, user) {
       return [];
     }
   }
+  
   const friends = await getFriends();
 
   function showAddFriendMessage() {
@@ -375,6 +443,7 @@ export default async function loadHomeSection(content, user) {
       loading = false;
     }
   }
+
   const sentinel = document.createElement('div');
   sentinel.id = "scroll-sentinel";
   postsContainer.after(sentinel);
@@ -394,7 +463,7 @@ export default async function loadHomeSection(content, user) {
 
   async function loadLikedPosts() {
     try {
-      const res = await fetch('/api/posts?page=1&limit=50', { credentials: 'include' });
+      const res = await fetch('/api/posts/me?page=1&limit=50', { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to load posts');
       const data = await res.json();
       const posts = Array.isArray(data) ? data : data.posts || [];
@@ -406,6 +475,25 @@ export default async function loadHomeSection(content, user) {
         return;
       }
       likedPosts.forEach(addPostToDOM);
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  }
+
+  async function loadFavoritedPosts() {
+    try {
+      const res = await fetch('/api/posts/me?page=1&limit=50', { credentials: 'include' });
+      if (!res.ok) throw new Error('Failed to load posts');
+      const data = await res.json();
+      const posts = Array.isArray(data) ? data : data.posts || [];
+
+      const favoritePosts = posts.filter(post => post.favoritedByUser);
+      postsContainer.innerHTML = '';
+      if (favoritePosts.length === 0) {
+        postsContainer.innerHTML = '<div style="text-align:center;opacity:0.7;">You haven\'t added any post to favorites yet.</div>';
+        return;
+      }
+      favoritePosts.forEach(addPostToDOM);
     } catch (err) {
       showToast(err.message, 'error');
     }
@@ -444,9 +532,13 @@ export default async function loadHomeSection(content, user) {
     loadLikedPosts();
   });
 
+  favoriteButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    loadFavoritedPosts()
+  })
+
   postedButton.addEventListener('click', (e) => {
     e.preventDefault();
     loadUserPosts();
   });
-
 }
