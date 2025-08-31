@@ -29,11 +29,11 @@ export default async function loadHomeSection(content, user) {
     <h2><i class="fas fa-home"></i> Home Page</h2>
 
     <div class="friend-box-container">
-      <div style="text-align: center;">
-        <div class="story" data-image="../media/neirly-logo.webp">
-          <img src="${user.profilePictureUrl || '../media/user.webp'}" alt="You" />
+      <div style="text-align: center;" data-menu="profile">
+        <div class="story" data-image="../media/neirly-logo.webp" data-menu="profile">
+          <img src="${user.profilePictureUrl || '../media/user.webp'}" alt="You" data-menu="profile" />
         </div>
-        <div class="story-label">You</div>
+        <div class="story-label" data-menu="profile">You</div>
       </div>
     </div>
 
@@ -42,9 +42,9 @@ export default async function loadHomeSection(content, user) {
         <a id="create-post" class="cta-button-actions" title="Create a new post"><i class="fas fa-pen-to-square"></i></a>
         <div class="divider"></div>
         <a id="feed" class="cta-button-actions" title="From Friends"><i class="fas fa-people-group"></i></a>
-        <a id="posted" class="cta-button-actions" title="Your Posts"><i class="fa-solid fa-bookmark"></i></a>
-        <a id="liked" class="cta-button-actions" title="Liked Posts"><i class="fa-solid fa-heart"></i></a>
-        <a id="favorites" class="cta-button-actions" title="Favorites Posts"><i class="fa-solid fa-star"></i></a>
+        <a id="posted" href="#home=posted" class="cta-button-actions" title="Your Posts"><i class="fa-solid fa-bookmark"></i></a>
+        <a id="liked" href="#home=liked" class="cta-button-actions" title="Liked Posts"><i class="fa-solid fa-heart"></i></a>
+        <a id="favorites" href="#home=favorites" class="cta-button-actions" title="Favorites Posts"><i class="fa-solid fa-star"></i></a>
       </div>
     </div>
     
@@ -421,12 +421,11 @@ export default async function loadHomeSection(content, user) {
       const posts = Array.isArray(data) ? data : data.posts || [];
 
       if (currentPage === 1) postsContainer.innerHTML = '';
-      if (!friends || friends.length === 0) {
-        showAddFriendMessage();
-      }
 
       if (posts.length === 0) {
-        if (currentPage === 1) {
+        if (!friends || friends.length === 0) {
+          showAddFriendMessage();
+        } else if (currentPage === 1) {
           postsContainer.innerHTML = '<div style="text-align:center;opacity:0.7;">No posts from friends.</div>';
         }
         hasMore = false;
@@ -518,13 +517,16 @@ export default async function loadHomeSection(content, user) {
     }
   }
 
-  loadPosts();
-
   homeButton.addEventListener('click', (e) => {
     e.preventDefault();
     currentPage = 1;
     hasMore = true;
     loadPosts();
+  });
+
+  postedButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    loadUserPosts();
   });
 
   likedButton.addEventListener('click', (e) => {
@@ -536,9 +538,4 @@ export default async function loadHomeSection(content, user) {
     e.preventDefault();
     loadFavoritedPosts()
   })
-
-  postedButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    loadUserPosts();
-  });
 }

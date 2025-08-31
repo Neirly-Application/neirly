@@ -28,24 +28,24 @@ export default async function loadNearYouSection(content, user) {
   content.innerHTML = `
     <h2><i class="fas fa-broadcast-tower"></i> Near you</h2>
 
-    <div class="card profile-card">
-      <img src="${avatar}" alt="User Profile" oncontextmenu="return false;">
-      <div class="profile-info">
-        <h3 class="info-name">${username}</h3>
-        <p class="info-nick">${nickname}</p>
-        <p class="info-about">${about}</p>
+    <div class="card profile-card" data-menu="profile">
+      <img src="${avatar}" alt="User Profile" data-menu="profile" oncontextmenu="return false;">
+      <div class="profile-info" data-menu="profile" >
+        <h3 class="info-name" data-menu="profile" >${username}</h3>
+        <p class="info-nick" data-menu="profile" >${nickname}</p>
+        <p class="info-about" data-menu="profile" >${about}</p>
         <span class="status">Online</span>
       </div>
-      <div class="profile-actions">
+      <div class="profile-actions" data-menu="profile" >
 
-      <a href="#profile" data-section="profile">
-        <button class="view-btn">
-          <i class="fas fa-pen"></i> <span>Edit Profile</span>
+      <a href="#profile" data-section="profile" data-menu="profile" >
+        <button class="view-btn" data-menu="profile" >
+          <i class="fas fa-pen" data-menu="profile" ></i> <span data-menu="profile" >Edit Profile</span>
         </button>
       </a>
-      <a>
-        <button class="settings-btn">
-          <i class="fas fa-cog"></i> <span>Map Settings</span>
+      <a href="settings-location" data-menu="location" >
+        <button class="settings-btn" data-menu="location" >
+          <i class="fas fa-cog"></i> <span data-menu="location" >Location Settings</span>
         </button>
       </a>
       </div>

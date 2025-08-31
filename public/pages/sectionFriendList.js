@@ -69,7 +69,7 @@ export default async function loadFriendListSection(content, user) {
       </div>
     </div>
 
-    <h3>Friends</h3><br>
+    <h3>Friends (<span id="friends-count">0</span>)</h3><br>
   
     <div id="friendsList">Start now by adding a friend via their nickname!</div>
   `;
@@ -85,6 +85,11 @@ export default async function loadFriendListSection(content, user) {
   const outgoingTab = document.getElementById('outgoingTab');
   const incomingRequests = document.getElementById('incomingRequests');
   const outgoingRequests = document.getElementById('outgoingRequests');
+  let friends = [];
+
+  async function updateFriendsCount() {
+    document.getElementById('friends-count').textContent = friends.length;
+  }
 
   function updateFriendNotificationBadge(count) {
     const reqBadge = document.querySelector('.friend-requests-badge');
@@ -144,6 +149,7 @@ export default async function loadFriendListSection(content, user) {
         friendNickInput.value = '';
         await loadFriends();
         await fetchAndUpdateFriendNotifications();
+        await updateFriendsCount();
       } else {
         showToast(data.message || 'Error while sending friend request.', 'error');
       }
@@ -171,6 +177,7 @@ export default async function loadFriendListSection(content, user) {
         showToast(data.message || (accept ? 'Friend request accepted.' : 'Friend request rejected.'), 'success');
         await loadFriends();
         await fetchAndUpdateFriendNotifications();
+        await updateFriendsCount();
       } else {
         showToast(data.message || 'Error processing friend request.', 'error');
       }
@@ -191,34 +198,37 @@ export default async function loadFriendListSection(content, user) {
       }
 
       const { confirmedFriends = [], pendingRequests = [], sentRequests = [] } = data;
+      friends = confirmedFriends;
 
       updateFriendNotificationBadge(pendingRequests.length);
+      await updateFriendsCount();
 
       let html = '';
 
       if (confirmedFriends.length > 0) {
         confirmedFriends.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
         html += confirmedFriends.map(friend => `
-          <div class="friend-item">
-            <div class="friend-info">
-              <img src="${friend.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar" />
-              <div class="friend-name">
-                <strong>${friend.name || '-'}</strong><br>
-                <small class="friend-nick">@${friend.uniquenick || ''}</small>
+          <div class="friend-item" data-menu="selected-friend-profile selected-friend">
+            <div class="friend-info" data-menu="selected-friend-profile selected-friend">
+              <img src="${friend.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar" data-menu="selected-friend-profile selected-friend"/>
+              <div class="friend-name" data-menu="selected-friend-profile selected-friend">
+                <strong data-menu="selected-friend-profile selected-friend">${friend.name || '-'}</strong><br>
+                <small class="friend-nick" data-menu="selected-friend-profile selected-friend">@${friend.uniquenick || ''}</small>
               </div>
             </div>
-            <div class="friend-actions">
+            <div class="friend-actions" data-menu="selected-friend-profile selected-friend">
               <button class="message-btn" 
                       title="Message ${friend.name || 'User'}" 
                       data-id="${friend._id}" 
-                      data-name="${friend.name || '-'}">
-                <i class="fas fa-comment-alt"></i> 
+                      data-name="${friend.name || '-'}"
+                      data-menu="selected-friend-chat-with">
+                <i class="fas fa-comment-alt" data-menu="selected-friend-profile selected-friend-chat-with"></i> 
               </button>
-              <button class="remove-btn" title="Remove ${friend.name || 'User'}" data-id="${friend._id}" data-name="${friend.name || '-'}">
-                <i class="fas fa-user-minus"></i>
+              <button class="remove-btn" title="Remove ${friend.name || 'User'}" data-id="${friend._id}" data-name="${friend.name || '-'}" data-menu="selected-friend-profile selected-friend-remove">
+                <i class="fas fa-user-minus" data-menu="selected-friend-profile selected-friend-remove"></i>
               </button>
-              <button class="settings-btn" title="Friend Settings" data-id="${friend._id}" data-name="${friend.name || '-'}">
-                <i class="fas fa-cog"></i>
+              <button class="settings-btn" title="Friend Settings" data-id="${friend._id}" data-name="${friend.name || '-'}" data-menu="selected-friend-profile selected-friend-settings">
+                <i class="fas fa-cog" data-menu="selected-friend-profile selected-friend-settings"></i>
               </button>
             </div>
           </div>
@@ -231,12 +241,12 @@ export default async function loadFriendListSection(content, user) {
 
       incomingRequests.innerHTML = pendingRequests.length > 0
         ? pendingRequests.map(req => `
-            <div class="friend-request-card">
-              <div class="friend-request-card-info">
-                <img src="${req.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar" />
-                <div class="friend-request-card-name">
-                  <strong>${req.name || 'User'}</strong><br>
-                  <small class="friend-request-card-nick">@${req.uniquenick || 'Undefined'}</small>
+            <div class="friend-request-card" data-menu="selected-friend-profile incoming-friend">
+              <div class="friend-request-card-info" data-menu="selected-friend-profile incoming-friend">
+                <img src="${req.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar" data-menu="selected-friend-profile incoming-friend"/>
+                <div class="friend-request-card-name" data-menu="selected-friend-profile incoming-friend">
+                  <strong data-menu="selected-friend-profile incoming-friend">${req.name || 'User'}</strong><br>
+                  <small class="friend-request-card-nick" data-menu="selected-friend-profile incoming-friend">@${req.uniquenick || 'Undefined'}</small>
                 </div>
               </div>
               <div class="friend-request-card-actions">
@@ -253,12 +263,12 @@ export default async function loadFriendListSection(content, user) {
 
       outgoingRequests.innerHTML = sentRequests.length > 0
         ? sentRequests.map(req => `
-            <div class="friend-request-card">
-              <div class="friend-request-card-info">
-                <img src="${req.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar" />
-                <div class="friend-request-card-name">
-                  <strong>${req.name || 'User'}</strong><br>
-                  <small class="friend-request-card-nick">@${req.uniquenick || 'Undefined'}</small>
+            <div class="friend-request-card" data-menu="selected-friend-profile outgoing-friend">
+              <div class="friend-request-card-info" data-menu="selected-friend-profile outgoing-friend">
+                <img src="${req.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar" data-menu=" outgoing-friend"/>
+                <div class="friend-request-card-name" data-menu="selected-friend-profile outgoing-friend">
+                  <strong data-menu="selected-friend-profile outgoing-friend">${req.name || 'User'}</strong><br>
+                  <small class="friend-request-card-nick" data-menu="selected-friend-profile outgoing-friend">@${req.uniquenick || 'Undefined'}</small>
                 </div>
               </div>
               <div class="friend-request-card-actions">
@@ -298,6 +308,7 @@ export default async function loadFriendListSection(content, user) {
                 showToast(data.message || 'Friend request cancelled.', 'success');
                 await loadFriends();
                 await fetchAndUpdateFriendNotifications();
+                await updateFriendsCount();
               } else {
                 showToast(data.message || 'Error cancelling request.', 'error');
               }
@@ -308,7 +319,7 @@ export default async function loadFriendListSection(content, user) {
         });
       });
 
-      document.querySelectorAll('#remove-friend').forEach(btn => {
+      document.querySelectorAll('.remove-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
           const friendId = btn.dataset.id;
           const friendName = btn.dataset.name;
@@ -323,6 +334,7 @@ export default async function loadFriendListSection(content, user) {
                 showToast(data.message || 'Friend removed.', 'success');
                 await loadFriends();
                 await fetchAndUpdateFriendNotifications();
+                await updateFriendsCount();
               } else {
                 showToast(data.message || 'Error removing friend.', 'error');
               }
@@ -374,4 +386,5 @@ export default async function loadFriendListSection(content, user) {
 
   await loadFriends();
   await fetchAndUpdateFriendNotifications();
+  await updateFriendsCount();
 }

@@ -105,11 +105,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- NAV PROFILE ---
     function getNavProfileHTML(isMobile) {
       if (isMobile) {
-        return `<img src="${user.profilePictureUrl}" alt="Profile Picture" class="profile-icon">`;
+        return `<img src="${user.profilePictureUrl}" alt="Profile Picture" class="profile-icon" data-menu="profile">`;
       } else {
         return `
-          <img src="${user.profilePictureUrl}" alt="Profile Picture" class="profile-icon">
-          <span class="nav-username">${user.name || user.email}</span>`;
+          <img src="${user.profilePictureUrl}" alt="Profile Picture" class="profile-icon" data-menu="profile">
+          <span class="nav-username" data-menu="profile">${user.name || user.email}</span>`;
       }
     }
 
@@ -556,7 +556,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 });
-
 
 function detectDevTools() {
   const threshold = 160;

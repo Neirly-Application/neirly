@@ -40,8 +40,8 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
   try {
     function showAddFriendMessage() {
       chatsContainer.innerHTML = `
-        <p class="info-text" style="text-align:left;opacity:0.7;margin-bottom: 20px;">Start now by adding a friend!</p>
-        <button id="add-friend-btn" class="cta-button"><i class="fas fa-user-plus"></i> Add a friend</button>
+        <p class="info-text" style="text-align:left;opacity:0.7;margin-bottom: 20px;" data-menu="friend-list" >Start now by adding a friend!</p>
+        <button id="add-friend-btn" class="cta-button" data-menu="friend-list"><i class="fas fa-user-plus" data-menu="friend-list" ></i> Add a friend</button>
       `;
       const btn = chatsContainer.querySelector('#add-friend-btn');
       if (btn) btn.addEventListener('click', () => { window.location.hash = '#friend-list'; });
@@ -49,8 +49,8 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
 
     function showSelectFriendMessage() {
       chatsContainer.innerHTML = `
-        <p class="info-text" style="text-align:left;opacity:0.7;margin-bottom: 20px;">Chat now with your friends!</p>
-        <button id="add-friend-btn" class="cta-button"><i class="fas fa-user-plus"></i> Select a friend</button>
+        <p class="info-text" style="text-align:left;opacity:0.7;margin-bottom: 20px;" data-menu="messages friend-list">Chat now with your friends!</p>
+        <button id="add-friend-btn" class="cta-button" data-menu="messages friend-list"><i class="fas fa-user-plus" data-menu="messages friend-list"></i> Select a friend</button>
       `;
       const btn = chatsContainer.querySelector('#add-friend-btn');
       if (btn) btn.addEventListener('click', () => { window.location.hash = '#friend-list'; });

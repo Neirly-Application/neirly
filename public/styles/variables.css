@@ -5,6 +5,8 @@ body.light {
 
   --bubble-color: rgba(100, 130, 255, 0.18);
   --bubble-glow: rgba(100, 130, 255, 0.55);
+  
+  --progress-bar-color: linear-gradient(90deg, #001f4d, #002966, #003d80, #0056b3, #007bff);
 
   --main-text-color: #2e2e2e;
 
@@ -190,6 +192,8 @@ body.dark {
 
   --bubble-color: rgba(100, 130, 255, 0.55);
   --bubble-glow: rgba(100, 130, 255, 0.18);
+
+  --progress-bar-color: linear-gradient(90deg, #001f4d, #002966, #003d80, #0056b3, #007bff);
 
   --main-text-color: #ffffff;
 

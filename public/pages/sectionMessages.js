@@ -50,6 +50,4 @@ export default async function loadMessagesSection(content, user, subSection = 'l
       loadMessagesSection(content, user, 'list');
     });
   }
-
-  
 };

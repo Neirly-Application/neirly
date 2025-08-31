@@ -27,7 +27,7 @@
   <link rel="stylesheet" href="../styles/dist/notifications.min.css" />
   <link rel="stylesheet" href="../styles/dist/sectionSettingAPI.min.css" />
   <link rel="stylesheet" href="../styles/dist/sectionSettingInfo.min.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/leaflet.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/leaflet.css" />
 
   <script src="https://unpkg.com/leaflet/leaflet.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
@@ -40,46 +40,40 @@
   <link rel="icon" type="image/png" sizes="512x512" href="../media/favicon/favicon_512x512.png">
 
 </head>
-
 <body>
-  <button class="mobile-toggle" aria-label="Toggle Menu">
-    <i class="fas fa-bars"></i>
-  </button>
+  <div id="progress-bar"></div>
 
-  <div class="mobile-topbar">
-    <div class="topbar-left">
-      <span class="topbar-title">
+  <div class="mobile-topbar" data-menu="mobile-topbar">
+    <div class="topbar-left" data-menu="mobile-topbar">
+      <span class="topbar-title" data-menu="mobile-topbar">
         <img class="main-web-app-logo" src="../media/icons/NeirlyLogo.svg" alt="Neirly Logo">
       </span>
     </div>
-    <div class="topbar-menu">
-      <a href="#premium" class="nav-item premium" title="Premium" data-section="premium">
-        <i class="fas fa-crown"></i>
+    <div class="topbar-menu" data-menu="mobile-topbar">
+      <a href="#premium" class="nav-item premium" title="Premium" data-menu="premium" data-section="premium">
+        <i data-menu="premium" class="fas fa-crown"></i>
       </a>
-      <a href="#notifications" class="nav-item" title="Notifications" data-section="notifications">
-        <i class="fas fa-bell">
-          <span class="notification-badge"></span>
+      <a href="#notifications" class="nav-item" title="Notifications" data-menu="notifications" data-section="notifications">
+        <i data-menu="notifications" class="fas fa-bell">
+          <span data-menu="notifications" class="notification-badge"></span>
         </i>
       </a>
-      <a href="#friend-list" class="nav-item" title="Friends" data-section="friend-list">
-        <i class="fas fa-people-group"></i>
-          <span class="friend-notification-badge"></span>
+      <a href="#friend-list" class="nav-item" title="Friends" data-menu="friend-list" data-section="friend-list">
+        <i data-menu="friend-list" class="fas fa-people-group"></i>
+          <span data-menu="friend-list" class="friend-notification-badge"></span>
         </i>
       </a>
-      <button class="menu-button" title="Options">
-        <i class="fas fa-ellipsis-v"></i>
+      <button class="menu-button" title="Options" data-menu="topbar-menu" >
+        <i data-menu="topbar-menu" class="fas fa-ellipsis-v"></i>
       </button>
-      <div class="menu-dropdown">        
-        <a href="#ceo" class="nav-item" data-section="ceo" id="admin-section" style="display:none;">
-          <i class="fas fa-user-shield"></i> Actions
+      <div class="menu-dropdown">
+        <a href="#profile" data-menu="profile" data-section="profile" class="nav-item">
+          <i data-menu="profile" class="fas fa-user"></i> Profile
         </a>
-        <a href="#profile" data-section="profile" class="nav-item">
-          <i class="fas fa-user"></i> Profile
+        <a href="#settings-devices" data-menu="devices" data-section="settings-devices" class="nav-item">
+          <i data-menu="devices" class="fas fa-laptop"></i> Devices
         </a>
-        <a href="#settings-devices" data-section="settings-devices" class="nav-item">
-          <i class="fas fa-laptop"></i> Devices
-        </a>
-        <a href="#settings" data-section="settings" class="nav-item">
+        <a href="#settings" data-menu="settings" data-section="settings" class="nav-item">
           <i class="fas fa-cog"></i> Settings 
         </a>
         <a href="#logout" class="nav-item logout-btn" id="logout-btn">
@@ -95,46 +89,47 @@
     </div>
     
     <div class="nav-links">
-      <a href="#home" class="nav-item active" title="Home Page" data-section="home">
-        <i class="fas fa-home"></i>
-        <span>Home</span>
+      <a href="#home" class="nav-item active" title="Home Page" data-menu="home" data-section="home">
+        <i class="fas fa-home" data-menu="home"></i>
+        <span data-menu="home">Home</span>
       </a>
-      <a href="#near-you" class="nav-item" title="Near You" data-section="near-you">
-        <i class="fas fa-broadcast-tower"></i>
-        <span>Near You</span>
+      <a href="#near-you" class="nav-item" title="Near You" data-menu="near-you" data-section="near-you">
+        <i class="fas fa-broadcast-tower" data-menu="near-you"></i>
+        <span data-menu="near-you">Near You</span>
         </a>
       </a>
-      <a href="#friend-list" class="nav-item" title="Friend List" data-section="friend-list">
-        <i class="fas fa-people-group"></i>
-        <span>Friends</span>
+      <a href="#friend-list" class="nav-item" title="Friend List" data-menu="friend-list" data-section="friend-list">
+        <i class="fas fa-people-group" data-menu="friend-list"></i>
+        <span data-menu="friend-list">Friends</span>
+        <span class="friend-notification-badge" data-menu="friend-list"></span>
       </a>
-      <a href="#messages" class="nav-item" title="Private Messages" data-section="messages">
-        <i class="fas fa-comment-alt"></i> 
-        <span>Messagges</span>
+      <a href="#messages" class="nav-item" title="Private Messages" data-menu="messages" data-section="messages">
+        <i class="fas fa-comment-alt" data-menu="messages"></i> 
+        <span data-menu="messages">Messagges</span>
       </a>
-      <a href="#search" class="nav-item" title="Search" data-section="search">
-        <i class="fas fa-search"></i>
-        <span>Search</span>
+      <a href="#search" class="nav-item" title="Search" data-menu="search" data-section="search">
+        <i class="fas fa-search" data-menu="search"></i>
+        <span data-menu="search">Search</span>
       </a>
-      <a href="#notifications" class="nav-item" title="Notifications" data-section="notifications">
-        <i class="fas fa-bell"></i>
-        <span>Notifications</span>
-        <span class="notification-badge"></span>
+      <a href="#notifications" class="nav-item" title="Notifications" data-menu="notifications" data-section="notifications">
+        <i class="fas fa-bell" data-menu="notifications"></i>
+        <span data-menu="notifications">Notifications</span>
+        <span class="notification-badge" data-menu="notifications"></span>
       </a>
-      <a href="#settings" class="nav-item settings" title="Settings" data-section="settings">
-        <i class="fas fa-cog"></i> 
-        <span>Settings</span>
+      <a href="#settings" class="nav-item settings" title="Settings" data-menu="settings" data-section="settings">
+        <i class="fas fa-cog" data-menu="settings"></i> 
+        <span data-menu="settings">Settings</span>
       </a>
     </div>
 
     <div class="nav-footer">
-      <a href="#profile" class="nav-item" id="nav-profile-loader" title="Profile" data-section="profile">
-        <i class="fas fa-user"></i> 
-        <span>Profile</span>
+      <a href="#profile" class="nav-item" id="nav-profile-loader" title="Profile" data-menu="profile" data-section="profile">
+        <i class="fas fa-user" data-menu="profile"></i> 
+        <span data-menu="profile">Profile</span>
       </a>
-      <a href="#premium" class="nav-item premium" title="Premium" data-section="premium">
-        <i class="fas fa-crown"></i>
-        <span>Premium</span>
+      <a href="#premium" class="nav-item premium" title="Premium" data-menu="premium" data-section="premium">
+        <i class="fas fa-crown" data-menu="premium"></i>
+        <span data-menu="premium">Premium</span>
       </a>
       <a href="#logout" class="nav-item logout-btn" title="Logout" id="logout-btn">
         <i class="fas fa-sign-out-alt"></i> 
@@ -144,20 +139,20 @@
   </nav>
 
   <nav class="bottom-navbar">
-      <a href="#home" class="nav-item" data-section="home">
-        <i class="fas fa-home"></i>
+      <a href="#home" class="nav-item" data-menu="home" data-section="home">
+        <i data-menu="home" class="fas fa-home"></i>
       </a>
-      <a href="#near-you" class="nav-item" data-section="near-you">
-        <i class="fas fa-broadcast-tower"></i>
+      <a href="#near-you" class="nav-item" data-menu="near-you" data-section="near-you">
+        <i data-menu="near-you" class="fas fa-broadcast-tower"></i>
       </a>
-      <a href="#search" class="nav-item" data-section="search">
-        <i class="fas fa-search"></i>
+      <a href="#search" class="nav-item" data-menu="search" data-section="search">
+        <i data-menu="search" class="fas fa-search"></i>
       </a>
-      <a href="#messages" class="nav-item" data-section="messages">
-        <i class="fas fa-comment-alt"></i>
+      <a href="#messages" class="nav-item" data-menu="messages" data-section="messages">
+        <i data-menu="messages" class="fas fa-comment-alt"></i>
       </a>
-      <a href="#profile" id="nav-profile-loader" class="nav-item" data-section="profile">
-        <i class="fas fa-user"></i>
+      <a href="#profile" id="nav-profile-loader" class="nav-item" data-menu="profile" data-section="profile">
+        <i data-menu="profile" class="fas fa-user"></i>
       </a>
   </nav>
 
@@ -165,7 +160,17 @@
     <div class="spinner"></div>
   </div>
 
-  <main class="content" id="content"></main>
+  <main class="content" id="content" data-menu="content"></main>
+
+  <div id="custom-menu" class="custom-menu">
+    <div class="dynamic"></div>
+    <div class="bottom">
+      <ul>
+        <li><a href="#settings-info"><i class="fas fa-info-circle"></i> App Informations</a></li>
+        <li><a href="#settings"><i class="fas fa-cog"></i> Settings</a></li>
+      </ul>
+    </div>
+  </div>
 
   <div id="offlineOverlay" style="display:none;">
     <div class="offline-content">
@@ -193,6 +198,7 @@
 
   <script src="https://unpkg.com/leaflet/leaflet.js"></script>
   <script type="module" src="../scripts/manageMain.js"></script>
+  <script src="../scripts/contextmenu.js"></script>
   <script src="../scripts/offline.js"></script>
   <script type="module" src="../scripts/notification.js"></script>
   <script src="../scripts/script.js"></script>
@@ -236,5 +242,27 @@
       }
     });
   </script>
-  </body>
+
+  <script>
+    const progressBar = document.getElementById("progress-bar");
+
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.random() * 10; 
+      if (progress < 100) {
+        progressBar.style.width = progress + "%";
+      } else {
+        clearInterval(interval);
+      }
+    }, 200);
+
+    window.addEventListener("load", () => {
+      clearInterval(interval);
+      progressBar.style.width = "100%";
+      setTimeout(() => {
+        progressBar.remove();
+      }, 1000);
+    });
+  </script>
+</body>
 </html>
