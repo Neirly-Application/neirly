@@ -11,7 +11,7 @@ body {
   background-size: 400% 400%;
   animation: gradient 10s ease infinite;
   transition: background 0.5s ease-in-out;
-  color: var(--soft-dark-text);
+  color: var(--accent);
 }
 
 label {
@@ -19,7 +19,7 @@ label {
   margin-top: 1rem;
   font-weight: 600;
   font-size: 1rem;
-  color: var(--soft-dark-text);
+  color: var(--accent);
 }
 
 input,
@@ -78,7 +78,7 @@ select:focus {
   cursor: pointer;
   font-size: 1rem;
   user-select: none;
-  color: var(--dark-text);
+  color: var(--accent);
 }
 
 .custom-checkbox input {

@@ -3,6 +3,7 @@ document.addEventListener('contextmenu', (e) => {
 
   let menuTargets = e.target.dataset.menu;
   if (!menuTargets) menuTargets = 'default';
+  if (menuTargets === "disabled") return;
 
   const types = menuTargets.split(' ');
   showCustomMenu(e.clientX, e.clientY, types);
@@ -78,7 +79,7 @@ function showCustomMenu(x, y, types) {
           <li><a href="#settings-account"><i class="fas fa-user-shield"></i> Account & Security</a></li>
           <li><a href="#settings-privacy"><i class="fas fa-lock"></i> Privacy</a></li>
           <li><a href="#settings-theme"><i class="fas fa-palette"></i> App Theme</a></li>
-          <small>More...</small>
+          <small><a href="#settings">More...</a></small>
         </ul>`,
       'premium': `
         <ul>

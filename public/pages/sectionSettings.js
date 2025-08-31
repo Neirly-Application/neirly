@@ -28,19 +28,19 @@ export default async function loadSettingsSection(content, user) {
       <h2><i class="fas fa-cog"></i> Settings</h2>
     </div>
     <div class="settings-container">
-      <ul class="settings-menu">
-        <li><a href="#settings-account"><i class="fas fa-user-shield"></i> Account & Security</a></li>
-        <li><a href="#settings-privacy"><i class="fas fa-lock"></i> Privacy</a></li>
-        <li><a href="#settings-backup"><i class="fas fa-floppy-disk"></i> Backup</a></li>
-        <li><a href="#settings-payments" class="premium"><i class="fas fa-wallet"></i> Plan & Payments</a></li>
-        <li><a href="#settings-devices"><i class="fas fa-laptop"></i> Devices</a></li>
-        <li><a href="#settings-activity"><i class="fas fa-chart-line"></i> Activity Logs</a></li>
-        <li><a href="#settings-chats"><i class="fas fa-comment-alt"></i> Chats</a></li>
-        <li><a href="#settings-notifications"><i class="fas fa-bell"></i> Notifications</a></li>
-        <li><a href="#settings-theme"><i class="fas fa-palette"></i> App Theme</a></li>
-        <li><a href="#settings-language"><i class="fas fa-globe"></i> Language</a></li>
-        <li><a href="#settings-developer"><i class="fas fa-key"></i> API Keys</a></li>
-        <li><a href="#settings-info"><i class="fas fa-info-circle"></i> App Information</a></li>
+      <ul class="settings-menu" data-menu="disabled">
+        <li><a href="#settings-account" data-menu="disabled"><i class="fas fa-user-shield" data-menu="disabled"></i> Account & Security</a></li>
+        <li><a href="#settings-privacy" data-menu="disabled"><i class="fas fa-lock" data-menu="disabled"></i> Privacy</a></li>
+        <li><a href="#settings-backup" data-menu="disabled"><i class="fas fa-floppy-disk" data-menu="disabled"></i> Backup</a></li>
+        <li><a href="#settings-payments" class="premium" data-menu="disabled"><i class="fas fa-wallet" data-menu="disabled"></i> Plan & Payments</a></li>
+        <li><a href="#settings-devices" data-menu="disabled"><i class="fas fa-laptop" data-menu="disabled"></i> Devices</a></li>
+        <li><a href="#settings-activity" data-menu="disabled"><i class="fas fa-chart-line" data-menu="disabled"></i> Activity Logs</a></li>
+        <li><a href="#settings-chats" data-menu="disabled"><i class="fas fa-comment-alt" data-menu="disabled"></i> Chats</a></li>
+        <li><a href="#settings-notifications" data-menu="disabled"><i class="fas fa-bell" data-menu="disabled"></i> Notifications</a></li>
+        <li><a href="#settings-theme" data-menu="disabled"><i class="fas fa-palette" data-menu="disabled"></i> App Theme</a></li>
+        <li><a href="#settings-language" data-menu="disabled"><i class="fas fa-globe" data-menu="disabled"></i> Language</a></li>
+        <li><a href="#settings-developer" data-menu="disabled"><i class="fas fa-key" data-menu="disabled"></i> API Keys</a></li>
+        <li><a href="#settings-info" data-menu="disabled"><i class="fas fa-info-circle" data-menu="disabled"></i> App Information</a></li>
       </ul>
     </div>
   `;
