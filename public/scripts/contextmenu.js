@@ -5,11 +5,14 @@ document.addEventListener('contextmenu', (e) => {
   if (!menuTargets) menuTargets = 'default';
   if (menuTargets === "disabled") return;
 
+  const name = '<b>' + e.target.dataset.name + '</b>' || '<b>' + 'User' + '</b>';
+  const nick = "@" + e.target.dataset.nick || 'Undefined';
+
   const types = menuTargets.split(' ');
-  showCustomMenu(e.clientX, e.clientY, types);
+  showCustomMenu(e.clientX, e.clientY, types, name, nick);
 });
 
-function showCustomMenu(x, y, types) {
+function showCustomMenu(x, y, types, name, nick) {
   const menu = document.getElementById('custom-menu');
   const dynamicPart = menu.querySelector('.dynamic');
   dynamicPart.innerHTML = '';
@@ -36,26 +39,26 @@ function showCustomMenu(x, y, types) {
         <ul>
           <li><a href="#friend-list"><i class="fas fa-user-plus"></i> Add a friend</a></li>
           <li><a href="#friend-list"><i class="fas fa-user-friends"></i> View friend list</a></li>
-          <li><a href="#friend-list"><i class="fas fa-ban"></i> View blocked list</a></li>
+          <li><a href="#friend-list"><i class="fas fa-ban"></i> See blocked list</a></li>
         </ul>`,
       'selected-friend': `
         <ul>
-          <li><a><i class="fas fa-comment-alt"></i> Chat with friend</a></li>
-          <li><a><i class="fas fa-user-minus"></i> Remove friend</a></li>
-          <li><a><i class="fas fa-ban"></i> Block friend</a></li>
+          <li><a><i class="fas fa-comment-alt"></i> Chat with ${name}</a></li>
+          <li><a><i class="fas fa-user-minus"></i> Unfriend ${name}</a></li>
+          <li><a><i class="fas fa-ban"></i> Block ${name}</a></li>
           <li><a><i class="fas fa-cog"></i> Friend settings</a></li>
         </ul>`,
       'selected-friend-profile': `
         <ul>
-          <li><a><i class="fas fa-user"></i> View Profile</a></li>
+          <li><a><i class="fas fa-user"></i> ${name}'s Profile</a></li>
         </ul>`,
       'selected-friend-chat-with': `
         <ul>
-          <li><a><i class="fas fa-comment-alt"></i> Chat with friend</a></li>
+          <li><a><i class="fas fa-comment-alt"></i> Chat with ${name}</a></li>
         </ul>`,
       'selected-friend-remove': `
         <ul>
-          <li><a><i class="fas fa-user-minus"></i> Remove friend</a></li>
+          <li><a><i class="fas fa-user-minus"></i> Unfriend ${name}</a></li>
         </ul>`,
       'selected-friend-settings': `
         <ul>
@@ -63,12 +66,16 @@ function showCustomMenu(x, y, types) {
         </ul>`,
       'incoming-friend': `
         <ul>
-          <li><a><i class="fas fa-check"></i> Accept friend request</a></li>
-          <li><a><i class="fas fa-times"></i> Reject friend request</a></li>
+          <li><a><i class="fas fa-check"></i> Accept ${name}'s request</a></li>
+          <li><a><i class="fas fa-times"></i> Reject ${name}'s request</a></li>
         </ul>`,
       'outgoing-friend': `
         <ul>
           <li><a><i class="fas fa-times"></i> Cancel Request</a></li>
+        </ul>`,
+      'add-friend': `
+        <ul>
+          <li><a href="#friend-list"><i class="fas fa-user-plus"></i> Add ${name}</a></li>
         </ul>`,
       'messages': `
         <ul>
@@ -84,6 +91,22 @@ function showCustomMenu(x, y, types) {
       'premium': `
         <ul>
           <li><a href="#settings-payment"><i class="fas fa-wallet"></i> Plan & Payments</a></li>
+        </ul>`,
+      'copy-post-title': `
+        <ul>
+          <li><a><i class="fas fa-copy"></i> Copy Title</a></li>
+        </ul>`,
+      'copy-post-desc': `
+        <ul>
+          <li><a><i class="fas fa-copy"></i> Copy Content</a></li>
+        </ul>`,
+      'post-author': `
+        <ul>
+          <li><a><i class="fas fa-user"></i> ${name}'s Profile</a></li>
+        </ul>`,
+      'nearby-user-profile': `
+        <ul>
+          <li><a><i class="fas fa-user"></i> ${name}'s Profile</a></li>
         </ul>`
     };
 

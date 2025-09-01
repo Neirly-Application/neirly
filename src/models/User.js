@@ -66,11 +66,6 @@ const userSchema = new mongoose.Schema({
     default: 250 
 
   },
-  roles: {    
-    type: [String],
-    enum: ['user', 'supporter','moderator', 'ceo' ],
-    default: ['user']
-  },
   profileVisibility: {
     type: String,
     enum: ['friends', 'everyone', 'private'],
@@ -81,14 +76,25 @@ const userSchema = new mongoose.Schema({
     location: String,
     lastActive: Date
   }],
-  profileCompleted: { type: Boolean, default: false },
+  location: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point'
+    },
+    coordinates: {
+      type: [Number],
+      default: [0, 0]
+    }
+  },
   roles: { type: [String], enum: ['user', 'supporter', 'alpha_tester', 'moderator', 'ceo' ], default: ['user']},
-  acceptedTerms: { type: Boolean,
-                    required: function () {
-                        return this.profileCompleted;
-                    },
-                    default: true,
-                  },
+  acceptedTerms: { 
+    type: Boolean,
+    required: function () {
+        return this.profileCompleted;
+    },
+    default: true,
+  },
   homeSettings: {
     address: {
       city: { type: String },
@@ -125,6 +131,7 @@ userSchema.index({ hasPremium: 1 });
 userSchema.index({ friends: 1 });
 userSchema.index({ recentChats: 1 });
 userSchema.index({ provider: 1 });
+userSchema.index({ location: '2dsphere' });
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;

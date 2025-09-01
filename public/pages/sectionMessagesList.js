@@ -32,7 +32,7 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
 
   content.innerHTML = `
     <h2><i class="fas fa-comment-alt"></i> Messages</h2>
-    <div id="chats">
+    <div id="chats" data-menu="messages">
       <p>Loading chats...</p>
     </div>
   `;
@@ -40,8 +40,11 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
   try {
     function showAddFriendMessage() {
       chatsContainer.innerHTML = `
-        <p class="info-text" style="text-align:left;opacity:0.7;margin-bottom: 20px;" data-menu="friend-list" >Start now by adding a friend!</p>
-        <button id="add-friend-btn" class="cta-button" data-menu="friend-list"><i class="fas fa-user-plus" data-menu="friend-list" ></i> Add a friend</button>
+      <div class="text-middlepage-info error" data-menu="messages">
+        <img src="../media/errors/4052969.webp" alt="Not Found" data-menu="messages">
+        <p data-menu="messages">Start now by adding a friend!</p>
+        <button id="add-friend-btn" class="cta-button" data-menu="messages friend-list"><i class="fas fa-user-plus"></i> Add a friend</button>
+      </div>
       `;
       const btn = chatsContainer.querySelector('#add-friend-btn');
       if (btn) btn.addEventListener('click', () => { window.location.hash = '#friend-list'; });
@@ -49,8 +52,11 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
 
     function showSelectFriendMessage() {
       chatsContainer.innerHTML = `
-        <p class="info-text" style="text-align:left;opacity:0.7;margin-bottom: 20px;" data-menu="messages friend-list">Chat now with your friends!</p>
-        <button id="add-friend-btn" class="cta-button" data-menu="messages friend-list"><i class="fas fa-user-plus" data-menu="messages friend-list"></i> Select a friend</button>
+      <div class="text-middlepage-info error" data-menu="messages">
+        <img src="../media/errors/4052968.webp" alt="Not Found" data-menu="messages">
+        <p data-menu="messages">Too quiet. Start now a chat with a friend!</p>
+        <button id="add-friend-btn" class="cta-button" data-menu="messages friend-list"><i class="fas fa-users"></i> Select a friend</button>
+      </div>
       `;
       const btn = chatsContainer.querySelector('#add-friend-btn');
       if (btn) btn.addEventListener('click', () => { window.location.hash = '#friend-list'; });

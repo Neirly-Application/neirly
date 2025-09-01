@@ -28,7 +28,7 @@ const requiredPackages = [
   "bcrypt", "cookie-parser", "cors", "node-cron", "discord.js", "dotenv", "express",
   "express-session", "jsonwebtoken", "leo-profanity", "mongo", "mongoose",
   "multer", "ngrok", "node-fetch", "nodemailer", "passport", "passport-discord",
-  "passport-google-oauth20", "passport-facebook", "passport-local", "ua-parser-js"
+  "passport-google-oauth20", "passport-facebook", "passport-local", "ua-parser-js", "node-geocoder"
 ];
 
 const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json')));

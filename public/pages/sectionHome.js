@@ -51,7 +51,11 @@ export default async function loadHomeSection(content, user) {
     <div class="fancy-line"></div>
 
     <div class="home-posts" id="loadPosts">
-      <p style="text-align:center;opacity:0.7;">Posts are loading...</p>
+      <div class="error">
+        <img src="../media/errors/4052969.webp" alt="Not Found">
+        <p>Start now by adding a friend!</p>
+        <button id="add-friend-btn" class="cta-button"><i class="fas fa-user-plus"></i> Add a friend</button>
+      </div>
     </div>
   `;
 
@@ -160,35 +164,40 @@ export default async function loadHomeSection(content, user) {
     }
   });
 
-  createPostButton.addEventListener('click', () => {
+  function openPostForm(overlay, postForm) {
     overlay.classList.remove('hidden');
     postForm.querySelector('#postTitle').focus();
+  }
+
+  function closePostFormOnClickOutside(overlay) {
+    overlay.addEventListener('click', (event) => {
+      if (event.target === overlay) {
+        overlay.classList.add('hidden');
+      }
+    });
+  }
+
+  createPostButton.addEventListener('click', () => {
+    openPostForm(overlay, postForm);
   });
 
   overlay.addEventListener('click', (event) => {
     if (event.target === overlay) {
-      overlay.classList.add('hidden');
+      closePostFormOnClickOutside(overlay);
     }
-  });
-
-  function closeCreatePostOverlay() {
-    overlay.classList.add('hidden');
-  }
-
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-      closeCreatePostOverlay();
-    });
   });
 
   function addPostToDOM(post, { newPost: isNew = false } = {}) {
     const newPost = document.createElement('div');
-    newPost.classList.add('home-post-card');
     newPost.dataset.id = post._id;
     const author = post.author;
     const authorName = author?.name || "User";
-    const authorNick = author?.uniquenick || "user";
+    const authorNick = author?.uniquenick || "Undefined";
     const authorPic = author?.profilePictureUrl || "../media/user.webp";
+    newPost.classList.add('home-post-card');
+    newPost.setAttribute("data-menu", "post-author");
+    newPost.setAttribute("data-name", authorName);
+    newPost.setAttribute("data-nick", authorNick);
 
     let mediaHTML = '';
     let mediaPath = post.media?.url;
@@ -240,30 +249,34 @@ export default async function loadHomeSection(content, user) {
     }
     const randomEmoji = getRandomEmojiSrc();
 
+    function authorDataAttrs(author) {
+      const name = author.name || 'User';
+      const nick = author.uniquenick || 'Undefined';
+      return `data-name="${name}" data-nick="${nick}"`;
+    }
+
     newPost.innerHTML = `
-      <div class="home-post-card-content">
+      <div class="home-post-card-content" data-menu="post-author" ${authorDataAttrs(author)}>
         <div class="post-menu">
           <button class="post-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
           <div class="post-menu-dropdown" style="display:none"></div>
         </div>
-        <div class="post-author">
-          <a href="#@${authorNick}"><img class="post-author-pic" src="${authorPic}" alt="${authorName}" />
-          <span class="post-author-name">${authorName}</span></a>
+        <div class="post-author" data-menu="post-author" ${authorDataAttrs(author)}>
+          <a href="#@${authorNick}"><img class="post-author-pic" src="${authorPic}" alt="${authorName}" data-menu="post-author" ${authorDataAttrs(author)}/>
+          <span class="post-author-name" data-menu="post-author" ${authorDataAttrs(author)}>${authorName}</span></a>
         </div>
-        <h2>${post.title}</h2>
-        <div class="desc"><p>${post.content.replace(/\n/g, "<br>")}</p></div>
+        <h2 data-menu="post-author copy-post-title" ${authorDataAttrs(author)}>${post.title}</h2>
+        <div class="desc" data-menu="post-author copy-post-desc" ${authorDataAttrs(author)}><p data-menu="post-author copy-post-desc" ${authorDataAttrs(author)}>${post.content.replace(/\n/g, "<br>")}</p></div>
         ${mediaHTML}
+        <small data-menu="post-author" ${authorDataAttrs(author)}>${new Date(post.createdAt).toLocaleDateString('en-EN', { day: 'numeric', month: 'long', year: 'numeric' })}</small>
       </div>
-      <small>${new Date(post.createdAt).toLocaleDateString('en-EN', { day: 'numeric', month: 'long', year: 'numeric' })}</small>
-      <div class="post-fancy-line"></div>
-      <div class="post-actions">
-        <div class="post-actions-left">
+      <div class="post-actions" data-menu="post-author" ${authorDataAttrs(author)}>
+        <div class="post-actions-left" data-menu="post-author" ${authorDataAttrs(author)}>
           <li><a class="like" href="#" title="Like ${authorName}'s Post"><i class="${post.likedByUser ? 'fas' : 'far'} fa-heart"></i></a></li>
           <li><a class="comment" href="#" title="Comment ${authorName}'s Post"><i class="far fa-comment"></i></a></li>
-          <!-- <li><a class="reaction" href="#" title="Add a Reaction"><i class="far fa-${reactions[Math.floor(Math.random() * reactions.length)]}"></i></a></li> -->
           <li><a href="#" title="React ${authorName}'s Post"><img src="${randomEmoji}" class="custom-emoji"></a></li>
         </div>
-        <div class="post-actions-right">
+        <div class="post-actions-right" data-menu="post-author" ${authorDataAttrs(author)}>
           <li><a class="favorite" href="#" title="Add ${authorName}'s Post to Favorites"><i class="${post.favoritedByUser ? 'fas' : 'far'} fa-star"></i></a></li>
           <li><a class="share" href="#" title="Share ${authorName}'s Post"><i class="far fa-paper-plane"></i></a></li>
         </div>
@@ -402,8 +415,11 @@ export default async function loadHomeSection(content, user) {
 
   function showAddFriendMessage() {
     postsContainer.innerHTML = `
-      <p class="info-text" style="text-align:center;opacity:0.7;margin-bottom: 20px;">Start now by adding a friend!</p>
-      <button id="add-friend-btn" class="cta-button"><i class="fas fa-user-plus"></i> Add a friend</button>
+      <div class="error">
+        <img src="../media/errors/4052969.webp" alt="Not Found">
+        <p>Start now by adding a friend!</p>
+        <button id="add-friend-btn" class="cta-button"><i class="fas fa-user-plus"></i> Add a friend</button>
+      </div>
     `;
     const btn = postsContainer.querySelector('#add-friend-btn');
     if (btn) btn.addEventListener('click', () => { window.location.hash = '#friend-list'; });
@@ -426,7 +442,12 @@ export default async function loadHomeSection(content, user) {
         if (!friends || friends.length === 0) {
           showAddFriendMessage();
         } else if (currentPage === 1) {
-          postsContainer.innerHTML = '<div style="text-align:center;opacity:0.7;">No posts from friends.</div>';
+          postsContainer.innerHTML = `
+           <div class="error">
+            <img src="../media/errors/4052968.webp" alt="Not Found">
+            <p>Too quiet. No posts from Friends</p>
+          </div>
+          `;
         }
         hasMore = false;
         return;
@@ -469,8 +490,15 @@ export default async function loadHomeSection(content, user) {
 
       const likedPosts = posts.filter(post => post.likedByUser);
       postsContainer.innerHTML = '';
-      if (likedPosts.length === 0) {
-        postsContainer.innerHTML = '<div style="text-align:center;opacity:0.7;">You didn\'t like any post yet.</div>';
+      if (!friends || friends.length === 0) {
+          showAddFriendMessage();
+        } else if (likedPosts.length === 0) {
+        postsContainer.innerHTML = `
+           <div class="error">
+            <img src="../media/errors/6416912.webp" alt="Not Found">
+            <p>You didn\'t like any post yet.</p>
+          </div>
+          `;
         return;
       }
       likedPosts.forEach(addPostToDOM);
@@ -488,8 +516,15 @@ export default async function loadHomeSection(content, user) {
 
       const favoritePosts = posts.filter(post => post.favoritedByUser);
       postsContainer.innerHTML = '';
-      if (favoritePosts.length === 0) {
-        postsContainer.innerHTML = '<div style="text-align:center;opacity:0.7;">You haven\'t added any post to favorites yet.</div>';
+      if (!friends || friends.length === 0) {
+          showAddFriendMessage();
+        } else if (favoritePosts.length === 0) {
+        postsContainer.innerHTML = `
+           <div class="error">
+            <img src="../media/errors/6416913.webp" alt="Not Found">
+            <p>You haven\'t added any post to favorites yet.</p>
+          </div>
+          `;
         return;
       }
       favoritePosts.forEach(addPostToDOM);
@@ -507,7 +542,16 @@ export default async function loadHomeSection(content, user) {
       postsContainer.innerHTML = '';
 
       if (posts.length === 0) {
-        postsContainer.innerHTML = '<div style="text-align:center;opacity:0.7;">You haven\'t posted anything yet.</div>';
+        postsContainer.innerHTML = `
+           <div class="error">
+            <img src="../media/errors/6416911.webp" alt="Not Found">
+            <p>You haven\'t posted anything yet.</p>
+            <button id="startPosting" class="cta-button"><i class="fas fa-pen-to-square"></i> Start Posting</button>
+          </div>
+          `;
+
+          const startPostingButton = postsContainer.querySelector('#startPosting');
+          startPostingButton.addEventListener('click', () => openPostForm(overlay, postForm));
         return;
       }
 

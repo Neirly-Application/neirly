@@ -189,6 +189,9 @@
 }
 
 .home-post-card small {
+  display: block;
+  text-align: left;
+  margin-top: 14px;
   color: var(--home-post-card-text-color-small);
 }
 

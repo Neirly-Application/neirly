@@ -84,7 +84,14 @@ export default async function loadSearchSection(content, user) {
 
   const renderGenericResults = ({ posts = [], tags = [], users = [] }) => {
     if (!users.length && !posts.length && !tags.length) {
-      results.innerHTML = `<p>No results found.</p>`;
+      results.innerHTML = `
+        <div class="text-middlepage-info">
+          <div class="error">
+            <img src="../media/errors/2275514.webp" alt="Not Found">
+            <p>No users found.</p>
+          </div>
+        </div>
+      `;
       return;
     }
 
@@ -154,7 +161,14 @@ export default async function loadSearchSection(content, user) {
       renderUsers(json?.searches || []);
     } catch (err) {
       console.error('Failed to load last searches:', err);
-      results.innerHTML = `<p class="search-error">Unable to load recent searches.</p>`;
+      results.innerHTML = `
+        <div class="text-middlepage-info">
+          <div class="error">
+            <img src="../media/errors/2210218.webp" alt="Loading Error">
+            <p>Unable to load recent searches.</p>
+          </div>
+        </div>
+      `;
     }
   };
 
@@ -179,7 +193,7 @@ export default async function loadSearchSection(content, user) {
         const json = await res.json();
         renderUsers(json?.users || []);
       } else {
-        saveTextSearch(query); // non aspetto
+        saveTextSearch(query); 
 
         const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`, { credentials: 'include' });
         const json = await res.json();

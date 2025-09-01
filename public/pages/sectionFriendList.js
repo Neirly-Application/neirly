@@ -207,28 +207,29 @@ export default async function loadFriendListSection(content, user) {
 
       if (confirmedFriends.length > 0) {
         confirmedFriends.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+        function friendDataAttrs(friend) {
+          const name = friend.name || 'User';
+          const nick = friend.uniquenick || 'Undefined';
+          return `data-name="${name}" data-nick="${nick}"`;
+        }
         html += confirmedFriends.map(friend => `
-          <div class="friend-item" data-menu="selected-friend-profile selected-friend">
-            <div class="friend-info" data-menu="selected-friend-profile selected-friend">
-              <img src="${friend.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar" data-menu="selected-friend-profile selected-friend"/>
-              <div class="friend-name" data-menu="selected-friend-profile selected-friend">
-                <strong data-menu="selected-friend-profile selected-friend">${friend.name || '-'}</strong><br>
-                <small class="friend-nick" data-menu="selected-friend-profile selected-friend">@${friend.uniquenick || ''}</small>
+          <div class="friend-item" data-menu="selected-friend-profile selected-friend" ${friendDataAttrs(friend)}>
+            <div class="friend-info" data-menu="selected-friend-profile selected-friend" ${friendDataAttrs(friend)}>
+              <img src="${friend.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar" data-menu="selected-friend-profile selected-friend" ${friendDataAttrs(friend)}/>
+              <div class="friend-name" data-menu="selected-friend-profile selected-friend" ${friendDataAttrs(friend)}>
+                <strong data-menu="selected-friend-profile selected-friend" ${friendDataAttrs(friend)}">${friend.name || 'User'}</strong><br>
+                <small class="friend-nick" data-menu="selected-friend-profile selected-friend" ${friendDataAttrs(friend)}>@${friend.uniquenick || 'Undefined'}</small>
               </div>
             </div>
             <div class="friend-actions" data-menu="selected-friend-profile selected-friend">
-              <button class="message-btn" 
-                      title="Message ${friend.name || 'User'}" 
-                      data-id="${friend._id}" 
-                      data-name="${friend.name || '-'}"
-                      data-menu="selected-friend-chat-with">
-                <i class="fas fa-comment-alt" data-menu="selected-friend-profile selected-friend-chat-with"></i> 
+              <button class="message-btn" title="Message ${friend.name || 'User'}" data-id="${friend._id}" ${friendDataAttrs(friend)} data-menu="selected-friend-chat-with">
+                <i class="fas fa-comment-alt" data-menu="selected-friend-profile selected-friend-chat-with" ${friendDataAttrs(friend)}></i> 
               </button>
-              <button class="remove-btn" title="Remove ${friend.name || 'User'}" data-id="${friend._id}" data-name="${friend.name || '-'}" data-menu="selected-friend-profile selected-friend-remove">
-                <i class="fas fa-user-minus" data-menu="selected-friend-profile selected-friend-remove"></i>
+              <button class="remove-btn" title="Remove ${friend.name || 'User'}" data-id="${friend._id}" ${friendDataAttrs(friend)} data-menu="selected-friend-profile selected-friend-remove">
+                <i class="fas fa-user-minus" data-menu="selected-friend-profile selected-friend-remove" ${friendDataAttrs(friend)}></i>
               </button>
-              <button class="settings-btn" title="Friend Settings" data-id="${friend._id}" data-name="${friend.name || '-'}" data-menu="selected-friend-profile selected-friend-settings">
-                <i class="fas fa-cog" data-menu="selected-friend-profile selected-friend-settings"></i>
+              <button class="settings-btn" title="Friend Settings" data-id="${friend._id}" ${friendDataAttrs(friend)} data-menu="selected-friend-profile selected-friend-settings">
+                <i class="fas fa-cog" data-menu="selected-friend-profile selected-friend-settings" ${friendDataAttrs(friend)}></i>
               </button>
             </div>
           </div>
@@ -239,21 +240,25 @@ export default async function loadFriendListSection(content, user) {
 
       friendsList.innerHTML = html;
 
-      incomingRequests.innerHTML = pendingRequests.length > 0
-        ? pendingRequests.map(req => `
-            <div class="friend-request-card" data-menu="selected-friend-profile incoming-friend">
-              <div class="friend-request-card-info" data-menu="selected-friend-profile incoming-friend">
-                <img src="${req.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar" data-menu="selected-friend-profile incoming-friend"/>
-                <div class="friend-request-card-name" data-menu="selected-friend-profile incoming-friend">
-                  <strong data-menu="selected-friend-profile incoming-friend">${req.name || 'User'}</strong><br>
-                  <small class="friend-request-card-nick" data-menu="selected-friend-profile incoming-friend">@${req.uniquenick || 'Undefined'}</small>
+      function reqDataAttrs(req) {
+        const name = req.name || 'User';
+        const nick = req.uniquenick || 'Undefined';
+        return `data-name="${name}" data-nick="${nick}"`;
+      };
+      incomingRequests.innerHTML = pendingRequests.length > 0 ? pendingRequests.map(req => `
+            <div class="friend-request-card" data-menu="selected-friend-profile incoming-friend" ${reqDataAttrs(req)}>
+              <div class="friend-request-card-info" data-menu="selected-friend-profile incoming-friend" ${reqDataAttrs(req)}>
+                <img src="${req.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar" data-menu="selected-friend-profile incoming-friend" ${reqDataAttrs(req)}/>
+                <div class="friend-request-card-name" data-menu="selected-friend-profile incoming-friend" ${reqDataAttrs(req)}>
+                  <strong data-menu="selected-friend-profile incoming-friend" ${reqDataAttrs(req)}>${req.name || 'User'}</strong><br>
+                  <small class="friend-request-card-nick" data-menu="selected-friend-profile incoming-friend" ${reqDataAttrs(req)}>@${req.uniquenick || 'Undefined'}</small>
                 </div>
               </div>
               <div class="friend-request-card-actions">
-                <button class="accept-btn" title="Accept ${req.name || 'User'}'s request" data-id="${req._id}" data-fromuserid="${req.fromUserId || req._id}" data-name="${req.name || 'User'}">
+                <button class="accept-btn" title="Accept ${req.name || 'User'}'s request" data-id="${req._id}" data-fromuserid="${req.fromUserId || req._id}" ${reqDataAttrs(req)}>
                   <i class="fas fa-check"></i> 
                 </button>
-                <button class="reject-btn" title="Reject ${req.name || 'User'}'s request" data-id="${req._id}" data-fromuserid="${req.fromUserId || req._id}" data-name="${req.name || 'User'}">
+                <button class="reject-btn" title="Reject ${req.name || 'User'}'s request" data-id="${req._id}" data-fromuserid="${req.fromUserId || req._id}" ${reqDataAttrs(req)}>
                   <i class="fas fa-times"></i>
                 </button>
               </div>
@@ -263,16 +268,16 @@ export default async function loadFriendListSection(content, user) {
 
       outgoingRequests.innerHTML = sentRequests.length > 0
         ? sentRequests.map(req => `
-            <div class="friend-request-card" data-menu="selected-friend-profile outgoing-friend">
-              <div class="friend-request-card-info" data-menu="selected-friend-profile outgoing-friend">
-                <img src="${req.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar" data-menu=" outgoing-friend"/>
-                <div class="friend-request-card-name" data-menu="selected-friend-profile outgoing-friend">
-                  <strong data-menu="selected-friend-profile outgoing-friend">${req.name || 'User'}</strong><br>
-                  <small class="friend-request-card-nick" data-menu="selected-friend-profile outgoing-friend">@${req.uniquenick || 'Undefined'}</small>
+            <div class="friend-request-card" data-menu="selected-friend-profile outgoing-friend" ${reqDataAttrs(req)}>
+              <div class="friend-request-card-info" data-menu="selected-friend-profile outgoing-friend" ${reqDataAttrs(req)}>
+                <img src="${req.profilePictureUrl || '../media/user.webp'}" alt="Avatar" class="avatar" data-menu=" outgoing-friend" ${reqDataAttrs(req)}/>
+                <div class="friend-request-card-name" data-menu="selected-friend-profile outgoing-friend" ${reqDataAttrs(req)}>
+                  <strong data-menu="selected-friend-profile outgoing-friend" ${reqDataAttrs(req)}">${req.name || 'User'}</strong><br>
+                  <small class="friend-request-card-nick" data-menu="selected-friend-profile outgoing-friend" ${reqDataAttrs(req)}>@${req.uniquenick || 'Undefined'}</small>
                 </div>
               </div>
               <div class="friend-request-card-actions">
-                <button class="cancel-request-btn" title="Cancel request" data-id="${req._id}" data-userid="${req.toUserId || req._id}" data-name="${req.name || 'User'}">
+                <button class="cancel-request-btn" title="Cancel request" data-id="${req._id}" data-userid="${req.toUserId || req._id}" ${reqDataAttrs(req)}>
                   <i class="fas fa-times"></i> 
                 </button>
               </div>
