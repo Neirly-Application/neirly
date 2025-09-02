@@ -3,7 +3,7 @@
   max-width: 250px;
   padding: 8px 14px;
   margin: 0 auto;
-  border: 2px solid var(--secondary);
+  border: 2px solid var(--main-bg);
   color: var(--main-text-color);
   background: transparent;
   border-radius: 6px;
@@ -13,6 +13,10 @@
   transition: transform .1s ease, background .1s ease, outline .1s ease;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+}
+
+.cta-button i {
+  margin: 0;
 }
 
 @media (hover: hover) and (pointer: fine) {

@@ -247,7 +247,7 @@
 }
 .post-actions-left li i,
 .post-actions-right li i {
-  margin: 0 auto;
+  margin: 0;
 }
 
 .like {
@@ -343,14 +343,14 @@
 @media (min-width: 1025px) {
   .post-actions li:hover {
     transform: scale(1.1);
-    color: var(--post-action-color, #012bd5);
+    color: var(--post-action-color);
   }
 }
 
 @media (max-width: 1024px) {
   .post-actions li:active {
     transform: scale(1.1);
-    color: var(--post-action-color, #012bd5);
+    color: var(--post-action-color);
   }
 }
 
@@ -395,6 +395,7 @@
 
 .cta-button-actions i {
   font-size: 20px;
+  margin: 0;
   line-height: 1;
 }
 

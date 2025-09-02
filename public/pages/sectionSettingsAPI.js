@@ -19,7 +19,8 @@ export default async function loadSettingsApiKeysSection(content, user) {
   content.style.height = '';
   content.style.overflow = '';
   content.style.padding = '';
-  content.style.margin = '';
+  content.style.margin  = '';
+  content.dataset.menu = '';
   content.style = 'transition: background 0.3s ease-in-out;';
     
   content.innerHTML = `

@@ -5,8 +5,9 @@ body.light {
 
   --bubble-color: rgba(100, 130, 255, 0.18);
   --bubble-glow: rgba(100, 130, 255, 0.55);
+  --skeleton-elements-bg: #a7a7a7ff;
   
-  --progress-bar-color: linear-gradient(90deg, #001f4d, #002966, #003d80, #0056b3, #007bff);
+  --progress-bar-color: linear-gradient(120deg, #0056b3, #0056b3, #007bff, #007bff, #439effff, #439effff);
 
   --main-text-color: #2e2e2e;
 
@@ -192,8 +193,9 @@ body.dark {
 
   --bubble-color: rgba(100, 130, 255, 0.55);
   --bubble-glow: rgba(100, 130, 255, 0.18);
+  --skeleton-elements-bg: #e0e0e0;
 
-  --progress-bar-color: linear-gradient(90deg, #001f4d, #002966, #003d80, #0056b3, #007bff);
+  --progress-bar-color: linear-gradient(120deg, #0056b3, #0056b3, #007bff, #007bff, #439effff, #439effff);
 
   --main-text-color: #ffffff;
 

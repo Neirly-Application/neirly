@@ -19,7 +19,8 @@ export default async function loadProfileSection(content, user) {
   content.style.height = '';
   content.style.overflow = '';
   content.style.padding = '';
-  content.style.margin = '';
+  content.style.margin  = '';
+  content.dataset.menu = '';
 
   content.innerHTML = '<h2><i class="fas fa-user"></i> Profile</h2><p>Loading data…</p>';
 

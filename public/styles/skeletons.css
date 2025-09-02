@@ -1,0 +1,26 @@
+.post-skeleton .skeleton-bar,
+.post-skeleton .skeleton-circle,
+.post-skeleton .skeleton-icon,
+.post-skeleton .media.skeleton {
+  border-radius: 10px;
+  background: var(--skeleton-elements-bg);
+  animation: skeleton-pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.skeleton-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+@keyframes skeleton-pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+}

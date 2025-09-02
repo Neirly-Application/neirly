@@ -15,7 +15,8 @@ export default async function loadPremiumSection(content, user) {
   content.style.height = '';
   content.style.overflow = '';
   content.style.padding = '';
-  content.style.margin = '';
+  content.style.margin  = '';
+  content.dataset.menu = '';
 
   let existingCanvas = document.getElementById('bubbles-canvas');
   if (!existingCanvas) {

@@ -18,7 +18,8 @@ export default async function loadNotificationsSection(content, user) {
   content.style.height = '';
   content.style.overflow = '';
   content.style.padding = '';
-  content.style.margin = '';
+  content.style.margin  = '';
+  content.dataset.menu = '';
 
   content.innerHTML = `
       <h2><i class="fas fa-bell"></i> Notifications</h2>

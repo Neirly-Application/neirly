@@ -18,7 +18,8 @@ export default async function loadHomeSection(content, user) {
   content.style.height = '';
   content.style.overflow = '';
   content.style.padding = '';
-  content.style.margin = '';
+  content.style.margin  = '';
+  content.dataset.menu = '';
 
   content.innerHTML = `
     <div class="backup-section">

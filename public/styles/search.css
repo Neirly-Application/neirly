@@ -1,4 +1,5 @@
 .search-bar {
+  position: relative;
   display: flex;
   justify-self: center;
   max-width: 600px;
@@ -12,20 +13,12 @@
 }
 
 .search-content {
+  position: relative;
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 10px;
-}
-
-.search-results {
-  display: block;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  text-align: center;
-  margin-top: 10px;
-  width: 100%;
-  height: auto;
+  padding-block: 10px;
+  padding-inline: 0;
 }
 
 .search-results::-webkit-scrollbar {
@@ -36,7 +29,6 @@
   width: 100%;
   height: 60px;
   padding: 10px 50px 10px 12px;
-  flex: 1;
   box-sizing: border-box;
   border: 1px solid var(--primary);
   border-radius: 10px;
@@ -44,25 +36,34 @@
   font-size: 1rem;
 }
 
-.search-bar i {
-  margin-left: 8px;
+.search-bar .search-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.search-bar .search-btn i {
+  margin: 0;
   color: var(--primary);
   font-size: 20px;
 }
 
-.search-btn {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  padding: 0;
-  margin-left: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.search-btn i {
-  color: var(--search-button-color);
+.search-results {
+  display: block;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  text-align: center;
+  margin-top: 10px;
+  width: 100%;
+  height: auto;
 }
 
 .search-title {

@@ -9,8 +9,43 @@
   width: auto;
   display: none;
   flex-direction: column;
-  z-index: 1000000;
+  z-index: 100000;
   user-select: none;
+}
+
+.custom-menu::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.custom-menu.arrow-top::before {
+  border: 8px solid transparent;
+  border-bottom-color: var(--primary);
+  top: -16px;
+  left: var(--arrow-x, 20px);
+}
+
+.custom-menu.arrow-bottom::before {
+  border: 8px solid transparent;
+  border-top-color: var(--primary);
+  bottom: -16px;
+  left: var(--arrow-x, 20px);
+}
+
+.custom-menu.arrow-left::before {
+  border: 8px solid transparent;
+  border-right-color: var(--primary);
+  left: -16px;
+  top: var(--arrow-y, 20px);
+}
+
+.custom-menu.arrow-right::before {
+  border: 8px solid transparent;
+  border-left-color: var(--primary);
+  right: -16px;
+  top: var(--arrow-y, 20px);
 }
 
 .custom-menu.visible {
@@ -32,7 +67,7 @@
 .custom-menu .bottom a {
   display: block;
   width: 100%;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 10px 12px;
   box-sizing: border-box;
   text-decoration: none;
@@ -45,7 +80,7 @@
   display: block;
   background: none;
   text-align: center;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 4px 6px;
   box-sizing: border-box;
   text-decoration: none;
@@ -81,6 +116,20 @@
 .custom-menu .bottom a:hover {
   cursor: pointer;
   background: var(--main-bg);
+}
+
+.custom-menu a .red,
+.custom-menu a i .red,
+.custom-menu a span .red {
+  color: #ff4444ff;
+}
+
+.custom-menu a:has(.red):hover {
+  background: #ff181891;
+}
+
+.custom-menu a:has(.red):hover .red {
+  color: #ffeeeeff;
 }
 
 .custom-menu ul {

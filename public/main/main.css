@@ -331,15 +331,19 @@ a .custom-emoji {
 .content::-webkit-scrollbar {
   display: none;
 }
-
 .content i {
   margin-right: 10px;
 }
-
 .content h2 {
   font-size: 20px;
   margin-top: 10px;
   margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 10px 16px 130px;
+  }
 }
 
 form label {
@@ -454,10 +458,6 @@ form button:focus-visible {
   .nav-item i {
     font-size: 1.1rem;
     margin-inline: 2px;
-  }
-
-  .content {
-    padding: 10px 16px 130px;
   }
 }
 
@@ -1395,6 +1395,38 @@ body.subsection-active {
   }
 }
 
+.skeleton-card .profile-card-row {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.skeleton-card .profile-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-card .profile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-left: auto;
+}
+
+@media (max-width: 480px) {
+  .skeleton-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .skeleton-card .profile-actions {
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}
+
 .case-header {
   display: flex;
   align-items: center;
@@ -1551,7 +1583,7 @@ body.subsection-active {
   height: auto;
 }
 
-.text-middlepage-info.error {
+.text-middlepage-info.error-container {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -1560,7 +1592,11 @@ body.subsection-active {
   text-align: center;
 }
 
-.error img:not(.custom-emoji):not(.profile-card img) {
+.error-container {
+  filter: grayscale(100%);
+}
+
+.error-container img:not(.custom-emoji):not(.profile-card img) {
   width: clamp(200px, 25vw, 300px);
   height: auto;
   filter: grayscale(100%);
@@ -1568,7 +1604,7 @@ body.subsection-active {
   margin: 0 auto;
 }
 
-.error p:not(.profile-info p):not(.profile-actions p),
+.error-container p:not(.profile-info p):not(.profile-actions p),
 .text-middlepage-info p:not(.profile-info p):not(.profile-actions p) {
   justify-content: center;
   text-align: center;
@@ -1576,6 +1612,6 @@ body.subsection-active {
   font-size: clamp(1rem, 2vw, 1.2rem);
 }
 
-.error p, .error button {
+.error-container p, .error-container button {
   margin-top: clamp(10px, 2vw, 20px);
 }

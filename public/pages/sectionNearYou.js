@@ -1,9 +1,77 @@
 import { showToast, customConfirm } from '../scripts/notification.js';
 import { stopBGAnimation, stopBubblesAnimation } from '../scripts/premiumBg.js';
 
+function showLocationSkeleton() {
+  const statusBox = document.getElementById("location-status");
+  const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+  if (!statusBox) return;
+
+  const random1 = random(180, 300);
+  const random2 = random(100, 200);
+  statusBox.innerHTML = `
+      <div class="error-container post-skeleton" data-menu="location" style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px;">
+        <div class="skeleton-circle" style="width: ${random1}px; height: 120px;"></div>
+        <p class="skeleton-bar" style="width: ${random2}px; height: 16px;"></p>
+      </div>
+    `;
+}
+
+function removeLocationSkeleton() {
+  const statusBox = document.getElementById("location-status");
+  if (!statusBox) return;
+  statusBox.querySelectorAll('.skeleton-bar').forEach(s => s.remove());
+}
+
+function showNearbyUsersSkeleton(count = 10) {
+  const usersBox = document.getElementById("nearby-users");
+  if (!usersBox) return;
+  const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+  const skeletons = [];
+  for (let i = 0; i < count; i++) {
+    const randomWidthName = random(100,180);
+    const randomWidthNick = random(40,80);
+    const randomWidthDesc = random(140,300);
+    skeletons.push(`
+      <div class="card profile-card post-skeleton">
+        <div class="profile-card-row">
+          <div class="skeleton-circle" style="width: 120px; height: 120px;"></div>
+          <div class="profile-info" style="margin-left: 10px; flex: 1;">
+            <p class="skeleton-bar" style="width: ${randomWidthName}px; height: 16px; margin-bottom: 10px;"></p>
+            <p class="skeleton-bar" style="width: ${randomWidthNick}px; height: 14px; margin-bottom: 10px;"></p>
+            <p class="skeleton-bar" style="width: ${randomWidthDesc}px; height: 14px; margin-bottom: 10px;"></p>
+            <p class="skeleton-bar" style="width: 80px; height: 16px;"></p>
+          </div>
+        </div>
+        <div class="profile-actions" style="display: flex; gap: 10px; margin-top: 10px;">
+          <div class="skeleton-bar" style="width: 100px; height: 30px;"></div>
+          <div class="skeleton-bar" style="width: 100px; height: 30px;"></div>
+        </div>
+      </div>
+    `);
+  }
+  usersBox.innerHTML = skeletons.join('');
+}
+
+function removeNearbyUsersSkeleton() {
+  const usersBox = document.getElementById("nearby-users");
+  if (!usersBox) return;
+  usersBox.querySelectorAll('.post-skeleton').forEach(card => card.remove());
+}
+
+function clearSkeletonsAndErrors() {
+  removeLocationSkeleton();
+  removeNearbyUsersSkeleton();
+  const statusBox = document.getElementById("location-status");
+  if (!statusBox) return;
+  statusBox.querySelectorAll('.error-container').forEach(e => e.remove());
+}
+
 export default async function loadNearYouSection(content, user) {
   stopBubblesAnimation();
   stopBGAnimation();
+
+  clearSkeletonsAndErrors();
 
   document.body.style.background = '';
   document.body.style.animation = '';
@@ -19,6 +87,7 @@ export default async function loadNearYouSection(content, user) {
   content.style.overflow = '';
   content.style.padding = '';
   content.style.margin = '';
+  content.dataset.menu = 'location';
 
   const avatar = user?.profilePictureUrl || '../media/user.webp';
   const username = user?.name || 'User';
@@ -30,7 +99,7 @@ export default async function loadNearYouSection(content, user) {
   }
 
   content.innerHTML = `
-    <h2><i class="fas fa-broadcast-tower"></i> Near you</h2>
+    <h2><i class="fas fa-location-dot"></i> Near you</h2>
 
     <div class="card profile-card" ${myDataAttrs(user)}>
       <div class="profile-card-row">
@@ -57,12 +126,14 @@ export default async function loadNearYouSection(content, user) {
     </div>
 
     <div class="fancy-line"></div>
-      <div id="location-status" class="text-middlepage-info">
-        <p>📍 Loading location...</p>
-      </div>
+    <div id="location-status" class="text-middlepage-info" data-menu="location"></div>
+    <div id="nearby-users"></div>
   `;
 
   const statusBox = document.getElementById("location-status");
+
+  showLocationSkeleton();
+  showNearbyUsersSkeleton(10);
 
   async function updateCoordinatesAndFetch(position) {
     const { latitude: lat, longitude: lng } = position.coords;
@@ -75,88 +146,94 @@ export default async function loadNearYouSection(content, user) {
       });
 
       const data = await fetch(`/api/near-me`).then(r => r.json());
+
+      removeLocationSkeleton();
+      removeNearbyUsersSkeleton();
+
       const nearbyUsers = data.nearby || [];
       const { road = '', city = '', postcode = '' } = data.address || {};
 
       let locationText = (!road && !city && !postcode) 
-        ? `
-          📍 Location not available!
-        `
-        : `
-          📍 Your Location: ${road}, ${postcode} ${city}
-        `;
+        ? `📍 Location not available!`
+        : `📍 Your Location: ${road}, ${postcode} ${city}`;
 
-      statusBox.innerHTML = `
-          <p>${locationText}</p>
-          <!-- <p><small><a href="#settings-location">Wrong Position?</a></small></p> -->
-      `;
+      statusBox.innerHTML = `<p data-menu="location">${locationText}</p>`;
 
       if (nearbyUsers.length) {
         const nearbyHtml = nearbyUsers.map(u => {
           const uName = u.name || 'User';
-          const uNick = '@' + u.uniquenick || '@' + 'Undefined';
+          const uNick = '@' + u.uniquenick || '@Undefined';
           const uAv = u.profilePictureUrl || '../media/user.webp';
-          const uAbout= u.about_me || '👋 Hello there! I\'m a Neirly user!';
+          const uAbout = u.about_me || '👋 Hello there! I\'m a Neirly user!';
 
           function userDataAttrs(user) {
-            return `data-menu="nearby-user-profile" data-name="${uName}" data-nick="${uNick}"`;
+            return `data-menu="nearby-user-profile location" data-name="${uName}" data-nick="${uNick}"`;
           }
 
           return `
-              <div class="card profile-card" ${userDataAttrs(user)}>
-                <div class="profile-card-row">
-                  <img src="${uAv}" alt="User Profile" ${userDataAttrs(user)} oncontextmenu="return false;">
-                  <div class="profile-info" ${userDataAttrs(user)} >
-                    <h3 class="info-name" ${userDataAttrs(user)} >${uName}</h3>
-                    <p class="info-nick" ${userDataAttrs(user)} >${uNick}</p>
-                    <p class="info-about" ${userDataAttrs(user)} >${uAbout}</p>
-                    <span class="status">Online</span>
-                  </div>
+            <div class="card profile-card" ${userDataAttrs(user)}>
+              <div class="profile-card-row">
+                <img src="${uAv}" alt="User Profile" ${userDataAttrs(user)} oncontextmenu="return false;">
+                <div class="profile-info" ${userDataAttrs(user)} >
+                  <h3 class="info-name" ${userDataAttrs(user)} ><i class="fas fa-location-dot" ${userDataAttrs(user)}></i>${uName}</h3>
+                  <p class="info-nick" ${userDataAttrs(user)} >${uNick}</p>
+                  <p class="info-about" ${userDataAttrs(user)} >${uAbout}</p>
+                  <span class="status">Online</span>
                 </div>
-                <div class="profile-actions" ${userDataAttrs(user)} >
-                  <a href="#friend-list" data-section="profile" ${userDataAttrs(user)} >
-                    <button class="cta-button" ${userDataAttrs(user)} >
-                      <i class="fas fa-user-plus" ${userDataAttrs(user)} ></i> Add Friend
-                    </button>
-                  </a>
-                </div>
-              </div>`;
+              </div>
+              <div class="profile-actions" ${userDataAttrs(user)} >
+                <a href="#friend-list" data-section="profile" ${userDataAttrs(user)} >
+                  <button class="cta-button" ${userDataAttrs(user)} >
+                    <i class="fas fa-user-plus" ${userDataAttrs(user)} ></i> Add Friend
+                  </button>
+                </a>
+              </div>
+            </div>`;
         }).join('');
         statusBox.innerHTML += nearbyHtml;
       } else {
         statusBox.innerHTML += `
-          <div class="error">
-            <img src="../media/errors/2275514.webp" alt="Not Found">
-            <p>No nearby users found.</p>
+          <div class="error-container" data-menu="location">
+            <img src="../media/errors/2275514.webp" alt="Not Found" data-menu="location">
+            <p data-menu="location">No nearby users found.</p>
           </div>
-          `;
+        `;
       }
 
     } catch (err) {
+      removeLocationSkeleton();
+      removeNearbyUsersSkeleton();
+
       console.error(err);
       statusBox.innerHTML = `
-          <div class="error">
-            <img src="../media/errors/2210218.webp" alt="Fetch Error">
-            <p>Unable to fetch nearby users.</p>
-          </div>`;
+        <div class="error-container" data-menu="location">
+          <img src="../media/errors/2210218.webp" alt="Fetch Error" data-menu="location">
+          <p data-menu="location">Unable to fetch nearby users.</p>
+        </div>`;
     }
   }
 
   function handleGeoError(err) {
+    removeLocationSkeleton();
+    removeNearbyUsersSkeleton();
+
     statusBox.innerHTML = `
-          <div class="error">
-            <img src="../media/errors/2210217.webp" alt="General Error">
-            <p>Error: ${err.message}.</p>
-          </div>`;
+      <div class="error-container" data-menu="location">
+        <img src="../media/errors/2210217.webp" alt="General Error" data-menu="location">
+        <p data-menu="location">Error: ${err.message}.</p>
+      </div>`;
   }
 
   async function initGeolocation() {
     if (!navigator.geolocation) {
+      removeLocationSkeleton();
+      removeNearbyUsersSkeleton();
+
       statusBox.innerHTML = `
-          <div class="error">
-            <img src="../media/errors/2210217.webp" alt="General Error">
-            <p>Geolocation not supported.</p>
-          </div>`;
+        <div class="error-container" data-menu="location">
+          <img src="../media/errors/2210217.webp" alt="General Error" data-menu="location">
+          <p data-menu="location">Geolocation not supported.</p>
+        </div>`;
       return;
     }
 
@@ -164,20 +241,24 @@ export default async function loadNearYouSection(content, user) {
       if (result.state === 'granted' || result.state === 'prompt') {
         navigator.geolocation.getCurrentPosition(updateCoordinatesAndFetch, handleGeoError);
       } else if (result.state === 'denied') {
+        removeLocationSkeleton();
+        removeNearbyUsersSkeleton();
+
         statusBox.innerHTML = `
-          <div class="error">
-            <img src="../media/errors/4052967.webp" alt="Geolocation Disabled">
-            <p>Geolocation is disabled. Please enable permissions in your browser settings.</p>
+          <div class="error-container" data-menu="location">
+            <img src="../media/errors/4052967.webp" alt="Geolocation Disabled" data-menu="location">
+            <p data-menu="location">Geolocation is disabled. Please enable permissions in your browser settings.</p>
           </div>`;
       }
     });
   }
 
-  const hasValidCoordinates = user?.location?.coordinates &&
-                              Array.isArray(user.location.coordinates) &&
-                              user.location.coordinates.length === 2 &&
-                              user.location.coordinates[0] !== 0 &&
-                              user.location.coordinates[1] !== 0;
+  const hasValidCoordinates = 
+    user?.location?.coordinates &&
+    Array.isArray(user.location.coordinates) &&
+    user.location.coordinates.length === 2 &&
+    user.location.coordinates[0] !== 0 &&
+    user.location.coordinates[1] !== 0;
 
   if (hasValidCoordinates) {
     updateCoordinatesAndFetch({

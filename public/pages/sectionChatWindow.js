@@ -19,7 +19,8 @@ export default async function loadChatWindow(content, user, chatUserId, onBack) 
   content.style.height = '';
   content.style.overflow = '';
   content.style.padding = '';
-  content.style.margin = '';
+  content.style.margin  = '';
+  content.dataset.menu = '';
 
   content.innerHTML = '<p>Loading chat...</p>';
 

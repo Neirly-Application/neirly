@@ -19,7 +19,8 @@ export default async function loadSettingsInfoSection(content, user) {
   content.style.height = '';
   content.style.overflow = '';
   content.style.padding = '';
-  content.style.margin = '';
+  content.style.margin  = '';
+  content.dataset.menu = '';
 
   console.log('[loadSettingsInfoSection] user object:', user);
 

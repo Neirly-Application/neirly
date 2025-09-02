@@ -1,12 +1,11 @@
 import { stopBGAnimation, stopBubblesAnimation } from '../scripts/premiumBg.js';
 
-let controller; // variabile globale al modulo per tenere l’AbortController
+let controller;
 
 export default async function loadMessagesList(content, user, onChatUserClick) {
   stopBubblesAnimation();
   stopBGAnimation();
 
-  // Annulla eventuale fetch precedente
   if (controller) controller.abort();
   controller = new AbortController();
 
@@ -28,7 +27,8 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
   content.style.height = '';
   content.style.overflow = '';
   content.style.padding = '';
-  content.style.margin = '';
+  content.style.margin  = '';
+  content.dataset.menu = '';
 
   content.innerHTML = `
     <h2><i class="fas fa-comment-alt"></i> Messages</h2>
@@ -40,7 +40,7 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
   try {
     function showAddFriendMessage() {
       chatsContainer.innerHTML = `
-      <div class="text-middlepage-info error" data-menu="messages">
+      <div class="text-middlepage-info error-container" data-menu="messages">
         <img src="../media/errors/4052969.webp" alt="Not Found" data-menu="messages">
         <p data-menu="messages">Start now by adding a friend!</p>
         <button id="add-friend-btn" class="cta-button" data-menu="messages friend-list"><i class="fas fa-user-plus"></i> Add a friend</button>
@@ -52,10 +52,10 @@ export default async function loadMessagesList(content, user, onChatUserClick) {
 
     function showSelectFriendMessage() {
       chatsContainer.innerHTML = `
-      <div class="text-middlepage-info error" data-menu="messages">
+      <div class="text-middlepage-info error-container" data-menu="messages">
         <img src="../media/errors/4052968.webp" alt="Not Found" data-menu="messages">
         <p data-menu="messages">Too quiet. Start now a chat with a friend!</p>
-        <button id="add-friend-btn" class="cta-button" data-menu="messages friend-list"><i class="fas fa-users"></i> Select a friend</button>
+        <button id="select-friend-btn" class="cta-button" data-menu="messages friend-list"><i class="fas fa-users"></i> Select a friend</button>
       </div>
       `;
       const btn = chatsContainer.querySelector('#add-friend-btn');

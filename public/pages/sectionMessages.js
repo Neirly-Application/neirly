@@ -20,7 +20,8 @@ export default async function loadMessagesSection(content, user, subSection = 'l
   content.style.height = '';
   content.style.overflow = '';
   content.style.padding = '';
-  content.style.margin = '';
+  content.style.margin  = '';
+  content.dataset.menu = '';
 
   const topNavbar = document.querySelector('.mobile-topbar');
   const bottomNavbar = document.querySelector('.bottom-navbar');

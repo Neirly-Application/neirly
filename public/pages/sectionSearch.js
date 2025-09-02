@@ -15,7 +15,8 @@ export default async function loadSearchSection(content, user) {
   content.style.height = '';
   content.style.overflow = '';
   content.style.padding = '';
-  content.style.margin = '';
+  content.style.margin  = '';
+  content.dataset.menu = '';
 
   content.innerHTML = `
     <div class="search-bar">
@@ -28,7 +29,12 @@ export default async function loadSearchSection(content, user) {
     </div>
     <div class="fancy-line"></div>
     <div class="search-results" id="search-results">
-      <p class="search-placeholder">Loading recent searches...</p>
+      <div class="text-middlepage-info">
+        <div class="error-container">
+          <img src="../media/errors/6416915.webp" alt="Search for Users">
+          <p>Loading recent searches...</p>
+        </div>
+      </div>
     </div>
   `;
 
@@ -63,7 +69,14 @@ export default async function loadSearchSection(content, user) {
 
   const renderUsers = (users = []) => {
     if (!users.length) {
-      results.innerHTML = `<p>Search now for a user you are interested to know!</p>`;
+      results.innerHTML = `
+        <div class="text-middlepage-info">
+          <div class="error-container">
+            <img src="../media/errors/6416915.webp" alt="Search for Users">
+            <p>Search now for any user you are interested to know!</p>
+          </div>
+        </div>
+        `;
       return;
     }
 
@@ -86,7 +99,7 @@ export default async function loadSearchSection(content, user) {
     if (!users.length && !posts.length && !tags.length) {
       results.innerHTML = `
         <div class="text-middlepage-info">
-          <div class="error">
+          <div class="error-container">
             <img src="../media/errors/2275514.webp" alt="Not Found">
             <p>No users found.</p>
           </div>
@@ -163,7 +176,7 @@ export default async function loadSearchSection(content, user) {
       console.error('Failed to load last searches:', err);
       results.innerHTML = `
         <div class="text-middlepage-info">
-          <div class="error">
+          <div class="error-container">
             <img src="../media/errors/2210218.webp" alt="Loading Error">
             <p>Unable to load recent searches.</p>
           </div>
@@ -184,7 +197,14 @@ export default async function loadSearchSection(content, user) {
     if (query === lastQuery) return;
     lastQuery = query;
 
-    results.innerHTML = `<p class="search-title">Searching for: <strong>${query}</strong>...</p>`;
+    results.innerHTML = `
+      <div class="text-middlepage-info">
+        <div class="error-container">
+          <img src="../media/errors/6416914.webp" alt="Searching for">
+          <p>Searching for: <strong>${query}</strong>...</p>
+        </div>
+      </div>
+      `;
 
     try {
       if (query.startsWith('@')) {
@@ -201,7 +221,15 @@ export default async function loadSearchSection(content, user) {
       }
     } catch (err) {
       console.error('Search error:', err);
-      results.innerHTML = `<p class="search-error">Something went wrong.</p>`;
+      results.innerHTML = `
+      
+      <div class="text-middlepage-info">
+        <div class="error-container">
+          <img src="../media/errors/2210218.webp" alt="Searching for">
+          <p>Something went wrong.</p>
+        </div>
+      </div>
+      `;
     }
   };
 

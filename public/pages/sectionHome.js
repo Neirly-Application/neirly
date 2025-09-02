@@ -23,7 +23,8 @@ export default async function loadHomeSection(content, user) {
   content.style.height = '';
   content.style.overflow = '';
   content.style.padding = '';
-  content.style.margin = '';
+  content.style.margin  = '';
+  content.dataset.menu = '';
 
   content.innerHTML = `
     <h2><i class="fas fa-home"></i> Home Page</h2>
@@ -51,11 +52,6 @@ export default async function loadHomeSection(content, user) {
     <div class="fancy-line"></div>
 
     <div class="home-posts" id="loadPosts">
-      <div class="error">
-        <img src="../media/errors/4052969.webp" alt="Not Found">
-        <p>Start now by adding a friend!</p>
-        <button id="add-friend-btn" class="cta-button"><i class="fas fa-user-plus"></i> Add a friend</button>
-      </div>
     </div>
   `;
 
@@ -83,7 +79,7 @@ export default async function loadHomeSection(content, user) {
       <div class="char-counter">
         <span id="charCount">0</span> / 300
       </div>
-      <input type="file" id="postMedia" accept="image/*,video/*,.gif" hidden />
+      <input type="file" id="postMedia" accept="image/*,video/*,.gif" style="display: none;"/>
       <label class="upload-btn" for="postMedia">
         <i class="fas fa-upload"></i> Choose Media
       </label>
@@ -166,15 +162,19 @@ export default async function loadHomeSection(content, user) {
 
   function openPostForm(overlay, postForm) {
     overlay.classList.remove('hidden');
+
+    postForm.querySelector('#postTitle').value = '';
+    postForm.querySelector('#postContent').value = '';
+    postForm.querySelector('#postMedia').value = '';
+    postForm.querySelector('#fileName').textContent = 'No file chosen';
+    postForm.querySelector('#charCount').textContent = '0';
+    postForm.querySelector('#charCount').style.color = '#4e6ef2';
+
     postForm.querySelector('#postTitle').focus();
   }
 
   function closePostFormOnClickOutside(overlay) {
-    overlay.addEventListener('click', (event) => {
-      if (event.target === overlay) {
         overlay.classList.add('hidden');
-      }
-    });
   }
 
   createPostButton.addEventListener('click', () => {
@@ -186,6 +186,227 @@ export default async function loadHomeSection(content, user) {
       closePostFormOnClickOutside(overlay);
     }
   });
+
+  function showSkeletons(count = 5) {
+    postsContainer.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+      const skeleton = document.createElement('div');
+      skeleton.className = 'home-post-card post-skeleton';
+      skeleton.innerHTML = `
+        <div class="home-post-card-content">
+          <div class="post-menu">
+            <button class="post-menu-btn skeleton-circle"></button>
+          </div>
+          <div class="post-author">
+            <div class="post-author-pic skeleton-circle"></div>
+            <div class="post-author-name skeleton-bar" style="width: 100px; height: 16px;"></div>
+          </div>
+          <h2 class="skeleton-bar" style="width: 70%; height: 20px; margin-bottom: 10px;"></h2>
+          <div class="desc">
+            <p class="skeleton-bar" style="width: 90%; height: 14px;"></p>
+            <p class="skeleton-bar" style="width: 85%; height: 14px;"></p>
+            <p class="skeleton-bar" style="width: 80%; height: 14px;"></p>
+          </div>
+          <div class="media skeleton" style="height: 200px; border-radius: 20px; margin: 10px 0;"></div>
+          <small class="skeleton-bar" style="width: 30%; height: 12px;"></small>
+        </div>
+        <div class="post-actions">
+          <div class="post-actions-left">
+            <li class="skeleton-icon"></li>
+            <li class="skeleton-icon"></li>
+            <li class="skeleton-icon"></li>
+          </div>
+          <div class="post-actions-right">
+            <li class="skeleton-icon"></li>
+            <li class="skeleton-icon"></li>
+          </div>
+        </div>
+      `;
+      postsContainer.appendChild(skeleton);
+    }
+  }
+
+  function removeSkeletons() {
+    document.querySelectorAll('.post-skeleton').forEach(s => s.remove());
+  }
+
+  async function getFriends() {
+    try {
+      const res = await fetch('/api/chats/friends-and-chats', { credentials: 'include' });
+      if (!res.ok) throw new Error('Failed to load friends');
+      const data = await res.json();
+      return data.friends || [];
+    } catch (err) {
+      showToast(err.message, 'error');
+      return [];
+    }
+  }
+  
+  const friends = await getFriends();
+
+  function showAddFriendMessage() {
+    postsContainer.innerHTML = `
+      <div class="error-container">
+        <img src="../media/errors/4052969.webp" alt="Not Found">
+        <p>Start now by adding a friend!</p>
+        <button id="add-friend-btn" class="cta-button"><i class="fas fa-user-plus"></i> Add a friend</button>
+      </div>
+    `;
+    const btn = postsContainer.querySelector('#add-friend-btn');
+    if (btn) btn.addEventListener('click', () => { window.location.hash = '#friend-list'; });
+  }
+
+  async function loadPosts() {
+    if (loading || !hasMore) return;
+    loading = true;
+
+    showSkeletons(5);
+
+    try {
+      const res = await fetch(`/api/posts?page=${currentPage}&limit=10`, { credentials: 'include' });
+      if (!res.ok) throw new Error('Failed to load posts');
+
+      const data = await res.json();
+      const posts = Array.isArray(data) ? data : data.posts || [];
+
+      removeSkeletons();
+
+      if (currentPage === 1) postsContainer.innerHTML = '';
+
+      if (posts.length === 0) {
+        if (!friends || friends.length === 0) {
+          showAddFriendMessage();
+        } else if (currentPage === 1) {
+          postsContainer.innerHTML = `
+           <div class="error-container">
+            <img src="../media/errors/4052968.webp" alt="Not Found">
+            <p>Too quiet. No posts from Friends yet.</p>
+          </div>
+          `;
+        }
+        hasMore = false;
+        return;
+      }
+
+      posts.forEach(addPostToDOM);
+
+      hasMore = posts.length === 10;
+      currentPage++;
+    } catch (err) {
+      showToast(err.message, 'error');
+    } finally {
+      loading = false;
+    }
+  }
+
+  const sentinel = document.createElement('div');
+  sentinel.id = "scroll-sentinel";
+  postsContainer.after(sentinel);
+
+  const observer = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      loadPosts();
+    }
+  }, {
+    root: null,
+    rootMargin: "600px",
+    threshold: 0
+  });
+
+  observer.observe(sentinel);
+
+
+  async function loadLikedPosts() {
+    showSkeletons(5);
+
+    try {
+      const res = await fetch('/api/posts/me?page=1&limit=50', { credentials: 'include' });
+      if (!res.ok) throw new Error('Failed to load posts');
+      const data = await res.json();
+      const posts = Array.isArray(data) ? data : data.posts || [];
+    
+      removeSkeletons();
+
+      const likedPosts = posts.filter(post => post.likedByUser);
+      postsContainer.innerHTML = '';
+      if (!friends || friends.length === 0) {
+          showAddFriendMessage();
+        } else if (likedPosts.length === 0) {
+        postsContainer.innerHTML = `
+           <div class="error-container">
+            <img src="../media/errors/6416912.webp" alt="Not Found">
+            <p>You didn\'t like any post yet.</p>
+          </div>
+          `;
+        return;
+      }
+      likedPosts.forEach(addPostToDOM);
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  }
+
+  async function loadFavoritedPosts() {
+    showSkeletons(5);
+
+    try {
+      const res = await fetch('/api/posts/me?page=1&limit=50', { credentials: 'include' });
+      if (!res.ok) throw new Error('Failed to load posts');
+      const data = await res.json();
+      const posts = Array.isArray(data) ? data : data.posts || [];
+    
+      removeSkeletons();
+
+      const favoritePosts = posts.filter(post => post.favoritedByUser);
+      postsContainer.innerHTML = '';
+      if (!friends || friends.length === 0) {
+          showAddFriendMessage();
+        } else if (favoritePosts.length === 0) {
+        postsContainer.innerHTML = `
+           <div class="error-container">
+            <img src="../media/errors/6416913.webp" alt="Not Found">
+            <p>You haven\'t added any post to favorites yet.</p>
+          </div>
+          `;
+        return;
+      }
+      favoritePosts.forEach(addPostToDOM);
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  }
+
+  async function loadUserPosts() {
+    showSkeletons(5);
+
+    try {
+      const res = await fetch('/api/posts/me?page=1&limit=50', { credentials: 'include' });
+      if (!res.ok) throw new Error('Failed to load posts');
+      const data = await res.json();
+      const posts = data.posts || [];
+    
+      removeSkeletons();
+
+      postsContainer.innerHTML = '';
+      if (posts.length === 0) {
+        postsContainer.innerHTML = `
+           <div class="error-container">
+            <img src="../media/errors/6416911.webp" alt="Not Found">
+            <p>You haven\'t posted anything yet.</p>
+            <button id="startPosting" class="cta-button"><i class="fas fa-pen-to-square"></i> Start Posting</button>
+          </div>
+          `;
+
+          const startPostingButton = postsContainer.querySelector('#startPosting');
+          startPostingButton.addEventListener('click', () => openPostForm(overlay, postForm));
+        return;
+      }
+
+      posts.forEach(addPostToDOM);
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  }
 
   function addPostToDOM(post, { newPost: isNew = false } = {}) {
     const newPost = document.createElement('div');
@@ -219,22 +440,6 @@ export default async function loadHomeSection(content, user) {
         mediaHTML = `<img src="${mediaPath}" alt="Post Media" />`;
       }
     }
-
-    /* const reactions = [
-      "face-smile",       
-      "face-grin-hearts", 
-      "face-grin-stars",  
-      "face-grin",
-      "face-angry",    
-      "face-grin-squint-tears",    
-      "face-kiss-wink-heart",
-      "face-kiss",
-      "face-meh",
-      "face-surprise",
-      "face-dizzy",
-      "face-grin-tears",
-      "face-sad-cry"
-    ]; */
 
     const reactions = [ "🙂", "😍", "🤩", "🤨", "😠", "🤣", "😂", "😘", "🥱", "😯", "😢", "🙄", "😎" ];
     function emojiToCode(emoji) {
@@ -396,168 +601,6 @@ export default async function loadHomeSection(content, user) {
       postsContainer.prepend(newPost);
     } else {
       postsContainer.appendChild(newPost);
-    }
-  }
-  
-  async function getFriends() {
-    try {
-      const res = await fetch('/api/chats/friends-and-chats', { credentials: 'include' });
-      if (!res.ok) throw new Error('Failed to load friends');
-      const data = await res.json();
-      return data.friends || [];
-    } catch (err) {
-      showToast(err.message, 'error');
-      return [];
-    }
-  }
-  
-  const friends = await getFriends();
-
-  function showAddFriendMessage() {
-    postsContainer.innerHTML = `
-      <div class="error">
-        <img src="../media/errors/4052969.webp" alt="Not Found">
-        <p>Start now by adding a friend!</p>
-        <button id="add-friend-btn" class="cta-button"><i class="fas fa-user-plus"></i> Add a friend</button>
-      </div>
-    `;
-    const btn = postsContainer.querySelector('#add-friend-btn');
-    if (btn) btn.addEventListener('click', () => { window.location.hash = '#friend-list'; });
-  }
-
-  async function loadPosts() {
-    if (loading || !hasMore) return;
-    loading = true;
-
-    try {
-      const res = await fetch(`/api/posts?page=${currentPage}&limit=10`, { credentials: 'include' });
-      if (!res.ok) throw new Error('Failed to load posts');
-
-      const data = await res.json();
-      const posts = Array.isArray(data) ? data : data.posts || [];
-
-      if (currentPage === 1) postsContainer.innerHTML = '';
-
-      if (posts.length === 0) {
-        if (!friends || friends.length === 0) {
-          showAddFriendMessage();
-        } else if (currentPage === 1) {
-          postsContainer.innerHTML = `
-           <div class="error">
-            <img src="../media/errors/4052968.webp" alt="Not Found">
-            <p>Too quiet. No posts from Friends</p>
-          </div>
-          `;
-        }
-        hasMore = false;
-        return;
-      }
-
-      posts.forEach(addPostToDOM);
-
-      hasMore = posts.length === 10;
-      currentPage++;
-    } catch (err) {
-      showToast(err.message, 'error');
-    } finally {
-      loading = false;
-    }
-  }
-
-  const sentinel = document.createElement('div');
-  sentinel.id = "scroll-sentinel";
-  postsContainer.after(sentinel);
-
-  const observer = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting) {
-      loadPosts();
-    }
-  }, {
-    root: null,
-    rootMargin: "600px",
-    threshold: 0
-  });
-
-  observer.observe(sentinel);
-
-
-  async function loadLikedPosts() {
-    try {
-      const res = await fetch('/api/posts/me?page=1&limit=50', { credentials: 'include' });
-      if (!res.ok) throw new Error('Failed to load posts');
-      const data = await res.json();
-      const posts = Array.isArray(data) ? data : data.posts || [];
-
-      const likedPosts = posts.filter(post => post.likedByUser);
-      postsContainer.innerHTML = '';
-      if (!friends || friends.length === 0) {
-          showAddFriendMessage();
-        } else if (likedPosts.length === 0) {
-        postsContainer.innerHTML = `
-           <div class="error">
-            <img src="../media/errors/6416912.webp" alt="Not Found">
-            <p>You didn\'t like any post yet.</p>
-          </div>
-          `;
-        return;
-      }
-      likedPosts.forEach(addPostToDOM);
-    } catch (err) {
-      showToast(err.message, 'error');
-    }
-  }
-
-  async function loadFavoritedPosts() {
-    try {
-      const res = await fetch('/api/posts/me?page=1&limit=50', { credentials: 'include' });
-      if (!res.ok) throw new Error('Failed to load posts');
-      const data = await res.json();
-      const posts = Array.isArray(data) ? data : data.posts || [];
-
-      const favoritePosts = posts.filter(post => post.favoritedByUser);
-      postsContainer.innerHTML = '';
-      if (!friends || friends.length === 0) {
-          showAddFriendMessage();
-        } else if (favoritePosts.length === 0) {
-        postsContainer.innerHTML = `
-           <div class="error">
-            <img src="../media/errors/6416913.webp" alt="Not Found">
-            <p>You haven\'t added any post to favorites yet.</p>
-          </div>
-          `;
-        return;
-      }
-      favoritePosts.forEach(addPostToDOM);
-    } catch (err) {
-      showToast(err.message, 'error');
-    }
-  }
-
-  async function loadUserPosts() {
-    try {
-      const res = await fetch('/api/posts/me?page=1&limit=50', { credentials: 'include' });
-      if (!res.ok) throw new Error('Failed to load posts');
-      const data = await res.json();
-      const posts = data.posts || [];
-      postsContainer.innerHTML = '';
-
-      if (posts.length === 0) {
-        postsContainer.innerHTML = `
-           <div class="error">
-            <img src="../media/errors/6416911.webp" alt="Not Found">
-            <p>You haven\'t posted anything yet.</p>
-            <button id="startPosting" class="cta-button"><i class="fas fa-pen-to-square"></i> Start Posting</button>
-          </div>
-          `;
-
-          const startPostingButton = postsContainer.querySelector('#startPosting');
-          startPostingButton.addEventListener('click', () => openPostForm(overlay, postForm));
-        return;
-      }
-
-      posts.forEach(addPostToDOM);
-    } catch (err) {
-      showToast(err.message, 'error');
     }
   }
 
