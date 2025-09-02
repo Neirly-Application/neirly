@@ -6,7 +6,7 @@ function showLocationSkeleton() {
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
   if (!statusBox) return;
 
-  const random1 = random(180, 300);
+  const random1 = random(180, 200);
   const random2 = random(100, 200);
   statusBox.innerHTML = `
       <div class="error-container post-skeleton" data-menu="location" style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px;">
@@ -29,9 +29,9 @@ function showNearbyUsersSkeleton(count = 10) {
 
   const skeletons = [];
   for (let i = 0; i < count; i++) {
-    const randomWidthName = random(100,180);
+    const randomWidthName = random(100,140);
     const randomWidthNick = random(40,80);
-    const randomWidthDesc = random(140,300);
+    const randomWidthDesc = random(100,140);
     skeletons.push(`
       <div class="card profile-card post-skeleton">
         <div class="profile-card-row">
