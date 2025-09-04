@@ -3,24 +3,39 @@
 .post-skeleton .skeleton-icon,
 .post-skeleton .media.skeleton {
   border-radius: 10px;
-  background: var(--skeleton-elements-bg);
-  animation: skeleton-pulse 1.5s infinite ease-in-out;
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-elements-bg) 0%,
+    var(--skeleton-elements-bg-glow) 50%,
+    var(--skeleton-elements-bg) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.5s infinite ease-in-out, skeleton-shimmer 1.5s infinite ease-in-out;
 }
 
 .skeleton-circle {
   width: 30px;
   height: 30px;
-  border-radius: 50%;
+  border-radius: 50% !important;
 }
 
 .skeleton-icon {
   width: 24px;
   height: 24px;
-  border-radius: 50%;
+  border-radius: 50% !important;
 }
 
 @keyframes skeleton-pulse {
   0% { opacity: 1; }
   50% { opacity: 0.4; }
   100% { opacity: 1; }
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }

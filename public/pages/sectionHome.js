@@ -5,6 +5,7 @@ export default async function loadHomeSection(content, user) {
   let currentPage = 1;
   let loading = false;
   let hasMore = true;
+  removeSkeletons
 
   stopBubblesAnimation();
   stopBGAnimation();
@@ -65,6 +66,54 @@ export default async function loadHomeSection(content, user) {
   const favoriteButton   = content.querySelector('#favorites');
   const postsContainer   = content.querySelector('#loadPosts');
 
+  function showSkeletons(count = 5) {
+    postsContainer.innerHTML = '';
+    const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    for (let i = 0; i < count; i++) {
+      const skeleton = document.createElement('div');
+      const titleWidth = random(50,70);
+      const mediaHeight = random(0,300);
+      const longDesc = `
+            <p class="skeleton-bar" style="width: 90%; height: 14px; margin-top: 14px;"></p>
+            <p class="skeleton-bar" style="width: 85%; height: 14px; margin-top: 8px;"></p>
+            <p class="skeleton-bar" style="width: 80%; height: 14px; margin: 5px 0 14px 0;"></p>
+      `;
+      skeleton.className = 'home-post-card post-skeleton';
+      skeleton.innerHTML = `
+        <div class="home-post-card-content">
+          <div class="post-menu">
+            <button class="post-menu-btn skeleton-circle"></button>
+          </div>
+          <div class="post-author">
+            <div class="post-author-pic skeleton-circle"></div>
+            <div class="post-author-name skeleton-bar" style="width: 100px; height: 16px;"></div>
+          </div>
+          <h2 class="skeleton-bar" style="width: ${titleWidth}%; height: 20px; margin-bottom: 10px;"></h2>
+            ${longDesc}
+          <div class="media skeleton" style="height: ${mediaHeight}px; border-radius: 20px; margin: 10px 0;"></div>
+          <small class="skeleton-bar" style="width: 40%; height: 12px;"></small>
+        </div>
+        <div class="post-actions">
+          <div class="post-actions-left">
+            <li class="skeleton-icon"></li>
+            <li class="skeleton-icon"></li>
+            <li class="skeleton-icon"></li>
+          </div>
+          <div class="post-actions-right">
+            <li class="skeleton-icon"></li>
+            <li class="skeleton-icon"></li>
+          </div>
+        </div>
+      `;
+      postsContainer.appendChild(skeleton);
+    }
+  }
+
+  function removeSkeletons() {
+    document.querySelectorAll('.post-skeleton').forEach(s => s.remove());
+  }
+
   const overlay = document.createElement('div');
   overlay.classList.add('create-post-overlay');
   overlay.classList.add('hidden');
@@ -118,14 +167,23 @@ export default async function loadHomeSection(content, user) {
 // =====================
 //      POST SUBMIT
 // =====================
+  let canClick = true;
+
   submitButton.addEventListener('click', async (e) => {
     e.preventDefault();
+
+    if (!canClick) return;
+    canClick = false;
 
     const title = postForm.querySelector('#postTitle').value.trim();
     const contentText = postForm.querySelector('#postContent').value.trim();
     const file = fileInput.files[0];
 
-    if (!title || !contentText) return showToast('Title and content are required!', 'error');
+    if (!title || !contentText) {
+      showToast('Title and content are required!', 'error');
+      canClick = true;
+      return;
+    }
 
     const formData = new FormData();
     formData.append('title', title);
@@ -155,8 +213,13 @@ export default async function loadHomeSection(content, user) {
       fileName.textContent = 'No file chosen';
       submitButton.textContent = 'Post';
       showToast('Post created!', 'success');
+
     } catch (err) {
       showToast(err.message, 'error');
+    } finally {
+      setTimeout(() => {
+        canClick = true;
+      }, 3000);
     }
   });
 
@@ -174,7 +237,7 @@ export default async function loadHomeSection(content, user) {
   }
 
   function closePostFormOnClickOutside(overlay) {
-        overlay.classList.add('hidden');
+    overlay.classList.add('hidden');
   }
 
   createPostButton.addEventListener('click', () => {
@@ -186,49 +249,6 @@ export default async function loadHomeSection(content, user) {
       closePostFormOnClickOutside(overlay);
     }
   });
-
-  function showSkeletons(count = 5) {
-    postsContainer.innerHTML = '';
-    for (let i = 0; i < count; i++) {
-      const skeleton = document.createElement('div');
-      skeleton.className = 'home-post-card post-skeleton';
-      skeleton.innerHTML = `
-        <div class="home-post-card-content">
-          <div class="post-menu">
-            <button class="post-menu-btn skeleton-circle"></button>
-          </div>
-          <div class="post-author">
-            <div class="post-author-pic skeleton-circle"></div>
-            <div class="post-author-name skeleton-bar" style="width: 100px; height: 16px;"></div>
-          </div>
-          <h2 class="skeleton-bar" style="width: 70%; height: 20px; margin-bottom: 10px;"></h2>
-          <div class="desc">
-            <p class="skeleton-bar" style="width: 90%; height: 14px;"></p>
-            <p class="skeleton-bar" style="width: 85%; height: 14px;"></p>
-            <p class="skeleton-bar" style="width: 80%; height: 14px;"></p>
-          </div>
-          <div class="media skeleton" style="height: 200px; border-radius: 20px; margin: 10px 0;"></div>
-          <small class="skeleton-bar" style="width: 30%; height: 12px;"></small>
-        </div>
-        <div class="post-actions">
-          <div class="post-actions-left">
-            <li class="skeleton-icon"></li>
-            <li class="skeleton-icon"></li>
-            <li class="skeleton-icon"></li>
-          </div>
-          <div class="post-actions-right">
-            <li class="skeleton-icon"></li>
-            <li class="skeleton-icon"></li>
-          </div>
-        </div>
-      `;
-      postsContainer.appendChild(skeleton);
-    }
-  }
-
-  function removeSkeletons() {
-    document.querySelectorAll('.post-skeleton').forEach(s => s.remove());
-  }
 
   async function getFriends() {
     try {
@@ -597,9 +617,43 @@ export default async function loadHomeSection(content, user) {
       });
     });
 
+    function waitForImages(el) {
+      const imgs = el.querySelectorAll("img");
+      if (imgs.length === 0) return Promise.resolve();
+
+      return Promise.all(
+        Array.from(imgs).map(img => {
+          if (img.complete) return Promise.resolve();
+          return new Promise(resolve => {
+            img.onload = resolve;
+            img.onerror = resolve;
+          });
+        })
+      );
+    }
+
     if (isNew) {
       postsContainer.prepend(newPost);
-    } else {
+
+      newPost.style.transition = "opacity 1s ease, height 1s ease, margin 1s ease, padding 1s ease, transform 1s ease";
+      newPost.style.opacity = "1";
+      newPost.style.transform = "scale(1) translateY(0)";
+
+      waitForImages(newPost).then(() => {
+        const fullHeight = newPost.scrollHeight + "px";
+        newPost.style.height = fullHeight;
+
+        setTimeout(() => {
+          newPost.style.opacity = "0";
+          newPost.style.height = "0px";
+          newPost.style.margin = "0px";
+          newPost.style.padding = "0px";
+          newPost.style.transform = "scale(0.8) translateY(-20px)";
+
+          setTimeout(() => newPost.remove(), 1000);
+        }, 5000);
+      });
+} else {
       postsContainer.appendChild(newPost);
     }
   }

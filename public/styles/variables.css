@@ -5,7 +5,8 @@ body.light {
 
   --bubble-color: rgba(100, 130, 255, 0.18);
   --bubble-glow: rgba(100, 130, 255, 0.55);
-  --skeleton-elements-bg: #a7a7a7ff;
+  --skeleton-elements-bg: #777777ff;
+  --skeleton-elements-bg-glow: #a7a7a733;
   
   --progress-bar-color: linear-gradient(120deg, #0056b3, #0056b3, #007bff, #007bff, #439effff, #439effff);
 
@@ -194,6 +195,7 @@ body.dark {
   --bubble-color: rgba(100, 130, 255, 0.55);
   --bubble-glow: rgba(100, 130, 255, 0.18);
   --skeleton-elements-bg: #e0e0e0;
+  --skeleton-elements-bg-glow: #e0e0e033;
 
   --progress-bar-color: linear-gradient(120deg, #0056b3, #0056b3, #007bff, #007bff, #439effff, #439effff);
 

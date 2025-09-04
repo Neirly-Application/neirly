@@ -116,6 +116,14 @@ function showCustomMenu(x, y, types, name, nick) {
       'nearby-user-profile': `
         <ul>
           <li><a><i class="fas fa-user"></i> ${name}</a></li>
+        </ul>`,
+      'user-ints': `
+        <ul>
+          <li><a><i class="fas fa-seedling"></i> Edit Interests</a></li>
+        </ul>`,
+      'nearby-user-ints': `
+        <ul>
+          <li><a><i class="fas fa-seedling"></i> Show Interests</a></li>
         </ul>`
     };
 

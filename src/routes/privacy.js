@@ -20,7 +20,7 @@ router.get('/privacy', async (req, res) => {
 router.put('/privacy', async (req, res) => {
     try {
         const { visibility } = req.body;
-        const allowedValues = ['friends', 'everyone', 'private'];
+        const allowedValues = [ 'vp_everyone', 'vp_friends', 'vp_friends_except' ];
 
         if (!allowedValues.includes(visibility)) {
             return res.status(400).json({ message: 'Invalid values.' })

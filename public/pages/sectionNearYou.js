@@ -6,12 +6,10 @@ function showLocationSkeleton() {
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
   if (!statusBox) return;
 
-  const random1 = random(180, 200);
-  const random2 = random(100, 200);
+  const randomWidth = random(140, 300);
   statusBox.innerHTML = `
       <div class="error-container post-skeleton" data-menu="location" style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px;">
-        <div class="skeleton-circle" style="width: ${random1}px; height: 120px;"></div>
-        <p class="skeleton-bar" style="width: ${random2}px; height: 16px;"></p>
+        <p class="skeleton-bar" style="width: ${randomWidth}px; height: 16px;"></p>
       </div>
     `;
 }
@@ -35,17 +33,26 @@ function showNearbyUsersSkeleton(count = 10) {
     skeletons.push(`
       <div class="card profile-card post-skeleton">
         <div class="profile-card-row">
+          <!-- Avatar -->
           <div class="skeleton-circle" style="width: 120px; height: 120px;"></div>
+
+          <!-- Info -->
           <div class="profile-info" style="margin-left: 10px; flex: 1;">
-            <p class="skeleton-bar" style="width: ${randomWidthName}px; height: 16px; margin-bottom: 10px;"></p>
+            <p class="skeleton-bar" style="width: 140px; height: 16px; margin-bottom: 10px;"></p>
+            <p class="skeleton-bar" style="width: ${randomWidthName}px; height: 14px; margin-bottom: 10px;"></p>
             <p class="skeleton-bar" style="width: ${randomWidthNick}px; height: 14px; margin-bottom: 10px;"></p>
-            <p class="skeleton-bar" style="width: ${randomWidthDesc}px; height: 14px; margin-bottom: 10px;"></p>
-            <p class="skeleton-bar" style="width: 80px; height: 16px;"></p>
+            <p class="skeleton-bar" style="width: ${randomWidthDesc}px; height: 16px;"></p>
+          </div>
+
+          <div class="actions-wrapper">
+            <div class="profile-actions">
+              <div class="skeleton-bar" style="width: 100px; height: 30px;"></div>
+            </div>
           </div>
         </div>
-        <div class="profile-actions" style="display: flex; gap: 10px; margin-top: 10px;">
-          <div class="skeleton-bar" style="width: 100px; height: 30px;"></div>
-          <div class="skeleton-bar" style="width: 100px; height: 30px;"></div>
+
+        <div class="pref-actions">
+          <div class="skeleton-bar" style="width: 30px; height: 20px; margin-top: 10px;"></div>
         </div>
       </div>
     `);
@@ -65,6 +72,86 @@ function clearSkeletonsAndErrors() {
   const statusBox = document.getElementById("location-status");
   if (!statusBox) return;
   statusBox.querySelectorAll('.error-container').forEach(e => e.remove());
+}
+
+function renderUserCard(u, index) {
+  const uName = u.name || 'User';
+  const uNick = '@' + (u.uniquenick || 'Undefined');
+  const uAv = u.profilePictureUrl || '../media/user.webp';
+  const uAbout = u.about_me || '👋 Hello there! I\'m a Neirly user!';
+
+  function userDataAttrs(user) {
+    return `data-menu="nearby-user-profile location" data-name="${uName}" data-nick="${uNick}"`;
+  }
+
+  const interestsId = `user-interests-${index}`;
+
+  return `
+    <div class="card profile-card" ${userDataAttrs(u)}>
+      <div class="profile-card-row">
+        <img src="${uAv}" alt="User Profile" ${userDataAttrs(u)} oncontextmenu="return false;">
+        <div class="profile-info" ${userDataAttrs(u)} >
+          <h3 class="info-name" ${userDataAttrs(u)} >
+            <i class="fas fa-location-dot" ${userDataAttrs(u)}></i>${uName}
+          </h3>
+          <p class="info-nick" ${userDataAttrs(u)} >${uNick}</p>
+          <p class="info-about" ${userDataAttrs(u)} >${uAbout}</p>
+          <span class="status">Online</span>
+          <div id="${interestsId}" class="user-interests interests-cont hidden" ${userDataAttrs(u)}></div>
+        </div>
+        <div class="actions-wrapper" ${userDataAttrs(u)}>
+          <div class="profile-actions" ${userDataAttrs(u)} >
+            <a href="#friend-list" data-section="profile" ${userDataAttrs(u)} >
+              <button class="cta-button" ${userDataAttrs(u)} >
+                <i class="fas fa-user-plus" ${userDataAttrs(u)} ></i> Add ${uName}
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pref-actions" data-menu="nearby-user-ints">
+          <a href="#" class="toggle-interests" data-target="${interestsId}">
+            <button class="pref cta-button">
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </a>
+      </div>
+    </div>`;
+}
+
+function initInterestsToggles() {
+  const container = document.getElementById("nearby-users");
+  if (!container) return;
+
+  if (container.dataset.bound === "true") return;
+  container.dataset.bound = "true";
+
+  container.addEventListener("click", (e) => {
+    const btn = e.target.closest(".toggle-interests");
+    if (!btn || !container.contains(btn)) return;
+
+    e.preventDefault();
+
+    const targetId = btn.dataset.target;
+    const interestsEl = document.getElementById(targetId);
+    const iconEl = btn.querySelector("i");
+
+    if (!interestsEl) return;
+
+    if (!interestsEl.innerHTML.trim()) {
+      interestsEl.innerHTML = `<a>No interests</a>`;
+    }
+
+    const nowHidden = interestsEl.classList.toggle("hidden");
+
+    if (iconEl) {
+      iconEl.classList.toggle("fa-chevron-up", !nowHidden);
+      iconEl.classList.toggle("fa-chevron-down", nowHidden);
+    }
+
+    btn.setAttribute("aria-expanded", String(!nowHidden));
+  });
 }
 
 export default async function loadNearYouSection(content, user) {
@@ -100,34 +187,40 @@ export default async function loadNearYouSection(content, user) {
 
   content.innerHTML = `
     <h2><i class="fas fa-location-dot"></i> Near you</h2>
-
     <div class="card profile-card" ${myDataAttrs(user)}>
       <div class="profile-card-row">
         <img src="${avatar}" alt="User Profile" ${myDataAttrs(user)} oncontextmenu="return false;">
-        <div class="profile-info" ${myDataAttrs(user)} >
-          <h3 class="info-name" ${myDataAttrs(user)} >${username}</h3>
-          <p class="info-nick" ${myDataAttrs(user)} >${nickname}</p>
-          <p class="info-about" ${myDataAttrs(user)} >${about}</p>
+        <div class="profile-info" ${myDataAttrs(user)}>
+          <h3 class="info-name" ${myDataAttrs(user)}><i class="fas fa-user"></i> ${username}</h3>
+          <p class="info-nick" ${myDataAttrs(user)}>${nickname}</p>
+          <p class="info-about" ${myDataAttrs(user)}>${about}</p>
           <span class="status">Online</span>
+          <div id="user-interests-main" class="user-interests-cont" data-menu="user-ints">
+            <a data-menu="user-ints" >Easy</a>
+            <a data-menu="user-ints" >Easy</a>
+            <a data-menu="user-ints" >Easy</a>
+          </div>
         </div>
-      </div>
-      <div class="profile-actions" ${myDataAttrs(user)} >
-        <a href="#profile" data-section="profile" data-menu="profile" >
-          <button class="cta-button" data-menu="profile" >
-            <i class="fas fa-pen" data-menu="profile" ></i> Edit Profile
-          </button>
-        </a>
-        <a href="#settings-location" data-menu="location" >
-          <button class="cta-button" data-menu="location" >
-            <i class="fas fa-cog" data-menu="location"></i> Location
-          </button>
-        </a>
+        <div class="actions-wrapper" ${myDataAttrs(user)}>
+          <div class="profile-actions" ${myDataAttrs(user)}>
+            <a href="#profile" data-section="profile" data-menu="profile">
+              <button class="cta-button" data-menu="profile">
+                <i class="fas fa-pen" data-menu="profile"></i> Profile
+              </button>
+            </a>
+            <a href="#settings-location" data-menu="location">
+              <button class="cta-button" data-menu="location">
+                <i class="fas fa-cog" data-menu="location"></i> Location
+              </button>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="fancy-line"></div>
     <div id="location-status" class="text-middlepage-info" data-menu="location"></div>
-    <div id="nearby-users"></div>
+    <div id="nearby-users" class="text-middlepage-info" data-menu="location" style="margin-top: 20px;"></div>
   `;
 
   const statusBox = document.getElementById("location-status");
@@ -145,7 +238,9 @@ export default async function loadNearYouSection(content, user) {
         body: JSON.stringify({ lat, lng })
       });
 
-      const data = await fetch(`/api/near-me`).then(r => r.json());
+      const resp = await fetch('/api/near-me');
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
 
       removeLocationSkeleton();
       removeNearbyUsersSkeleton();
@@ -155,42 +250,15 @@ export default async function loadNearYouSection(content, user) {
 
       let locationText = (!road && !city && !postcode) 
         ? `📍 Location not available!`
-        : `📍 Your Location: ${road}, ${postcode} ${city}`;
+        : `📍 <b>Your Location:</b> ${road}, ${postcode} ${city}`;
 
       statusBox.innerHTML = `<p data-menu="location">${locationText}</p>`;
 
       if (nearbyUsers.length) {
-        const nearbyHtml = nearbyUsers.map(u => {
-          const uName = u.name || 'User';
-          const uNick = '@' + u.uniquenick || '@Undefined';
-          const uAv = u.profilePictureUrl || '../media/user.webp';
-          const uAbout = u.about_me || '👋 Hello there! I\'m a Neirly user!';
+        const nearbyHtml = nearbyUsers.map((u, i) => renderUserCard(u, i)).join('');
+        document.getElementById("nearby-users").innerHTML = nearbyHtml;
 
-          function userDataAttrs(user) {
-            return `data-menu="nearby-user-profile location" data-name="${uName}" data-nick="${uNick}"`;
-          }
-
-          return `
-            <div class="card profile-card" ${userDataAttrs(user)}>
-              <div class="profile-card-row">
-                <img src="${uAv}" alt="User Profile" ${userDataAttrs(user)} oncontextmenu="return false;">
-                <div class="profile-info" ${userDataAttrs(user)} >
-                  <h3 class="info-name" ${userDataAttrs(user)} ><i class="fas fa-location-dot" ${userDataAttrs(user)}></i>${uName}</h3>
-                  <p class="info-nick" ${userDataAttrs(user)} >${uNick}</p>
-                  <p class="info-about" ${userDataAttrs(user)} >${uAbout}</p>
-                  <span class="status">Online</span>
-                </div>
-              </div>
-              <div class="profile-actions" ${userDataAttrs(user)} >
-                <a href="#friend-list" data-section="profile" ${userDataAttrs(user)} >
-                  <button class="cta-button" ${userDataAttrs(user)} >
-                    <i class="fas fa-user-plus" ${userDataAttrs(user)} ></i> Add Friend
-                  </button>
-                </a>
-              </div>
-            </div>`;
-        }).join('');
-        statusBox.innerHTML += nearbyHtml;
+        initInterestsToggles();
       } else {
         statusBox.innerHTML += `
           <div class="error-container" data-menu="location">
@@ -270,4 +338,6 @@ export default async function loadNearYouSection(content, user) {
   } else {
     initGeolocation();
   }
+
+  initInterestsToggles();
 }
