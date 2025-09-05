@@ -81,6 +81,8 @@
 }
 
 .actions-wrapper {
+  width: 100%;
+  max-width: 240px;
   display: flex;
   flex-direction: column; 
   text-aling: center;
@@ -95,14 +97,6 @@
   gap: 10px;
 }
 
-.pref-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
 .profile-actions a {
   padding: 8px 14px;
   font-size: 14px;
@@ -114,6 +108,14 @@
   justify-content: center;
   gap: 6px;
   text-decoration: none;
+}
+
+.pref-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .pref-actions a button.pref {

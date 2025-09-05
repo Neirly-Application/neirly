@@ -129,7 +129,7 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
       req.body.about_me.trim() !== '' &&
       req.body.about_me !== user.about_me
     ) {
-      updates.about_me = req.body.about_me.trim().slice(0, 190);
+      updates.about_me = req.body.about_me.trim().slice(0, 250);
       updatedFields.push('about_me');
     }
 
@@ -144,7 +144,7 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
         }
       }
 
-      const outputDir = path.resolve(__dirname, '../../uploads/user');
+      const outputDir = path.resolve(__dirname, '../../uploads/user/');
       if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
 
       const newFilename = `${Date.now()}-${user._id}.webp`;
@@ -159,7 +159,7 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
         if (err) console.warn('Error removing temp upload:', err.message);
       });
 
-      updates.profilePictureUrl = `/uploads/user/${newFilename}`;
+      updates.profilePictureUrl = `/uploads/user/${newFilename}`; // 👈 mancava
       updatedFields.push('profilePicture');
     }
 
