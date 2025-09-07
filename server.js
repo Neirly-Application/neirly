@@ -223,7 +223,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/switch-root', (req, res) => {
-  const allowedOrigin = 'http://localhost:3000';
+  const allowedOrigin = 'http://www.neirly.com';
   const origin = req.get('Origin') || req.get('Referer');
 
   if (!origin || !origin.startsWith(allowedOrigin)) {
