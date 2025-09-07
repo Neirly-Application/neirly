@@ -147,7 +147,7 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
       const outputDir = path.resolve(__dirname, '../../uploads/user/');
       if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
 
-      const newFilename = `${Date.now()}-${user._id}.webp`;
+      const newFilename = `${user._id}.webp`;
       const outputPath = path.join(outputDir, newFilename);
 
       await sharp(req.file.path)
@@ -159,7 +159,7 @@ router.put('/profile', upload.single('profilePicture'), async (req, res) => {
         if (err) console.warn('Error removing temp upload:', err.message);
       });
 
-      updates.profilePictureUrl = `/uploads/user/${newFilename}`; // 👈 mancava
+      updates.profilePictureUrl = `/uploads/user/${newFilename}`;
       updatedFields.push('profilePicture');
     }
 

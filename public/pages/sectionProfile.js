@@ -30,17 +30,6 @@ export default async function loadProfileSection(content, user) {
     return;
   }
 
-  const maskEmail = (email = '') => {
-    const [u, d] = email.split('@');
-    if (!d) return email;
-    if (u.length <= 2) return u[0] + '*'.repeat(u.length - 1) + '@' + d;
-    const visibleStart = u[0];
-    const visibleEnd = u.slice(-1);
-    const maskLength = u.length - 2;
-    const mask = '*'.repeat(maskLength);
-    return `${visibleStart}${mask}${visibleEnd}@${d}`;
-  };
-
   const lastUniquenickChange = new Date(user.uniquenickChangedAt || 0);
   const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
   const canEditUniquenick = Date.now() - lastUniquenickChange.getTime() >= sevenDaysInMs;
