@@ -1,4 +1,4 @@
-const ApiKey  = require('../models/ApiKey').default;
+const ApiKey  = require('../models/Apikey').default;
 const bcrypt  = require('bcryptjs');
 
 const BUCKET  = new Map();          // key → [timestamps]

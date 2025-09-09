@@ -2,7 +2,7 @@ const express  = require('express');
 const router   = express.Router();
 const crypto   = require('crypto');
 const bcrypt   = require('bcryptjs');
-const ApiKey   = require('../models/ApiKey').default;
+const ApiKey   = require('../models/Apikey').default;
 const { authMiddleware } = require('../auth/authMiddleware');
 
 router.use(authMiddleware);
