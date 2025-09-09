@@ -47,7 +47,7 @@ body.premium-theme {
   --ping-bad: #f71000;
 }
 
-body{
+body {
 	overflow: hidden;
 	width: 100vw;
 	height: 100vh;
