@@ -379,3 +379,50 @@ input:checked + .slider::before {
 	justify-content: center;
 	z-index: 9999;
 }
+
+.cta-button {
+  width: auto;
+  max-width: 250px;
+  padding: 8px 14px;
+  margin: 0 auto;
+  border: 2px solid var(--main-bg);
+  color: var(--main-bg);
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: transform .1s ease, background .1s ease, outline .1s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.cta-button i {
+  margin: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cta-button:hover,
+  .cta-button:focus-visible {
+    background: var(--primary);
+    transform: scale(1.03);
+    outline-offset: 0;
+    outline: 2px solid var(--main-bg);
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .cta-button:hover,
+  .cta-button:focus-visible {
+    background: transparent;
+    transform: none;
+    outline: none;
+  }
+
+  .cta-button:active {
+    background: var(--primary);
+    transform: scale(1.03);
+    outline-offset: 0;
+    outline: 2px solid var(--main-bg);
+  }
+}

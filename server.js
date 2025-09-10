@@ -87,6 +87,23 @@ const app = express();
 const activeIPs = new Map();
 const TIMEOUT = 5000;
 
+const blockedFiles = [
+  '/login.html',
+  '/register.html',
+  '/main/app.html',
+  '/uploads',
+  '/media',
+  '/sfx',
+  '/documentation'
+];
+
+app.use((req, res, next) => {
+  if (blockedFiles.includes(req.path)) {
+    return res.status(403).send('Access denied.');
+  }
+  next();
+});
+
 app.use('/launch', (req, res, next) => {
   const ip = req.ip || req.connection.remoteAddress;
 
@@ -120,7 +137,7 @@ app.get('/ping', (req, res) => {
 const { authMiddleware } = require('./src/auth/authMiddleware.js');
 
 // Developer API (API key)
-const profilePublicRouter = require('./src/routes/public/profilePublic.js');
+// const profilePublicRouter = require('./src/routes/public/profilePublic.js');
 const apiRouter = require('./src/routes/api');
 
 // JWT-protected client APIs
@@ -171,7 +188,7 @@ app.use(passport.initialize());
  *  Public endpoints require API key
  * ------------------------------------------------------------------------- */
 const v1 = express.Router();
-v1.use('/public', profilePublicRouter);
+// v1.use('/public', profilePublicRouter);
 v1.use('/developer', apiRouter);
 app.use('/api/v1', v1);
 
