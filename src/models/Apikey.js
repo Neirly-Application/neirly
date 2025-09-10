@@ -1,7 +1,6 @@
-import mongoose, { model } from 'mongoose';
-const { Schema } = mongoose;
+const mongoose = require('mongoose');
 
-const apiKeySchema = new Schema({
+const ApikeySchema = new mongoose.Schema({
   key:         { type: String, required: true, unique: true },
   hashedKey:   { type: String, required: true, unique: true },
   description: { type: String, required: true },
@@ -18,4 +17,4 @@ const apiKeySchema = new Schema({
   }]
 });
 
-export default model('ApiKey', apiKeySchema);
+module.exports = mongoose.model('Apikey', ApikeySchema);
