@@ -1,4 +1,4 @@
-const express = require('express');
+/* const express = require('express');
 const router = express.Router();
 const User = require('../../models/User');
 const apiKeyMiddleware = require('../../auth/apiKeyMiddleware');
@@ -26,3 +26,4 @@ router.get('/profile', apiKeyMiddleware, async (req, res) => {
 });
 
 module.exports = router;
+*/
