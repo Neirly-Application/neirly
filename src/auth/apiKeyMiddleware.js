@@ -1,4 +1,4 @@
-const ApiKey  = require('../models/Apikey').default;
+/* const ApiKey  = require('../models/Apikey').default;
 const bcrypt  = require('bcryptjs');
 
 const BUCKET  = new Map();          // key → [timestamps]
@@ -81,3 +81,4 @@ module.exports = async function apiKeyMiddleware(req, res, next) {
     res.status(500).json({ message: 'API key middleware error' });
   }
 };
+*/

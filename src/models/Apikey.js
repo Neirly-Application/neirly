@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+/* const mongoose = require('mongoose');
 
 const ApikeySchema = new mongoose.Schema({
   key:         { type: String, required: true, unique: true },
@@ -18,3 +18,4 @@ const ApikeySchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Apikey', ApikeySchema);
+*/
