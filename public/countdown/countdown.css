@@ -426,3 +426,93 @@ input:checked + .slider::before {
     outline: 2px solid var(--main-bg);
   }
 }
+
+.alpha-overlay.hidden {
+  display: none;
+}
+
+.alpha-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.alpha-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #2c4296;
+  transition: color 0.2s;
+}
+
+.alpha-form {
+  position: relative;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 20px;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alpha-form h3 {
+  margin-bottom: 15px;
+  color: #001c2b;
+}
+
+.alphaForm input,
+.alphaForm textarea {
+  font-family: var(--font-body);
+  width: 200px;
+  border-radius: 6px;
+  border: none;
+  margin-bottom: 10px;
+  color: #001c2bad;
+  font-size: 0.85rem;
+  padding: 0.6rem;
+}
+
+.alphaForm label {
+  color: #2c4296;
+}
+
+.alphaForm button {
+  display: block;
+  margin: 0 auto;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 8px;
+  background: #90d6ff;
+  color: #2c4296;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.alphaForm button:hover {
+  background: #001c2b;
+  color: #2c4296;
+}
+
+.alphaForm textarea {
+  resize: none;
+  min-height: 80px;
+}
+
+#responseMessage {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  color: #001c2b;
+}

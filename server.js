@@ -87,23 +87,6 @@ const app = express();
 const activeIPs = new Map();
 const TIMEOUT = 5000;
 
-const blockedFiles = [
-  '/login.html',
-  '/register.html',
-  '/main/app.html',
-  '/uploads',
-  '/media',
-  '/sfx',
-  '/documentation'
-];
-
-app.use((req, res, next) => {
-  if (blockedFiles.includes(req.path)) {
-    return res.status(403).send('Access denied.');
-  }
-  next();
-});
-
 app.use('/launch', (req, res, next) => {
   const ip = req.ip || req.connection.remoteAddress;
 
@@ -141,6 +124,7 @@ const { authMiddleware } = require('./src/auth/authMiddleware.js');
 const apiRouter = require('./src/routes/api');
 
 // JWT-protected client APIs
+const alpha = require('./src/routes/alphaTesterAccess');
 const profileRouter = require('./src/routes/profile');
 const notificationsRouter = require('./src/routes/notifications');
 const chatsRouter = require('./src/routes/chatsRouter');
@@ -183,6 +167,28 @@ app.use(cookieParser());
 app.use(express.static(pathModule.join(__dirname, 'public')));
 app.use(passport.initialize());
 
+const blockedFiles = [
+  '/login.html',
+  '/register.html',
+  '/main/app.html',
+  '/uploads',
+  '/media',
+  '/sfx',
+  '/documentation',
+  '/bypass'
+];
+
+app.use((req, res, next) => {
+  if (req.cookies && req.cookies.alphaTester === 'true') {
+    return next();
+  }
+  if (blockedFiles.includes(req.path)) {
+    return res.status(403).send('Access denied.');
+  }
+
+  next();
+});
+
 /* ---------------------------------------------------------------------------
  *  DEVELOPER API (versioned)
  *  Public endpoints require API key
@@ -203,6 +209,7 @@ app.use('/api/auth', adminRouter);
 app.use('/api/auth', completeProfileRouter);
 
 // Protected client endpoints
+app.use('/api', alpha);
 app.use('/api', notificationsRouter);
 app.use('/api', deleteUserRouter);
 app.use('/api', activityRouter);

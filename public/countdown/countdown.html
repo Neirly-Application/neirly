@@ -76,14 +76,34 @@
     <small class="small-mobile" id="small_text-mobile" title="Touch devices Keybinds">Swipe &nbsp;<a title="Swipe left for light theme" onclick="simSwipeLeft()"><i class="fas fa-arrow-left"></i> left</a>&nbsp; and &nbsp;<a title="Swipe right for dark theme" onclick="simSwipeRight()">right <i class="fas fa-arrow-right"></i></a>&nbsp; to change theme.</small>
     <small class="small-desktop" id="small_text-desktop" title="Desktop Keybinds">Press &nbsp;<a title="Keybind M: toggle audio" onclick='audioToggleBtn.click();'>M</a>&nbsp; to toggle audio and &nbsp;<a title="Keybind T: toggle theme" onclick='toggleThemeOnClick()'>T</a>&nbsp; to toggle theme.</small>
     <button id="audio-toggle" class="audio-btn" title="Volume ON/OFF"><i class="fas fa-volume-mute"></i> Volume OFF</button>
+    <button class="cta-button" id="alphaBtn">
+      <i class="fas fa-flask"></i> Alpha Tester?
+    </button>
     <button class="cta-button" onclick='window.location.href="/discord"'>
         <i class="fab fa-discord"></i> Discord
     </button> 
     <button class="cta-button" id="shareBtn">
-        <i class="fab fa-share-alt"></i> Share
+        <i class="fas fa-share-alt"></i> Share
     </button>
     <p title="Your Network ping">Ping: <span id="ping">0</span></p>
   </main>
+
+  <div id="alphaOverlay" class="alpha-overlay hidden">
+    <div class="alpha-form">
+      <span class="alpha-close-btn" id="closeOverlay">&times;</span>
+      <h3>Alpha Tester Access</h3>
+      <small style="color: #000829a9; font-size: 12px;">For security reasons, you must log in each time you open the page. The login won't be saved.</small><br>
+      <form id="alphaForm" class="alphaForm">
+        <label for="email">Email:</label>
+        <input type="email" id="email" required placeholder="Enter your email address">
+
+        <label for="code">Code:</label>
+        <input type="password" id="code" required placeholder="Enter your Alpha Tester code">
+        <button type="submit">Verify</button>
+      </form>
+      <p id="responseMessage"></p>
+    </div>
+  </div>
 
   <label class="theme-switch" id="switch-theme" title="Toggle Theme">
     <input type="checkbox" id="theme-toggle">
@@ -102,30 +122,41 @@
   <script src="/countdown/countdown.js"></script>
   <script src="/scripts/offline.js"></script>
   <script>
-    const shareBtn = document.getElementById("shareBtn");
-    const siteUrl = 'https://neirly.com/';
+    const alphaBtn = document.getElementById('alphaBtn');
+    const overlay = document.getElementById('alphaOverlay');
+    const closeBtn = document.getElementById('closeOverlay');
+    const alphaForm = document.getElementById('alphaForm');
+    const responseMessage = document.getElementById('responseMessage');
 
-    shareBtn.addEventListener("click", async () => {
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: document.title,
-            text: "Neirly is now online! Check out the launch countdown and stay tuned for the release!",
-            url: siteUrl
-          });
-        } catch (err) {
-          console.warn("There was an error while sharing the website:", err);
+    alphaBtn.addEventListener('click', () => overlay.classList.remove('hidden'));
+    closeBtn.addEventListener('click', () => overlay.classList.add('hidden'));
+    window.addEventListener('click', e => { if (e.target === overlay) overlay.classList.add('hidden'); });
+
+    alphaForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const code = document.getElementById('code').value;
+
+      try {
+        const res = await fetch('/api/verify-alpha', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, code })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          responseMessage.style.color = 'green';
+          responseMessage.textContent = data.message || 'Access granted!';
+          window.location.replace("/bypass");
+        } else {
+          responseMessage.style.color = 'red';
+          responseMessage.textContent = data.message || 'Wrong code.';
         }
-      } else {
-        const shareLinks = `
-          <div id="shareLinks" style="margin-top:10px">
-            <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(siteUrl)}" target="_blank">Facebook</a> |
-            <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(siteUrl)}" target="_blank">Twitter</a> |
-            <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(siteUrl)}" target="_blank">WhatsApp</a> |
-            <a href="mailto:?subject=Take a look, Neirly is now Online!&body=${encodeURIComponent(siteUrl)}">Email</a>
-          </div>
-        `;
-        document.body.insertAdjacentHTML("beforeend", shareLinks);
+      } catch (err) {
+        responseMessage.style.color = 'red';
+        responseMessage.textContent = 'Network error. Try again later.';
+        console.error(err);
       }
     });
   </script>
