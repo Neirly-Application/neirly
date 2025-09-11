@@ -117,7 +117,7 @@ app.get('/ping', (req, res) => {
 /* ---------------------------------------------------------------------------
  *  Custom middleware and route imports
  * ------------------------------------------------------------------------- */
-const { authMiddleware } = require('./src/auth/authMiddleware.js');
+const redirectApi = require('./src/auth/redirectApiMiddleware');
 
 // Developer API (API key)
 // const profilePublicRouter = require('./src/routes/public/profilePublic.js');
@@ -202,28 +202,28 @@ app.use('/api/v1', v1);
  *  CLIENT API (no version in path)
  *  Used by the web/mobile client after login
  * ------------------------------------------------------------------------- */
-app.use('/api/auth', authenticateRouter);
-app.use('/api/auth', forceLogoutRouter);
-app.use('/api/auth', banUserRouter);
-app.use('/api/auth', adminRouter);
-app.use('/api/auth', completeProfileRouter);
+app.use('/api/auth', authenticateRouter, redirectApi);
+app.use('/api/auth', forceLogoutRouter, redirectApi);
+app.use('/api/auth', banUserRouter, redirectApi);
+app.use('/api/auth', adminRouter, redirectApi);
+app.use('/api/auth', completeProfileRouter, redirectApi);
 
 // Protected client endpoints
-app.use('/api', alpha);
-app.use('/api', notificationsRouter);
-app.use('/api', deleteUserRouter);
-app.use('/api', activityRouter);
-app.use('/api', profileRouter);
-app.use('/api', friendsRouter);
-app.use('/api', privacyRouter);
-app.use('/api', devicesRouter);
-app.use('/api', nearMeRouter);
-app.use('/api', chatsRouter);
-app.use('/api', getUser);
-app.use('/api', searchNickRouter);
-app.use('/api', themeRouter);
-app.use('/api', accountSecurity);
-app.use('/api/posts', postRouter);
+app.use('/api', alpha, redirectApi);
+app.use('/api', notificationsRouter, redirectApi);
+app.use('/api', deleteUserRouter, redirectApi);
+app.use('/api', activityRouter, redirectApi);
+app.use('/api', profileRouter, redirectApi);
+app.use('/api', friendsRouter, redirectApi);
+app.use('/api', privacyRouter, redirectApi);
+app.use('/api', devicesRouter, redirectApi);
+app.use('/api', nearMeRouter, redirectApi);
+app.use('/api', chatsRouter, redirectApi);
+app.use('/api', getUser, redirectApi);
+app.use('/api', searchNickRouter, redirectApi);
+app.use('/api', themeRouter, redirectApi);
+app.use('/api', accountSecurity, redirectApi);
+app.use('/api/posts', postRouter, redirectApi);
 
 /* ---------------------------------------------------------------------------
  *  Static file routes
@@ -250,7 +250,7 @@ app.get('/', (req, res) => {
   res.sendFile(pathModule.join(__dirname, rootFile));
 });
 
-app.post('/switch-root', (req, res) => {
+app.post('/switch-root', redirectApi, (req, res) => {
   const allowedOrigin = 'http://localhost:3000';
   const origin = req.get('Origin') || req.get('Referer');
 

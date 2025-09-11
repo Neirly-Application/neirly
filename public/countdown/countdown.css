@@ -398,7 +398,7 @@ input:checked + .slider::before {
 }
 
 .cta-button i {
-  margin: 0;
+  margin-right: 10px;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -468,6 +468,10 @@ input:checked + .slider::before {
 .alpha-form h3 {
   margin-bottom: 15px;
   color: #001c2b;
+}
+
+.alpha-form h3 i {
+  margin-right: 10px;
 }
 
 .alphaForm input,
