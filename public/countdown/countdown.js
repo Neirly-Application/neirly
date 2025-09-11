@@ -354,7 +354,7 @@ function enableAnimations() {
 window.addEventListener('load', enableAnimations);
 
 // ==== ONLINE USERS ====
-fetch('/launch');
+/* fetch('/launch');
 function updateOnlineUsers() {
   fetch('/launch-online-users')
     .then(res => res.json())
@@ -366,6 +366,7 @@ function updateOnlineUsers() {
 
 updateOnlineUsers();
 setInterval(updateOnlineUsers, 2000);
+*/
 
 // ==== KEY EVENTS ====
 function changeFavicon(newFaviconUrl) {

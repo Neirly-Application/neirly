@@ -232,6 +232,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 let rootFile = 'public/countdown/countdown.html';
 
+app.get('/discord', (req, res) => {
+  res.redirect( 'https://discord.gg/4XNvpPHSYX' );
+});
+
 app.get('/bypass', (req, res) => {
   res.sendFile(pathModule.join(__dirname, 'index.html'));
 });
