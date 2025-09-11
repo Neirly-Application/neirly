@@ -83,7 +83,6 @@ passport.use(new GoogleStrategy({
       }
       if (!user.provider) user.provider = 'google';
 
-      // non tocco avatar, uniquenick o altri campi se già presenti
       await user.save();
       return done(null, user);
     }

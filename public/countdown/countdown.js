@@ -470,5 +470,5 @@ const pingEl = document.getElementById('ping');
     }
 }
 
-setInterval(measurePing, 10000);
+setInterval(measurePing, 1000);
 measurePing();

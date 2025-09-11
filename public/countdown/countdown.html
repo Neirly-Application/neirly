@@ -13,6 +13,7 @@
   <meta name="description" content="Neirly is now online! Check out the launch countdown and stay tuned for the release!">
   <meta name="keywords" content="Neirly, social, community, friends, chat, share, nearby, near you, neirly">
   <meta name="author" content="Neirly">
+  <meta name="theme-color" content="#3533cd">
 
   <meta property="og:title" content="Neirly - Shared passions. Close in age. Real connections.">
   <meta property="og:description" content="Neirly is now online! Check out the launch countdown and stay tuned for the release!">
@@ -157,6 +158,34 @@
         responseMessage.style.color = 'red';
         responseMessage.textContent = 'Network error. Try again later.';
         console.error(err);
+      }
+    });
+  </script>
+
+  <script>
+    const shareBtn = document.getElementById("shareBtn");
+    const siteUrl = 'https://neirly.com/';
+
+    shareBtn.addEventListener("click", async () => {
+      const shareText = `💙 Neirly is now online! Check out the launch countdown and stay tuned! 🚀`;
+      
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: document.title,
+            text: shareText,
+            url: siteUrl
+          });
+        } catch (err) {
+          console.warn("Sharing failed:", err);
+        }
+      } else {
+        try {
+          await navigator.clipboard.writeText(shareText);
+          alert("Link copied to clipboard! You can now paste it anywhere.");
+        } catch (err) {
+          console.warn("Clipboard write failed:", err);
+        }
       }
     });
   </script>
